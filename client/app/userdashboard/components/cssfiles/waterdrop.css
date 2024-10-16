@@ -1,0 +1,21 @@
+.drop {
+    animation: dropAnimation 2s ease-in-out infinite;
+  }
+
+@keyframes dropAnimation {
+    0% {
+      top: -50px;
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      top: 80px;
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+    100% {
+      top: -50px;
+      transform: scale(1);
+      opacity: .3;
+    }
+  }
