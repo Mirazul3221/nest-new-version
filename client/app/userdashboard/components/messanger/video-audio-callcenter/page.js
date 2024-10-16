@@ -68,10 +68,10 @@ const Page = () => {
       },
     });
     //////////////////////////////////////////
-    if (callInv === "call-start") {
-      const mike = stream?.getAudioTracks()[0];
-      mike.enabled = !mike.enabled;
-    }
+    // if (callInv === "call-start") {
+    //   const mike = stream?.getAudioTracks()[0];
+    //   mike.enabled = !mike.enabled;
+    // }
     const devices = await navigator.mediaDevices.enumerateDevices();
     setDeviceInfo(devices);
     setLocalStram(stream);
@@ -299,8 +299,6 @@ const Page = () => {
   };
   const toggleMike = () => {
     if (myStream.current) {
-      const mike = myStream.current?.getAudioTracks()[0];
-      mike.enabled = !mike.enabled;
       setToggleMick(!toggleMick);
     }
   };
