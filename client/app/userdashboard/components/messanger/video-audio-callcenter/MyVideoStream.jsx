@@ -14,6 +14,7 @@ const MyVideoStream = ({ stream }) => {
         style={{ borderRadius: "10px", objectFit: "cover" }}
         ref={localuserRef}
         autoPlay
+        muted
         className="w-full"
       />
       {stream?.id}
