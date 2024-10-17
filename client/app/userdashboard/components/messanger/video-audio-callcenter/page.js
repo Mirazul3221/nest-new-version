@@ -59,7 +59,20 @@ const Page = () => {
     };
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: videoConstraints,
+      video:  {
+        width: {
+          ideal: 380,
+          min: 380,
+          max: 1920,
+        },
+        height: {
+          ideal: 200,
+          min: 200,
+          max: 1280,
+        },
+        frameRate: { ideal: 10 }
+        // facingMode: { exact: "user" },
+      },
     });
     //////////////////////////////////////////
     // if (callInv === "call-start") {
