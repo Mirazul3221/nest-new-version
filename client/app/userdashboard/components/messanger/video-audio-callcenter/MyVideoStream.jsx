@@ -11,7 +11,7 @@ const MyVideoStream = ({ stream }) => {
   return (
     <div>
       <video
-        style={{ borderRadius: "10px", objectFit: "cover" }}
+        style={{ borderRadius: "10px", objectFit: "cover",transform:scaleX(-1) }}
         ref={localuserRef}
         autoPlay
         muted
