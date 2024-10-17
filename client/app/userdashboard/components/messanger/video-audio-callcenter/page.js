@@ -442,7 +442,7 @@ const Page = () => {
               autoPlay
               ref={remoteRef}
             ></video>
-            <div className="flex mx-auto absolute bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+            <div className="flex mx-auto absolute bottom-10 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
@@ -456,7 +456,6 @@ const Page = () => {
                 <IoVideocamOffOutline size={30} />
               </h2>
               <button
-                disabled={true}
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
