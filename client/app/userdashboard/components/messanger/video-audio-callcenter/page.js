@@ -438,7 +438,7 @@ const Page = () => {
         </div>
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
        {
-        !remoteRef.current && (
+        !remoteRef.current && callInv === 'call-received' && (
           <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
           <h2 className="text-2xl text-white">Loading...</h2>
     </div>
