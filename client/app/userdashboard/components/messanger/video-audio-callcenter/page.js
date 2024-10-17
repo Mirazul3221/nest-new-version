@@ -82,6 +82,16 @@ const Page = () => {
         ],
       };
       const rtc = await new RTCPeerConnection(config);
+      ///////////////////////////////////////////////////////////////////////////////////////////////
+     const sender = rtc.getSenders()[0];
+     const params = sender.getParameters();
+     params.encodings = [
+      { rid: 'low', maxBitrate: 500000 },  // Low resolution stream
+      { rid: 'med', maxBitrate: 1500000 }, // Medium resolution stream
+      { rid: 'high', maxBitrate: 3000000 } // High resolution stream
+     ];
+     sender.setParameters(params);
+
       //////////////////////////////add local stream to peer connection//////////////////////////////
       if (myStream.current !== null) {
         myStream.current.getTracks().forEach((track) => {
