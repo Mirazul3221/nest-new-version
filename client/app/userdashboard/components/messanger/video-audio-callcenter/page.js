@@ -52,9 +52,14 @@ const Page = () => {
   ////////////////////////global media stream call here////////////////////////
   ////////////////////////////////////////////////////////////////////////////
   const generateStream = async () => {
+    const videoConstraints = {
+      width: { ideal: 640 },
+      height: { ideal: 360 },
+      frameRate: { ideal: 15 }
+    };
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: true
+      video: videoConstraints,
     });
     //////////////////////////////////////////
     // if (callInv === "call-start") {
@@ -83,14 +88,14 @@ const Page = () => {
       };
       const rtc = await new RTCPeerConnection(config);
       ///////////////////////////////////////////////////////////////////////////////////////////////
-     const sender = rtc.getSenders()[0];
-     const params = sender.getParameters();
-     params.encodings = [
-      { rid: 'low', maxBitrate: 500000 },  // Low resolution stream
-      { rid: 'med', maxBitrate: 1500000 }, // Medium resolution stream
-      { rid: 'high', maxBitrate: 3000000 } // High resolution stream
-     ];
-     sender.setParameters(params);
+    //  const sender = rtc.getSenders()[0];
+    //  const params = sender.getParameters();
+    //  params.encodings = [
+    //   { rid: 'low', maxBitrate: 500000 },  // Low resolution stream
+    //   { rid: 'med', maxBitrate: 1500000 }, // Medium resolution stream
+    //   { rid: 'high', maxBitrate: 3000000 } // High resolution stream
+    //  ];
+    //  sender.setParameters(params);
 
       //////////////////////////////add local stream to peer connection//////////////////////////////
       if (myStream.current !== null) {
