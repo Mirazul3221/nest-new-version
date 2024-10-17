@@ -53,19 +53,7 @@ const Page = () => {
   const generateStream = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: {
-        width: {
-          ideal: 1280,
-          min: 640,
-          max: 1920,
-        },
-        height: {
-          ideal: 720,
-          min: 480,
-          max: 1080,
-        },
-        // facingMode: { exact: "user" },
-      },
+      video: true
     });
     //////////////////////////////////////////
     // if (callInv === "call-start") {
