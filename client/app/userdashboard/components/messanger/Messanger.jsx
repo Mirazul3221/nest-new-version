@@ -121,7 +121,9 @@ const Messanger = ({
       console.log(isOpenMyFriendMessangerWindow);
       setIsOpenMyFriendMessangerWindow(data);
     });
-    //  alert(switcher ? "on" : 'of')
+    return ()=>{
+      socket && socket.off('getOpenMessageWindow')
+    }
   };
   useEffect(() => {
     invoke?.emit("myUserInfo", {

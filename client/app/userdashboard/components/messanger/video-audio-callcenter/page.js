@@ -338,49 +338,94 @@ const Page = () => {
         </div>
       )}
       <div>
-              {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
-      {type === "Video" && callInv !== "call-received" && (
-        <div>
-          <img
-            className={`border-[10px] duration-1000 border-white mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
-            src={profile}
-            alt="profile-image"
-          />
-          {type === "Video" && (
-            <h3 className="text-2xl text-white">
-              You are in video call with {name}
-            </h3>
-          )}
-          {type === "Audio" && (
-            <h3 className="text-2xl text-white">
-              You are in audio call with {name}
-            </h3>
-          )}
+        {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
+        {type === "Video" && callInv !== "call-received" && (
+          <div>
+            <img
+              className={`border-[10px] border-white mx-auto duration-500 ${callInv === 'end-call' ? 'w-32 h-32' : 'shadow-[-1px_5px_40px_0px_white] w-48 h-48'} rounded-full`}
+              src={profile}
+              alt="profile-image"
+            />
+            {type === "Video" && (
+              <h3 className="text-2xl text-white text-center">
+                {callInv === "end-call"
+                  ? "Video call end"
+                  : ` You are in video call with ${name}`}
+              </h3>
+            )}
+          </div>
+        )}
+        {type === "Audio" && (
+          <div>
+            <img
+              className={`border-[10px] duration-1000 border-white mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
+              src={profile}
+              alt="profile-image"
+            />
+            {type === "Audio" && (
+              <h3 className="text-2xl text-white">
+                {callInv === "end-call"
+                  ? "Audio call end"
+                  : ` You are in audio call with ${name}`}
+              </h3>
+            )}
+          </div>
+        )}
+        {/* //////////////////////////////////////////////////////////////////////////////////////////////// */}
+        <div className="relative">
+        <div className={`${
+            callInv === "call-start" ? "scale-1 duration-500" : "scale-0"
+          } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}>
+            <h4
+              className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
+              onClick={handleCallEnd}
+            >
+              <MdCallEnd size={30} />
+            </h4>
+            <h2
+              onClick={toggleVideo}
+              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
+            >
+              <IoVideocamOffOutline size={30} />
+            </h2>
+            <button
+              disabled={true}
+              onClick={toggleMike}
+              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
+            >
+              <CiMicrophoneOff size={30} />
+            </button>
+          </div>
+        {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+
+        <div
+          className={`${
+            callInv === "end-call" ? "scale-1 duration-500" : "scale-0"
+          } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center mt-3 gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}
+        >
+          <h4
+            className="text-white w-fit bg-green-500 p-2 rounded-full cursor-pointer"
+            onClick={handleCallStart}
+          >
+            <MdCallEnd size={30} />
+          </h4>
+          <button
+            onClick={() => window.close()}
+            className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-pointer"
+          >
+            <RxCross1 size={30} />
+          </button>
         </div>
-      )}
-      {type === "Audio" && callInv && (
-        <div>
-          <img
-            className={`border-[10px] duration-1000 border-white mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
-            src={profile}
-            alt="profile-image"
-          />
-          {type === "Video" && (
-            <h3 className="text-2xl text-white">
-              You are in video call with {name}
-            </h3>
-          )}
-          {type === "Audio" && (
-            <h3 className="text-2xl text-white">
-              You are in audio call with {name}
-            </h3>
-          )}
         </div>
-      )}
-      {/* //////////////////////////////////////////////////////////////////////////////////////////////// */}
-           {
-            callInv === 'call-start' && (
-              <div className="flex justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+        {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
+        {callInv === "call-received" && type === "Video" && (
+          <div className="relative">
+            <video
+              className="rounded-lg h-screen w-auto"
+              autoPlay
+              ref={remoteRef}
+            ></video>
+            <div className="flex mx-auto absolute bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
@@ -401,38 +446,8 @@ const Page = () => {
                 <CiMicrophoneOff size={30} />
               </button>
             </div>
-            )
-           }
-            {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
-            {
-              callInv === 'call-received' && type === 'Video' && (
-                <div className="relative">
-                  <video className="rounded-lg h-screen w-auto" autoPlay ref={remoteRef}></video>
-                  <div className="flex mx-auto absolute bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
-              <h4
-                className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
-                onClick={handleCallEnd}
-              >
-                <MdCallEnd size={30} />
-              </h4>
-              <h2
-                onClick={toggleVideo}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-              >
-                <IoVideocamOffOutline size={30} />
-              </h2>
-              <button
-                disabled={true}
-                onClick={toggleMike}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-              >
-                <CiMicrophoneOff size={30} />
-              </button>
-            </div>
-                </div>
-              )
-            }
-            
+          </div>
+        )}
       </div>
     </div>
   );
