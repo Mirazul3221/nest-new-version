@@ -317,6 +317,8 @@ const Page = () => {
   const toggleMike = () => {
     if (myStream.current) {
       setToggleMick(!toggleMick);
+    const mike = myStream.current?.getAudioTracks()[0];
+    mike.enabled = !mike.enabled;
     }
   };
   // const aidioInput = localStream?.getAudioTracks()[0]
@@ -435,6 +437,13 @@ const Page = () => {
         </div>
         </div>
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
+       {
+        !remoteRef.current && (
+          <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
+          <h2 className="text-2xl text-white">Loading...</h2>
+    </div>
+        )
+       }
         {callInv === "call-received" && type === "Video" && (
           <div className="relative">
             <video
@@ -442,7 +451,7 @@ const Page = () => {
               autoPlay
               ref={remoteRef}
             ></video>
-            <div className="flex mx-auto absolute bottom-10 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+            <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
