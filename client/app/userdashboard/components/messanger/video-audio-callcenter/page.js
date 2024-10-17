@@ -19,6 +19,7 @@ import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { MdCallEnd } from "react-icons/md";
+import './video.css'
 const Page = () => {
   const data = useSearchParams();
   // const [localStream, setLocalStream] = useState(null);

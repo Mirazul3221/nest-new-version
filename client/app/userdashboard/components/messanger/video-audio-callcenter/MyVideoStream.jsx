@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-
+import './video.css'
 const MyVideoStream = ({ stream }) => {
   const localuserRef = useRef(null);
   if (stream && localuserRef.current) {
@@ -11,7 +11,7 @@ const MyVideoStream = ({ stream }) => {
   return (
     <div>
       <video
-        style={{ borderRadius: "10px", objectFit: "cover",transform:scaleX(-1) }}
+        style={{ borderRadius: "10px", objectFit: "cover" }}
         ref={localuserRef}
         autoPlay
         muted
