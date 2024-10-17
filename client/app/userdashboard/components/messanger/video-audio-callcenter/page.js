@@ -317,7 +317,7 @@ const Page = () => {
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
-            <div className="absolute right-4 top-4 w-3/12 rounded-md h-3/12">
+            <div className="absolute z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
               <MyVideoStream stream={myStream.current} />
               {/* <video autoPlay ref={myVideoRef}></video> */}
               {callInv === "call-start" && (
@@ -434,14 +434,14 @@ const Page = () => {
               </h4>
               <h2
                 onClick={toggleVideo}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
+                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
                 <IoVideocamOffOutline size={30} />
               </h2>
               <button
                 disabled={true}
                 onClick={toggleMike}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
+                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
                 <CiMicrophoneOff size={30} />
               </button>
