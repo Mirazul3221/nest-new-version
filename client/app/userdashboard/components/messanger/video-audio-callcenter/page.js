@@ -143,6 +143,9 @@ const Page = () => {
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
       if (event.candidate) {
+        
+      console.log('Mirazul')
+      console.log(event.candidate)
         await socket?.emit("icecandidate", {
           me: myId,
           friend: fdId,
