@@ -99,7 +99,7 @@ const Page = () => {
           },
         ],
       };
-      const rtc = await new RTCPeerConnection(config);
+      const rtc = await new RTCPeerConnection();
       ///////////////////////////////////////////////////////////////////////////////////////////////
     //  const sender = rtc.getSenders()[0];
     //  const params = sender.getParameters();
