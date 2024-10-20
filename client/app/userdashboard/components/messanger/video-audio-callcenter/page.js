@@ -110,9 +110,6 @@ const Page = () => {
                 {
                   urls: 'stun:global.stun.twilio.com:3478'  // Replace with your STUN server address
                 },
-                {
-                  urls: 'stun2.l.google.com:19302'  // Replace with your STUN server address
-                },
                 // TURN server with credentials
                 {
                   urls: 'turn:192.158.29.39:3478?transport=tcp',  // Replace with your TURN server address
