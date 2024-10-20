@@ -19,13 +19,16 @@ import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { MdCallEnd } from "react-icons/md";
-import './video.css'
+import "./video.css";
 const Page = () => {
   const data = useSearchParams();
   // const [localStream, setLocalStream] = useState(null);
   const [myFace, setMyFace] = useState(true);
   const [isRing, setIsRing] = useState(true);
   const [isRemoteRing, setIsRemoteRing] = useState(false);
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [callAlert,setCallAlert] = useState('local')
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [deviceInfo, setDeviceInfo] = useState(null);
   const [localStream, setLocalStram] = useState(null);
   // const [attached,setAttached] = useState(false)
@@ -55,11 +58,11 @@ const Page = () => {
     const videoConstraints = {
       width: { ideal: 640 },
       height: { ideal: 360 },
-      frameRate: { ideal: 15 }
+      frameRate: { ideal: 15 },
     };
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      video:  {
+      video: {
         width: {
           ideal: 380,
           min: 380,
@@ -70,7 +73,7 @@ const Page = () => {
           min: 200,
           max: 1280,
         },
-        frameRate: { ideal: 10 }
+        frameRate: { ideal: 10 },
         // facingMode: { exact: "user" },
       },
     });
@@ -100,35 +103,35 @@ const Page = () => {
         ],
       };
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            const configuration = {
-              iceServers: [
-                // STUN server
-                {
-                  urls: 'stun:stun.l.google.com:19302'  // Replace with your STUN server address
-                },
-                {
-                  urls: 'stun:global.stun.twilio.com:3478'  // Replace with your STUN server address
-                },
-                // TURN server with credentials
-                {
-                  urls: 'turn:relay1.expressturn.com:3478',  // Your TURN server
-                  username: 'efNFMA7S3AXKL4C9FV',              // Your username
-                  credential: 'qHpAu3uMlVCiUAlR'               // Your password
-              }
-              ]
-            };
-                  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      const configuration = {
+        iceServers: [
+          // STUN server
+          {
+            urls: "stun:stun.l.google.com:19302", // Replace with your STUN server address
+          },
+          {
+            urls: "stun:global.stun.twilio.com:3478", // Replace with your STUN server address
+          },
+          // TURN server with credentials
+          {
+            urls: "turn:relay1.expressturn.com:3478", // Your TURN server
+            username: "efNFMA7S3AXKL4C9FV", // Your username
+            credential: "qHpAu3uMlVCiUAlR", // Your password
+          },
+        ],
+      };
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       const rtc = await new RTCPeerConnection(configuration);
       ///////////////////////////////////////////////////////////////////////////////////////////////
-    //  const sender = rtc.getSenders()[0];
-    //  const params = sender.getParameters();
-    //  params.encodings = [
-    //   { rid: 'low', maxBitrate: 500000 },  // Low resolution stream
-    //   { rid: 'med', maxBitrate: 1500000 }, // Medium resolution stream
-    //   { rid: 'high', maxBitrate: 3000000 } // High resolution stream
-    //  ];
-    //  sender.setParameters(params);
+      //  const sender = rtc.getSenders()[0];
+      //  const params = sender.getParameters();
+      //  params.encodings = [
+      //   { rid: 'low', maxBitrate: 500000 },  // Low resolution stream
+      //   { rid: 'med', maxBitrate: 1500000 }, // Medium resolution stream
+      //   { rid: 'high', maxBitrate: 3000000 } // High resolution stream
+      //  ];
+      //  sender.setParameters(params);
 
       //////////////////////////////add local stream to peer connection//////////////////////////////
       if (myStream.current !== null) {
@@ -163,9 +166,8 @@ const Page = () => {
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
       if (event.candidate) {
-        
-      console.log('Mirazul')
-      console.log(event.candidate)
+        console.log("Mirazul");
+        console.log(event.candidate);
         await socket?.emit("icecandidate", {
           me: myId,
           friend: fdId,
@@ -209,6 +211,7 @@ const Page = () => {
     socket &&
       socket.on("receivedCallSuccess", () => {
         setCallInv("call-received");
+        setCallAlert('none')
         init();
       });
     return () => {
@@ -296,7 +299,7 @@ const Page = () => {
   };
 
   const handleCallEnd = () => {
-    setIsRemoteRing(false);
+    setCallAlert('none')
     setMyFace(false);
     setIsRing(false);
     socket?.emit("end-call", { id: fdId, end: "call-end" });
@@ -324,8 +327,7 @@ const Page = () => {
   useEffect(() => {
     socket &&
       socket.on("call-reached", (res) => {
-        setIsRing(false);
-        setIsRemoteRing(true);
+        setCallAlert('remote')
       });
     return () => {};
   }, [socket]);
@@ -340,8 +342,8 @@ const Page = () => {
   const toggleMike = () => {
     if (myStream.current) {
       setToggleMick(!toggleMick);
-    const mike = myStream.current?.getAudioTracks()[0];
-    mike.enabled = !mike.enabled;
+      const mike = myStream.current?.getAudioTracks()[0];
+      mike.enabled = !mike.enabled;
     }
   };
   // const aidioInput = localStream?.getAudioTracks()[0]
@@ -356,6 +358,12 @@ const Page = () => {
           : "bg-gray-500 duration-1000"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
+    {
+      callAlert === 'local' && action === "call-start" && ( <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>)
+    }
+    {
+      callAlert === 'remote' && action === "call-start" && ( <audio autoPlay src="/call-ringtone/remote-alaram.mp3" loop></audio>)
+    }
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
@@ -384,7 +392,11 @@ const Page = () => {
         {type === "Video" && callInv !== "call-received" && (
           <div>
             <img
-              className={`border-[10px] border-white mx-auto duration-500 ${callInv === 'end-call' ? 'w-32 h-32' : 'shadow-[-1px_5px_40px_0px_white] w-48 h-48'} rounded-full`}
+              className={`border-[10px] border-white mx-auto duration-500 ${
+                callInv === "end-call"
+                  ? "w-32 h-32"
+                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48"
+              } rounded-full`}
               src={profile}
               alt="profile-image"
             />
@@ -415,9 +427,11 @@ const Page = () => {
         )}
         {/* //////////////////////////////////////////////////////////////////////////////////////////////// */}
         <div className="relative">
-        <div className={`${
-            callInv === "call-start" ? "scale-1 duration-500" : "scale-0"
-          } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}>
+          <div
+            className={`${
+              callInv === "call-start" ? "scale-1 duration-500" : "scale-0"
+            } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}
+          >
             <h4
               className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
               onClick={handleCallEnd}
@@ -438,35 +452,33 @@ const Page = () => {
               <CiMicrophoneOff size={30} />
             </button>
           </div>
-        {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-        <div
-          className={`${
-            callInv === "end-call" ? "scale-1 duration-500" : "scale-0"
-          } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center mt-3 gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}
-        >
-          <h4
-            className="text-white w-fit bg-green-500 p-2 rounded-full cursor-pointer"
-            onClick={handleCallStart}
+          <div
+            className={`${
+              callInv === "end-call" ? "scale-1 duration-500" : "scale-0"
+            } flex absolute top-0 left-[50%] -translate-x-[50%] justify-between px-6 items-center mt-3 gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}
           >
-            <MdCallEnd size={30} />
-          </h4>
-          <button
-            onClick={() => window.close()}
-            className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-pointer"
-          >
-            <RxCross1 size={30} />
-          </button>
-        </div>
+            <h4
+              className="text-white w-fit bg-green-500 p-2 rounded-full cursor-pointer"
+              onClick={handleCallStart}
+            >
+              <MdCallEnd size={30} />
+            </h4>
+            <button
+              onClick={() => window.close()}
+              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-pointer"
+            >
+              <RxCross1 size={30} />
+            </button>
+          </div>
         </div>
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
-       {
-        !remoteRef.current && callInv === 'call-received' && (
+        {!remoteRef.current && callInv === "call-received" && (
           <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
-          <h2 className="text-2xl text-white">Loading...</h2>
-    </div>
-        )
-       }
+            <h2 className="text-2xl text-white">Loading...</h2>
+          </div>
+        )}
         {callInv === "call-received" && type === "Video" && (
           <div className="relative">
             <video
