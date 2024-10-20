@@ -99,7 +99,7 @@ const CallReceiverRoom = () => {
             data?.type === 'Audio' ?  <HiOutlinePhoneMissedCall size={30}/> :  data?.type === 'Video' ?   <IoVideocamOffOutline size={30}/> : ''
            }
             </h4>
-            <h4 onClick={handleReceiveCall} className="text-white w-fit bg-green-500 p-2 rounded-full border-2 cursor-pointer drop" >
+            <h4 onClick={handleReceiveCall} className="text-white duration-500 w-fit bg-green-500 p-2 rounded-full border-2 cursor-pointer drop" >
                <a target='_blank' href={`/userdashboard/components/messanger/video-audio-callcenter?my_peear=${encodeURIComponent(store.userInfo.id)}&friend_peear=${encodeURIComponent(data?.senderId)}&name=${encodeURIComponent(data?.name)}&profile=${data?.profile}&title=${data?.title}&type=${data?.type}&action=call-received`}>{data?.type === "Audio" ? <LuPhoneCall size={30}/> : data?.type === "Video" ? <GoDeviceCameraVideo size={30}/> : ''}</a>
             </h4>
         </div>
