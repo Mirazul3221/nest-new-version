@@ -101,25 +101,18 @@ const Page = () => {
       };
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            const configuration = {
-              iceServers: [
-                // STUN server
-                {
-                  urls: 'stun:stun.l.google.com:19302'  // Replace with your STUN server address
-                },
-                {
-                  urls: 'stun:global.stun.twilio.com:3478'  // Replace with your STUN server address
-                },
-                // TURN server with credentials
-                {
-                  urls: 'turn:192.158.29.39:3478?transport=tcp',  // Replace with your TURN server address
-                  username: '28224511:1379330808',        // Replace with your TURN server username
-                  credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA='     // Replace with your TURN server credential
-                }
-              ]
-            };
+            const iceServers = [
+              {
+                  urls: 'stun:stun.l.google.com:19302'  // STUN server for public IP discovery
+              },
+              {
+                  urls: 'turn:relay1.expressturn.com:3478',  // Your TURN server
+                  username: 'efNFMA7S3AXKL4C9FV',              // Your username
+                  credential: 'qHpAu3uMlVCiUAlR'               // Your password
+              }
+          ];
                   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      const rtc = await new RTCPeerConnection(configuration);
+      const rtc = await new RTCPeerConnection(iceServers);
       ///////////////////////////////////////////////////////////////////////////////////////////////
     //  const sender = rtc.getSenders()[0];
     //  const params = sender.getParameters();
