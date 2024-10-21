@@ -301,12 +301,12 @@ const Page = () => {
     setCallAlert("local");
   };
 
-  const handleCallEnd = () => {
+  const handleCallEnd =async () => {
     setMyFace(false);
     setIsRing(false);
-    socket?.emit("end-call", { id: fdId, end: "call-end" });
+   socket && await socket?.emit("end-call", { id: fdId, end: "call-end" });
     socket &&
-      socket.on("call-reached", (res) => {
+     await socket.on("call-reached", (res) => {
         console.log(res);
       });
     setCallInv("end-call");

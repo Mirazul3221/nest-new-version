@@ -51,13 +51,13 @@ const CallReceiverRoom = () => {
   }, [socket]);
 
   useEffect(() => {
-    socket?.on('end-call-signal',(res)=>{
+   socket && socket?.on('end-call-signal',(res)=>{
        if (res) {
          setWindow(false)
        }
     })
     return () => {
-      socket?.off("end-call-signal")
+      socket && socket?.off("end-call-signal")
     };
   }, [socket]);
   const handleReceiveCall = async()=>{
