@@ -421,10 +421,10 @@ const Page = () => {
         {type === "Video" && callInv !== "call-received" && (
           <div>
             <img
-              className={`border-[10px] border-white mx-auto duration-500 ${
+              className={`border-white mx-auto duration-500 ${
                 callInv === "end-call"
-                  ? "w-32 h-32"
-                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48"
+                  ? "w-32 h-32 border-[4px]"
+                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48 border-[10px]"
               } rounded-full`}
               src={profile}
               alt="profile-image"
@@ -496,7 +496,7 @@ const Page = () => {
             </h4>
             <button
               onClick={() => window.close()}
-              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-pointer"
+              className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
             >
               <RxCross1 size={30} />
             </button>
