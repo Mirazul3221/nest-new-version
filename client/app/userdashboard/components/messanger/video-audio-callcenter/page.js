@@ -298,17 +298,8 @@ const Page = () => {
     }, 2000);
   };
 
-  const handleCallEnd = () => {
-    setCallAlert('none')
-    setMyFace(false);
-    setIsRing(false);
-    socket?.emit("end-call", { id: fdId, end: "call-end" });
-    socket &&
-      socket.on("call-reached", (res) => {
-        console.log(res);
-      });
-    setCallInv("end-call");
-  };
+
+  //==================================================================================================================
   const handleCallStart = () => {
     setMyFace(true);
     setIsRing(true);
@@ -320,6 +311,20 @@ const Page = () => {
       type,
     });
     setCallInv("call-start");
+    setCallAlert('local')
+  };
+
+  
+  const handleCallEnd = () => {
+    setMyFace(false);
+    setIsRing(false);
+    socket?.emit("end-call", { id: fdId, end: "call-end" });
+    socket &&
+      socket.on("call-reached", (res) => {
+        console.log(res);
+      });
+    setCallInv("end-call");
+    setCallAlert('none')
   };
   // useEffect(() => {
 
@@ -348,8 +353,28 @@ const Page = () => {
   };
   // const aidioInput = localStream?.getAudioTracks()[0]
   // =========================================================================================================================
-  // =========================================================================================================================
-
+  // ===============================================All logic for call stop===================================================
+  useEffect(() => {
+    socket && socket.on('callStatus',res=>{
+      setCallInv("end-call");
+      setCallAlert('none')
+      const error = new Audio('/call-ringtone/error-126627.mp3')
+      error.play()
+    })
+    return () => {
+      socket && socket.off('callStatus')
+    };
+  }, [socket]);
+  const onTabClose = ()=>{
+    null
+  }
+  if(typeof window !=='undefined'){
+    window.addEventListener('beforeunload', function(event) {
+      // Code to execute before the tab is closed
+      onTabClose();
+  });
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div
       className={`${
