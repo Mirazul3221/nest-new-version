@@ -34,7 +34,10 @@ const CallReceiverRoom = () => {
       'simple.mp3',
       'muhammad_nabina.mp3',
       'islamic_tone.mp3',
-      'arabic_trend.mp3'
+      'arabic_trend.mp3',
+      'subhanallah_islamic_to.mp3',
+      'ya_rabbe_mustafa.mp3',
+      'sami_yusuf_urdu.mp3'
     ]
     socket?.on('signal-call',(data)=>{
       setCancleWindow(true)
