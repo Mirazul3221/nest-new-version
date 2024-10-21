@@ -39,7 +39,7 @@ const SocketProvider = ({ children }) => {
     };
   }, [socket]);
 
-  /////////////////////All logic for webRTC/////////////////////////////
+  /////////////////////All logic for webRTC///////////////////////////
   const peearConnectionRef = useRef(null);
   const CreatePeearConnection = useCallback(() => {
     if (typeof window !== undefined) {

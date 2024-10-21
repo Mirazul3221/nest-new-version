@@ -27,7 +27,7 @@ const Page = () => {
   const [isRing, setIsRing] = useState(true);
   const [isRemoteRing, setIsRemoteRing] = useState(false);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [callAlert,setCallAlert] = useState('local')
+  const [callAlert, setCallAlert] = useState("local");
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [deviceInfo, setDeviceInfo] = useState(null);
   const [localStream, setLocalStram] = useState(null);
@@ -92,18 +92,6 @@ const Page = () => {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const CreatePeearConnection = useCallback(async () => {
     if (typeof window !== undefined) {
-      const config = {
-        iceServers: [
-          {
-            urls: [
-              "stun:stun.l.google.com:19302",
-              "stun:global.stun.twilio.com:3478",
-            ],
-          },
-        ],
-      };
-
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       const configuration = {
         iceServers: [
           // STUN server
@@ -122,7 +110,7 @@ const Page = () => {
         ],
       };
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      const rtc = await new RTCPeerConnection(configuration);
+      const rtc = await new RTCPeerConnection();
       ///////////////////////////////////////////////////////////////////////////////////////////////
       //  const sender = rtc.getSenders()[0];
       //  const params = sender.getParameters();
@@ -211,7 +199,7 @@ const Page = () => {
     socket &&
       socket.on("receivedCallSuccess", () => {
         setCallInv("call-received");
-        setCallAlert('none')
+        setCallAlert("none");
         init();
       });
     return () => {
@@ -298,7 +286,6 @@ const Page = () => {
     }, 2000);
   };
 
-
   //==================================================================================================================
   const handleCallStart = () => {
     setMyFace(true);
@@ -311,10 +298,9 @@ const Page = () => {
       type,
     });
     setCallInv("call-start");
-    setCallAlert('local')
+    setCallAlert("local");
   };
 
-  
   const handleCallEnd = () => {
     setMyFace(false);
     setIsRing(false);
@@ -324,7 +310,7 @@ const Page = () => {
         console.log(res);
       });
     setCallInv("end-call");
-    setCallAlert('none')
+    setCallAlert("none");
   };
   // useEffect(() => {
 
@@ -332,7 +318,7 @@ const Page = () => {
   useEffect(() => {
     socket &&
       socket.on("call-reached", (res) => {
-        setCallAlert('remote')
+        setCallAlert("remote");
       });
     return () => {};
   }, [socket]);
@@ -355,24 +341,42 @@ const Page = () => {
   // =========================================================================================================================
   // ===============================================All logic for call stop===================================================
   useEffect(() => {
-    socket && socket.on('callStatus',res=>{
-      setCallInv("end-call");
-      setCallAlert('none')
-      const error = new Audio('/call-ringtone/error-126627.mp3')
-      error.play()
-    })
+    socket &&
+      socket.on("callStatus", (res) => {
+        setCallInv("end-call");
+        setCallAlert("none");
+        const error = new Audio("/call-ringtone/error-126627.mp3");
+        error.play();
+      });
     return () => {
-      socket && socket.off('callStatus')
+      socket && socket.off("callStatus");
     };
   }, [socket]);
-  const onTabClose = ()=>{
-    null
-  }
-  if(typeof window !=='undefined'){
-    window.addEventListener('beforeunload', function(event) {
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    socket?.on("end-call-signal", (res) => {
+      if (res) {
+        if (callInv === "call-received") {
+          window.close();
+        } else {
+          setCallInv("end-call");
+          setCallAlert("none");
+        }
+      }
+    });
+    return () => {
+      socket?.off("end-call-signal");
+    };
+  }, [socket,callInv]);
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const onTabClose = () => {
+    null;
+  };
+  if (typeof window !== "undefined") {
+    window.addEventListener("beforeunload", function (event) {
       // Code to execute before the tab is closed
       onTabClose();
-  });
+    });
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
@@ -383,12 +387,12 @@ const Page = () => {
           : "bg-gray-500 duration-1000"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
-    {
-      callAlert === 'local' && action === "call-start" && ( <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>)
-    }
-    {
-      callAlert === 'remote' && action === "call-start" && ( <audio autoPlay src="/call-ringtone/remote-alaram.mp3" loop></audio>)
-    }
+      {callAlert === "local" && action === "call-start" && (
+        <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
+      )}
+      {callAlert === "remote" && action === "call-start" && (
+        <audio autoPlay src="/call-ringtone/remote-alaram.mp3" loop></audio>
+      )}
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
