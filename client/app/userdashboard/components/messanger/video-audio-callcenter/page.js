@@ -474,11 +474,13 @@ const Page = () => {
               <IoVideocamOffOutline size={30} />
             </h2>
             <button
-              disabled={true}
               onClick={toggleMike}
               className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
             >
-              <CiMicrophoneOff size={30} />
+             
+              {
+                toggleMick ? <CiMicrophoneOn size={30}/> :  <CiMicrophoneOff size={30} />
+              }
             </button>
           </div>
           {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
