@@ -584,7 +584,7 @@ const Page = () => {
             </div>
           </div>
         )}
-        //////////////////////////////////////audio call logic//////////////////////////////////////////
+        {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
         {callInv === "call-received" && type === "Audio" && (
           <div className="relative">
              <audio autoPlay ref={remoteAudio}></audio>
