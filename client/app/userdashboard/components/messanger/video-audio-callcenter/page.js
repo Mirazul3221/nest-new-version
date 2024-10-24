@@ -301,14 +301,14 @@ const Page = () => {
     setCallAlert("local");
   };
 
-  const handleCallEnd =async () => {
+  const handleCallEnd = async () => {
     setMyFace(false);
     setIsRing(false);
-   socket && await socket?.emit("end-call", { id: fdId, end: "call-end" });
+    socket && (await socket?.emit("end-call", { id: fdId, end: "call-end" }));
     socket &&
-     await socket.on("call-reached", (res) => {
+      (await socket.on("call-reached", (res) => {
         console.log(res);
-      });
+      }));
     setCallInv("end-call");
     setCallAlert("none");
   };
@@ -367,7 +367,7 @@ const Page = () => {
     return () => {
       socket?.off("end-call-signal");
     };
-  }, [socket,callInv]);
+  }, [socket, callInv]);
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const onTabClose = () => {
     null;
@@ -477,10 +477,7 @@ const Page = () => {
               onClick={toggleMike}
               className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
             >
-             
-              {
-                toggleMick ? <CiMicrophoneOn size={30}/> :  <CiMicrophoneOff size={30} />
-              }
+              <CiMicrophoneOff size={30} />
             </button>
           </div>
           {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
@@ -534,7 +531,11 @@ const Page = () => {
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
-                <CiMicrophoneOff size={30} />
+                {toggleMick ? (
+                  <CiMicrophoneOn size={30} />
+                ) : (
+                  <CiMicrophoneOff size={30} />
+                )}
               </button>
             </div>
           </div>
