@@ -194,7 +194,7 @@ const Page = () => {
     })();
   }, [socket]);
 
-  ///////////////////////////Render webRTC in here/////////////////////////////
+  ///////////////////////////Render webRTC in here///////////////////////////////
   useEffect(() => {
     socket &&
       socket.on("receivedCallSuccess", () => {
