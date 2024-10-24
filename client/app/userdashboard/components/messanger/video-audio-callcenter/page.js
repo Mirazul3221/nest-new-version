@@ -102,7 +102,6 @@ const Page = () => {
 
     const audioTracks = {
       audio: true,
-      video: false,
     };
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -165,8 +164,10 @@ const Page = () => {
       ////////////////////listen to remote stream and add to peer connection/////////////////////////
       rtc.ontrack = function (event) {
         remoteStream.current = event.streams[0];
-        remoteVideo.current.srcObject = event.streams[0];
-        remoteAudio.current.srcObject = event.streams[0];
+
+        type === "Video"
+          ? (remoteVideo.current.srcObject = event.streams[0])
+          : (remoteAudio.current.srcObject = event.streams[0]);
         console.log(event.streams[0]);
       };
       ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -415,7 +416,7 @@ const Page = () => {
     });
   }
 
-  console.log(remoteStream.current)
+  console.log(remoteStream.current);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div
@@ -483,7 +484,8 @@ const Page = () => {
               src={profile}
               alt="profile-image"
             />
-            {type === "Audio" && (
+            <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">{name}</h2>
+            {type === "Audio" &&  callInv !== "call-received" && (
               <h3 className="text-2xl text-white">
                 {callInv === "end-call"
                   ? "Audio call end"
@@ -540,11 +542,13 @@ const Page = () => {
           </div>
         </div>
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
-        {!remoteVideo.current && callInv === "call-received" && type === "Video" && (
-          <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
-            <h2 className="text-2xl text-white">Loading...</h2>
-          </div>
-        )}
+        {!remoteVideo.current &&
+          callInv === "call-received" &&
+          type === "Video" && (
+            <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
+              <h2 className="text-2xl text-white">Loading...</h2>
+            </div>
+          )}
         {callInv === "call-received" && type === "Video" && (
           <div className="relative">
             <video
@@ -588,29 +592,20 @@ const Page = () => {
         )}
         {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
         {callInv === "call-received" && type === "Audio" && (
-          <div className="relative">
-             <audio autoPlay ref={remoteAudio}></audio>
-            <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+          <div>
+            <audio autoPlay ref={remoteAudio}></audio>
+            <div className="flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
               >
                 <MdCallEnd size={30} />
               </h4>
-              {type === "Video" ? (
-                <button
-                  onClick={toggleVideo}
-                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+              <button
+                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
                 >
-                  {toggleVid ? (
-                    <IoVideocamOffOutline size={30} />
-                  ) : (
-                    <GoDeviceCameraVideo size={30} />
-                  )}
+                   <IoVideocamOffOutline size={30} />
                 </button>
-              ) : (
-                <IoVideocamOffOutline size={30} />
-              )}
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
