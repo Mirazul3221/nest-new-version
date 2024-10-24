@@ -61,7 +61,28 @@ const Page = () => {
       height: { ideal: 360 },
       frameRate: { ideal: 15 },
     };
-    const stream = await navigator.mediaDevices.getUserMedia({
+    // const stream = await navigator.mediaDevices.getUserMedia({
+    //   audio: true,
+    //   video: {
+    //     width: {
+    //       ideal: 380,
+    //       min: 380,
+    //       max: 1920,
+    //     },
+    //     height: {
+    //       ideal: 200,
+    //       min: 200,
+    //       max: 1280,
+    //     },
+    //     frameRate: { ideal: 10 },
+    //     // facingMode: { exact: "user" },
+    //   },
+    // });
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    const videoTrack = {
       audio: true,
       video: {
         width: {
@@ -76,8 +97,21 @@ const Page = () => {
         },
         frameRate: { ideal: 10 },
         // facingMode: { exact: "user" },
-      },
-    });
+      },}
+
+
+    const audioTracks = {
+      audio: true,
+      video:false
+    };
+    ////////////////////////////////////////////////////////////////////////////////
+
+    const stream =
+    type === "Video"
+      ? await navigator.mediaDevices.getUserMedia(videoTrack)
+      : type === "Audio"
+      ? await navigator.mediaDevices.getUserMedia(audioTracks)
+      : null;
     //////////////////////////////////////////
     // if (callInv === "call-start") {
     //   const mike = stream?.getAudioTracks()[0];
