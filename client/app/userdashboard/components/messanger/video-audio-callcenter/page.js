@@ -51,7 +51,8 @@ const Page = () => {
   const myStream = useRef(null);
   const remoteStream = useRef(null);
   const peearConnectionRef = useRef(null);
-  const remoteRef = useRef(null);
+  const remoteVideo = useRef(null);
+  const remoteAudio = useRef(null);
   //////////////////////////////////////////////////////////////////////////////
   ////////////////////////global media stream call here////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -79,7 +80,6 @@ const Page = () => {
     //   },
     // });
 
-
     ////////////////////////////////////////////////////////////////////////////////
 
     const videoTrack = {
@@ -97,21 +97,21 @@ const Page = () => {
         },
         frameRate: { ideal: 10 },
         // facingMode: { exact: "user" },
-      },}
-
+      },
+    };
 
     const audioTracks = {
       audio: true,
-      video:false
+      video: false,
     };
     ////////////////////////////////////////////////////////////////////////////////
 
     const stream =
-    type === "Video"
-      ? await navigator.mediaDevices.getUserMedia(videoTrack)
-      : type === "Audio"
-      ? await navigator.mediaDevices.getUserMedia(audioTracks)
-      : null;
+      type === "Video"
+        ? await navigator.mediaDevices.getUserMedia(videoTrack)
+        : type === "Audio"
+        ? await navigator.mediaDevices.getUserMedia(audioTracks)
+        : null;
     //////////////////////////////////////////
     // if (callInv === "call-start") {
     //   const mike = stream?.getAudioTracks()[0];
@@ -165,7 +165,8 @@ const Page = () => {
       ////////////////////listen to remote stream and add to peer connection/////////////////////////
       rtc.ontrack = function (event) {
         remoteStream.current = event.streams[0];
-        remoteRef.current.srcObject = event.streams[0];
+        remoteVideo.current.srcObject = event.streams[0];
+        remoteAudio.current.srcObject = event.streams[0];
         console.log(event.streams[0]);
       };
       ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -537,7 +538,7 @@ const Page = () => {
           </div>
         </div>
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
-        {!remoteRef.current && callInv === "call-received" && (
+        {!remoteVideo.current && callInv === "call-received" && type === "Video" && (
           <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
             <h2 className="text-2xl text-white">Loading...</h2>
           </div>
@@ -547,7 +548,7 @@ const Page = () => {
             <video
               className="rounded-lg h-screen w-auto"
               autoPlay
-              ref={remoteRef}
+              ref={remoteVideo}
             ></video>
             <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
@@ -556,15 +557,58 @@ const Page = () => {
               >
                 <MdCallEnd size={30} />
               </h4>
-              <h2
-                onClick={toggleVideo}
+              {type === "Video" ? (
+                <button
+                  onClick={toggleVideo}
+                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                >
+                  {toggleVid ? (
+                    <IoVideocamOffOutline size={30} />
+                  ) : (
+                    <GoDeviceCameraVideo size={30} />
+                  )}
+                </button>
+              ) : (
+                <IoVideocamOffOutline size={30} />
+              )}
+              <button
+                onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
-              
-                {
-                 toggleVid ?   <IoVideocamOffOutline size={30} />  : <GoDeviceCameraVideo size={30}/>
-                }
-              </h2>
+                {toggleMick ? (
+                  <CiMicrophoneOff size={30} />
+                ) : (
+                  <CiMicrophoneOn size={30} />
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+        //////////////////////////////////////audio call logic//////////////////////////////////////////
+        {callInv === "call-received" && type === "Audio" && (
+          <div className="relative">
+             <audio autoPlay ref={remoteAudio}></audio>
+            <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+              <h4
+                className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
+                onClick={handleCallEnd}
+              >
+                <MdCallEnd size={30} />
+              </h4>
+              {type === "Video" ? (
+                <button
+                  onClick={toggleVideo}
+                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                >
+                  {toggleVid ? (
+                    <IoVideocamOffOutline size={30} />
+                  ) : (
+                    <GoDeviceCameraVideo size={30} />
+                  )}
+                </button>
+              ) : (
+                <IoVideocamOffOutline size={30} />
+              )}
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
