@@ -14,6 +14,7 @@ import MyVideoStream from "./MyVideoStream";
 import { PeerConnection } from "./webRTC";
 import { HiOutlinePhoneMissedCall } from "react-icons/hi";
 import { IoVideocamOffOutline } from "react-icons/io5";
+import { GoDeviceCameraVideo } from "react-icons/go";
 import { LuPhoneCall } from "react-icons/lu";
 import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
@@ -525,16 +526,19 @@ const Page = () => {
                 onClick={toggleVideo}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
-                <IoVideocamOffOutline size={30} />
+              
+                {
+                 toggleVid ?   <IoVideocamOffOutline size={30} />  : <GoDeviceCameraVideo size={30}/>
+                }
               </h2>
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
               >
                 {toggleMick ? (
-                  <CiMicrophoneOn size={30} />
-                ) : (
                   <CiMicrophoneOff size={30} />
+                ) : (
+                  <CiMicrophoneOn size={30} />
                 )}
               </button>
             </div>
