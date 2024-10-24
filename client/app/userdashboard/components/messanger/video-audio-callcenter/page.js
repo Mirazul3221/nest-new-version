@@ -484,7 +484,9 @@ const Page = () => {
               src={profile}
               alt="profile-image"
             />
-            <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">{name}</h2>
+             {
+              callInv === 'call-received' && <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">{name}</h2>
+             }
             {type === "Audio" &&  callInv !== "call-received" && (
               <h3 className="text-2xl text-white">
                 {callInv === "end-call"
