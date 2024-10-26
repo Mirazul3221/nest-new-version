@@ -600,7 +600,7 @@ const Page = () => {
         {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
         {
              callInv === "call-received" && type === "Audio" && (
-              <div className="w-screen h-screen overflow-hidden -z-10 absolute -top-[4%] left-0">
+              <div className="w-screen h-screen overflow-hidden -z-10 absolute -top-[5%] left-0">
                 <canvas ref={canvRef} className="w-full h-full bg-black"></canvas>
               </div>
              )
