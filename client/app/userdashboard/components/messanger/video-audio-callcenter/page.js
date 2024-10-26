@@ -21,6 +21,7 @@ import { CiMicrophoneOff } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { MdCallEnd } from "react-icons/md";
 import "./video.css";
+import { visualEffect } from "./audioVisualizer";
 const Page = () => {
   const data = useSearchParams();
   // const [localStream, setLocalStream] = useState(null);
@@ -53,6 +54,7 @@ const Page = () => {
   const peearConnectionRef = useRef(null);
   const remoteVideo = useRef(null);
   const remoteAudio = useRef(null);
+  const canvRef = useRef(null);
   //////////////////////////////////////////////////////////////////////////////
   ////////////////////////global media stream call here////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -163,6 +165,9 @@ const Page = () => {
       }
       ////////////////////listen to remote stream and add to peer connection/////////////////////////
       rtc.ontrack = function (event) {
+        if (event.streams[0] && type === "Audio") {
+          visualEffect(canvRef.current,event.streams[0])
+        }
         remoteStream.current = event.streams[0];
 
         type === "Video"
@@ -416,14 +421,14 @@ const Page = () => {
     });
   }
 
-  console.log(remoteStream.current);
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div
       className={`${
         callInv === "call-start"
           ? "bg-black duration-1000"
-          : "bg-gray-500 duration-1000"
+          : ""
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
       {callAlert === "local" && action === "call-start" && (
@@ -456,19 +461,38 @@ const Page = () => {
         </div>
       )}
       <div>
-        {type === "Audio" && (
+        {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
+        {type === "Video" && callInv !== "call-received" && (
           <div>
             <img
-              className={`border-[10px] duration-1000 border-white mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
+              className={`border-white mx-auto duration-500 ${
+                callInv === "end-call"
+                  ? "w-32 h-32 border-[4px]"
+                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48 border-[10px]"
+              } rounded-full`}
               src={profile}
               alt="profile-image"
             />
-            {callInv === "call-received" && (
-              <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">
-                {name}
-              </h2>
+            {type === "Video" && (
+              <h3 className="text-2xl text-white text-center">
+                {callInv === "end-call"
+                  ? "Video call end"
+                  : ` You are in video call with ${name}`}
+              </h3>
             )}
-            {type === "Audio" && callInv !== "call-received" && (
+          </div>
+        )}
+        {type === "Audio" && (
+          <div>
+            <img
+              className={`border-[10px] duration-1000 border-white ${callInv === 'call-received' && 'opacity-60'} mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
+              src={profile}
+              alt="profile-image"
+            />
+             {
+              callInv === 'call-received' && <h2 className={`font-semibold text-gray-700 w-fit mx-auto py-2 px-4 rounded-lg text-center ${callInv === 'call-received' && 'bg-white'} text-3xl uppercase mt-4`}>{name}</h2>
+             }
+            {type === "Audio" &&  callInv !== "call-received" && (
               <h3 className="text-2xl text-white">
                 {callInv === "end-call"
                   ? "Audio call end"
@@ -574,43 +598,31 @@ const Page = () => {
           </div>
         )}
         {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
-        {type === "Video" && callInv !== "call-received" && (
-          <div>
-            <img
-              className={`border-white mx-auto duration-500 ${
-                callInv === "end-call"
-                  ? "w-32 h-32 border-[4px]"
-                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48 border-[10px]"
-              } rounded-full`}
-              src={profile}
-              alt="profile-image"
-            />
-            {type === "Video" && (
-              <h3 className="text-2xl text-white text-center">
-                {callInv === "end-call"
-                  ? "Video call end"
-                  : ` You are in video call with ${name}`}
-              </h3>
-            )}
-          </div>
-        )}
-        {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
+        {
+             callInv === "call-received" && type === "Audio" && (
+              <div className="w-screen h-screen overflow-hidden -z-10 absolute -top-[4%] left-0">
+                <canvas ref={canvRef} className="w-full h-full bg-black"></canvas>
+              </div>
+             )
+        }
         {callInv === "call-received" && type === "Audio" && (
-          <div className="">
+          <div>
             <audio autoPlay ref={remoteAudio}></audio>
-            <div className="flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
+            <div className={`${callInv === "call-received" && 'bg-white'} flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}>
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
               >
                 <MdCallEnd size={30} />
               </h4>
-              <button className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed">
-                <IoVideocamOffOutline size={30} />
-              </button>
+              <button
+                  className="text-white w-fit bg-gray-500 p-2 rounded-full cursor-not-allowed"
+                >
+                   <IoVideocamOffOutline size={30} />
+                </button>
               <button
                 onClick={toggleMike}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                className="text-white w-fit bg-gray-500 p-2 rounded-full"
               >
                 {toggleMick ? (
                   <CiMicrophoneOff size={30} />
