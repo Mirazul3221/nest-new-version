@@ -456,27 +456,6 @@ const Page = () => {
         </div>
       )}
       <div>
-        {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
-        {type === "Video" && callInv !== "call-received" && (
-          <div>
-            <img
-              className={`border-white mx-auto duration-500 ${
-                callInv === "end-call"
-                  ? "w-32 h-32 border-[4px]"
-                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48 border-[10px]"
-              } rounded-full`}
-              src={profile}
-              alt="profile-image"
-            />
-            {type === "Video" && (
-              <h3 className="text-2xl text-white text-center">
-                {callInv === "end-call"
-                  ? "Video call end"
-                  : ` You are in video call with ${name}`}
-              </h3>
-            )}
-          </div>
-        )}
         {type === "Audio" && (
           <div>
             <img
@@ -484,10 +463,12 @@ const Page = () => {
               src={profile}
               alt="profile-image"
             />
-             {
-              callInv === 'call-received' && <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">{name}</h2>
-             }
-            {type === "Audio" &&  callInv !== "call-received" && (
+            {callInv === "call-received" && (
+              <h2 className="font-semibold text-white text-center text-3xl uppercase mt-4">
+                {name}
+              </h2>
+            )}
+            {type === "Audio" && callInv !== "call-received" && (
               <h3 className="text-2xl text-white">
                 {callInv === "end-call"
                   ? "Audio call end"
@@ -593,8 +574,29 @@ const Page = () => {
           </div>
         )}
         {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
-        {callInv === "call-received" && type === "Audio" && (
+        {type === "Video" && callInv !== "call-received" && (
           <div>
+            <img
+              className={`border-white mx-auto duration-500 ${
+                callInv === "end-call"
+                  ? "w-32 h-32 border-[4px]"
+                  : "shadow-[-1px_5px_40px_0px_white] w-48 h-48 border-[10px]"
+              } rounded-full`}
+              src={profile}
+              alt="profile-image"
+            />
+            {type === "Video" && (
+              <h3 className="text-2xl text-white text-center">
+                {callInv === "end-call"
+                  ? "Video call end"
+                  : ` You are in video call with ${name}`}
+              </h3>
+            )}
+          </div>
+        )}
+        {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
+        {callInv === "call-received" && type === "Audio" && (
+          <div className="">
             <audio autoPlay ref={remoteAudio}></audio>
             <div className="flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
@@ -603,11 +605,9 @@ const Page = () => {
               >
                 <MdCallEnd size={30} />
               </h4>
-              <button
-                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-                >
-                   <IoVideocamOffOutline size={30} />
-                </button>
+              <button className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed">
+                <IoVideocamOffOutline size={30} />
+              </button>
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
