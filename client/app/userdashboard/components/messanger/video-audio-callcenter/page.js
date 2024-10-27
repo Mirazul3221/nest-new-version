@@ -457,7 +457,7 @@ const Page = () => {
                   <MyVideoStream stream={myStream.current} /> 
                </div>
                <video
-              className={`rounded-lg max-h-[300px] h-[200px] w-auto ${toggleStream ? "block" : "hidden"}`}
+              className={`rounded-lg max-h-[300px] h-[200px] bg-black w-auto ${toggleStream ? "block" : "hidden"}`}
               autoPlay
               ref={remoteVideo}
             ></video>
