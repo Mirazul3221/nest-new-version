@@ -20,7 +20,6 @@ import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { MdCallEnd } from "react-icons/md";
-// import "./video.css";
 import { visualEffect } from "./audioVisualizer";
 const Page = () => {
   const data = useSearchParams();
@@ -674,7 +673,7 @@ const Page = () => {
                   setFaceVideoMove(false);
                 }, 10000);
               }}
-              className={`${isRemoteScreenSharing ? '' : 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
+              className={`${isRemoteScreenSharing ? 'rotate-0' : 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
                 toggleStream ? "hidden" : "block"
               }`}
               autoPlay
@@ -770,9 +769,6 @@ const Page = () => {
             </div>
           </div>
         )}
-      </div>
-      <div className={`${isRemoteScreenSharing ? '' : 'scale-x-[-1] bg-white'}`}>
-         sfhhhhhhhh glo gradient videoConstraints
       </div>
     </div>
   );
