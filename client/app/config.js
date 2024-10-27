@@ -4,4 +4,4 @@ export let baseurl = 'https://htcmxlwe.vercel.app';
 //====================//================
 export let viewurl = 'https://bcs-prep.vercel.app';
 //  viewurl = 'http://localhost:3000'
-//////
+/////////
