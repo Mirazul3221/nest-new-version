@@ -36,6 +36,7 @@ const Page = () => {
   // const [attached,setAttached] = useState(false)
   const [toggleVid, setToggleVid] = useState(false);
   const [toggleMick, setToggleMick] = useState(false);
+  const [toggleStream, setToggleStream] = useState(false);
   const { store } = useContext(storeContext);
   const myId = data.get("my_peear");
   const fdId = data.get("friend_peear");
@@ -55,6 +56,7 @@ const Page = () => {
   const remoteVideo = useRef(null);
   const remoteAudio = useRef(null);
   const canvRef = useRef(null);
+  const exchangeStream = useRef(null);
   //////////////////////////////////////////////////////////////////////////////
   ////////////////////////global media stream call here////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -192,6 +194,15 @@ const Page = () => {
     }
     callStream();
   }, []);
+
+  if (
+    type === "Video" &&
+    callInv === "call-received" &&
+    exchangeStream.current !== null && 
+    myStream.current !== null
+  ) {
+    exchangeStream.current.srcObject = myStream.current;
+  }
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -441,7 +452,7 @@ const Page = () => {
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
-            <div className="absolute z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
+            <div onClick={()=>setToggleStream(!toggleStream)} className="absolute z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
               <MyVideoStream stream={myStream.current} />
               {/* <video autoPlay ref={myVideoRef}></video> */}
               {callInv === "call-start" && (
@@ -560,9 +571,15 @@ const Page = () => {
         {callInv === "call-received" && type === "Video" && (
           <div className="relative">
             <video
-              className="rounded-lg h-screen w-auto"
+              className={`rounded-lg h-screen w-auto ${toggleStream ? "hidden" : "block"}`}
               autoPlay
               ref={remoteVideo}
+            ></video>
+            <video
+              className={`rounded-lg h-screen w-auto ${toggleStream ? "block" : "hidden"}`}
+              autoPlay
+              muted
+              ref={exchangeStream}
             ></video>
             <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
