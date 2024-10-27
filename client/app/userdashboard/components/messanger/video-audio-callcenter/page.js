@@ -225,7 +225,11 @@ const Page = () => {
       // Replace current video track with the screen track
       const sender = peearConnectionRef
         ?.getSenders()
-        .find((s) => s.track.kind === "video");
+        .find((s) => {
+          console.log('screen sharing option ///////////////')
+          console.log(s)
+          s.track.kind === "video"
+        });
       sender.replaceTrack(screenTrack);
 
       // Set state to indicate screen sharing is active
