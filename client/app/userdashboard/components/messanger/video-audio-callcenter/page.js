@@ -441,7 +441,7 @@ const Page = () => {
       className={`${
         callInv === "call-start"
           ? "bg-black duration-1000"
-          : ""
+          : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
       {callAlert === "local" && action === "call-start" && (
