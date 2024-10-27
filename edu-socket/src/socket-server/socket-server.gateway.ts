@@ -158,8 +158,17 @@ export class NotificationsGateway
           });
         }
       });
+
+      //////////////////////logic for screen sharing//////////////////////
+      await client.on('screen-sharing',res=>{
+        if (this.socketUsers[res?.friend]?.length > 0) {
+          this.socketUsers[res?.friend]?.map(async (id) => {
+            await this.server.to(id).emit('screen-sharing', res.isSharing);
+          });
+        }
+      })
     }
-  } /////
+  } ///////
   //
   ////////////////////////////////////////Method For disConnetted Users////////////////////////////////////////////
   async handleDisconnect(client: Socket) {
