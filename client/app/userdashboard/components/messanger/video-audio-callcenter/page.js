@@ -56,7 +56,8 @@ const Page = () => {
   const remoteVideo = useRef(null);
   const remoteAudio = useRef(null);
   const canvRef = useRef(null);
-  const exchangeStream = useRef(null);
+  const exchangeLocalStream = useRef(null);
+  const exchangeRemoteStream = useRef(null);
   //////////////////////////////////////////////////////////////////////////////
   ////////////////////////global media stream call here////////////////////////
   ////////////////////////////////////////////////////////////////////////////
@@ -171,7 +172,7 @@ const Page = () => {
           visualEffect(canvRef.current,event.streams[0])
         }
         remoteStream.current = event.streams[0];
-
+        exchangeRemoteStream.current.srcObject = event.streams[0]
         type === "Video"
           ? (remoteVideo.current.srcObject = event.streams[0])
           : (remoteAudio.current.srcObject = event.streams[0]);
@@ -198,10 +199,10 @@ const Page = () => {
   if (
     type === "Video" &&
     callInv === "call-received" &&
-    exchangeStream.current !== null && 
+    exchangeLocalStream.current !== null && 
     myStream.current !== null
   ) {
-    exchangeStream.current.srcObject = myStream.current;
+    exchangeLocalStream.current.srcObject = myStream.current;
   }
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
@@ -457,9 +458,9 @@ const Page = () => {
                   <MyVideoStream stream={myStream.current} /> 
                </div>
                <video
-              className={`rounded-lg max-h-[300px] h-[200px] bg-black w-auto ${toggleStream ? "block" : "hidden"}`}
+              className={`rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${toggleStream ? "block" : "hidden"}`}
               autoPlay
-              ref={remoteVideo}
+              ref={exchangeRemoteStream}
             ></video>
               {/* <video autoPlay ref={myVideoRef}></video> */}
               {callInv === "call-start" && (
@@ -586,7 +587,7 @@ const Page = () => {
               className={`rounded-lg h-screen w-auto ${toggleStream ? "block" : "hidden"}`}
               autoPlay
               muted
-              ref={exchangeStream}
+              ref={exchangeLocalStream}
             ></video>
             <div className="flex mx-auto absolute bottom-20 md:bottom-4 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700">
               <h4
