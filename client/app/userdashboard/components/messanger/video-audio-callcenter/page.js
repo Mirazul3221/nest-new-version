@@ -20,7 +20,7 @@ import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { MdCallEnd } from "react-icons/md";
-import "./video.css";
+// import "./video.css";
 import { visualEffect } from "./audioVisualizer";
 const Page = () => {
   const data = useSearchParams();
@@ -212,6 +212,7 @@ const Page = () => {
   ////////////////////////////////////Here is the logic for screen sharing method/////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [isScreenSharing, setIsScreenSharing] = useState(false);
+  const [isRemoteScreenSharing, setIsRemoteScreenSharing] = useState(false);
   let screenTrack; // Keep track of the screen track
 
   const startScreenShare = async () => {
@@ -223,18 +224,16 @@ const Page = () => {
       screenTrack = screenStream.getVideoTracks()[0];
 
       // Replace current video track with the screen track
-      const sender = peearConnectionRef.current
-        ?.getSenders()
-        .find((s) => {
-          console.log('screen sharing option ///////////////')
-          console.log(s)
-          s.track.kind === "video"
-        });
-      sender.replaceTrack(screenTrack);
+      if (peearConnectionRef.current) {
+        const sender = peearConnectionRef.current?.getSenders()
+        sender[1].replaceTrack(screenTrack)
+      }
 
+      // sender.replaceTrack(screenTrack);
+       
       // Set state to indicate screen sharing is active
       setIsScreenSharing(true);
-
+      socket && socket.emit('screen-sharing',{friend:fdId,isSharing:true})
       // Listen for when screen sharing stops directly (e.g., from the browser prompt)
       screenTrack.onended = () => stopScreenShare();
     } catch (error) {
@@ -248,14 +247,20 @@ const Page = () => {
       screenTrack.stop();
       const sender = peearConnectionRef.current
         ?.getSenders()
-        .find((s) => s.track.kind === "video");
-      sender.replaceTrack(myStream.current.getVideoTracks()[0]);
-
-      // Reset state and clean up
+      sender[1].replaceTrack(myStream.current.getVideoTracks()[0]);
       setIsScreenSharing(false);
     }
+    socket && socket.emit('screen-sharing',{friend:fdId,isSharing:false})
   };
-
+  //////////////////////////////////////Reomte screen sharing statue check by socket signalig//////////////////////////////////////////
+  useEffect(() => {
+    socket && socket.on('screen-sharing',res=>{
+      setIsRemoteScreenSharing(res.isSharing);
+    })
+    return () => {
+       socket && socket.off('screen-sharing')
+    };
+  }, [socket]);
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -523,7 +528,7 @@ const Page = () => {
                 <MyVideoStream stream={myStream.current} />
               </div>
               <video
-                className={`rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${
+                className={`scale-x-[-1] rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${
                   toggleStream ? "block" : "hidden"
                 }  ${
                   faceVideoMove
@@ -664,7 +669,7 @@ const Page = () => {
                   setFaceVideoMove(false);
                 }, 10000);
               }}
-              className={`rounded-lg h-screen w-auto ${
+              className={`${isRemoteScreenSharing && 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
                 toggleStream ? "hidden" : "block"
               }`}
               autoPlay
@@ -677,7 +682,7 @@ const Page = () => {
                   setFaceVideoMove(false);
                 }, 10000);
               }}
-              className={`rounded-lg h-screen w-auto ${
+              className={`scale-x-[-1] rounded-lg h-screen w-auto ${
                 toggleStream ? "block" : "hidden"
               }`}
               autoPlay
@@ -761,6 +766,7 @@ const Page = () => {
           </div>
         )}
       </div>
+      <div className={`${isScreenSharing ? "" : "scale-x-[-1]"}`}>Ki jala dea geli</div>
     </div>
   );
 };
