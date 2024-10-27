@@ -674,7 +674,7 @@ const Page = () => {
                   setFaceVideoMove(false);
                 }, 10000);
               }}
-              className={`${isRemoteScreenSharing && 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
+              className={`${isRemoteScreenSharing ? '' : 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
                 toggleStream ? "hidden" : "block"
               }`}
               autoPlay
@@ -771,7 +771,6 @@ const Page = () => {
           </div>
         )}
       </div>
-      <div className={`${isScreenSharing ? "" : "scale-x-[-1]"}`}>Ki jala dea geli</div>
     </div>
   );
 };
