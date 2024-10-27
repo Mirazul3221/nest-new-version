@@ -452,8 +452,15 @@ const Page = () => {
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
-            <div onClick={()=>setToggleStream(!toggleStream)} className="absolute z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
-              <MyVideoStream stream={myStream.current} />
+            <div onClick={()=>setToggleStream(!toggleStream)} className="absolute cursor-pointer z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
+               <div className={`${toggleStream ? "hidden" : "block"}`}>
+                  <MyVideoStream stream={myStream.current} /> 
+               </div>
+               <video
+              className={`rounded-lg max-h-[300px] h-[200px] w-auto ${toggleStream ? "block" : "hidden"}`}
+              autoPlay
+              ref={remoteVideo}
+            ></video>
               {/* <video autoPlay ref={myVideoRef}></video> */}
               {callInv === "call-start" && (
                 <div className="h-[400px] overflow-y-auto hidden md:block">
