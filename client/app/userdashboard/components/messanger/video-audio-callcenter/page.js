@@ -37,7 +37,7 @@ const Page = () => {
   const [toggleVid, setToggleVid] = useState(false);
   const [toggleMick, setToggleMick] = useState(false);
   const [toggleStream, setToggleStream] = useState(false);
-  const [faceVideoMove,setFaceVideoMove] = useState(true)
+  const [faceVideoMove, setFaceVideoMove] = useState(true);
   const { store } = useContext(storeContext);
   const myId = data.get("my_peear");
   const fdId = data.get("friend_peear");
@@ -207,6 +207,51 @@ const Page = () => {
   ) {
     exchangeLocalStream.current.srcObject = myStream.current;
   }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////Here is the logic for screen sharing method/////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
+  let screenTrack; // Keep track of the screen track
+
+  const startScreenShare = async () => {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      screenTrack = screenStream.getVideoTracks()[0];
+
+      // Replace current video track with the screen track
+      const sender = peearConnectionRef
+        ?.getSenders()
+        .find((s) => s.track.kind === "video");
+      sender.replaceTrack(screenTrack);
+
+      // Set state to indicate screen sharing is active
+      setIsScreenSharing(true);
+
+      // Listen for when screen sharing stops directly (e.g., from the browser prompt)
+      screenTrack.onended = () => stopScreenShare();
+    } catch (error) {
+      console.error("Error sharing screen:", error);
+    }
+  };
+  //////////////////////////////////////////////////////////
+  const stopScreenShare = () => {
+    if (screenTrack) {
+      // Stop the screen track and replace it with the camera track
+      screenTrack.stop();
+      const sender = peearConnectionRef
+        ?.getSenders()
+        .find((s) => s.track.kind === "video");
+      sender.replaceTrack(myStream.current.getVideoTracks()[0]);
+
+      // Reset state and clean up
+      setIsScreenSharing(false);
+    }
+  };
+
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -441,9 +486,9 @@ const Page = () => {
   useEffect(() => {
     if (callInv === "call-received" && type === "Video") {
       setTimeout(() => {
-         setFaceVideoMove(false)
+        setFaceVideoMove(false);
       }, 10000);
-}
+    }
   }, [callInv]);
   return (
     <div
@@ -464,13 +509,23 @@ const Page = () => {
               onClick={() => setToggleStream(!toggleStream)}
               className="absolute cursor-pointer z-50 right-4 top-4 w-3/12 rounded-md h-3/12"
             >
-              <div className={`${toggleStream ? "hidden" : "block"} ${faceVideoMove ? "scale-100 duration-150" : "scale-0 duration-150"}`}>
+              <div
+                className={`${toggleStream ? "hidden" : "block"} ${
+                  faceVideoMove
+                    ? "scale-100 duration-150"
+                    : "scale-0 duration-150"
+                }`}
+              >
                 <MyVideoStream stream={myStream.current} />
               </div>
               <video
                 className={`rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${
                   toggleStream ? "block" : "hidden"
-                }  ${faceVideoMove ? "scale-100 duration-150" : "scale-0 duration-150"}`}
+                }  ${
+                  faceVideoMove
+                    ? "scale-100 duration-150"
+                    : "scale-0 duration-150"
+                }`}
                 autoPlay
                 ref={exchangeRemoteStream}
               ></video>
@@ -600,9 +655,9 @@ const Page = () => {
           <div className="relative">
             <video
               onMouseMove={() => {
-                setFaceVideoMove(true)
+                setFaceVideoMove(true);
                 setTimeout(() => {
-                  setFaceVideoMove(false)
+                  setFaceVideoMove(false);
                 }, 10000);
               }}
               className={`rounded-lg h-screen w-auto ${
@@ -613,9 +668,9 @@ const Page = () => {
             ></video>
             <video
               onMouseMove={() => {
-                setFaceVideoMove(true)
+                setFaceVideoMove(true);
                 setTimeout(() => {
-                  setFaceVideoMove(false)
+                  setFaceVideoMove(false);
                 }, 10000);
               }}
               className={`rounded-lg h-screen w-auto ${
@@ -655,6 +710,12 @@ const Page = () => {
                 ) : (
                   <CiMicrophoneOn size={30} />
                 )}
+              </button>
+              <button
+                onClick={startScreenShare}
+                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+              >
+                Share a screen
               </button>
             </div>
           </div>
