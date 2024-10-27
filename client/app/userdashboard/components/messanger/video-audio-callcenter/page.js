@@ -37,6 +37,7 @@ const Page = () => {
   const [toggleVid, setToggleVid] = useState(false);
   const [toggleMick, setToggleMick] = useState(false);
   const [toggleStream, setToggleStream] = useState(false);
+  const [faceVideoMove,setFaceVideoMove] = useState(true)
   const { store } = useContext(storeContext);
   const myId = data.get("my_peear");
   const fdId = data.get("friend_peear");
@@ -169,11 +170,11 @@ const Page = () => {
       ////////////////////listen to remote stream and add to peer connection/////////////////////////
       rtc.ontrack = function (event) {
         if (event.streams[0] && type === "Audio") {
-          visualEffect(canvRef.current,event.streams[0])
+          visualEffect(canvRef.current, event.streams[0]);
         }
         remoteStream.current = event.streams[0];
-        if (type === 'Video') {
-          exchangeRemoteStream.current.srcObject = event.streams[0]
+        if (type === "Video") {
+          exchangeRemoteStream.current.srcObject = event.streams[0];
         }
         type === "Video"
           ? (remoteVideo.current.srcObject = event.streams[0])
@@ -201,7 +202,7 @@ const Page = () => {
   if (
     type === "Video" &&
     callInv === "call-received" &&
-    exchangeLocalStream.current !== null && 
+    exchangeLocalStream.current !== null &&
     myStream.current !== null
   ) {
     exchangeLocalStream.current.srcObject = myStream.current;
@@ -435,15 +436,19 @@ const Page = () => {
     });
   }
 
-
   /////////////////////////////////////////////////////////END////////////////////////////////////////////////////////////
   //Start from new
+  useEffect(() => {
+    if (callInv === "call-received" && type === "Video") {
+      setTimeout(() => {
+         setFaceVideoMove(false)
+      }, 10000);
+}
+  }, [callInv]);
   return (
     <div
       className={`${
-        callInv === "call-start"
-          ? "bg-black duration-1000"
-          : "bg-gray-500"
+        callInv === "call-start" ? "bg-black duration-1000" : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
       {callAlert === "local" && action === "call-start" && (
@@ -455,15 +460,20 @@ const Page = () => {
       {(callInv === "call-start" || callInv === "call-received") && (
         <div>
           {myFace && type === "Video" && (
-            <div onClick={()=>setToggleStream(!toggleStream)} className="absolute cursor-pointer z-50 right-4 top-4 w-3/12 rounded-md h-3/12">
-               <div className={`${toggleStream ? "hidden" : "block"}`}>
-                  <MyVideoStream stream={myStream.current} /> 
-               </div>
-               <video
-              className={`rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${toggleStream ? "block" : "hidden"}`}
-              autoPlay
-              ref={exchangeRemoteStream}
-            ></video>
+            <div
+              onClick={() => setToggleStream(!toggleStream)}
+              className="absolute cursor-pointer z-50 right-4 top-4 w-3/12 rounded-md h-3/12"
+            >
+              <div className={`${toggleStream ? "hidden" : "block"} ${faceVideoMove ? "scale-100 duration-150" : "scale-0 duration-150"}`}>
+                <MyVideoStream stream={myStream.current} />
+              </div>
+              <video
+                className={`rounded-lg max-h-[300px] mx-auto duration-150 w-auto ${
+                  toggleStream ? "block" : "hidden"
+                }  ${faceVideoMove ? "scale-100 duration-150" : "scale-0 duration-150"}`}
+                autoPlay
+                ref={exchangeRemoteStream}
+              ></video>
               {/* <video autoPlay ref={myVideoRef}></video> */}
               {callInv === "call-start" && (
                 <div className="h-[400px] overflow-y-auto hidden md:block">
@@ -507,14 +517,22 @@ const Page = () => {
         {type === "Audio" && (
           <div>
             <img
-              className={`border-[10px] duration-1000 border-white ${callInv === 'call-received' && 'opacity-60'} mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
+              className={`border-[10px] duration-1000 border-white ${
+                callInv === "call-received" && "opacity-60"
+              } mx-auto w-48 h-48 shadow-[-1px_5px_40px_0px_white] rounded-full`}
               src={profile}
               alt="profile-image"
             />
-             {
-              callInv === 'call-received' && <h2 className={`font-semibold text-gray-700 w-fit mx-auto py-2 px-4 rounded-lg text-center ${callInv === 'call-received' && 'bg-white'} text-3xl uppercase mt-4`}>{name}</h2>
-             }
-            {type === "Audio" &&  callInv !== "call-received" && (
+            {callInv === "call-received" && (
+              <h2
+                className={`font-semibold text-gray-700 w-fit mx-auto py-2 px-4 rounded-lg text-center ${
+                  callInv === "call-received" && "bg-white"
+                } text-3xl uppercase mt-4`}
+              >
+                {name}
+              </h2>
+            )}
+            {type === "Audio" && callInv !== "call-received" && (
               <h3 className="text-2xl text-white">
                 {callInv === "end-call"
                   ? "Audio call end"
@@ -581,12 +599,28 @@ const Page = () => {
         {callInv === "call-received" && type === "Video" && (
           <div className="relative">
             <video
-              className={`rounded-lg h-screen w-auto ${toggleStream ? "hidden" : "block"}`}
+              onMouseMove={() => {
+                setFaceVideoMove(true)
+                setTimeout(() => {
+                  setFaceVideoMove(false)
+                }, 10000);
+              }}
+              className={`rounded-lg h-screen w-auto ${
+                toggleStream ? "hidden" : "block"
+              }`}
               autoPlay
               ref={remoteVideo}
             ></video>
             <video
-              className={`rounded-lg h-screen w-auto ${toggleStream ? "block" : "hidden"}`}
+              onMouseMove={() => {
+                setFaceVideoMove(true)
+                setTimeout(() => {
+                  setFaceVideoMove(false)
+                }, 10000);
+              }}
+              className={`rounded-lg h-screen w-auto ${
+                toggleStream ? "block" : "hidden"
+              }`}
               autoPlay
               muted
               ref={exchangeLocalStream}
@@ -626,28 +660,28 @@ const Page = () => {
           </div>
         )}
         {/* //////////////////////////////////////audio call logic////////////////////////////////////////// */}
-        {
-             callInv === "call-received" && type === "Audio" && (
-              <div className="w-screen h-screen overflow-hidden -z-10 absolute -top-[5%] left-0">
-                <canvas ref={canvRef} className="w-full h-full bg-black"></canvas>
-              </div>
-             )
-        }
+        {callInv === "call-received" && type === "Audio" && (
+          <div className="w-screen h-screen overflow-hidden -z-10 absolute -top-[5%] left-0">
+            <canvas ref={canvRef} className="w-full h-full bg-black"></canvas>
+          </div>
+        )}
         {callInv === "call-received" && type === "Audio" && (
           <div>
             <audio autoPlay ref={remoteAudio}></audio>
-            <div className={`${callInv === "call-received" && 'bg-white'} flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}>
+            <div
+              className={`${
+                callInv === "call-received" && "bg-white"
+              } flex mx-auto absolute bottom-20 left-[50%] -translate-x-[50%] justify-between px-6 items-center gap-6 py-2 bg-gray-500/10 rounded-full shadow-sm shadow-gray-700`}
+            >
               <h4
                 className="text-white w-fit bg-red-500 p-2 rounded-full cursor-pointer"
                 onClick={handleCallEnd}
               >
                 <MdCallEnd size={30} />
               </h4>
-              <button
-                  className="text-white w-fit bg-gray-500 p-2 rounded-full cursor-not-allowed"
-                >
-                   <IoVideocamOffOutline size={30} />
-                </button>
+              <button className="text-white w-fit bg-gray-500 p-2 rounded-full cursor-not-allowed">
+                <IoVideocamOffOutline size={30} />
+              </button>
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500 p-2 rounded-full"
