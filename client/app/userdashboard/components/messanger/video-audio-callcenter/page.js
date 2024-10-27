@@ -255,12 +255,17 @@ const Page = () => {
   //////////////////////////////////////Reomte screen sharing statue check by socket signalig//////////////////////////////////////////
   useEffect(() => {
     socket && socket.on('screen-sharing',res=>{
-      setIsRemoteScreenSharing(res.isSharing);
+      setIsRemoteScreenSharing(res);
+      console.log('rrrrrrrrrrrrrrr eeeeeeeeeeeeeeee sssssssssssssss')
+      console.log(res)
     })
     return () => {
        socket && socket.off('screen-sharing')
     };
   }, [socket]);
+
+  console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn gggggggggggggggggggggg 0000000000000000000000000000')
+  console.log(isRemoteScreenSharing)
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
