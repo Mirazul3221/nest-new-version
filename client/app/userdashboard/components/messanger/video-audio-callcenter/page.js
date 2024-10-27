@@ -771,6 +771,9 @@ const Page = () => {
           </div>
         )}
       </div>
+      <div className={`${isRemoteScreenSharing ? '' : 'scale-x-[-1] bg-white'}`}>
+         sfhhhhhhhh glo gradient videoConstraints
+      </div>
     </div>
   );
 };
