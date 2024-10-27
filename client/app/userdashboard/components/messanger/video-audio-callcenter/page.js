@@ -223,7 +223,7 @@ const Page = () => {
       screenTrack = screenStream.getVideoTracks()[0];
 
       // Replace current video track with the screen track
-      const sender = peearConnectionRef
+      const sender = peearConnectionRef.current
         ?.getSenders()
         .find((s) => {
           console.log('screen sharing option ///////////////')
@@ -246,7 +246,7 @@ const Page = () => {
     if (screenTrack) {
       // Stop the screen track and replace it with the camera track
       screenTrack.stop();
-      const sender = peearConnectionRef
+      const sender = peearConnectionRef.current
         ?.getSenders()
         .find((s) => s.track.kind === "video");
       sender.replaceTrack(myStream.current.getVideoTracks()[0]);
