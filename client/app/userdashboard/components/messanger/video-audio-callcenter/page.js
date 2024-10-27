@@ -172,7 +172,9 @@ const Page = () => {
           visualEffect(canvRef.current,event.streams[0])
         }
         remoteStream.current = event.streams[0];
-        exchangeRemoteStream.current.srcObject = event.streams[0]
+        if (type === 'Video') {
+          exchangeRemoteStream.current.srcObject = event.streams[0]
+        }
         type === "Video"
           ? (remoteVideo.current.srcObject = event.streams[0])
           : (remoteAudio.current.srcObject = event.streams[0]);
