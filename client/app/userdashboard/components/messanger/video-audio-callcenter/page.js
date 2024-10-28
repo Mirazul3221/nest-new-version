@@ -780,12 +780,12 @@ const Page = () => {
                   {toggleCam && (
                     <button
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                    >back</button>
+                    > <IoCameraReverseOutline  size={30} /></button>
                   )}
                   {!toggleCam && (
                     <button
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                    >front</button>
+                    ><IoCameraOutline  size={30} /></button>
                   )}
                 </div>
               )}
