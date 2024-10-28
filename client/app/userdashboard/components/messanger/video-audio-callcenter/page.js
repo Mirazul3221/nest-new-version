@@ -515,7 +515,7 @@ const Page = () => {
     <div>
     {
       deviceInfo?.filter(inf => inf.kind === 'videoinput')?.map((f,i)=>{
-        return <h2 className="bg-amber-500">{f.kind} && {f.label}</h2>
+        return <h2 key={i} className="bg-amber-500">{f.kind} && {f.label}</h2>
       })
      } 
     </div>
