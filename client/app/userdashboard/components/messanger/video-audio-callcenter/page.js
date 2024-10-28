@@ -272,6 +272,27 @@ const Page = () => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [toggleCam, setToggleCam] = useState(false);
   const [isBackcameraExist, setIsBackcameraExist] = useState(null);
+  const frontVideStream = async () => {
+    const stm = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: {
+        width: {
+          ideal: 380,
+          min: 380,
+          max: 1920,
+        },
+        height: {
+          ideal: 200,
+          min: 200,
+          max: 1280,
+        },
+        frameRate: { ideal: 10 },
+        facingMode: { exact: "user" },
+      },
+    });
+
+    return stm;
+  };
   const backVideStream = async () => {
     const stm = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -308,6 +329,22 @@ const Page = () => {
     }
     backCm();
   });
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  async function setFrontCameraStream() {
+    const stm = await frontVideStream();
+    const audiotrack = await stm.getAudioTracks()[0];
+    const videotrack = await stm.getVideoTracks()[0];
+    if (peearConnectionRef.current) {
+      const sender = await peearConnectionRef.current?.getSenders();
+      sender[0].replaceTrack(audiotrack);
+      sender[1].replaceTrack(videotrack);
+    }
+
+    myStream.current = stm;
+    setToggleCam(false);
+  }
+
+////////////////////////////////////////////////////////
   async function setBackCameraStream() {
     const stm = await backVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
@@ -321,6 +358,7 @@ const Page = () => {
     myStream.current = stm;
     setToggleCam(true);
   }
+
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -778,12 +816,12 @@ const Page = () => {
               {isBackcameraExist && (
                 <div>
                   {toggleCam && (
-                    <button
+                    <button onClick={setFrontCameraStream}
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
                     > <IoCameraReverseOutline  size={30} /></button>
                   )}
                   {!toggleCam && (
-                    <button
+                    <button onClick={setBackCameraStream}
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
                     ><IoCameraOutline  size={30} /></button>
                   )}
