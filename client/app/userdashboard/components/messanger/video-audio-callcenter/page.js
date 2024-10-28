@@ -271,6 +271,7 @@ const Page = () => {
 const  [isBackcameraExist,setIsBackcameraExist] = useState(null)
 const backVideStream = async () =>{
   const stm = await navigator.mediaDevices.getUserMedia({
+    audio:true,
     video: {
       width: {
         ideal: 380,
@@ -301,10 +302,11 @@ useEffect(() => {
   backCm()})
   async function setBackCameraStream() {
       const stm = await backVideStream()
-      const track = await stm.getVideoTracks()[0];
+      const audiotrack = await stm.getAudioTracks()[0];
+      const videotrack = await stm.getVideoTracks()[0];
       if (peearConnectionRef.current) {
         const sender =await peearConnectionRef.current?.getSenders();
-        sender[1].replaceTrack(track)
+        sender[1].replaceTrack(videotrack)
       }
 
       myStream.current = stm;
