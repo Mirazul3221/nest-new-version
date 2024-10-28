@@ -306,6 +306,7 @@ useEffect(() => {
       const videotrack = await stm.getVideoTracks()[0];
       if (peearConnectionRef.current) {
         const sender =await peearConnectionRef.current?.getSenders();
+        sender[0].replaceTrack(audiotrack)
         sender[1].replaceTrack(videotrack)
       }
 
