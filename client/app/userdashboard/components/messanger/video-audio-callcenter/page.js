@@ -261,12 +261,13 @@ const Page = () => {
     };
   }, [socket]);
 ////////////////////////////////////////////Here is the logic for toggling between forth and back camera////////////////////////////////////////////////
-let hasBackCamera;
-async function checkBackCamera() {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  hasBackCamera = devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
-}
-checkBackCamera()
+// let hasBackCamera;
+// async function checkBackCamera() {
+//   const devices = await navigator.mediaDevices.enumerateDevices();
+//   hasBackCamera = devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+//   devices.map(d=>console.log(d.kind))
+// }
+// checkBackCamera()
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -512,7 +513,9 @@ checkBackCamera()
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
      {
-      hasBackCamera && <h2 className="text-amber-500">{hasBackCamera?.label}</h2>
+      deviceInfo.map((info,i)=>{
+        return <h2 className="bg-amber-400" key={i}>{info.label}</h2>
+      })
      } 
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
