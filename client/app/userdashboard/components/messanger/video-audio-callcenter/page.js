@@ -17,6 +17,8 @@ import { LuScreenShare } from "react-icons/lu";
 import { LuScreenShareOff } from "react-icons/lu";
 import { IoVideocamOffOutline } from "react-icons/io5";
 import { GoDeviceCameraVideo } from "react-icons/go";
+import { IoCameraOutline } from "react-icons/io5";
+import { IoCameraReverseOutline } from "react-icons/io5";
 import { LuPhoneCall } from "react-icons/lu";
 import { CiMicrophoneOn } from "react-icons/ci";
 import { CiMicrophoneOff } from "react-icons/ci";
@@ -214,7 +216,7 @@ const Page = () => {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isRemoteScreenSharing, setIsRemoteScreenSharing] = useState(false);
-  const [screenTrack,setScreenTrack] = useState(null)
+  const [screenTrack, setScreenTrack] = useState(null);
 
   const startScreenShare = async () => {
     try {
@@ -223,95 +225,101 @@ const Page = () => {
         audio: true,
       });
       const track = await screenStream.getVideoTracks()[0];
-      setScreenTrack(track)
+      setScreenTrack(track);
 
       // Replace current video track with the screen track
       if (peearConnectionRef.current) {
-        const sender =await peearConnectionRef.current?.getSenders()
-        sender[1].replaceTrack(track)
+        const sender = await peearConnectionRef.current?.getSenders();
+        sender[1].replaceTrack(track);
       }
 
       // sender.replaceTrack(screenTrack);
-       
+
       // Set state to indicate screen sharing is active
       setIsScreenSharing(true);
-      socket && socket.emit('screen-sharing',{friend:fdId,isSharing:true})
+      socket &&
+        socket.emit("screen-sharing", { friend: fdId, isSharing: true });
       // Listen for when screen sharing stops directly (e.g., from the browser prompt)
-      track.onended =async () =>await stopScreenShare();
+      track.onended = async () => await stopScreenShare();
     } catch (error) {
       console.error("Error sharing screen:", error);
     }
   };
   //////////////////////////////////////////////////////////////
-  const stopScreenShare =async () => {
+  const stopScreenShare = async () => {
     if (screenTrack) {
       // Stop the screen track and replace it with the camera track
-     await screenTrack.stop();
-    //  setScreenTrack(null)
-      const sender =await peearConnectionRef.current
-        ?.getSenders()
+      await screenTrack.stop();
+      //  setScreenTrack(null)
+      const sender = await peearConnectionRef.current?.getSenders();
       sender[1].replaceTrack(myStream.current.getVideoTracks()[0]);
       setIsScreenSharing(false);
     }
-    socket && socket.emit('screen-sharing',{friend:fdId,isSharing:false})
+    socket && socket.emit("screen-sharing", { friend: fdId, isSharing: false });
   };
   //////////////////////////////////////Reomte screen sharing statue check by socket signalig//////////////////////////////////////////
   useEffect(() => {
-    socket && socket.on('screen-sharing',res=>{
-      setIsRemoteScreenSharing(res);
-    })
+    socket &&
+      socket.on("screen-sharing", (res) => {
+        setIsRemoteScreenSharing(res);
+      });
     return () => {
-       socket && socket.off('screen-sharing')
+      socket && socket.off("screen-sharing");
     };
   }, [socket]);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////Here is the logic for toggling between forth and back camera///////////////////////////////
- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- const [toggleCam,setToggleCam] = useState(false)
-const  [isBackcameraExist,setIsBackcameraExist] = useState(null)
-const backVideStream = async () =>{
-  const stm = await navigator.mediaDevices.getUserMedia({
-    audio:true,
-    video: {
-      width: {
-        ideal: 380,
-        min: 380,
-        max: 1920,
+  //////////////////////////////////////////Here is the logic for toggling between forth and back camera///////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [toggleCam, setToggleCam] = useState(false);
+  const [isBackcameraExist, setIsBackcameraExist] = useState(null);
+  const backVideStream = async () => {
+    const stm = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: {
+        width: {
+          ideal: 380,
+          min: 380,
+          max: 1920,
+        },
+        height: {
+          ideal: 200,
+          min: 200,
+          max: 1280,
+        },
+        frameRate: { ideal: 10 },
+        facingMode: { exact: "environment" },
       },
-      height: {
-        ideal: 200,
-        min: 200,
-        max: 1280,
-      },
-      frameRate: { ideal: 10 },
-      facingMode: { exact: "environment" },
-    },
-  })
+    });
 
-  return stm
-}
+    return stm;
+  };
   async function checkBackCamera() {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  return devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
-}
-useEffect(() => {
-  async function backCm() {
-    const backYes = await checkBackCamera()
-    setIsBackcameraExist(backYes)
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.some(
+      (device) =>
+        device.kind === "videoinput" &&
+        device.label.toLowerCase().includes("back")
+    );
   }
-  backCm()})
+  useEffect(() => {
+    async function backCm() {
+      const backYes = await checkBackCamera();
+      setIsBackcameraExist(backYes);
+    }
+    backCm();
+  });
   async function setBackCameraStream() {
-      const stm = await backVideStream()
-      const audiotrack = await stm.getAudioTracks()[0];
-      const videotrack = await stm.getVideoTracks()[0];
-      if (peearConnectionRef.current) {
-        const sender =await peearConnectionRef.current?.getSenders();
-        sender[0].replaceTrack(audiotrack)
-        sender[1].replaceTrack(videotrack)
-      }
+    const stm = await backVideStream();
+    const audiotrack = await stm.getAudioTracks()[0];
+    const videotrack = await stm.getVideoTracks()[0];
+    if (peearConnectionRef.current) {
+      const sender = await peearConnectionRef.current?.getSenders();
+      sender[0].replaceTrack(audiotrack);
+      sender[1].replaceTrack(videotrack);
+    }
 
-      myStream.current = stm;
-      setToggleCam(true)
+    myStream.current = stm;
+    setToggleCam(true);
   }
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
@@ -557,10 +565,6 @@ useEffect(() => {
         callInv === "call-start" ? "bg-black duration-1000" : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
-
-      {
-        isBackcameraExist ? <h2 onClick={setBackCameraStream} className="bg-amber-500">Yes</h2> : <h2 className="bg-amber-500">No</h2>
-      }
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
       )}
@@ -674,19 +678,13 @@ useEffect(() => {
             >
               <MdCallEnd size={30} />
             </h4>
-            <h2
-              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-            >
+            <h2 className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed">
               <LuScreenShareOff size={30} />
             </h2>
-            <h2
-              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-            >
+            <h2 className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed">
               <IoVideocamOffOutline size={30} />
             </h2>
-            <button
-              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
-            >
+            <button className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed">
               <CiMicrophoneOff size={30} />
             </button>
           </div>
@@ -728,7 +726,9 @@ useEffect(() => {
                   setFaceVideoMove(false);
                 }, 10000);
               }}
-              className={`${isRemoteScreenSharing ? 'rotate-0' : 'scale-x-[-1]'} rounded-lg h-screen w-auto ${
+              className={`${
+                isRemoteScreenSharing ? "rotate-0" : "scale-x-[-1]"
+              } rounded-lg h-screen w-auto ${
                 toggleStream ? "hidden" : "block"
               }`}
               autoPlay
@@ -756,25 +756,39 @@ useEffect(() => {
                 <MdCallEnd size={30} />
               </h4>
               <button
-                  onClick={isScreenSharing? stopScreenShare : startScreenShare}
-                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                >
-                  {isScreenSharing ? (
-                    <LuScreenShareOff size={30} />
-                  ) : (
-                    <LuScreenShare size={30} />
-                  )}
-                </button>
+                onClick={isScreenSharing ? stopScreenShare : startScreenShare}
+                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+              >
+                {isScreenSharing ? (
+                  <LuScreenShareOff size={30} />
+                ) : (
+                  <LuScreenShare size={30} />
+                )}
+              </button>
               <button
-                  onClick={toggleVideo}
-                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                >
-                  {toggleVid ? (
-                    <IoVideocamOffOutline size={30} />
-                  ) : (
-                    <GoDeviceCameraVideo size={30} />
+                onClick={toggleVideo}
+                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+              >
+                {toggleVid ? (
+                  <IoVideocamOffOutline size={30} />
+                ) : (
+                  <GoDeviceCameraVideo size={30} />
+                )}
+              </button>
+              {isBackcameraExist && (
+                <div>
+                  {toggleCam && (
+                    <button
+                      className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                    >back</button>
                   )}
-                </button>
+                  {!toggleCam && (
+                    <button
+                      className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                    >front</button>
+                  )}
+                </div>
+              )}
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
