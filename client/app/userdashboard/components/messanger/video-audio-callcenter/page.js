@@ -264,9 +264,31 @@ const Page = () => {
        socket && socket.off('screen-sharing')
     };
   }, [socket]);
-////////////////////////////////////////////Here is the logic for toggling between forth and back camera////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////Here is the logic for toggling between forth and back camera///////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ const [toggleCam,setToggleCam] = useState(false)
 const  [isBackcameraExist,setIsBackcameraExist] = useState(null)
+const backVideStream = async () =>{
+  const stm = await navigator.mediaDevices.getUserMedia({
+    video: {
+      width: {
+        ideal: 380,
+        min: 380,
+        max: 1920,
+      },
+      height: {
+        ideal: 200,
+        min: 200,
+        max: 1280,
+      },
+      frameRate: { ideal: 10 },
+      facingMode: { exact: "environment" },
+    },
+  })
 
+  return stm
+}
   async function checkBackCamera() {
   const devices = await navigator.mediaDevices.enumerateDevices();
   return devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
@@ -276,9 +298,18 @@ useEffect(() => {
     const backYes = await checkBackCamera()
     setIsBackcameraExist(backYes)
   }
-  backCm()
-}, [callInv]);
-console.log(isBackcameraExist)
+  backCm()})
+  async function setBackCameraStream() {
+      const stm = await backVideStream()
+      const track = await stm.getVideoTracks()[0];
+      if (peearConnectionRef.current) {
+        const sender =await peearConnectionRef.current?.getSenders();
+        sender[1].replaceTrack(track)
+      }
+
+      myStream.current = stm;
+      setToggleCam(true)
+  }
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -525,7 +556,7 @@ console.log(isBackcameraExist)
     >
 
       {
-        isBackcameraExist ? <h2 className="bg-amber-500">Yes</h2> : <h2 className="bg-amber-500">No</h2>
+        isBackcameraExist ? <h2 onClick={setBackCameraStream} className="bg-amber-500">Yes</h2> : <h2 className="bg-amber-500">No</h2>
       }
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
