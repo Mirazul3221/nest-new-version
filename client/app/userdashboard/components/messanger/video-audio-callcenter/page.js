@@ -13,6 +13,8 @@ import { useSocket } from "@/app/userdashboard/global/SocketProvider";
 import MyVideoStream from "./MyVideoStream";
 import { PeerConnection } from "./webRTC";
 import { HiOutlinePhoneMissedCall } from "react-icons/hi";
+import { LuScreenShare } from "react-icons/lu";
+import { LuScreenShareOff } from "react-icons/lu";
 import { IoVideocamOffOutline } from "react-icons/io5";
 import { GoDeviceCameraVideo } from "react-icons/go";
 import { LuPhoneCall } from "react-icons/lu";
@@ -212,7 +214,7 @@ const Page = () => {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isRemoteScreenSharing, setIsRemoteScreenSharing] = useState(false);
-  let screenTrack; // Keep track of the screen track
+  const [screenTrack,setScreenTrack] = useState(null)
 
   const startScreenShare = async () => {
     try {
@@ -220,12 +222,13 @@ const Page = () => {
         video: true,
         audio: true,
       });
-      screenTrack =await screenStream.getVideoTracks()[0];
+      const track = await screenStream.getVideoTracks()[0];
+      setScreenTrack(track)
 
       // Replace current video track with the screen track
       if (peearConnectionRef.current) {
         const sender =await peearConnectionRef.current?.getSenders()
-        sender[1].replaceTrack(screenTrack)
+        sender[1].replaceTrack(track)
       }
 
       // sender.replaceTrack(screenTrack);
@@ -234,7 +237,7 @@ const Page = () => {
       setIsScreenSharing(true);
       socket && socket.emit('screen-sharing',{friend:fdId,isSharing:true})
       // Listen for when screen sharing stops directly (e.g., from the browser prompt)
-      screenTrack.onended = () => stopScreenShare();
+      track.onended =async () =>await stopScreenShare();
     } catch (error) {
       console.error("Error sharing screen:", error);
     }
@@ -244,6 +247,7 @@ const Page = () => {
     if (screenTrack) {
       // Stop the screen track and replace it with the camera track
      await screenTrack.stop();
+    //  setScreenTrack(null)
       const sender =await peearConnectionRef.current
         ?.getSenders()
       sender[1].replaceTrack(myStream.current.getVideoTracks()[0]);
@@ -637,13 +641,16 @@ console.log(isBackcameraExist)
               <MdCallEnd size={30} />
             </h4>
             <h2
-              onClick={toggleVideo}
+              className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
+            >
+              <LuScreenShareOff size={30} />
+            </h2>
+            <h2
               className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
             >
               <IoVideocamOffOutline size={30} />
             </h2>
             <button
-              onClick={toggleMike}
               className="text-white w-fit bg-gray-500/10 p-2 rounded-full cursor-not-allowed"
             >
               <CiMicrophoneOff size={30} />
@@ -714,8 +721,17 @@ console.log(isBackcameraExist)
               >
                 <MdCallEnd size={30} />
               </h4>
-              {type === "Video" ? (
-                <button
+              <button
+                  onClick={isScreenSharing? stopScreenShare : startScreenShare}
+                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                >
+                  {isScreenSharing ? (
+                    <LuScreenShareOff size={30} />
+                  ) : (
+                    <LuScreenShare size={30} />
+                  )}
+                </button>
+              <button
                   onClick={toggleVideo}
                   className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
                 >
@@ -725,9 +741,6 @@ console.log(isBackcameraExist)
                     <GoDeviceCameraVideo size={30} />
                   )}
                 </button>
-              ) : (
-                <IoVideocamOffOutline size={30} />
-              )}
               <button
                 onClick={toggleMike}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
@@ -737,12 +750,6 @@ console.log(isBackcameraExist)
                 ) : (
                   <CiMicrophoneOn size={30} />
                 )}
-              </button>
-              <button
-                onClick={startScreenShare}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-              >
-                Share a screen
               </button>
             </div>
           </div>
