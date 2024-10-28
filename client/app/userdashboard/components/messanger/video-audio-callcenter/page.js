@@ -220,11 +220,11 @@ const Page = () => {
         video: true,
         audio: true,
       });
-      screenTrack = screenStream.getVideoTracks()[0];
+      screenTrack =await screenStream.getVideoTracks()[0];
 
       // Replace current video track with the screen track
       if (peearConnectionRef.current) {
-        const sender = peearConnectionRef.current?.getSenders()
+        const sender =await peearConnectionRef.current?.getSenders()
         sender[1].replaceTrack(screenTrack)
       }
 
@@ -239,12 +239,12 @@ const Page = () => {
       console.error("Error sharing screen:", error);
     }
   };
-  //////////////////////////////////////////////////////////
-  const stopScreenShare = () => {
+  //////////////////////////////////////////////////////////////
+  const stopScreenShare =async () => {
     if (screenTrack) {
       // Stop the screen track and replace it with the camera track
-      screenTrack.stop();
-      const sender = peearConnectionRef.current
+     await screenTrack.stop();
+      const sender =await peearConnectionRef.current
         ?.getSenders()
       sender[1].replaceTrack(myStream.current.getVideoTracks()[0]);
       setIsScreenSharing(false);
@@ -255,16 +255,18 @@ const Page = () => {
   useEffect(() => {
     socket && socket.on('screen-sharing',res=>{
       setIsRemoteScreenSharing(res);
-      console.log('rrrrrrrrrrrrrrr eeeeeeeeeeeeeeee sssssssssssssss')
-      console.log(res)
     })
     return () => {
        socket && socket.off('screen-sharing')
     };
   }, [socket]);
-
-  console.log('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn gggggggggggggggggggggg 0000000000000000000000000000')
-  console.log(isRemoteScreenSharing)
+////////////////////////////////////////////Here is the logic for toggling between forth and back camera////////////////////////////////////////////////
+let hasBackCamera;
+async function checkBackCamera() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  hasBackCamera = devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+}
+checkBackCamera()
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -509,6 +511,9 @@ const Page = () => {
         callInv === "call-start" ? "bg-black duration-1000" : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
+     {
+      hasBackCamera && <h2 className="text-amber-500">{hasBackCamera?.label}</h2>
+     } 
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
       )}

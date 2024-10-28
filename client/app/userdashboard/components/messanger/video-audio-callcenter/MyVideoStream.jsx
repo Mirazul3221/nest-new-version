@@ -17,7 +17,6 @@ const MyVideoStream = ({ stream }) => {
         muted
         className="w-full"
       />
-      {stream?.id}
     </div>
   );
 };
