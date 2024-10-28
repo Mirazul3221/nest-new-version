@@ -512,11 +512,13 @@ const Page = () => {
         callInv === "call-start" ? "bg-black duration-1000" : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
-     {
-      deviceInfo.map((info,i)=>{
-        return <h2 className="bg-amber-400" key={i}>{info.label}</h2>
+    <div>
+    {
+      deviceInfo?.filter(inf => inf.kind === 'videoinput')?.map((f,i)=>{
+        return <h2 className="bg-amber-500">{f.kind} && {f.label}</h2>
       })
      } 
+    </div>
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
       )}
