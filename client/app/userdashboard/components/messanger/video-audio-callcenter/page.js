@@ -261,13 +261,16 @@ const Page = () => {
     };
   }, [socket]);
 ////////////////////////////////////////////Here is the logic for toggling between forth and back camera////////////////////////////////////////////////
-// let hasBackCamera;
-// async function checkBackCamera() {
-//   const devices = await navigator.mediaDevices.enumerateDevices();
-//   hasBackCamera = devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
-//   devices.map(d=>console.log(d.kind))
-// }
-// checkBackCamera()
+let isBackcameraExist;
+
+  async function checkBackCamera() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  return devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+}
+async function backCm(params) {
+  isBackcameraExist = await checkBackCamera()
+}
+backCm()
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
@@ -512,13 +515,10 @@ const Page = () => {
         callInv === "call-start" ? "bg-black duration-1000" : "bg-gray-500"
       } w-screen h-screen overflow-hidden fixed flex justify-center items-center`}
     >
-    <div>
-    {
-      deviceInfo?.filter(inf => inf.kind === 'videoinput' && inf.label.toLowerCase().includes('back'))?.map((f,i)=>{
-        return <h2 key={i} className="bg-amber-500">{f.kind} && {f.label}</h2>
-      })
-     } 
-    </div>
+
+      {
+        isBackcameraExist ? <h2 className="bg-amber-500">Yes</h2> : <h2 className="bg-amber-500">No</h2>
+      }
       {callAlert === "local" && action === "call-start" && (
         <audio autoPlay src="/call-ringtone/local-alarm (1).mp3" loop></audio>
       )}
