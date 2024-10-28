@@ -261,16 +261,20 @@ const Page = () => {
     };
   }, [socket]);
 ////////////////////////////////////////////Here is the logic for toggling between forth and back camera////////////////////////////////////////////////
-let isBackcameraExist;
+const  [isBackcameraExist,setIsBackcameraExist] = useState(null)
 
   async function checkBackCamera() {
   const devices = await navigator.mediaDevices.enumerateDevices();
   return devices.some((device) => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
 }
-async function backCm(params) {
-  isBackcameraExist = await checkBackCamera()
-}
-backCm()
+useEffect(() => {
+  async function backCm() {
+    const backYes = await checkBackCamera()
+    setIsBackcameraExist(backYes)
+  }
+  backCm()
+}, [callInv]);
+console.log(isBackcameraExist)
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
