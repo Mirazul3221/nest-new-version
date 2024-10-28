@@ -514,7 +514,7 @@ const Page = () => {
     >
     <div>
     {
-      deviceInfo?.filter(inf => inf.kind === 'videoinput' && inf.label==='back')?.map((f,i)=>{
+      deviceInfo?.filter(inf => inf.kind === 'videoinput' && inf.label.toLowerCase().includes('back'))?.map((f,i)=>{
         return <h2 key={i} className="bg-amber-500">{f.kind} && {f.label}</h2>
       })
      } 
