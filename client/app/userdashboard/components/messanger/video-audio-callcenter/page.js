@@ -312,9 +312,8 @@ const Page = () => {
   });
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   async function setFrontCameraStream() {
-    if (myStream.current) {
-      myStream.current.getTracks().forEach(track => track.stop());
-    }
+    const perviousAudioTracks = myStream.current.getAudioTracks()[0];
+    const perviousVideoTracks = myStream.current.getVideoTracks()[0];
     const stm = await frontVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
     const videotrack = await stm.getVideoTracks()[0];
@@ -323,10 +322,10 @@ const Page = () => {
       sender[0].replaceTrack(audiotrack);
       sender[1].replaceTrack(videotrack);
     }
-    if (!toggleMick) {
+    if (perviousAudioTracks.enabled === false) {
       audiotrack.enabled = false
     }
-    if (!toggleVid) {
+    if (perviousVideoTracks.enabled === false) {
       videotrack.enabled = false
     }
     myStream.current = stm;
@@ -335,9 +334,9 @@ const Page = () => {
 
   ////////////////////////////////////////////////////////
   async function setBackCameraStream() {
-    if (myStream.current) {
-      myStream.current.getTracks().forEach(track => track.stop());
-    }
+    const perviousAudioTracks = myStream.current.getAudioTracks()[0];
+    const perviousVideoTracks = myStream.current.getVideoTracks()[0];
+    /////////////////////////////////////
     const stm = await backVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
     const videotrack = await stm.getVideoTracks()[0];
@@ -347,10 +346,10 @@ const Page = () => {
       sender[1].replaceTrack(videotrack);
     }
 
-    if (!toggleMick) {
+    if (perviousAudioTracks.enabled === false) {
       audiotrack.enabled = false
     }
-    if (!toggleVid) {
+    if (perviousVideoTracks.enabled === false) {
       videotrack.enabled = false
     }
     myStream.current = stm;
