@@ -342,6 +342,9 @@ const Page = () => {
    if (toggleMick) {
     setToggleMick(false)
    }
+   if (toggleVid) {
+    setToggleVid(false)
+   }
     myStream.current = stm;
     setToggleCam(false);
   }
@@ -360,6 +363,9 @@ const Page = () => {
     myStream.current = stm;
     if (toggleMick) {
       setToggleMick(false)
+     }
+     if (toggleVid) {
+      setToggleVid(false)
      }
     setToggleCam(true);
   }
