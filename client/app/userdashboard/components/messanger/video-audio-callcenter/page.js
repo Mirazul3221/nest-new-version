@@ -71,25 +71,6 @@ const Page = () => {
       height: { ideal: 360 },
       frameRate: { ideal: 15 },
     };
-    // const stream = await navigator.mediaDevices.getUserMedia({
-    //   audio: true,
-    //   video: {
-    //     width: {
-    //       ideal: 380,
-    //       min: 380,
-    //       max: 1920,
-    //     },
-    //     height: {
-    //       ideal: 200,
-    //       min: 200,
-    //       max: 1280,
-    //     },
-    //     frameRate: { ideal: 10 },
-    //     // facingMode: { exact: "user" },
-    //   },
-    // });
-
-    ////////////////////////////////////////////////////////////////////////////////
 
     const videoTrack = {
       audio: true,
@@ -339,17 +320,17 @@ const Page = () => {
       sender[0].replaceTrack(audiotrack);
       sender[1].replaceTrack(videotrack);
     }
-   if (toggleMick) {
-    setToggleMick(false)
-   }
-   if (toggleVid) {
-    setToggleVid(false)
-   }
+    if (toggleMick) {
+      setToggleMick(false);
+    }
+    if (toggleVid) {
+      setToggleVid(false);
+    }
     myStream.current = stm;
     setToggleCam(false);
   }
 
-////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
   async function setBackCameraStream() {
     const stm = await backVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
@@ -362,11 +343,11 @@ const Page = () => {
 
     myStream.current = stm;
     if (toggleMick) {
-      setToggleMick(false)
-     }
-     if (toggleVid) {
-      setToggleVid(false)
-     }
+      setToggleMick(false);
+    }
+    if (toggleVid) {
+      setToggleVid(false);
+    }
     setToggleCam(true);
   }
 
@@ -608,6 +589,13 @@ const Page = () => {
       }, 10000);
     }
   }, [callInv]);
+
+  //////////////////////////////Check My browser support screen sharing option///////////////////////////////
+  function isDisplayMediaSupported() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
+  }
+
+  ////////////////////////////////////////////
   return (
     <div
       className={`${
@@ -804,16 +792,18 @@ const Page = () => {
               >
                 <MdCallEnd size={30} />
               </h4>
-              <button
-                onClick={isScreenSharing ? stopScreenShare : startScreenShare}
-                className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-              >
-                {isScreenSharing ? (
-                  <LuScreenShareOff size={30} />
-                ) : (
-                  <LuScreenShare size={30} />
-                )}
-              </button>
+              {isDisplayMediaSupported() && (
+                <button
+                  onClick={isScreenSharing ? stopScreenShare : startScreenShare}
+                  className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
+                >
+                  {isScreenSharing ? (
+                    <LuScreenShareOff size={30} />
+                  ) : (
+                    <LuScreenShare size={30} />
+                  )}
+                </button>
+              )}
               <button
                 onClick={toggleVideo}
                 className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
@@ -827,14 +817,21 @@ const Page = () => {
               {isBackcameraExist && (
                 <div>
                   {toggleCam && (
-                    <button onClick={setFrontCameraStream}
+                    <button
+                      onClick={setFrontCameraStream}
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                    > <IoCameraReverseOutline  size={30} /></button>
+                    >
+                      {" "}
+                      <IoCameraReverseOutline size={30} />
+                    </button>
                   )}
                   {!toggleCam && (
-                    <button onClick={setBackCameraStream}
+                    <button
+                      onClick={setBackCameraStream}
                       className="text-white w-fit bg-gray-500/10 p-2 rounded-full"
-                    ><IoCameraOutline  size={30} /></button>
+                    >
+                      <IoCameraOutline size={30} />
+                    </button>
                   )}
                 </div>
               )}
