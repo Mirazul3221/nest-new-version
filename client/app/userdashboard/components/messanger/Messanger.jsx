@@ -16,6 +16,7 @@ import messageader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f
 import Image from "next/image";
 import { useSocket } from "../../global/SocketProvider";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
+import moment from "moment";
 const Messanger = ({
   id,
   name,
@@ -218,6 +219,22 @@ const Messanger = ({
       }
     }
   }, [switcher]);
+
+  //////////////////////////////////////////////////////////////////Logic for dispay time//////////////////////////////////////////////////////////
+  const formatetime = (timeStamp) => {
+     const today = moment().startOf('day');
+     const messageData = moment(timeStamp);
+     const weekAgo = moment().subtract(1,'weeks').startOf('day');
+     if (messageData.isSame(today,'day')) {
+      return `Today at ${messageData.format('h:mm A')}`;
+     }else if (messageData.isSame(today.subtract(1,'days'),'day')) {
+       return `Yesterday at ${messageData.format('h:mm A')}`;
+     }else if (messageData.isAfter(weekAgo)) {
+      return `${messageData.format('dddd')} at ${messageData.format('h:mm A')}`;
+     }else {
+      return `${messageData.format('MMMD')} at ${messageData.format('h:mm A')}`
+     }
+  }
   return (
     <div>
       {!switcher && (
@@ -297,7 +314,8 @@ const Messanger = ({
                 {myAndFriendMessage.map((m, i) => {
                   return m.senderId === store.userInfo.id ? (
                     <div key={i} className="my-message py-2 flex justify-end">
-                      <div
+                     <div className="w-full flex flex-col items-end">
+                     <div
                         style={{ borderRadius: "20px 20px 0px 20px" }}
                         className="max-w-[80%] w-fit bg-slate-100"
                       >
@@ -308,6 +326,10 @@ const Messanger = ({
                           {HTMLReactParser(m.message)}
                         </p>
                       </div>
+                      <p className="text-[9px]">
+                         {formatetime(m?.createdAt)}
+                         </p>
+                     </div>
                     </div>
                   ) : (
                     <div key={i}>
@@ -330,6 +352,9 @@ const Messanger = ({
                             {HTMLReactParser(m.message)}
                           </p>
                         </div>
+                        <p className="text-[9px] ml-6">
+                         {formatetime(m?.createdAt)}
+                         </p>
                       </div>
                     </div>
                   );
@@ -382,7 +407,7 @@ const Messanger = ({
                     style={{ borderRadius: "20px 20px 20px 0px" }}
                     className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
                   >
-                    <p ref={bottomRef} className="px-4 py-1 blur-[1px]">
+                    <p ref={bottomRef} className="px-4 py-1 blur-[2px]">
                       {typingMsg.message}
                     </p>
                   </div>
