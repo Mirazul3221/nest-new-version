@@ -323,12 +323,12 @@ const Page = () => {
       sender[0].replaceTrack(audiotrack);
       sender[1].replaceTrack(videotrack);
     }
-    // if (toggleMick) {
-    //   setToggleMick(false);
-    // }
-    // if (toggleVid) {
-    //   setToggleVid(false);
-    // }
+    if (!toggleMick) {
+      audiotrack.enabled = false
+    }
+    if (!toggleVid) {
+      videotrack.enabled = false
+    }
     myStream.current = stm;
     setToggleCam(false);
   }
@@ -348,12 +348,12 @@ const Page = () => {
     }
 
     myStream.current = stm;
-    // if (toggleMick) {
-    //   setToggleMick(false);
-    // }
-    // if (toggleVid) {
-    //   setToggleVid(false);
-    // }
+    if (!toggleMick) {
+      audiotrack.enabled = false
+    }
+    if (!toggleVid) {
+      videotrack.enabled = false
+    }
     setToggleCam(true);
   }
 
