@@ -232,7 +232,7 @@ const Messanger = ({
      }else if (messageData.isAfter(weekAgo)) {
       return `${messageData.format('dddd')} at ${messageData.format('h:mm A')}`;
      }else {
-      return `${messageData.format('MMMD')} at ${messageData.format('h:mm A')}`
+      return `${messageData.format('MMM D')} at ${messageData.format('h:mm A')}`
      }
   }
   return (
