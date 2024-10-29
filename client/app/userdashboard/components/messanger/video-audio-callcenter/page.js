@@ -347,13 +347,13 @@ const Page = () => {
       sender[1].replaceTrack(videotrack);
     }
 
-    myStream.current = stm;
     if (!toggleMick) {
       audiotrack.enabled = false
     }
     if (!toggleVid) {
       videotrack.enabled = false
     }
+    myStream.current = stm;
     setToggleCam(true);
   }
 
@@ -602,6 +602,7 @@ const Page = () => {
   }
 
   ////////////////////////////////////////////
+  console.log(myStream.current)
   return (
     <div
       className={`${
