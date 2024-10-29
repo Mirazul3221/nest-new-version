@@ -312,6 +312,9 @@ const Page = () => {
   });
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   async function setFrontCameraStream() {
+    if (myStream.current) {
+      myStream.current.getTracks().forEach(track => track.stop());
+    }
     const stm = await frontVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
     const videotrack = await stm.getVideoTracks()[0];
@@ -320,18 +323,21 @@ const Page = () => {
       sender[0].replaceTrack(audiotrack);
       sender[1].replaceTrack(videotrack);
     }
-    if (toggleMick) {
-      setToggleMick(false);
-    }
-    if (toggleVid) {
-      setToggleVid(false);
-    }
+    // if (toggleMick) {
+    //   setToggleMick(false);
+    // }
+    // if (toggleVid) {
+    //   setToggleVid(false);
+    // }
     myStream.current = stm;
     setToggleCam(false);
   }
 
   ////////////////////////////////////////////////////////
   async function setBackCameraStream() {
+    if (myStream.current) {
+      myStream.current.getTracks().forEach(track => track.stop());
+    }
     const stm = await backVideStream();
     const audiotrack = await stm.getAudioTracks()[0];
     const videotrack = await stm.getVideoTracks()[0];
@@ -342,12 +348,12 @@ const Page = () => {
     }
 
     myStream.current = stm;
-    if (toggleMick) {
-      setToggleMick(false);
-    }
-    if (toggleVid) {
-      setToggleVid(false);
-    }
+    // if (toggleMick) {
+    //   setToggleMick(false);
+    // }
+    // if (toggleVid) {
+    //   setToggleVid(false);
+    // }
     setToggleCam(true);
   }
 
