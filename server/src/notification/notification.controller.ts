@@ -24,7 +24,7 @@ export class NotificationController {
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.notificationService.findOne(+id);
-  // }
+  // }//
 
   @Get('seen-and-delete')
   @UseGuards(AuthGuard())
@@ -36,6 +36,7 @@ export class NotificationController {
   @UseGuards(AuthGuard())
   deleteOne(@Param('requesterName') requesterName:string, @Req() req:any) {
     const id = req.user._id
+    console.log(id,requesterName)//
     return this.notificationService.deleteOne(id,requesterName);
   }
 

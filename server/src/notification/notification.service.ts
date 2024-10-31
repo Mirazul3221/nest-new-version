@@ -22,6 +22,7 @@ export class NotificationService {
         readerId:body.readerId,
         type:body.type,
         message:{
+          requesterId:allUserDetails[0]._id,
           requesterName:allUserDetails[0].name,
           requesterProfie:allUserDetails[0].profile,
           requesterStatus:allUserDetails[0].status,

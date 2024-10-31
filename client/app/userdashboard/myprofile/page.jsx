@@ -39,7 +39,7 @@ const Page = () => {
   const [openMOdel, setOpenModel] = useState(false);
   // const isBrowser = typeof window !== undefined;
   const [percentage, setPercentage] = useState(0);
-  const { store , socketConnection } = useContext(storeContext);
+  const { store  } = useContext(storeContext);
   useEffect(() => {
     async function fetchData() {
       try {

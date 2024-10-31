@@ -3,6 +3,7 @@ import React from 'react'
 import { IoNotificationsOffOutline } from "react-icons/io5";
 import InvitationCard from './InvitationCard';
 import Link from 'next/link';
+import FriendRequest from './FriendRequest';
 const NotificationContainer = ({notificationList,sayThanks}) => {
   return (
     <div className="bg-gray-50 shadow-md absolute z-50 top-[70px] md:top-[90px] w-full md:w-4/12 overflow-hidden right-0 md:right-12">
@@ -21,26 +22,7 @@ const NotificationContainer = ({notificationList,sayThanks}) => {
             if (item.type === "friend-request") {
               return (
                 <div key={i} className="mb-4 border-b py-2">
-                  <p>{moment(item.createdAt).fromNow()}</p>
-                  <div className="flex gap-4 items-center">
-                    <img
-                      className="w-20 h-20 rounded-full border-2 border-gray-500"
-                      src={item.message[0].requesterProfie}
-                      alt={item.message[0].requesterName}
-                    />
-                    <div className="">
-                      <p>
-                         A new friend request from{" "}
-                        <span className="text-violet-700">
-                          {item.message[0].requesterName}
-                        </span>{" "}
-                      </p>
-                      <div className="flex gap-4 mt-2">
-                        <div className="px-6 py-[5px] bg-gray-200 text-gray-700 w-fit rounded-md"><h2>Remove</h2></div>
-                        <div className="px-6 py-[5px] bg-violet-700 text-white w-fit rounded-md"><h2>Accept</h2></div>
-                    </div>
-                    </div>
-                  </div>
+                  <FriendRequest item={item}/>
                 </div>
               );
             }
