@@ -32,7 +32,7 @@ const Page = () => {
   const devidedQuestionsW = devider(wrongQuestions, 120);
   return (
     <div className="min-h-screen py-4 px-2">
-      <h2 className="text-fuchsia-500 font-bold text-2xl mb-2">History</h2>
+      <h2 className="text-violet-700 font-bold text-2xl mb-2">History</h2>
       <div className="flex gap-3 mb-3">
         <h2
           onClick={() => {
@@ -40,7 +40,7 @@ const Page = () => {
             level === "R" ? null : setSwitcher(false)
           }}
           className={`px-6 py-2 w-1/2 ${
-            level == "R" ? "bg-fuchsia-500 duration-300 text-white" : ""
+            level == "R" ? "bg-violet-700 duration-300 text-white" : ""
           } text-center rounded-md  cursor-pointer`}
         >
           Right Ans
@@ -51,7 +51,7 @@ const Page = () => {
             level === "W" ? null : setSwitcher(false)
           }}
           className={`px-6 py-2 w-1/2 ${
-            level == "W" ? "bg-fuchsia-500 duration-300 text-white" : ""
+            level == "W" ? "bg-violet-700 duration-300 text-white" : ""
           } text-center rounded-md cursor-pointer`}
         >
           Wrong Ans
@@ -70,7 +70,7 @@ const Page = () => {
                         setCount(i);
                         setSwitcher(true);
                       }}
-                      className="cursor-pointer flex justify-between items-center bg-fuchsia-500 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
+                      className="cursor-pointer flex justify-between items-center bg-violet-700 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
                     >
                       {item} <MdOutlineDoubleArrow />
                     </h2>
@@ -101,7 +101,7 @@ const Page = () => {
                         setCount(i);
                         setSwitcher(true);
                       }}
-                      className="cursor-pointer flex justify-between items-center bg-fuchsia-500 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
+                      className="cursor-pointer flex justify-between items-center bg-violet-700 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
                     >
                       {item} <MdOutlineDoubleArrow />
                     </h2>
@@ -132,7 +132,7 @@ const Page = () => {
         <div className="fixed bottom-0 md:hidden left-0 w-full px-10 py-4 bg-white rounded-t-md">
           <div className="mobile flex w-full justify-between">
             <div className="">
-              <div className="text-fuchsia-500 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full">
+              <div className="text-violet-700 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full">
                 <Link href={"/"}>
                   <IoHomeOutline size={30} />
                 </Link>

@@ -88,7 +88,7 @@ const Page = () => {
                             setSubSwitcher(true);
                             setCount(i);
                           }}
-                          className="cursor-pointer flex justify-between items-center bg-fuchsia-500 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
+                          className="cursor-pointer flex justify-between items-center bg-violet-700 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
                         >
                           {item}  <MdOutlineDoubleArrow />
                         </h2>
@@ -134,7 +134,7 @@ const Page = () => {
             }`}
           >
             <div className="w-full">
-              <h2 className="py-2 bg-fuchsia-500 px-6 text-2xl md:text-3xl text-white">
+              <h2 className="py-2 bg-violet-700 px-6 text-2xl md:text-3xl text-white">
                 বিষয় ভিত্তিক
               </h2>
               <div className="gap-[5px]">

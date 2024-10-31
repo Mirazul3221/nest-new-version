@@ -29,6 +29,7 @@ const Page = () => {
   const [openMessangerBox, setOpenMessangerBox] = useState(true);
   const [openMessangerBox1, setOpenMessangerBox1] = useState(false);
   const { store } = useContext(storeContext);
+  const {socket, myActiveFriends } = useSocket();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -142,7 +143,6 @@ const Page = () => {
       setLoaderReq(false);
       handleNotification(recipient);
       // setAllQuestions(totalReadQuestions),
-      console.log(data);
       //   setLoader(false);
     } catch (error) {
       //   setLoader(false);
@@ -171,6 +171,7 @@ const Page = () => {
           },
         }
       );
+      socket && (await socket.emit("new-notification", recipient));
     } catch (error) {}
   };
   //==================================================================
@@ -197,8 +198,6 @@ const Page = () => {
   //    );
   //    setSomeFriendProfileAndId(data)
   //   }
-  console.log(acceptedFriendsId);
-  const { myActiveFriends } = useSocket();
   return (
     <ProtectRoute>
       {/* <div onClick={someFriendProfileAndIdd}>jsgdkgjsdkjgjkzdjis</div> */}
@@ -222,7 +221,7 @@ const Page = () => {
                   {userDetails?.name ? (
                     <div className="absolute bottom-0 translate-y-[50%]">
                       <div className="relative">
-                        <h4 className="absolute bottom-[40%] md:bottom-[50%] right-0 translate-x-[50%] p-2 bg-fuchsia-300 w-12 h-12 rounded-full flex justify-center items-center border-r-2 border-t-2 border-white text-center text-[10px] md:translate-y-[50%] text-white translate-y-[20%]">
+                        <h4 className="absolute bottom-[40%] md:bottom-[50%] right-0 translate-x-[50%] p-2 bg-violet-500 w-12 h-12 rounded-full flex justify-center items-center border-r-2 border-t-2 border-white text-center text-[10px] md:translate-y-[50%] text-white translate-y-[20%]">
                           {userDetails.status}
                         </h4>
                         <img
@@ -315,7 +314,7 @@ const Page = () => {
                                     onClick={() => {
                                       friendRequestApi(userDetails?._id);
                                     }}
-                                    className="bg-fuchsia-500 cursor-pointer text-white rounded-md w-fit px-2 mt-1 flex gap-[3px] items-center"
+                                    className="bg-violet-700 cursor-pointer text-white rounded-md w-fit px-2 mt-1 flex gap-[3px] items-center"
                                   >
                                     <IoPersonAdd size={16} />
                                     Add Friend
@@ -400,7 +399,7 @@ const Page = () => {
             </div>
           </div>
           <div className="md:w-8/12 bg-white rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
-            <h2 className="text-center text-fuchsia-500">
+            <h2 className="text-center text-violet-700">
               All The Questions You Have read
             </h2>
             <div>
@@ -472,7 +471,7 @@ const Page = () => {
                       </h2>
                       <h4 className="text-center text-gray-700 mt-2">
                         Reader Type :{" "}
-                        <span className="text-fuchsia-500">{item.status}</span>
+                        <span className="text-violet-700">{item.status}</span>
                       </h4>
                       <div className="flex gap-2 mt-2 justify-center items-center">
                         {acceptedFriendsId &&
@@ -503,7 +502,7 @@ const Page = () => {
                         <Link
                           href={`${viewurl}/userdashboard/searchusers/${item._id}`}
                         >
-                          <h2 className="py-1 px-2 cursor-pointer bg-fuchsia-500 rounded-md text-white text-sm">
+                          <h2 className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-white text-sm">
                             View Details
                           </h2>
                         </Link>

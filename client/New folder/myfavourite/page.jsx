@@ -20,13 +20,13 @@
 //   return (
 //         <ProtectRoute>
 //               <div className='md:p-20 p-2 md:w-1/2'>
-//              <Link href={'./myfavourite/bangla'}>  <h2 className='py-2 px-6 mb-1 bg-fuchsia-500 text-center text-white rounded-lg cursor-pointer text-2xl'>Bangla</h2></Link>
-//              <Link href={'./myfavourite/english'}>  <h2 className='py-2 px-6 mb-2 bg-fuchsia-500 text-center text-white rounded-lg cursor-pointer text-2xl'>English</h2></Link>
+//              <Link href={'./myfavourite/bangla'}>  <h2 className='py-2 px-6 mb-1 bg-violet-700 text-center text-white rounded-lg cursor-pointer text-2xl'>Bangla</h2></Link>
+//              <Link href={'./myfavourite/english'}>  <h2 className='py-2 px-6 mb-2 bg-violet-700 text-center text-white rounded-lg cursor-pointer text-2xl'>English</h2></Link>
 //        </div>
 //             <div className="mobile-responsive flex justify-center items-center gap-2 fixed bottom-2 left-[50%] -translate-x-[50%]">
 //             <div className=""><div className={`p-2 rounded-full bg-gray-200 shadow-md shadow-gray-500`}> <Link href={"./myprofile"}><CgProfile size={30} /></Link></div></div>
 //             <div className=""><div className="p-2 rounded-full bg-gray-200 shadow-md shadow-gray-500"> <Link href={"/"}><IoHomeOutline size={30} /></Link></div></div>
-//             <div className=""><div className={`${pathNamme == "/userdashboard/myfavourite" ? "bg-fuchsia-500 text-white scale-110 duration-500" : ""} p-2 rounded-full `}> <Link href={"./myfavourite"}><AiFillHeart size={30}/></Link></div></div>
+//             <div className=""><div className={`${pathNamme == "/userdashboard/myfavourite" ? "bg-violet-700 text-white scale-110 duration-500" : ""} p-2 rounded-full `}> <Link href={"./myfavourite"}><AiFillHeart size={30}/></Link></div></div>
 //           </div>
 //         </ProtectRoute>
 //   )

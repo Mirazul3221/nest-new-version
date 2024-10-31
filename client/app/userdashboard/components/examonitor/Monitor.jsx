@@ -96,7 +96,7 @@ const { store } = useContext(storeContext);
                     <div
                       onClick={handleClick}
                       className={`md:w-6 w-4 h-4 cursor-pointer md:h-6 ${
-                        getLocalVal === "true" ? "bg-fuchsia-500" : "bg-white"
+                        getLocalVal === "true" ? "bg-violet-700" : "bg-white"
                       } rounded-full`}
                     ></div>
                   </div>
@@ -109,7 +109,7 @@ const { store } = useContext(storeContext);
                     <div
                       onClick={handleClickForRobot}
                       className={`md:w-6 w-4 h-4 cursor-pointer md:h-6 ${
-                        getRobot === "on" ? "bg-fuchsia-500" : "bg-white"
+                        getRobot === "on" ? "bg-violet-700" : "bg-white"
                       } rounded-full`}
                     ></div>
                   </div>
@@ -162,7 +162,7 @@ const { store } = useContext(storeContext);
                           onClick={() => setNavigate(true)}
                           className={`md:w-5 w-4 h-4 cursor-pointer md:h-5 bounce_btn ${
                             getRobot === "on"
-                              ? "animate-ping bg-fuchsia-500"
+                              ? "animate-ping bg-violet-700"
                               : "bg-white"
                           } rounded-full`}
                         ></div>

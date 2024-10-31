@@ -15,7 +15,7 @@ const AssistantHome = () => {
         <div className="w-20">
           <Logo />
         </div>{" "}
-        <span className="font-bold text-fuchsia-600 text-lg">
+        <span className="font-bold text-violet-800 text-lg">
           {store.userInfo.name}
         </span>
       </div>

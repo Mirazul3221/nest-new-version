@@ -238,7 +238,7 @@ const Messanger = ({
   return (
     <div>
       {!switcher && (
-        <button className="bg-fuchsia-500 px-4 flex items-center gap-2 rounded-md text-white" onClick={() => setSwitcher(true)}>
+        <button className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white" onClick={() => setSwitcher(true)}>
         <BiMessageRoundedDots />  Messaging
         </button>
       )}
@@ -247,7 +247,7 @@ const Messanger = ({
           switcher ? "scale-1" : "scale-0"
         } fixed duration-200 -left-0 md:left-1/3 md:h-auto pb-4 bg-white origin-bottom-left bottom-0 md:bottom-10 w-full md:w-4/12 z-50 md:ml-6 border rounded-md`}
       >
-        <div className="py-3 bg-fuchsia-500 rounded-t-md flex justify-between items-center px-4">
+        <div className="py-3 bg-violet-700 rounded-t-md flex justify-between items-center px-4">
           <div className="flex gap-2">
             <img
               className="w-8 h-8 border border-white rounded-full"
@@ -297,7 +297,7 @@ const Messanger = ({
                   src={profile}
                   alt={name}
                 />
-                <h3 className="text-gray-500 text-center font-semibold text-2xl">
+                <h3 className="text-gray-500 text-center font-semibold text-2xl bg-v">
                   {name}
                 </h3>
                 {title?.length > 0 && title !== "Untitled User" && (
@@ -336,14 +336,14 @@ const Messanger = ({
                       <div className="friend-message py-2 relative mb-6">
                         <div className="image-box absolute -bottom-6">
                           <img
-                            className="w-8 h-8 rounded-full border border-fuchsia-500"
+                            className="w-8 h-8 rounded-full border border-violet-700"
                             src={profile}
                             alt={name}
                           />
                         </div>
                         <div
                           style={{ borderRadius: "20px 20px 20px 0px" }}
-                          className="px-2 ml-6 bg-fuchsia-500 max-w-[80%] w-fit text-white text-left"
+                          className="px-2 ml-6 bg-violet-700 max-w-[80%] w-fit text-white text-left"
                         >
                           <p
                             ref={bottomRef}
@@ -391,7 +391,7 @@ const Messanger = ({
                 <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
                   <div className="image-box absolute bottom-5">
                     <img
-                      className="w-8 h-8 rounded-full border border-fuchsia-500"
+                      className="w-8 h-8 rounded-full border border-violet-700"
                       src={profile}
                       alt={name}
                     />

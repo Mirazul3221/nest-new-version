@@ -22,12 +22,12 @@ const Page = () => {
       <ProtectRoute>
         <div className="md:p-20 p-2 md:w-1/2">
           <Link href={"./myfavourite/bangla"}>
-            <h2 className="py-2 px-6 mb-1 bg-fuchsia-500 text-center text-white rounded-lg cursor-pointer text-2xl">
+            <h2 className="py-2 px-6 mb-1 bg-violet-700 text-center text-white rounded-lg cursor-pointer text-2xl">
               Bangla
             </h2>
           </Link>
           <Link href={"./myfavourite/english"}>
-            <h2 className="py-2 px-6 mb-2 bg-fuchsia-500 text-center text-white rounded-lg cursor-pointer text-2xl">
+            <h2 className="py-2 px-6 mb-2 bg-violet-700 text-center text-white rounded-lg cursor-pointer text-2xl">
               English
             </h2>
           </Link>
@@ -43,7 +43,7 @@ const Page = () => {
             </div>
             <div className="">
               <div
-                className={`text-fuchsia-500 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full`}
+                className={`text-violet-700 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full`}
               >
                 <Link href={"./myfavourite"}>
                   <AiOutlineHeart size={30} />

@@ -81,20 +81,20 @@ const UserDashboard = () => {
           <SuperHeader/>
           <div className="gap-1 justify-between hidden md:flex my-3">
             <h2 className="md:text-2xl text-md font-semibold text-gray-500 w-1/2 text-balance">
-              Hi <span className="text-[#d000ff]">{firstname + " "}</span>{" "}
+              Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
               Welcome back
             </h2>
           </div>
         </div>
         <div className="wrapper md:px-10 px-4 md:py-4 pt-4">
           <div className="py-4">
-            <h2 className="text-fuchsia-500 md:text-2xl font-bold">
+            <h2 className="text-violet-700 md:text-2xl font-bold">
               Subject Based Study
             </h2>
             <Layout />
           </div>
           <div className="py-4">
-            <h2 className="text-fuchsia-500 md:text-2xl font-bold">
+            <h2 className="text-violet-700 md:text-2xl font-bold">
               Previous BCS Questions
             </h2>
             {/* <BcsLayout/> */}
@@ -110,7 +110,7 @@ const UserDashboard = () => {
         <div className="fixed bottom-0 md:hidden left-0 w-full px-10 py-4 bg-white rounded-t-md">
           <div className="mobile flex w-full justify-between">
             <div className="">
-              <div className="text-fuchsia-500 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full">
+              <div className="text-violet-700 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full">
                 <Link href={"/"}>
                   <IoHomeOutline size={30} />
                 </Link>

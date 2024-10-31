@@ -121,7 +121,7 @@ const MyCurrentMessage = ({
           )}
           <p>{msgTime}</p>
           {msg.hasSeen !== true && (
-            <p className={`text-[8px] duration-150 absolute -bottom-3 ${msgStatus === "sending..." ? "text-rose-500" : msgStatus === "sent" ? "text-green-500" : 'text-fuchsia-500'}`}>
+            <p className={`text-[8px] duration-150 absolute -bottom-3 ${msgStatus === "sending..." ? "text-rose-500" : msgStatus === "sent" ? "text-green-500" : 'text-violet-700'}`}>
               {msg?.status ? msgStatus : ""}
             </p>
           )}

@@ -310,11 +310,12 @@ const Page = () => {
           },
         }
       );
+      socket && await socket.emit('new-notification',id)
     } catch (error) {
       console.log(error);
     }
   };
-const {myActiveFriends} = useSocket()
+const {socket,myActiveFriends} = useSocket()
   return (
     <ProtectRoute>
       <div className="md:px-10 px-4 mb-2 md:min-h-[91vh] duration-300 relative">
@@ -323,8 +324,8 @@ const {myActiveFriends} = useSocket()
           <Navbar />
         </div>
         <div className="md:flex justify-between gap-5">
-          <div className="md:w-4/12 border-t-4 bg-white rounded-lg border-fuchsia-500 shadow-md p-10 relative min-h-80">
-            <div className="absolute w-full h-[25vh] md:h-40 bg-fuchsia-50 top-0 left-0">
+          <div className="md:w-4/12 border-t-4 bg-white rounded-lg border-violet-700 shadow-md p-10 relative min-h-80">
+            <div className="absolute w-full h-[25vh] md:h-40 bg-violet-50 top-0 left-0">
               <Image
                 className="w-full h-full rounded-t-sm"
                 src={profileBanner}
@@ -362,7 +363,7 @@ const {myActiveFriends} = useSocket()
                       )}
                     </div>
                   </div>
-                  <h4 className="absolute bottom-0 right-10 md:right-0 p-2 bg-fuchsia-300 w-16 h-16 rounded-full flex justify-center items-center border-4 border-white text-center text-sm translate-x-[10%] md:translate-x-[30%] text-white translate-y-[20%]">
+                  <h4 className="absolute bottom-0 right-10 md:right-0 p-2 bg-violet-500 w-16 h-16 rounded-full flex justify-center items-center border-4 border-white text-center text-sm translate-x-[10%] md:translate-x-[30%] text-white translate-y-[20%]">
                     {/* <Image className="rounded-full" src={levelUp} alt="level" /> */}
                     {userDetails.status}
                   </h4>
@@ -418,8 +419,8 @@ const {myActiveFriends} = useSocket()
                         className={`updateTitle w-1/2 py-1 px-6 ${
                           loader
                             ? "bg-white text-gray-700 hover:bg-slate-100"
-                            : "bg-fuchsia-500 text-white cursor-pointer"
-                        } hover:bg-fuchsia-400 duration-200 text-center rounded-md`}
+                            : "bg-violet-700 text-white cursor-pointer"
+                        } hover:bg-violet-600 duration-200 text-center rounded-md`}
                       >
                         <div className="flex justify-center items-center gap-2">
                           <p>Update</p>{" "}
@@ -482,7 +483,7 @@ const {myActiveFriends} = useSocket()
                         onClick={() => {
                           updateUserTitle(), setControlTitle(false);
                         }}
-                        className="updateTitle w-1/2 cursor-pointer text-white px-2 bg-fuchsia-500 hover:bg-fuchsia-400 duration-200 text-center rounded-md"
+                        className="updateTitle w-1/2 cursor-pointer text-white px-2 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
                       >
                         Update
                       </div>
@@ -494,7 +495,7 @@ const {myActiveFriends} = useSocket()
                       <h2
                         className={`updateTitle ${
                           userDetails.title?.length <= 30
-                            ? "text-center text-fuchsia-500"
+                            ? "text-center text-violet-700"
                             : "text-rose-500"
                         } `}
                       >
@@ -558,7 +559,7 @@ const {myActiveFriends} = useSocket()
                       onClick={() => {
                         updateUserDescription(), setControlDesc(false);
                       }}
-                      className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-fuchsia-500 hover:bg-fuchsia-400 duration-200 text-center rounded-md"
+                      className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
                     >
                       Update
                     </div>
@@ -649,7 +650,7 @@ const {myActiveFriends} = useSocket()
                         </div>
                         <div
                           onClick={updateFacebookLink}
-                          className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-fuchsia-500 hover:bg-fuchsia-400 duration-200 text-center rounded-md"
+                          className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
                         >
                           Update
                         </div>
@@ -660,8 +661,8 @@ const {myActiveFriends} = useSocket()
               )}
             </div>
           </div>
-          <div className="md:w-8/12 bg-white border-t-4 border-fuchsia-500 rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
-            <h2 className="text-center text-fuchsia-500">
+          <div className="md:w-8/12 bg-white border-t-4 border-violet-700 rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
+            <h2 className="text-center text-violet-700">
               All The Questions You Have read
             </h2>
             <div>
@@ -733,7 +734,7 @@ const {myActiveFriends} = useSocket()
                         onClick={() => {
                           handleAcceptRequest(item);
                         }}
-                        className="py-2 px-4 bg-fuchsia-500 rounded-md text-white"
+                        className="py-2 px-4 bg-violet-700 rounded-md text-white"
                       >
                         Accept
                       </h2>
@@ -778,7 +779,7 @@ const {myActiveFriends} = useSocket()
                       <a
                         href={`${viewurl}/userdashboard/searchusers/${item._id}`}
                       >
-                        <h2 className="py-1 px-2 cursor-pointer bg-fuchsia-500 rounded-md text-white text-sm">
+                        <h2 className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-white text-sm">
                           View Details
                         </h2>
                       </a>
@@ -787,7 +788,7 @@ const {myActiveFriends} = useSocket()
                           onClick={() => {
                             inviteYourFriend(item._id);
                           }}
-                          className="py-1 px-2 cursor-pointer bg-fuchsia-500 rounded-md text-sm text-white"
+                          className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
                         >
                           Invite
                         </h2>
@@ -805,7 +806,7 @@ const {myActiveFriends} = useSocket()
                 key={i}
                 className="mt-4 md:hidden border-b items-center gap-2"
               >
-                <h2 className="mt-2 mb-1 text-fuchsia-500">{item.sub} : </h2>
+                <h2 className="mt-2 mb-1 text-violet-700">{item.sub} : </h2>
                 <h2>Correct Answer : {item.rightAns}</h2>
                 <h2>Wrong Answer : {item.wrongAns}</h2>
               </div>
@@ -841,7 +842,7 @@ const {myActiveFriends} = useSocket()
             </div>
             <div className="">
               <div
-                className={`shadow-md text-fuchsia-500 shadow-fuchsia-500 duration-500 p-2 rounded-full`}
+                className={`shadow-md text-violet-700 shadow-fuchsia-500 duration-500 p-2 rounded-full`}
               >
                 <Link href={"./myprofile"}>
                   <CgProfile size={30} />

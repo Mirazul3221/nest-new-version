@@ -93,13 +93,13 @@ const Page = () => {
               <div className="">
                 <h2 className="text-2xl text-gray-700 md:mb-4">
                   Result for
-                  <span className="font-bold text-fuchsia-500">
+                  <span className="font-bold text-violet-700">
                     {" " + decodeURIComponent(searchVal)}
                   </span>
                 </h2>
                 <h2 className="text-2xl text-gray-700 mb-4">
                   Total search result
-                  <span className="font-bold text-fuchsia-500">
+                  <span className="font-bold text-violet-700">
                     {" " + data.length}
                   </span>
                 </h2>
@@ -111,7 +111,7 @@ const Page = () => {
               onClick={() => (setSynce("Questions"), fetchQuestions())}
               className={`${
                 synce == "Questions"
-                  ? "text-fuchsia-500 font-bold border-fuchsia-500 duration-500"
+                  ? "text-violet-700 font-bold border-violet-700 duration-500"
                   : ""
               } w-1/2 py-2 cursor-pointer bg-white text-center rounded-md border-b-4`}
             >
@@ -121,7 +121,7 @@ const Page = () => {
               onClick={() => (setSynce("Users"), fetchUser())}
               className={`${
                 synce == "Users"
-                  ? "text-fuchsia-500 font-bold border-fuchsia-500 duration-500"
+                  ? "text-violet-700 font-bold border-violet-700 duration-500"
                   : ""
               } w-1/2 py-2 cursor-pointer bg-white text-center rounded-md border-b-4`}
             >
@@ -142,7 +142,7 @@ const Page = () => {
                           <Link href={`/userdashboard/searchusers/${user._id}`}>
                             <div className="flex w-fit pr-10 pl-4 items-center md:gap-4 gap-2 border-b-2 shadow-md rounded-full py-2">
                               <img
-                                className="md:w-16 md:h-16 w-10 h-10  rounded-full border border-fuchsia-500"
+                                className="md:w-16 md:h-16 w-10 h-10  rounded-full border border-violet-700"
                                 src={`${user.profile}`}
                               />
                               <h2 className="md:text-[24px] text-[16px] font-bold text-gray-700">

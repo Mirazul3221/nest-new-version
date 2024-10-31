@@ -127,13 +127,13 @@ const Header = ({getSearchValue}) => {
             </li>
           </div>
           <Link href={"/register"}>
-            <li className="text-lg font-normal px-4 ml-2 py-[4px] text-white bg-fuchsia-500 w-fit cursor-pointer duration-500 rounded-md">
+            <li className="text-lg font-normal px-4 ml-2 py-[4px] text-white bg-violet-700 w-fit cursor-pointer duration-500 rounded-md">
               Join
             </li>
           </Link>
         </ul>
         <Link className="md:hidden" href={"/register"}>
-          <div className="text-lg font-normal px-4 py-[4px] ml-2 hover:text-white hover:bg-fuchsia-500 text-fuchsia-500 w-fit cursor-pointer duration-500 rounded-md border-[1px] border-fuchsia-500">
+          <div className="text-lg font-normal px-4 py-[4px] ml-2 hover:text-white hover:bg-violet-700 text-violet-700 w-fit cursor-pointer duration-500 rounded-md border-[1px] border-violet-700">
             Join
           </div>
         </Link>

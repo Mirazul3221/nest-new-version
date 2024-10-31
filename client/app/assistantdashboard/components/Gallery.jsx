@@ -17,8 +17,8 @@ const Gallery = ({ setShow, images,imageLoader }) => {
           </span>
         </div>
         <label htmlFor="images">
-          <div className="p-4 border-2 border-fuchsia-500 flex justify-center items-center cursor-pointer border-dotted my-2">
-            {imageLoader ? <Image className="w-10" src={loderImage} alt="Loader"/> : <FaCloudUploadAlt className="text-fuchsia-500" size={40} />}
+          <div className="p-4 border-2 border-violet-700 flex justify-center items-center cursor-pointer border-dotted my-2">
+            {imageLoader ? <Image className="w-10" src={loderImage} alt="Loader"/> : <FaCloudUploadAlt className="text-violet-700" size={40} />}
           </div>
         </label>
         <div className="overflow-auto max-h-[65vh] grid grid-cols-4 items-center gap-4">

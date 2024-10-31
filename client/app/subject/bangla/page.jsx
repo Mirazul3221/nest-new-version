@@ -75,7 +75,7 @@ const Page = () => {
         ) : (
           <div className="md:flex justify-between gap-4 mx-2">
             <div className="md:w-1/2">
-              <h2 className="py-2 bg-fuchsia-500 px-6 text-2xl md:text-3xl text-white">
+              <h2 className="py-2 bg-violet-700 px-6 text-2xl md:text-3xl text-white">
                 বিষয় ভিত্তিক
               </h2>
               <div className="gap-[5px]">

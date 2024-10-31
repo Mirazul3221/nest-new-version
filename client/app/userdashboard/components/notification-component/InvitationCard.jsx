@@ -1,18 +1,20 @@
 "use client"
+import moment from 'moment';
 import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from "react-icons/io";
 const InvitationCard = ({item,sayThanks}) => {
     const [closeInvite,setCloseInvite] = useState(false)
   return (
     <div className={`mb-4 ${closeInvite ? "hidden" : ""} border-b py-2`}>
-    <div className="flex justify-between items-center gap-2 w-7/12">
+      <p className='mb-2'>{moment(item.createdAt).fromNow()}</p>
+    <div className="flex justify-between items-center gap-2 w-10/12 md:w-7/12">
       <div className="relative w-fit">
         <img
           className="w-20 h-20 rounded-full border-2 border-gray-500"
           src={item.message[0].requesterProfie}
           alt={item.message[0].requesterName}
         />
-        <h2 className="bg-fuchsia-300 w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-4 -right-4">
+        <h2 className="bg-violet-500 w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-4 -right-4">
           {item?.message[0]?.requesterStatus}
         </h2>
       </div>
@@ -33,7 +35,7 @@ const InvitationCard = ({item,sayThanks}) => {
     <div onClick={()=>{
       setCloseInvite(true)
       sayThanks(item?.message[0]?.requesterId)
-    }} className="py-1 cursor-pointer w-fit px-6 bg-fuchsia-500 text-white rounded-lg">
+    }} className="py-1 cursor-pointer w-fit px-6 bg-violet-700 text-white rounded-lg">
      {`Say "thank you"`}
     </div>
   </div>

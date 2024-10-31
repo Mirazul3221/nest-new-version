@@ -80,7 +80,7 @@ const Otp = ({ setKey, mail }) => {
     <h2 className="bg-gray-200 w-fit mt-1 text-gray-500 duration-500 border py-1 text-center cursor-pointer rounded-md px-4 text-sm">Cancel</h2></Link>
 <div
           onClick={handleOtp}
-          className="bg-fuchsia-500 hover:bg-fuchsia-600 w-fit mt-1 text-white duration-500 border py-1 text-center cursor-pointer rounded-md px-4 text-sm"
+          className="bg-violet-700 hover:bg-violet-600 w-fit mt-1 text-white duration-500 border py-1 text-center cursor-pointer rounded-md px-4 text-sm"
         >
           Continue
         </div>

@@ -55,17 +55,12 @@ export class NotificationsGateway
     this.socketUsers[userId].push(client.id);
     if (userId) {
       ///////////////////////////////////////////////////////////////////////////////////////////////////////
-      console.log('//////////////////////////////////////////////////////');
-      console.log(`User connected: ${userId} and sid:${client.id}`);
-      console.log(this.socketUsers);
-      console.log('//////////////////////////////////////////////////////');
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////
       client.on('checkSenderOnlineStatus', async (data) => {
         let isOnline = Object.keys(this.socketUsers)?.some((u) => u === data);
         client.emit('getSenderOnlineStatus', isOnline);
         console.log(data);
       });
-      //////////////////////////////////////////////////////////////////////////////////////////////////////
+      /////////////////////////////////////////Here is the logic for messaging////////////////////////////////////////////
       client.on('send-message-to-my-friend', async (data) => {
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
@@ -89,6 +84,16 @@ export class NotificationsGateway
           });
         }
       });
+
+      /////////////////////////////Here is the logic for notification////////////////////////////
+      client.on('new-notification', async (data) => {
+        console.log('notif' , data)
+        if (this.socketUsers[data]?.length > 0) {
+          this.socketUsers[data]?.map(async (id) => {
+            await client.to(id).emit('new-notification', 'new message');
+          });
+        }
+      });//
 
       //////////////////////////Here is the logic for active users////////////////////////////////
       const userIds = Object.keys(this.socketUsers);

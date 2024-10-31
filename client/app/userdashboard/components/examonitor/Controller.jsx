@@ -382,7 +382,7 @@ const Controller = ({
           <FaBookReader size={20} />
           <h2 className="my-2 text-[11px] md:text-lg">
             এই পর্যন্ত আপনি (
-            <span className="font-bold text-fuchsia-500">
+            <span className="font-bold text-violet-700">
               {" " + countReadingQuestion + " "}
             </span>
             ) টি প্রশ্ন পড়ছেন।
@@ -428,7 +428,7 @@ const Controller = ({
                     </h2>
                   </div>
 
-                  <h2 className="text-[9px] flex mt-2 md:text-[10px] ml-1 text-fuchsia-500">
+                  <h2 className="text-[9px] flex mt-2 md:text-[10px] ml-1 text-violet-700">
                     {value.examName ? (
                       <span>
                         {" "}
@@ -597,7 +597,7 @@ const Controller = ({
                                     setShowPoint(true);
                                   }, 50);
                                 }}
-                                className="details px-4 py-2 rounded-full border cursor-pointer border-fuchsia-500"
+                                className="details px-4 py-2 rounded-full border cursor-pointer border-violet-700"
                               >
                                 <LiaHandPointUpSolid
                                   size={20}
@@ -610,7 +610,7 @@ const Controller = ({
                         {isSave == "yes" && (
                           <div
                             onClick={() => saveQuestion(value._id, index)}
-                            className="px-4 py-2 rounded-full border cursor-pointer border-fuchsia-500"
+                            className="px-4 py-2 rounded-full border cursor-pointer border-violet-700"
                           >
                             {saveQLoader && justifyid == value._id ? (
                               <Image
@@ -624,7 +624,7 @@ const Controller = ({
                           </div>
                         )}
 
-                        <div className="flex items-center gap-[1px] right-2 shadow-sm px-4 py-2 rounded-full border border-fuchsia-500">
+                        <div className="flex items-center gap-[1px] right-2 shadow-sm px-4 py-2 rounded-full border border-violet-700">
                           {value._id ===
                           getReadQuestion?.find((id) => id === value._id) ? (
                             <PiEye color="#c602db" />
@@ -632,7 +632,7 @@ const Controller = ({
                             <PiEyeSlash color="#a8a8a8" />
                           )}
                           <h2
-                            className={`text-[8px] text-fuchsia-500 md:text-[10px]  rounded-full ${
+                            className={`text-[8px] text-violet-700 md:text-[10px]  rounded-full ${
                               countReadTime(value._id) === null ? "" : ""
                             } flex justify-center items-center`}
                           >
@@ -643,7 +643,7 @@ const Controller = ({
                           onClick={() => {
                             handleShare(), setShowPointDesc(value);
                           }}
-                          className="flex items-center gap-[1px] cursor-pointer right-2 shadow-sm px-4 py-2 rounded-full border border-fuchsia-500"
+                          className="flex items-center gap-[1px] cursor-pointer right-2 shadow-sm px-4 py-2 rounded-full border border-violet-700"
                         >
                           <RiShareLine size={20} color="#c602db" />
                         </div>
@@ -715,7 +715,7 @@ const Controller = ({
                          <Image className="w-16 h-16" src={pinterest} alt="pinterest"/>
                         </ TelegramShareButton>
                       </div>
-                      <div className="md:hidden w-16 h-16 bg-fuchsia-500 rounded-full flex justify-center items-center">
+                      <div className="md:hidden w-16 h-16 bg-violet-700 rounded-full flex justify-center items-center">
                       <CopyToClipboard text={`https://bcs-prep.vercel.app/singlequestion/${showPointDesc._id}`}>
                         <button className="p-4 text-white" onClick={()=>{setCopy('Copied!');setTimeout(() => {
                           setCopy('copy')
@@ -724,7 +724,7 @@ const Controller = ({
                       </div>
                     </div>
 
-                    <div className="mt-4 hidden py-2 px-4 border border-fuchsia-500 rounded-md text-fuchsia-500 md:flex gap-2 justify-between items-center">
+                    <div className="mt-4 hidden py-2 px-4 border border-violet-700 rounded-md text-violet-700 md:flex gap-2 justify-between items-center">
                       <div >https://bcs-prep.vercel.app/singlequestion/${showPointDesc._id}</div>
                       <CopyToClipboard text={`${viewurl}/singlequestion/${showPointDesc._id}`}>
                         <button className="p-4" onClick={()=>{setCopy('Copied!');setTimeout(() => {

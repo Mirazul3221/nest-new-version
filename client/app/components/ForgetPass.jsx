@@ -90,7 +90,7 @@ const ForgetPass = ({ setKey, setMail,getMyProfile }) => {
                 className={`mt-2 ${
                   loader
                     ? ""
-                    : "bg-fuchsia-500 hover:bg-fuchsia-600 text-white duration-500"
+                    : "bg-violet-700 hover:bg-violet-600 text-white duration-500"
                 } border py-2 rounded-md w-full flex justify-center items-center`}
               >
                 {loader ? (
