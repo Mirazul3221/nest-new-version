@@ -85,10 +85,10 @@ const FriendRequest = ({item}) => {
             </span>{" "}
           </p>
           <div className="flex gap-4 mt-2">
-            <div onClick={()=>cancleFriendRequest(item)} className="px-6 py-[5px] bg-gray-200 text-gray-700 w-fit rounded-md">
+            <div onClick={()=>cancleFriendRequest(item)} className="px-6 cursor-pointer py-[5px] bg-gray-200 text-gray-700 w-fit rounded-md">
               <h2>Delete</h2>
             </div>
-            <div onClick={()=>handleAcceptRequest(item)} className="px-6 py-[5px] bg-violet-700 text-white w-fit rounded-md">
+            <div onClick={()=>handleAcceptRequest(item)} className="px-6 cursor-pointer py-[5px] bg-violet-700 text-white w-fit rounded-md">
               <h2>Confirm</h2>
             </div>
           </div>
