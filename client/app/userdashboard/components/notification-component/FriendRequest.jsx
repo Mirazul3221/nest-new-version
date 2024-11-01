@@ -3,10 +3,12 @@ import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import moment from "moment";
 import React, { useContext, useState } from "react";
+import { useSocket } from "../../global/SocketProvider";
 
 const FriendRequest = ({item}) => {
     const [closeContainer,setCloseContainer] = useState(false)
     const { store  } = useContext(storeContext);
+    const {socket} = useSocket()
     const handleAcceptRequest = async (item) => {
         try {
           await axios.get(`${baseurl}/friend-request/${item.message[0].requesterId}/respond`, {
@@ -14,6 +16,7 @@ const FriendRequest = ({item}) => {
               Authorization: `Bearer ${store.token}`,
             },
           });
+          socket && await socket.emit('new-notification',id)
          handleNotification(item);
          setCloseContainer(true)
         } catch (error) {
