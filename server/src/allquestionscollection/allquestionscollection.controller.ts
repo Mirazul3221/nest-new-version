@@ -56,6 +56,11 @@ export class AllquestionscollectionController {
   }
 
   //=================UPDATE DOCUMEN=========================
+  @Get('singleUser/all')
+  async getAllQuestions(){
+   return await this.allquestionscollectionService.findAll()
+  }
+
   @Get('singleUser/find/:id')
   // @UseGuards(AuthGuard())
   async findEnglishSingleQuestionForUser(@Param('id') id: string) {

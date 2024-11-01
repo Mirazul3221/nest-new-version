@@ -31,10 +31,10 @@ export class AllquestionscollectionService {
     return 'Question added successfully';
   }
 
-  findAll() {
-    return `This action returns all allquestionscollection`;
+ async findAll() {
+    return await this.allquestionscollection.find()
   }
-  //===================Find Documents fields================
+  //===================Find Documents fields==================
   async findBanglaForReader() {
     const bangla = await this.allquestionscollection.find({
       subject: 'Bangla',
