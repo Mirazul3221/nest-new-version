@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
    console.log('don')
     return {
       title: Q.question,
-      description: <p>{HTMLReactParser(Q.description)}</p>,
+      description:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
       keywords:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
     //   openGraph: {
     //     title: Q.question,
