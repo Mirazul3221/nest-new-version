@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import waiting from "@/public/wating.gif";
 import Image from "next/image";
 import { Banner } from "@/app/adsterra/Banner";
+import Head from "next/head";
 
 const Page = () => {
   const [data, setData] = useState([]);
@@ -36,6 +37,16 @@ const Page = () => {
   console.log(conv)
 
   return (
+    <>
+    <Head>
+    <title>{data.question}</title>
+        <meta name="description" content={`${data.description}`} />
+        <meta name="keywords" content={`${data.subject},${data.question},${data.option_01},${data.option_02},${data.option_03},${data.option_04}`} />
+        <meta property="og:title" content={`${data.question}`} />
+        <meta property="og:description" content={`${data.description}`} />
+        <meta property="og:type" content="website" />
+    </Head>
+    <main>
     <div className="bg-gray-100 py-2 min-h-screen">
       <div className="flex justify-center items-center w-20 h-20 p-2 md:p-0 md:w-36 md:h-36 bg-white rounded-full mx-auto border-2">
         <Logo w={100} />
@@ -106,6 +117,8 @@ const Page = () => {
         <Banner className="w-full" />
       </div>
     </div>
+    </main>
+    </>
   );
 };
 
