@@ -16,7 +16,7 @@ const FriendRequest = ({item}) => {
               Authorization: `Bearer ${store.token}`,
             },
           });
-          socket && await socket.emit('new-notification',id)
+          socket && await socket.emit('new-notification',item.message[0].requesterId)
          handleNotification(item);
          setCloseContainer(true)
         } catch (error) {

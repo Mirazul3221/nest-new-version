@@ -85,7 +85,7 @@ export class NotificationsGateway
         }
       });
 
-      /////////////////////////////Here is the logic for notification////////////////////////////
+      /////////////////////////////Here is the logic for notification/////////////////////////////
       client.on('new-notification', async (data) => {
         console.log('notif' , data)
         if (this.socketUsers[data]?.length > 0) {

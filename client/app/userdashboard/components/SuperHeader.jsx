@@ -225,7 +225,7 @@ const SuperHeader = () => {
             <IoIosNotificationsOutline size={26} />
           </div>
           {openNotif && (
-                   <NotificationContainer notificationList={notificationList} sayThanks={sayThanks}/>
+                   <NotificationContainer notificationList={notificationList} sayThanks={sayThanks} setOpenNotif={setOpenNotif}/>
                 )}
           {/* ////////////////////////////////////////////////////////////// */}
           <div className="group relative duration-100">

@@ -260,7 +260,7 @@ const Page = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      socket && await socket.emit('new-notification',id)
+      socket && await socket.emit('new-notification',user._id)
       handleNotification(user);
       setAcceptReq(true);
      
