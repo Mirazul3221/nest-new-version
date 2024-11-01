@@ -13,7 +13,7 @@ const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
         <div className="w-2 h-2 bg-white rounded-full"></div>
         <div className="w-2 h-2 bg-white rounded-full"></div>
       </div>
-      <div  onClick={()=>setOpenNotif(false)} className="left-0 px-2 bg-white w-full -top-[110%] absolute flex justify-end"> <span className='text-gray-700'><RxCross2 size={30}/></span> </div>
+      <div  onClick={()=>setOpenNotif(false)} className="left-0 px-2 md:hidden bg-white w-full -top-[110%] absolute flex justify-end"> <span className='text-gray-700'><RxCross2 size={30}/></span> </div>
     </div>
     <div className="overflow-y-scroll h-[92vh] md:h-[70vh]">
       {notificationList?.length > 0 ? (

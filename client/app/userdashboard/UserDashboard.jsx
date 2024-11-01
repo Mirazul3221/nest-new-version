@@ -13,7 +13,6 @@ import Footer from "../components/Footer";
 import axios from "axios";
 import { baseurl } from "../config";
 import Test from "./components/Test";
-
 import SuperHeader from "./components/SuperHeader";
 import { useSocket } from "./global/SocketProvider";
 // import Image from "next/image";
