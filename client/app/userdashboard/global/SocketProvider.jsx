@@ -6,7 +6,7 @@ import socketContext from "./socketContext";
 import storeContext from "@/app/global/createContex";
 const SocketProvider = ({ children }) => {
   let mysocketUrl = "https://edu-socket.onrender.com";
-  mysocketUrl = "http://localhost:3001";
+  // mysocketUrl = "http://localhost:3001";
   const { store } = useContext(storeContext);
   const [socket, setSocket] = useState(null);
   const [localStream, setLocalStram] = useState(null);
