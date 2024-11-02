@@ -1,21 +1,21 @@
-import { baseurl } from "./config";
+import { viewurl } from "./config";
 
 export default function sitemap() {
     return [
       {
-        url: `${baseurl}`,
+        url: `${viewurl}`,
         lastModified: new Date(),
         changeFrequency: 'yearly',
         priority: 1,
       },
       {
-        url: `${baseurl}/subject/english`,
+        url: `${viewurl}/subject/english`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.8,
       },
       {
-        url: `${baseurl}/subject/bangla`,
+        url: `${viewurl}/subject/bangla`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.8,
