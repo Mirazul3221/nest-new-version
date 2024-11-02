@@ -1,6 +1,6 @@
 "use client";
 import Logo from "@/app/components/Logo";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser";
 import { useParams } from "next/navigation";
@@ -18,8 +18,7 @@ const Page = () => {
         const { data } = await axios.get(
           `${baseurl}/allquestionscollection/singleUser/find/${pram.id}`
         );
-
-        setData(data);
+        setData(data[0]);
         setloader(false);
       } catch (error) {
         console.log(error);
@@ -28,6 +27,7 @@ const Page = () => {
     }
     fetchData();
   }, []);
+
   return (
      <>
     <div className="bg-gray-100 py-2 min-h-screen">

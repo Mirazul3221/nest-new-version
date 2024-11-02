@@ -7,6 +7,8 @@ import { Document } from 'mongoose';
 })
 export class Allquestionscollection extends Document {
   @Prop({ required: false })
+  slug: string;
+  @Prop({ required: false })
   subject: string;
   @Prop({ required: true })
   subSubject: string;

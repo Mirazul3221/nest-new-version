@@ -14,7 +14,7 @@ export class AllquestionscollectionController {
     return this.allquestionscollectionService.create(createAllquestionscollectionDto);
   }
 
-  @Get("find")
+  @Get("findall")
   async findAll() {
     return await this.allquestionscollectionService.findAll();
   }
@@ -64,7 +64,7 @@ export class AllquestionscollectionController {
   @Get('singleUser/find/:id')
   // @UseGuards(AuthGuard())
   async findEnglishSingleQuestionForUser(@Param('id') id: string) {
-    return await this.allquestionscollectionService.findEnglishSingleQuestion(id);
+    return await this.allquestionscollectionService.findFromPublicPlace(id);
   }
   @Get('english/find/:id')
   // @UseGuards(AuthGuard())

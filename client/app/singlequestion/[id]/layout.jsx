@@ -3,6 +3,7 @@ import HTMLReactParser from "html-react-parser";
 
 // app/posts/[id]/layout.jsx (Server Component)
 export async function generateMetadata({ params }) {
+  // console.log(dynamicUrl)
     const res = await fetch(`${baseurl}/allquestionscollection/singleUser/find/${params.id}`);
     const Q = await res.json();
    console.log('don')

@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateAllquestionscollectionDto {
+    @IsOptional()
+    readonly slug : string;
     @IsNotEmpty()
     @IsString()
     readonly subject: string;

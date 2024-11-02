@@ -22,8 +22,16 @@ export class AllquestionscollectionService {
     if (existQuestions?.question == question && existQuestions?.examName == examName && existQuestions?.otherExamName == otherExamName) {
       throw new ConflictException("This question already exist, please add new one")
     } else {
+      const createSlug = (text)=>{
+          return  text.toLowerCase().trim().replace(/[^a-z0-9/s-]/g,'-')
+            .replace(/\s+/g,'-').replace(/-+/g,'-');
+      }
+      const date = new Date()
+      const slug = createSlug(createAllquestionscollectionDto.question+date)
+      console.log(slug)
+      const fullSchema = {slug,...createAllquestionscollectionDto}
       const created = await new this.allquestionscollection(
-        createAllquestionscollectionDto,
+        fullSchema,
       );
       created.save();
     }
@@ -98,6 +106,12 @@ export class AllquestionscollectionService {
   }
 
   //==================Update all documents================
+  async findFromPublicPlace (id: string){
+    const isValid = mongoose.Types.ObjectId.isValid(id);
+    console.log(isValid)
+    const singleQuestion = await this.allquestionscollection.find(isValid ? {_id:id} : {slug : id});
+    return singleQuestion;
+  }
   async findEnglishSingleQuestion(id: string) {
     const singleQuestion = await this.allquestionscollection.findById(id);
     return singleQuestion;
