@@ -30,5 +30,6 @@ export default async function sitemap() {
         changeFrequency: 'monthly',
         priority: 0.8,
       },
+      ...dynamicUrl
     ]
   }
