@@ -28,6 +28,18 @@ const Page = () => {
     fetchData();
   }, []);
 
+  async function name(params) { 
+  const res = await fetch(`${baseurl}/allquestionscollection/findall`);
+  const data =await res.json()
+  const dynamicUrl = data.map((m)=>({
+    url: `${viewurl}/singlequestion/${m.slug ? m.slug : m._id}`,
+    lastModified: new Date(),
+    changeFrequency: 'yearly',
+    priority: 1,
+  }))
+
+  console.log(dynamicUrl)
+  }
   return (
      <>
     <div className="bg-gray-100 py-2 min-h-screen">
