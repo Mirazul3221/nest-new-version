@@ -90,7 +90,7 @@ export class NotificationsGateway
         console.log('notif' , data)
         if (this.socketUsers[data]?.length > 0) {
           this.socketUsers[data]?.map(async (id) => {
-            await client.to(id).emit('new-notification', 'new message');
+            await this.server.to(id).emit('new-notification', 'new message');
           });
         }
       });//

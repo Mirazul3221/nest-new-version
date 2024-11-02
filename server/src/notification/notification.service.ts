@@ -81,12 +81,16 @@ export class NotificationService {
    await sendNotification.save()
 
   ///////////////////////delete notification more than twenty//////////////////////////
-  const allMyNotification = await this.notificationModel.find({readerId:body.readerId})
-  console.log(allMyNotification.length)
-  if (allMyNotification.length >= 20) {
-   const lantNotifId = allMyNotification[0]._id
-   await this.notificationModel.findByIdAndDelete({_id:new mongoose.mongo.ObjectId(lantNotifId)})
-  }
+  const notificationCount = await this.notificationModel.countDocuments({readerId:body.readerId})
+   console.log(notificationCount)
+   
+   if (notificationCount > 20) {
+     const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-20);
+     const excessIds = excessNotification.map((notif)=>notif._id)
+      await this.notificationModel.deleteMany({
+        _id : { $in : excessIds }
+      });
+   }
   }
 
  async findAll(id) {
