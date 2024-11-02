@@ -1,14 +1,14 @@
 import { baseurl, viewurl } from "./config";
 
 export default async function sitemap() {
-    const res = await fetch(`${baseurl}/allquestionscollection/findall`);
-    const data =await res.json()
-    const dynamicUrl = data.map((m)=>({
-      url: `${viewurl}/singlequestion/${m.slug ? m.slug : m._id}`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 1,
-    }))
+    // const res = await fetch(`${baseurl}/allquestionscollection/findall`);
+    // const data =await res.json()
+    // const dynamicUrl = data.map((m)=>({
+    //   url: `${viewurl}/singlequestion/${m.slug ? m.slug : m._id}`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'yearly',
+    //   priority: 1,
+    // }))
 
     return [
       {
@@ -29,6 +29,5 @@ export default async function sitemap() {
         changeFrequency: 'monthly',
         priority: 0.8,
       },
-      ...dynamicUrl
     ]
   }
