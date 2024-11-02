@@ -1,12 +1,9 @@
 import { baseurl } from "@/app/config";
-import HTMLReactParser from "html-react-parser";
-
-// app/posts/[id]/layout.jsx (Server Component)
 export async function generateMetadata({ params }) {
   // console.log(dynamicUrl)
-    const res = await fetch(`${baseurl}/allquestionscollection/singleUser/find/${params.id}`);
+    const res = await fetch(`${baseurl}/allquestionscollection/publicUser/find/${params.id}`);
     const Q = await res.json();
-   console.log('don')
+   console.log(params)
     return {
       title: Q.question,
       description:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
@@ -18,7 +15,6 @@ export async function generateMetadata({ params }) {
     //   },
     };
   }
-  
   export default function PostLayout({ children }) {
     return <>{children}</>;
   }

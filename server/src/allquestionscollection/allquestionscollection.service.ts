@@ -105,12 +105,17 @@ export class AllquestionscollectionService {
     return english;
   }
 
-  //==================Update all documents================
+  //==================Public access================
   async findFromPublicPlace (id: string){
     const isValid = mongoose.Types.ObjectId.isValid(id);
     console.log(isValid)
     const singleQuestion = await this.allquestionscollection.find(isValid ? {_id:id} : {slug : id});
     return singleQuestion;
+  }
+
+  async findTopicForPublicUser (topic){
+    console.log(topic)
+    return await this.allquestionscollection.find({topic})
   }
   async findEnglishSingleQuestion(id: string) {
     const singleQuestion = await this.allquestionscollection.findById(id);

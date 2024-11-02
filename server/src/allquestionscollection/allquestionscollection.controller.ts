@@ -55,17 +55,25 @@ export class AllquestionscollectionController {
     return this.allquestionscollectionService.remove(+id);
   }
 
-  //=================UPDATE DOCUMEN=========================
-  @Get('singleUser/all')
+  //=================Public Access=========================
+  @Get('publicUser/all')
   async getAllQuestions(){
    return await this.allquestionscollectionService.findAll()
   }
 
-  @Get('singleUser/find/:id')
+  @Get('publicUser/find/:id')
   // @UseGuards(AuthGuard())
-  async findEnglishSingleQuestionForUser(@Param('id') id: string) {
+  async findQuestionForUser(@Param('id') id: string) {
     return await this.allquestionscollectionService.findFromPublicPlace(id);
   }
+
+
+  @Get('publicUser/findbytopic/:topic')
+  // @UseGuards(AuthGuard())
+  async findTopicForPublicUser(@Param('topic') topic: string) {
+    return await this.allquestionscollectionService.findTopicForPublicUser(topic);
+  }
+  //////////////////////////////////////////////////////////////////////////////////////////////
   @Get('english/find/:id')
   // @UseGuards(AuthGuard())
   async findEnglishSingleQuestion(@Param('id') id: string) {

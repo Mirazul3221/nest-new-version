@@ -3,7 +3,7 @@ import { baseurl, viewurl } from "./config";
 
 export default async function sitemap() {
 
-    const {data} =await axios.get(`${baseurl}/allquestionscollection/findall`)
+    const {data} =await axios.get(`${baseurl}/allquestionscollection/publicUser/all`)
     const dynamicUrl = data.map((m)=>({
       url: `${viewurl}/singlequestion/${m.slug ? m.slug : m._id}`,
       lastModified: new Date(),
@@ -30,6 +30,5 @@ export default async function sitemap() {
         changeFrequency: 'monthly',
         priority: 0.8,
       },
-      ...dynamicUrl
     ]
   }
