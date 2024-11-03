@@ -2,7 +2,8 @@ import { baseurl } from "@/app/config";
 export async function generateMetadata({ params }) {
   // console.log(dynamicUrl)
     const res = await fetch(`${baseurl}/allquestionscollection/publicUser/find/${params.id}`);
-    const Q = await res.json();
+    const data = await res.json();
+    const Q = data[0];
    console.log(params)
     return {
       title: Q.question,

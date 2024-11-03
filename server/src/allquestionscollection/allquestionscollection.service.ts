@@ -108,13 +108,11 @@ export class AllquestionscollectionService {
   //==================Public access================
   async findFromPublicPlace (id: string){
     const isValid = mongoose.Types.ObjectId.isValid(id);
-    console.log(isValid)
     const singleQuestion = await this.allquestionscollection.find(isValid ? {_id:id} : {slug : id});
-    return singleQuestion;
+    return await singleQuestion;
   }
 
   async findTopicForPublicUser (topic){
-    console.log(topic)
     return await this.allquestionscollection.find({topic})
   }
   async findEnglishSingleQuestion(id: string) {
