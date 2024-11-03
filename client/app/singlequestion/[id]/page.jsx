@@ -223,7 +223,7 @@ const Page = () => {
                   );
                 })}
               </div>
-              {!loading && (
+              {loading && (
                 <div className="flex justify-center mt-8">
                   <Image className="w-10 md:w-20" src={loder} alt="loading" />
                 </div>
