@@ -1,6 +1,6 @@
 "use client";
-import Logo from "@/app/components/Logo";
-import { baseurl, viewurl } from "@/app/config";
+import loder from "@/public/chunk-loader.webp";
+import { baseurl } from "@/app/config";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser";
 import { useParams } from "next/navigation";
@@ -12,29 +12,57 @@ import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import EnglishSiteBar from "./components/EnglishSiteBar";
 const Page = () => {
-  const [data, setData] = useState([]);
-  const [topic, setTopic] = useState(null);
+  const [singleData, setSingleData] = useState([]);
   const [loader, setloader] = useState(true);
+  ////////////////////////////////////////////////////////////Logical state for pagination/////////////////////////////////////////////
+  const [topic, setTopic] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const limit = 10;
   const pram = useParams();
-  useEffect(() => {
-    async function releventQuestions(topic) {
-      try {
+  ////////////////////////////////////////////Fetch chunk data from server//////////////////////////////////////
+  const fetchChunkData = async () => {
+    console.log(window.innerHeight);
+    console.log(window.scrollY);
+    console.log(document.body.offsetHeight);
+    if (loading) return;
+    console.log(loading);
+    setLoading(true);
+    console.log("kon bale darce");
+    console.log(singleData);
+    try {
+      if (singleData.topic !== undefined) {
         const { data } = await axios.get(
-          `${baseurl}/allquestionscollection/publicUser/findbytopic/${topic}`
+          `${baseurl}/allquestionscollection/publicUser/findbytopic?page=${page}&limit=${limit}&topic=${singleData.topic}`
         );
-        setTopic(data);
-      } catch (error) {
-        console.log(error);
+        setTopic((prev) => [...prev, ...data]);
+        setPage((prev) => prev + 1);
+        setLoading(false);
       }
-    }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        !loading
+      ) {
+        fetchChunkData(singleData);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, singleData]);
+  useEffect(() => {
     async function fetchData() {
       try {
         const { data } = await axios.get(
           `${baseurl}/allquestionscollection/publicUser/find/${pram.id}`
         );
-        setData(data[0]);
+        setSingleData(data[0]);
         setloader(false);
-        await releventQuestions(data[0].topic);
       } catch (error) {
         console.log(error);
         setloader(false);
@@ -42,7 +70,6 @@ const Page = () => {
     }
     fetchData();
   }, []);
-
   console.log(topic);
   return (
     <>
@@ -53,14 +80,14 @@ const Page = () => {
             <Image className="w-1/3" src={waiting} alt="Loading" />
           </div>
         ) : (
-          <div className="md:container mx-auto flex">
-            <div className="bg-violet-500 sticky min-h-screen h-screen w-2/12 top-20 overflow-y-auto">
+          <div className="md:px-20 px-4 flex">
+            <div className="bg-violet-500 sticky min-h-screen h-screen w-2/12 top-20 overflow-y-auto hidden md:block">
               <div className="w-full">
-                {data.subject === "English" ? <EnglishSiteBar /> : ""}
+                {singleData.subject === "English" ? <EnglishSiteBar /> : ""}
               </div>
             </div>
-            <div className="md:px-10 px-4 w-10/12">
-              <div className={`bg-white border-t-2`}>
+            <div className="md:w-10/12">
+              <div className={`bg-white border-t-2 px-4`}>
                 <div className="sub_details border-b-2 py-2 text-gray-500">
                   <h2>
                     <span className="font-bold text-gray-700">Subject</span>{" "}
@@ -70,63 +97,70 @@ const Page = () => {
                     {" "}
                     <span className="font-bold text-gray-700">
                       Topic
-                    </span> : {data.topic}
+                    </span> : {singleData.topic}
                   </h3>
                   <h4>
                     <span className="font-bold text-gray-700">
                       Previous Exam
                     </span>{" "}
-                    : {data?.otherExamName}
+                    : {singleData?.otherExamName}
                   </h4>
                 </div>
                 <div className="question py-2 text-gray-500 border-b-2 mb-4">
                   <h4 className="text-lg mb-2 font-bold">
-                    Question : {data?.question}
+                    Question : {singleData?.question}
                   </h4>
                   <div className="md:grid grid-cols-2 gap-6">
                     <h4>
                       {" "}
                       <span className="font-bold text-gray-700">A</span> :{" "}
-                      {data?.option_01}
+                      {singleData?.option_01}
                     </h4>
                     <h4>
                       <span className="font-bold text-gray-700">B</span> :{" "}
-                      {data?.option_02}
+                      {singleData?.option_02}
                     </h4>
                     <h4>
                       <span className="font-bold text-gray-700">C</span> :{" "}
-                      {data?.option_03}
+                      {singleData?.option_03}
                     </h4>
                     <h4>
                       <span className="font-bold text-gray-700">D</span>:{" "}
-                      {data?.option_04}
+                      {singleData?.option_04}
                     </h4>
 
                     <h5 className="font-bold text-gray-700">
                       <span>Answer</span>:{" "}
-                      {data?.rightAns == 1
+                      {singleData?.rightAns == 1
                         ? "A"
-                        : data?.rightAns == 2
+                        : singleData?.rightAns == 2
                         ? "B"
-                        : data?.rightAns == 3
+                        : singleData?.rightAns == 3
                         ? "C"
-                        : data?.rightAns == 4
+                        : singleData?.rightAns == 4
                         ? "D"
                         : ""}
                     </h5>
                   </div>
                 </div>
                 <p className="">
-                  {HTMLReactParser(`${data.description || "No Data Found"}`)}
+                  {HTMLReactParser(
+                    `${singleData.description || "No Data Found"}`
+                  )}
                 </p>
               </div>
-              <h2 className="text-2xl mt-6 bg-violet-500 text-gray-50 py-2 rounded-md text-center shadow-md">
-                Read more relevent questions
-              </h2>
-              <div className="grid md:grid-cols-2">
+              {topic.length > 0 && (
+                <h2 className="md:text-2xl mt-6 bg-violet-500 pb-4 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
+                  Read more relevent questions
+                </h2>
+              )}
+              <div className="grid md:grid-cols-2 -mt-2 gap-4">
                 {topic?.map((item, i) => {
                   return (
-                    <div key={i} className={`bg-white border-t-2`}>
+                    <div
+                      key={i}
+                      className={`bg-gray-100 rounded-2xl md:p-4 border-t-2`}
+                    >
                       <div className="sub_details border-b-2 py-2 text-gray-500">
                         <h3>
                           {" "}
@@ -170,11 +204,11 @@ const Page = () => {
                             <span>Answer</span>:{" "}
                             {item?.rightAns == 1
                               ? "A"
-                              : data?.rightAns == 2
+                              : item?.rightAns == 2
                               ? "B"
-                              : data?.rightAns == 3
+                              : item?.rightAns == 3
                               ? "C"
-                              : data?.rightAns == 4
+                              : item?.rightAns == 4
                               ? "D"
                               : ""}
                           </h5>
@@ -189,6 +223,11 @@ const Page = () => {
                   );
                 })}
               </div>
+              {!loading && (
+                <div className="flex justify-center mt-8">
+                  <Image className="w-10 md:w-20" src={loder} alt="loading" />
+                </div>
+              )}
             </div>
           </div>
         )}

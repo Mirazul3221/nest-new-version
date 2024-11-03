@@ -112,8 +112,9 @@ export class AllquestionscollectionService {
     return await singleQuestion;
   }
 
-  async findTopicForPublicUser (topic){
-    return await this.allquestionscollection.find({topic})
+  async findTopicForPublicUser (topic,skip,limit){
+    console.log(skip + 'from service')
+    return await this.allquestionscollection.find({topic}).skip(skip).limit(limit).exec();
   }
   async findEnglishSingleQuestion(id: string) {
     const singleQuestion = await this.allquestionscollection.findById(id);

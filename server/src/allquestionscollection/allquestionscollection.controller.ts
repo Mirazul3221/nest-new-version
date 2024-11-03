@@ -55,7 +55,7 @@ export class AllquestionscollectionController {
     return this.allquestionscollectionService.remove(+id);
   }
 
-  //=================Public Access=========================
+  //=================Public Access and paginated question=========================
   @Get('publicUser/all')
   async getAllQuestions(){
    return await this.allquestionscollectionService.findAll()
@@ -67,11 +67,16 @@ export class AllquestionscollectionController {
     return await this.allquestionscollectionService.findFromPublicPlace(id);
   }
 
+  @Get('test/data')
+  async ttt (@Query() all : any){
+     console.log(all)
+  }//
 
-  @Get('publicUser/findbytopic/:topic')
-  // @UseGuards(AuthGuard())
-  async findTopicForPublicUser(@Param('topic') topic: string) {
-    return await this.allquestionscollectionService.findTopicForPublicUser(topic);
+  @Get('publicUser/findbytopic')
+  // @UseGuards(AuthGuard())/
+  async findTopicForPublicUser(@Query('page') page:number, @Query('limit') limit : number, @Query('topic') topic : string ) {
+    const skip = (page-1) * limit;
+    return await this.allquestionscollectionService.findTopicForPublicUser(topic,skip,limit);
   }
   //////////////////////////////////////////////////////////////////////////////////////////////
   @Get('english/find/:id')

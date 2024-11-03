@@ -22,6 +22,7 @@ const DataProvider = ({ children }) => {
 
   /////////////////////////////collect all my friend ids///////////////////////////////////
   async function getAllMyFriendsId() {
+   try {
     const { data } = await axios.get(
       `${baseurl}/friend-request/get-friend/accepted`,
       {
@@ -30,6 +31,9 @@ const DataProvider = ({ children }) => {
         },
       }
     );
+   } catch (error) {
+    
+   }
   }
   useEffect(() => {
     getAllMyFriendsId();
