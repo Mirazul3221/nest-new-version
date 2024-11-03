@@ -32,8 +32,9 @@ const Page = () => {
     console.log(singleData);
     try {
       if (singleData.topic !== undefined) {
+        const encodedQuery = encodeURIComponent(singleData.topic);
         const { data } = await axios.get(
-          `${baseurl}/allquestionscollection/publicUser/findbytopic?page=${page}&limit=${limit}&topic=${singleData.topic}`
+          `${baseurl}/allquestionscollection/publicUser/findbytopic?page=${page}&limit=${limit}&topic=${encodedQuery}`
         );
         setTopic((prev) => [...prev, ...data]);
         setPage((prev) => prev + 1);
