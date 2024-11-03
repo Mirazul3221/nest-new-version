@@ -8,6 +8,17 @@ const Section_01 = () => {
   <div className="left md:w-1/2 px-2">
   <h2 className='font-bold md:text-2xl pb-2 border-b-2'>কেন আপনি বিসিএস প্রি-পারেশান অনলাইন প্লাটফর্ম থেকে স্টাডি করবেন?</h2>
   <p className='md:text-lg mt-2'>বিসিএস প্রি পারেশান অনলাইন প্লাটফর্মটি সম্পূর্ণ নতুন একটি প্লাটফর্ম। এই প্লাটফর্মে আমার বাজারে প্রচলিত জব সলুশন বইয়ে যা আছে সেই সব প্রশ্ন ও এর সমাধান রাখতে চাই যাতে আপনি পরিপূর্ণ প্রস্তুতি নিতে কোন অংশে পিছিয়ে না পরেন। এছাড়া প্রতি প্রশ্নের সমাধানের এর সাথে প্রশ্ন সম্পর্কিত অসংখ্য তথ্য থাকবে যা আপনার পরিপূর্ণ প্রস্তুতি নিতে সহায়ক হবে। এছাড়া আপনার কছে যে প্রশ্নটি উত্তম মনে হবে সেটি সংরক্ষণ করে রাখার ব্যবস্থা থাকবে যেন আপনি পরবর্তীতে পড়তে পারেন</p>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7318908521952513"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7318908521952513"
+     data-ad-slot="3041018388"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
    </div>
         <div className="right md:w-1/2">
             <Image className='md:h-2/3' src={mobile} alt='bcs_banner'/>
