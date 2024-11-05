@@ -178,11 +178,6 @@ const Page = () => {
                       )}
                     </p>
                   </div>
-
-                  <script
-                    type="text/javascript"
-                    src="//pl23641250.profitablecpmrate.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
-                  ></script>
                   {topic.length > 0 && (
                     <h2 className="md:text-2xl mt-6 bg-violet-500 pb-6 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
                       Read more relevent questions
