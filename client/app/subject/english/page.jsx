@@ -20,6 +20,11 @@ import lodingImage from "@/public/wating.gif";
 import Image from "next/image";
 import Footer from "@/app/components/Footer";
 import SuperHeader from "@/app/userdashboard/components/SuperHeader";
+export const metadata = {
+  title:'bcs preparation online platform',
+  description : 'Bcs preparation online platform is a all in one flexible and manageable software. You will get all kind of facilities using a single software or platform',
+   keywords : 'online bcs preparation, online job preparation, job prostuti, bcs prostuti, bcs help'
+}
 const Page = () => {
   // const [navValue, setNaveValue] = useState("home");
   const [title, setTitle] = useState("");
