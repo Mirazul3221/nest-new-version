@@ -75,8 +75,9 @@ export class AllquestionscollectionController {
   @Get('publicUser/findbytopic')
   // @UseGuards(AuthGuard())/
   async findTopicForPublicUser(@Query('page') page:number, @Query('limit') limit : number, @Query('topic') topic : string ) {
-    console.log(topic)
+    console.log(page)
     const skip = (page-1) * limit;
+    console.log(skip + 'from service')
     return await this.allquestionscollectionService.findTopicForPublicUser(topic,skip,limit);
   }
   //////////////////////////////////////////////////////////////////////////////////////////////

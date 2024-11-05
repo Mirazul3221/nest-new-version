@@ -18,6 +18,8 @@ import { devider } from "../conponents/devider";
 import QuestionLoader from "../conponents/QuestionLoader";
 import lodingImage from "@/public/wating.gif";
 import Image from "next/image";
+import Footer from "@/app/components/Footer";
+import SuperHeader from "@/app/userdashboard/components/SuperHeader";
 const Page = () => {
   // const [navValue, setNaveValue] = useState("home");
   const [title, setTitle] = useState("");
@@ -74,18 +76,16 @@ const Page = () => {
 
   return (
     <ProtectRoute>
-      <div className="md:px-10 px-2">
-        <div className="flex justify-between items-center my-4">
-          <div className="md:w-20 w-16">
-            <Link href="/">
-              {/* <Image src={logo} alt="bffd" /> */}
-              <Logo />
-            </Link>
-          </div>
-          {/* <Navbar value={navValue} setValue={setNaveValue} /> */}
-        </div>
 
-        {switcher ? (
+      <div className="md:px-10 px-2">
+      <div className="mb-6 md:mb-10">
+        <div className="py-2">
+        <SuperHeader />
+        </div>
+      </div>
+
+      <div className="min-h-[80vh]">
+      {switcher ? (
           <div>
             <div className={`${subSwitcher ? "hidden" : ""}`}>
               {getQuestion.question.length > 0 ? (
@@ -196,14 +196,17 @@ const Page = () => {
                             className={` py-2 flex justify-between items-center cursor-pointer px-6 ml-6 md:ml-12 text-gray-600 mt-[5px]`}
                           >
                             <div className="relative">
-                                    <h2>{item2.name}</h2>
-                                    {loadingGif && item2.name === getTopicValue && (
-                                      <Image className="absolute -right-16 -top-[60%]" width={60} height={60}
-                                        src={lodingImage}
-                                        alt="loading-gif"
-                                      />
-                                    )}
-                                  </div>
+                              <h2>{item2.name}</h2>
+                              {loadingGif && item2.name === getTopicValue && (
+                                <Image
+                                  className="absolute -right-16 -top-[60%]"
+                                  width={60}
+                                  height={60}
+                                  src={lodingImage}
+                                  alt="loading-gif"
+                                />
+                              )}
+                            </div>
                             <MdOutlineArrowRight
                               className={`${
                                 title === item2.name ? "rotate-90" : ""
@@ -285,7 +288,10 @@ const Page = () => {
                                   <div className="relative">
                                     <h2>{item3}</h2>
                                     {loadingGif && item3 === getTopicValue && (
-                                      <Image className="absolute -right-16 -top-[60%]" width={60} height={60}
+                                      <Image
+                                        className="absolute -right-16 -top-[60%]"
+                                        width={60}
+                                        height={60}
                                         src={lodingImage}
                                         alt="loading-gif"
                                       />
@@ -317,7 +323,11 @@ const Page = () => {
           </div>
         )}
       </div>
+      </div>
       {/* <script type="text/javascript" src="//www.topcreativeformat.com/1e4c448d5eee38ea6fe4d00ccc81e2f1/invoke.js"></script> */}
+      <div className="w-full">
+          <Footer />
+        </div>
     </ProtectRoute>
   );
 };

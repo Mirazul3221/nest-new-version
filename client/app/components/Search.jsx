@@ -8,9 +8,9 @@ const Search = ({getSearchValue}) => {
     const router = useRouter()
     const path = usePathname()
     const handleNavigate = ()=>{
-      if (path !== "/") {
-        getSearchValue(search)
-      }
+      // if (path !== "/") {
+      //   getSearchValue(search)
+      // }
       router.push("/localuser/questions")  
     }
    const handleSearch = ()=>{
