@@ -206,7 +206,7 @@ const Page = () => {
 
                         <div className="border-t-2 max-h-0 duration-1000 overflow-hidden">
                        
-                            {HTMLReactParser(singleQuestion.description)}
+                            {HTMLReactParser( `${singleQuestion.description || "No Data Found"}`)}
                
                         </div>
 

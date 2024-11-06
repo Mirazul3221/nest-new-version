@@ -19,10 +19,17 @@ import Script from "next/script";
 import Test from "./Test";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Footer from "./components/Footer";
+import MobileBanner from "./adsterra/MobileBanner320";
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
   const [isClient, setIsClient] = useState(false);
+  const [orderAdd, setOrderAdd] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setOrderAdd(true);
+    }, 5000);
+  }, []);
   let number = [];
   for (let i = 1; i <= 100; i++) {
     number.push(i);
@@ -55,14 +62,21 @@ export default function Home() {
             <div className="bg-white flex justify-center py-10">
               <Image src={manymobile} alt="multiple mobile" />
             </div>
-            <div className="w-full overflow-hidden">
-              <Banner className="w-full" />
+            <div className="flex">
+              <div className="w-full overflow-hidden">
+                <Banner className="w-full" />
+              </div>
+              {orderAdd && (
+                <div className="w-full overflow-hidden">
+                  <Banner className="w-full" />
+                </div>
+              )}
             </div>
             <Script
               type="text/javascript"
               src="//pl23641250.highrevenuenetwork.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
             />
-            <Footer/>
+            <Footer />
             <Test />
             {/* <Card/> */}
           </main>

@@ -8,7 +8,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineHeart } from "react-icons/ai";
 import { GoHistory } from "react-icons/go";
-import { Banner, BannerMobile } from "../adsterra/Banner";
+import { Banner } from "../adsterra/Banner";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { baseurl } from "../config";
@@ -102,9 +102,6 @@ const UserDashboard = () => {
           </div>
           <div className="hidden md:block">
             <Banner />
-          </div>
-          <div className="hidden">
-            <BannerMobile />
           </div>
         </div>
         <div className="fixed bottom-0 md:hidden left-0 w-full px-10 py-4 bg-white rounded-t-md">
