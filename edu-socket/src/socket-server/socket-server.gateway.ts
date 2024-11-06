@@ -93,7 +93,7 @@ export class NotificationsGateway
             await this.server.to(id).emit('new-notification', 'new message');
           });
         }
-      });//
+      });
 
       //////////////////////////Here is the logic for active users////////////////////////////////
       const userIds = Object.keys(this.socketUsers);

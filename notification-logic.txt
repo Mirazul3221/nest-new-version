@@ -1,3 +1,5 @@
+
+
 "use client";
 import Logo from "@/app/components/Logo";
 import { baseurl } from "@/app/config";
@@ -85,7 +87,6 @@ const SuperHeader = () => {
   useEffect(() => {
     socket &&
       socket.on("new-notification", (id) => {
-        console.log(id)
         if (openNotif === true) {
           handleNotification();
           seenAndDeleteNotif();
@@ -98,9 +99,7 @@ const SuperHeader = () => {
     };
   }, [socket, openNotif]);
   console.log(openNotif)
-  useEffect(() => {
-    openNotif && handleNotification();
-  }, [openNotif]);
+  openNotif && handleNotification();
   useEffect(() => {
     handleNotification();
   }, []);

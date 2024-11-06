@@ -118,7 +118,7 @@ const Messanger = ({
     switcher
       ? socket?.emit("openMessageWindow", { receiverId: id, status: true })
       : socket?.emit("openMessageWindow", { receiverId: id, status: false });
-    socket.on("getOpenMessageWindow", (data) => {
+    socket && socket.on("getOpenMessageWindow", (data) => {
       console.log(isOpenMyFriendMessangerWindow);
       setIsOpenMyFriendMessangerWindow(data);
     });
