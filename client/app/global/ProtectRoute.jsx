@@ -7,14 +7,14 @@ import CallReceiverRoom from "../userdashboard/components/messanger/video-audio-
 export const MYONLINEFRIEND = []
 const ProtectRoute = ({children}) => {
   const [isMounted,setIsMounted] = useState(false)
+  const { store } = useContext(storeContext)
+  const router = useRouter()
+  const {socket} = useSocket()
   useEffect(() => {
     setIsMounted(true)
   }, []);
 
   if(!isMounted) return 'mounted';
-  const { store } = useContext(storeContext)
-  const router = useRouter()
-  const {socket} = useSocket()
   const protectRouter = ()=>{
     router.push("/login")
   }
