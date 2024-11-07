@@ -67,6 +67,7 @@ const Page = () => {
 
   const targetEle = (e)=>{
     const targetBox = e.target.parentElement.parentElement.parentElement.parentElement.children[2];
+    console.log(targetBox)
     targetBox.classList.remove("max-h-0")
     targetBox.classList.add("h-auto")
     targetBox.classList.add("max-h-[500vh]")
@@ -131,7 +132,7 @@ const Page = () => {
                     return (
                       <div
                         key={i}
-                        className={`relative overflow-auto border-2 rounded-lg bg-white mb-10 p-2`}
+                        className={`relative overflow-auto border-2 rounded-lg bg-white mb-10 duration-1000 p-2`}
                       >
                         <div className="sub_details border-b-2 py-2 text-gray-500">
                           <div className="text-lg flex justify-center items-center shadow-md bg-gray-100 p-2 w-8 h-8 rounded-md">
@@ -204,7 +205,7 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className="border-t-2 max-h-0 duration-1000 overflow-hidden">
+                        <div className="border-t-2 ggg max-h-0 duration-1000 overflow-hidden">
                        
                             {HTMLReactParser( `${singleQuestion.description || "No Data Found"}`)}
                

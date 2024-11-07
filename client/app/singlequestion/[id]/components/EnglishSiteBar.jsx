@@ -19,7 +19,7 @@ const EnglishSiteBar = ({passTopicTitle,setTopic,setPage}) => {
     }
   }
   return (
-    <div className='py-2'>
+    <div className='py-2 mb-8'>
         <h3 className='md:text-3xl text-white border-b-4 border-white p-4'>Literature</h3>
       {
         englishTopicValue[0]?.topic.map((val,i)=>{

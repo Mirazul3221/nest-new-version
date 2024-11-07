@@ -1,6 +1,6 @@
 "use client";
 import loder from "@/public/chunk-loader.webp";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser";
 import { useParams } from "next/navigation";
@@ -11,6 +11,7 @@ import { Banner } from "@/app/adsterra/Banner";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import EnglishSiteBar from "./components/EnglishSiteBar";
+import Link from "next/link";
 const Page = () => {
   const [singleData, setSingleData] = useState([]);
   const [loader, setloader] = useState(true);
@@ -21,6 +22,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [layoutData, switchLayout] = useState(singleData.topic);
+  const [count,setCount] = useState(1)
   const limit = 10;
   const pram = useParams();
   ////////////////////////////////////////////Fetch chunk data from server//////////////////////////////////////
@@ -91,6 +93,26 @@ const Page = () => {
       setFetchLoading(false);
     }, 30000);
   }, [layoutData]);
+  ///////////////////////////////////////////////////////////////////////////////////////
+  const targetElement0 = (e) => {
+    const targetBox =
+      e.target.parentElement.parentElement.children[4];
+    console.log(targetBox);
+    targetBox.classList.remove("max-h-0");
+    targetBox.classList.add("h-auto");
+    targetBox.classList.add("max-h-[500vh]");
+    targetBox.classList.add("duration-1000");
+  };
+  const targetElement = (e) => {
+    const targetBox =
+      e.target.parentElement.parentElement.parentElement.children[3];
+    console.log(targetBox);
+    targetBox.classList.remove("max-h-0");
+    targetBox.classList.add("h-auto");
+    targetBox.classList.add("max-h-[500vh]");
+    targetBox.classList.add("duration-1000");
+  };
+  ////////////////////////////////////////////
   return (
     <>
       <div className="py-2 min-h-screen">
@@ -112,7 +134,7 @@ const Page = () => {
               )}
             </div>
             <div className="md:px-20 px-4 md:flex">
-              <div className="bg-violet-500 sticky min-h-screen h-screen w-2/12 top-20 overflow-y-auto hidden md:block">
+              <div className="bg-violet-500 sticky min-h-[90vh] h-[90vh] w-2/12 top-20 overflow-y-auto hidden md:block">
                 <div className="w-full">
                   {singleData.subject === "English" ? (
                     <EnglishSiteBar
@@ -127,7 +149,7 @@ const Page = () => {
               </div>
               <div className="md:w-10/12">
                 {singleData.topic === layoutData ? (
-                  <div className="">
+                  <div>
                     <div className={`bg-white border-t-2 px-4`}>
                       <div className="sub_details border-b-2 py-2 text-gray-500">
                         <h2>
@@ -207,7 +229,9 @@ const Page = () => {
                             key={i}
                             className={`bg-gray-100 rounded-2xl p-2 md:p-4 border-t-2`}
                           >
-                            <h2 className="p-2 bg-white w-8 h-8 flex justify-center items-center rounded-full shadow-lg">{i + 1}</h2>
+                            <h2 className="p-2 bg-white w-8 h-8 flex justify-center items-center rounded-full shadow-lg">
+                              {i + 1}
+                            </h2>
                             <div className="sub_details border-b-2 py-2 text-gray-500">
                               <h3>
                                 {" "}
@@ -268,11 +292,30 @@ const Page = () => {
                                 </h5>
                               </div>
                             </div>
-                            <p className="">
-                              {HTMLReactParser(
-                                `${item.description || "No Data Found"}`
-                              )}
-                            </p>
+                            <div className="flex mt-2 gap-2 duration-100">
+                                  {item.description && (
+                                    <h4
+                                      onClick={(e)=>{targetElement0(e);setCount(i)}}
+                                      className={`px-4 cursor-pointer ${i === count ? "hidden" : ""} bg-violet-700 rounded-lg text-white`}
+                                    >
+                                      Read more...
+                                    </h4>
+                                  )}
+                                  <Link
+                                    href={`${viewurl}/singlequestion/${item._id}`}
+                                  >
+                                    <h4 className="px-4 bg-violet-700 rounded-lg text-white">
+                                      Open in a tab
+                                    </h4>
+                                  </Link>
+                                </div>
+                                <div className="max-h-0 duration-1000 overflow-hidden">
+                                <p>
+                                  {HTMLReactParser(
+                                    `${item.description || "No Data Found"}`
+                                  )}
+                                </p>
+                              </div>
                           </div>
                         );
                       })}
@@ -358,12 +401,31 @@ const Page = () => {
                                       : ""}
                                   </h5>
                                 </div>
+                                <div className="flex mt-2 gap-4">
+                                  {item.description && (
+                                    <h4
+                                      onClick={(e)=>{targetElement(e);setCount(i)}}
+                                      className={`px-4 cursor-pointer ${i === count ? "hidden" : ""} bg-violet-700 rounded-lg text-white`}
+                                    >
+                                      Read more...
+                                    </h4>
+                                  )}
+                                  <Link
+                                    href={`${viewurl}/singlequestion/${item._id}`}
+                                  >
+                                    <h4 className="px-4 bg-violet-700 rounded-lg text-white">
+                                      Open in a tab
+                                    </h4>
+                                  </Link>
+                                </div>
                               </div>
-                              <p className="">
-                                {HTMLReactParser(
-                                  `${item.description || "No Data Found"}`
-                                )}
-                              </p>
+                              <div className="max-h-0 duration-1000 overflow-hidden">
+                                <p>
+                                  {HTMLReactParser(
+                                    `${item.description || "No Data Found"}`
+                                  )}
+                                </p>
+                              </div>
                             </div>
                           );
                         })}
