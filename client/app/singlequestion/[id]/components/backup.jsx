@@ -25,7 +25,7 @@ const Page = () => {
   const [count,setCount] = useState(1)
   const limit = 10;
   const pram = useParams();
-  ////////////////////////////////////////////Fetch chunk data from server//////////////////////////////////////
+  ////////////////////////////////////////////Fetch chunk data from server////////////////////////////////////////
   
   useEffect(() => {
     async function fetchData() {
