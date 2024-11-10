@@ -34,7 +34,8 @@ const onlyMyfriends =   messangerFriends?.filter(friend => {
     <div className='absolute top-20 right-20 bg-gray-100 md:w-3/12 md:h-[50vh] border-4 rounded-2xl z-50'>
       {
         onlyMyfriends && onlyMyfriends.map((friend,i)=>{
-          return <a target='_blank' key={i}  href={`${viewurl}/userdashboard/messanger/${friend.name}/${friend._id}`}>
+          return <div key={i}>
+            <a target='_blank'  href={`${viewurl}/userdashboard/messanger/${friend.name}/${friend._id}`}>
              <div className="px-6 rounded-2xl py-2 border-b hover:bg-white duration-100">
            <div className="">
                 <img src={friend.profile} alt={friend.name}/>
@@ -42,6 +43,7 @@ const onlyMyfriends =   messangerFriends?.filter(friend => {
               <h2 className='mt-2 text-2xl text-slate-700'>{friend.name}</h2>
              </div>
           </a>
+          </div>
         })
       }
         </div>
