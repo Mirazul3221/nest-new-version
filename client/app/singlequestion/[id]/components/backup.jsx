@@ -22,26 +22,11 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [layoutData, switchLayout] = useState(singleData.topic);
-  const [count, setCount] = useState(1);
-  const limit = 20;
+  const [count,setCount] = useState(1)
+  const limit = 10;
   const pram = useParams();
-
-  const [popup,setPopup] = useState(false)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 100 &&
-        !loading
-      ) {
-        if (popup) return
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
   ////////////////////////////////////////////Fetch chunk data from server//////////////////////////////////////
-
+  
   useEffect(() => {
     async function fetchData() {
       try {
@@ -51,7 +36,6 @@ const Page = () => {
         setSingleData(data[0]);
         switchLayout(data[0].topic);
         setloader(false);
-        fetchChunkData(data[0].topic);
       } catch (error) {
         console.log(error);
         setloader(false);
@@ -59,7 +43,12 @@ const Page = () => {
     }
     fetchData();
   }, []);
-  ///////////////////////////////////////function Data set when scroll//////////////////////////////
+  /////////////////////////////////////////
+  useEffect(() => {
+    setTimeout(() => {
+      setLazyLoader(true);
+    }, 5000);
+  }, []);
   const fetchChunkData = async (layoutData) => {
     if (loading) return;
     try {
@@ -81,16 +70,38 @@ const Page = () => {
       }
     } catch (error) {}
   };
-  ////////////////////////////////////////////Data load////////////////////////////////
-  const dataLoad = (sub) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setTopic([]);
-    setPage(1);
-    switchLayout(sub);
-    fetchChunkData(sub);
-    setPopup(true)
-  };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        !loading
+      ) {
+        fetchChunkData(layoutData);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading,layoutData]);
+
+  useEffect(() => {
+    setFetchLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      setFetchLoading(false);
+    }, 30000);
+  }, [layoutData]);
+  ///////////////////////////////////////////////////////////////////////////////////////
+  const targetElement0 = (e) => {
+    const targetBox =
+      e.target.parentElement.parentElement.children[4];
+    console.log(targetBox);
+    targetBox.classList.remove("max-h-0");
+    targetBox.classList.add("h-auto");
+    targetBox.classList.add("max-h-[500vh]");
+    targetBox.classList.add("duration-1000");
+  };
   const targetElement = (e) => {
     const targetBox =
       e.target.parentElement.parentElement.parentElement.children[3];
@@ -100,6 +111,11 @@ const Page = () => {
     targetBox.classList.add("max-h-[500vh]");
     targetBox.classList.add("duration-1000");
   };
+  ////////////////////////////////////////////Data load////////////////////////////////
+  const dataLoad = () => {
+    // fetchChunkData(layoutData);
+      console.log(layoutData)
+  }
   return (
     <>
       <div className="py-2 min-h-screen">
@@ -123,12 +139,20 @@ const Page = () => {
             <div className="md:px-20 px-4 md:flex">
               <div className="bg-violet-500 sticky min-h-[90vh] h-[90vh] w-2/12 top-20 overflow-y-auto hidden md:block">
                 <div className="w-full">
-                  <EnglishSiteBar dataLoad={dataLoad} />
+                  {singleData.subject === "English" ? (
+                    <EnglishSiteBar
+                      dataLoad = {dataLoad}
+                      passTopicTitle={switchLayout}
+                      setTopic={setTopic}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
               <div className="md:w-10/12">
-                <div>
-                  {singleData.topic === layoutData && (
+                {singleData.topic === layoutData ? (
+                  <div>
                     <div className={`bg-white border-t-2 px-4`}>
                       <div className="sub_details border-b-2 py-2 text-gray-500">
                         <h2>
@@ -195,23 +219,22 @@ const Page = () => {
                         )}
                       </p>
                     </div>
-                  )}
-                  {topic.length > 0 && (
-                    <h2 className="md:text-2xl mt-6 bg-violet-500 pb-6 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
-                      Read more relevent questions
-                    </h2>
-                  )}
-                </div>
-                <div>
-                  {topic.length > 0 ? (
+                    {topic.length > 0 && (
+                      <h2 className="md:text-2xl mt-6 bg-violet-500 pb-6 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
+                        Read more relevent questions
+                      </h2>
+                    )}
+
                     <div className="grid md:grid-cols-2 -mt-3 gap-4">
                       {topic?.map((item, i) => {
                         return (
                           <div
                             key={i}
-                            className={`bg-gray-100 rounded-2xl md:p-4 border-t-2`}
+                            className={`bg-gray-100 rounded-2xl p-2 md:p-4 border-t-2`}
                           >
-                            <h2>{i + 1}</h2>
+                            <h2 className="p-2 bg-white w-8 h-8 flex justify-center items-center rounded-full shadow-lg">
+                              {i + 1}
+                            </h2>
                             <div className="sub_details border-b-2 py-2 text-gray-500">
                               <h3>
                                 {" "}
@@ -271,63 +294,152 @@ const Page = () => {
                                     : ""}
                                 </h5>
                               </div>
-                              <div className="flex mt-2 gap-4">
-                                {item.description && (
-                                  <h4
-                                    onClick={(e) => {
-                                      targetElement(e);
-                                      setCount(i);
-                                    }}
-                                    className={`px-4 cursor-pointer ${
-                                      i === count ? "hidden" : ""
-                                    } bg-violet-700 rounded-lg text-white`}
+                            </div>
+                            <div className="flex mt-2 gap-2 duration-100">
+                                  {item.description && (
+                                    <h4
+                                      onClick={(e)=>{targetElement0(e);setCount(i)}}
+                                      className={`px-4 cursor-pointer ${i === count ? "hidden" : ""} bg-violet-700 rounded-lg text-white`}
+                                    >
+                                      Read more...
+                                    </h4>
+                                  )}
+                                  <Link
+                                    href={`${viewurl}/singlequestion/${item._id}`}
                                   >
-                                    Read more...
-                                  </h4>
-                                )}
-                                <Link
-                                  href={`${viewurl}/singlequestion/${item._id}`}
-                                >
-                                  <h4 className="px-4 bg-violet-700 rounded-lg text-white">
-                                    Open in a tab
-                                  </h4>
-                                </Link>
+                                    <h4 className="px-4 bg-violet-700 rounded-lg text-white">
+                                      Open in a tab
+                                    </h4>
+                                  </Link>
+                                </div>
+                                <div className="max-h-0 duration-1000 overflow-hidden">
+                                <p>
+                                  {HTMLReactParser(
+                                    `${item.description || "No Data Found"}`
+                                  )}
+                                </p>
                               </div>
-                            </div>
-                            <div className="max-h-0 duration-1000 overflow-hidden">
-                              <p>
-                                {HTMLReactParser(
-                                  `${item.description || "No Data Found"}`
-                                )}
-                              </p>
-                            </div>
                           </div>
                         );
                       })}
                     </div>
-                  ) : (
-                    <div className="w-full h-[50vh] md:h-[80vh] flex justify-center items-center">
-                      {fetchLoading ? "Loading..." : "Data Not Found"}
-                    </div>
-                  )}
-                </div>
-                <div
-                    onClick={() => {
-                      fetchChunkData(layoutData);
-                    }}
-                    className="bg-violet-700 cursor-pointer shadow-md flex duration-300 justify-center items-center pr-4 border border-violet-700 text-white md:text-lg w-fit mx-auto my-4 rounded-full"
-                  >
+
                     {loading && (
-                      <div className="flex justify-center w-20 bg-white rounded-l-full">
+                      <div className="flex justify-center mt-8">
                         <Image
-                          className="w-6 p-1 md:w-8"
+                          className="w-10 md:w-20"
                           src={loder}
                           alt="loading"
                         />
                       </div>
                     )}
-                    <h2 className="pl-4">Read more questions</h2>
                   </div>
+                ) : (
+                  <div>
+                    {topic.length > 0 ? (
+                      <div className="grid md:grid-cols-2 -mt-3 gap-4">
+                        {topic?.map((item, i) => {
+                          return (
+                            <div
+                              key={i}
+                              className={`bg-gray-100 rounded-2xl md:p-4 border-t-2`}
+                            >
+                              <h2>{i + 1}</h2>
+                              <div className="sub_details border-b-2 py-2 text-gray-500">
+                                <h3>
+                                  {" "}
+                                  <span className="font-bold text-gray-700">
+                                    Topic
+                                  </span>{" "}
+                                  : {item.topic}
+                                </h3>
+                                <h4>
+                                  <span className="font-bold text-gray-700">
+                                    Previous Exam
+                                  </span>{" "}
+                                  : {item?.otherExamName}
+                                </h4>
+                              </div>
+                              <div className="question py-2 text-gray-500 border-b-2 mb-4">
+                                <h4 className="text-lg mb-2 font-bold">
+                                  Question : {item?.question}
+                                </h4>
+                                <div className="md:grid grid-cols-2 gap-6">
+                                  <h4>
+                                    {" "}
+                                    <span className="font-bold text-gray-700">
+                                      A
+                                    </span>{" "}
+                                    : {item?.option_01}
+                                  </h4>
+                                  <h4>
+                                    <span className="font-bold text-gray-700">
+                                      B
+                                    </span>{" "}
+                                    : {item?.option_02}
+                                  </h4>
+                                  <h4>
+                                    <span className="font-bold text-gray-700">
+                                      C
+                                    </span>{" "}
+                                    : {item?.option_03}
+                                  </h4>
+                                  <h4>
+                                    <span className="font-bold text-gray-700">
+                                      D
+                                    </span>
+                                    : {item?.option_04}
+                                  </h4>
+
+                                  <h5 className="font-bold text-gray-700">
+                                    <span>Answer</span>:{" "}
+                                    {item?.rightAns == 1
+                                      ? "A"
+                                      : item?.rightAns == 2
+                                      ? "B"
+                                      : item?.rightAns == 3
+                                      ? "C"
+                                      : item?.rightAns == 4
+                                      ? "D"
+                                      : ""}
+                                  </h5>
+                                </div>
+                                <div className="flex mt-2 gap-4">
+                                  {item.description && (
+                                    <h4
+                                      onClick={(e)=>{targetElement(e);setCount(i)}}
+                                      className={`px-4 cursor-pointer ${i === count ? "hidden" : ""} bg-violet-700 rounded-lg text-white`}
+                                    >
+                                      Read more...
+                                    </h4>
+                                  )}
+                                  <Link
+                                    href={`${viewurl}/singlequestion/${item._id}`}
+                                  >
+                                    <h4 className="px-4 bg-violet-700 rounded-lg text-white">
+                                      Open in a tab
+                                    </h4>
+                                  </Link>
+                                </div>
+                              </div>
+                              <div className="max-h-0 duration-1000 overflow-hidden">
+                                <p>
+                                  {HTMLReactParser(
+                                    `${item.description || "No Data Found"}`
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="w-full h-[50vh] md:h-[80vh] flex justify-center items-center">
+                        {fetchLoading ? "Loading..." : "Data Not Found"}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

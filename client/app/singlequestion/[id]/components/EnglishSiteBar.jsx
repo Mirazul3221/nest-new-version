@@ -3,20 +3,18 @@ import { baseurl } from '@/app/config';
 import axios from 'axios';
 import React from 'react'
 
-const EnglishSiteBar = ({passTopicTitle,setTopic,setPage}) => {
+const EnglishSiteBar = ({dataLoad}) => {
   const handleFunc =async (topic) => {
-    passTopicTitle(topic); 
-    try {
-      setTopic([])
-      const encodedQuery = encodeURIComponent(topic);
-      const { data } = await axios.get(
-        `${baseurl}/allquestionscollection/publicUser/findbytopic?page=1&limit=10&topic=${encodedQuery}`
-      );
-       setPage(2)
-      setTopic(data)
-    } catch (error) {
-      console.log(error)
-    }
+    dataLoad(topic)
+    // try {
+ 
+    //   const encodedQuery = encodeURIComponent(topic);
+    //   const { data } = await axios.get(
+    //     `${baseurl}/allquestionscollection/publicUser/findbytopic?page=1&limit=10&topic=${encodedQuery}`
+    //   );
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
   return (
     <div className='py-2 mb-8'>
