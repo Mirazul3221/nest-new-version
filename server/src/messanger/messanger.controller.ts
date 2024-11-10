@@ -15,6 +15,13 @@ export class MessangerController {
     return await this.messangerService.create(createMessangerDto,me);
   }
 
+ @Get('my-friends-by-message')
+ @UseGuards(AuthGuard())
+ async findAllFriendsByMessages (@Req() req : any){
+  const myId = req.user.id; 
+    return await this.messangerService.findAllFriendsByMessages(myId)
+ }
+
 
 
   @Get('get/:id')

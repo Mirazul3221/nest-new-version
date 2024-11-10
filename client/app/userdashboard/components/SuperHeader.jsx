@@ -16,6 +16,7 @@ import Search from "./Search";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { useSocket } from "../global/SocketProvider";
 import NotificationContainer from "./notification-component/NotificationContainer";
+import MessageBox from "./messanger/MessageBox";
 
 const SuperHeader = () => {
   const { store, dispatch } = useContext(storeContext);
@@ -80,6 +81,8 @@ const SuperHeader = () => {
       console.log(error);
     }
   };
+  /////////////////////////////Here is the logic for new message come/////////////////////////////////
+    const [openMessage,setOpenMessage] = useState(false)
   /////////////////////////////Here is the logic for new notification come//////////////////////////////
   const [openNotif, setOpenNotif] = useState(false);
   useEffect(() => {
@@ -177,6 +180,25 @@ const SuperHeader = () => {
                 </li>
                 <li
                   onClick={() => {
+                    setOpenMessage(!openMessage);
+                  }}
+                  className={`text-lg font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+                >
+                  <div className={`absolute -top-1 -right-1`}>
+                    {unseenNotification?.length > 0 && (
+                      <div
+                        className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
+                      >
+                        <p className="text-white text-[10px]">
+                          {unseenNotification.length}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <IoIosNotificationsOutline size={26} />
+                </li>
+                <li
+                  onClick={() => {
                     setOpenNotif(!openNotif);
                     seenAndDeleteNotif();
                   }}
@@ -195,6 +217,11 @@ const SuperHeader = () => {
                   </div>
                   <IoIosNotificationsOutline size={26} />
                 </li>
+                {/* ==================Open and close message==================== */}
+
+                {openMessage && (
+                   <MessageBox/>
+                )}
                 {/* ==================Open and close notification==================== */}
 
                 {openNotif && (

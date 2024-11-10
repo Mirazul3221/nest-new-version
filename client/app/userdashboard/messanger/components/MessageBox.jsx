@@ -2,6 +2,7 @@
 import { baseurl, viewurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
+import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 
@@ -32,16 +33,14 @@ const MessageBox = ({}) => {
     })
 
   return (
-    <div className="absolute top-20 right-20 bg-gray-100 md:w-3/12 md:h-[80vh] border-4 rounded-2xl z-50">
+    <div className="w-full">
       {onlyMyfriends &&
         onlyMyfriends.map((friend, i) => {
           return (
             <div key={i}>
-              <a
-                target="_blank"
-                href={`${viewurl}/userdashboard/messanger/${friend.name}/${friend._id}`}
-              >
-                <div className="px-6 flex gap-2 items-center rounded-2xl py-2 border-b hover:bg-white duration-100">
+
+               <Link  href={`${viewurl}/userdashboard/messanger/${friend.name}/${friend._id}`}>
+               <div className="px-6 flex gap-2 items-center rounded-2xl py-2 border-b hover:bg-white duration-100">
                   <div className="">
                     <img className="w-16 rounded-full" src={friend.profile} alt={friend.name} />
                   </div>
@@ -49,7 +48,7 @@ const MessageBox = ({}) => {
                     {friend.name}
                   </h2>
                 </div>
-              </a>
+               </Link>
             </div>
           );
         })}
