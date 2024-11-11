@@ -20,14 +20,13 @@ const MessageBox = ({}) => {
     loadmessage();
   }, []);
 
-  const onlyMyfriends = messangerFriends?.filter((friend) => {
-    return friend._id !== store.userInfo.id;
-  });
+
+  const sortedMessages = messangerFriends?.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
 
   return (
     <div className="w-full">
-      {onlyMyfriends &&
-        onlyMyfriends.map((friend, i) => {
+      {sortedMessages &&
+        sortedMessages.map((friend, i) => {
           return (
             <div key={i}>
               <Link

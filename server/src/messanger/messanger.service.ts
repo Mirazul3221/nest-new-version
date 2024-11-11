@@ -101,11 +101,12 @@ export class MessangerService {
           UserProfile : '$userProfile.profile',
           senderId : 1,
           lastMessage : 1,
-          messageTime : 1,
           lastMessageTime : 1
         }
       }
     ])
+
+    console.log(result)
      return await result;
   }
 
