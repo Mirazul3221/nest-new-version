@@ -42,20 +42,21 @@ const MessageBox = ({}) => {
                     />
                   </div>
                   <div className="">
-                    <h2 className="text-lg font-semibold text-slate-700">
+                      <div className="flex gap-4 items-center justify-between">
+                      <h2 className="text-lg font-semibold text-slate-700">
                       {friend.userName}
                     </h2>
-                    <div className="flex items-end gap-2">
+
+                    <p className="text-[12px] text-slate-500">
+                        {formatetime(friend.lastMessageTime)}
+                      </p>
+                      </div>
                       <h4 className="text-sm text-slate-500">
                         <span className="font-semibold text-slate-700">
                           {friend.senderId === store.userInfo.id ? "You :" : ""}
                         </span>{" "}
                         {friend.lastMessage}
                       </h4>
-                      <p className="text-[12px] text-slate-500">
-                        {formatetime(friend.lastMessageTime)}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </Link>
