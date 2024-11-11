@@ -1,4 +1,4 @@
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 export async function generateMetadata({ params }) {
   // console.log(dynamicUrl)
     const res = await fetch(`${baseurl}/allquestionscollection/publicUser/find/${params.id}`);
@@ -9,6 +9,9 @@ export async function generateMetadata({ params }) {
       title: Q.question,
       description:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
       keywords:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
+      alternates:{
+        canonical:`${viewurl}/singlequestion/${params.id}`
+      }
     //   openGraph: {
     //     title: Q.question,
     //     description: Q.description,

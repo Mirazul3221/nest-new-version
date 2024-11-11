@@ -17,7 +17,9 @@ const Page = () => {
             <MessageBox/>
            </div>
         </div>
-        <div className='middle w-6/12 bg-white h-full rounded-2xl shadow-sm border-gray-300 border p-4'>middle</div>
+        <div className='middle w-6/12 bg-white h-full rounded-2xl shadow-sm border-gray-300 border p-4'>
+        middle
+        </div>
         <div className='write w-3/12 bg-white'>right</div>
        </div>
     </div>

@@ -14,6 +14,12 @@ export class MessangerController {
     const me = req.user; 
     return await this.messangerService.create(createMessangerDto,me);
   }
+  @Get('my-friends-by-both-message-and-profile')
+  @UseGuards(AuthGuard())
+  async getCombinedLastMessageAndUserProfiles (@Req() req:any){
+    const myId = req.user.id; 
+      return await this.messangerService.getCombinedLastMessageAndUserProfiles(myId)
+  }
 
  @Get('my-friends-by-message')
  @UseGuards(AuthGuard())

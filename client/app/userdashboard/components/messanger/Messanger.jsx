@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useSocket } from "../../global/SocketProvider";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
 import moment from "moment";
+import { formatetime } from "./components/time";
 const Messanger = ({
   id,
   name,
@@ -220,21 +221,6 @@ const Messanger = ({
     }
   }, [switcher]);
 
-  //////////////////////////////////////////////////////////////////Logic for dispay time//////////////////////////////////////////////////////////
-  const formatetime = (timeStamp) => {
-     const today = moment().startOf('day');
-     const messageData = moment(timeStamp);
-     const weekAgo = moment().subtract(1,'weeks').startOf('day');
-     if (messageData.isSame(today,'day')) {
-      return `Today at ${messageData.format('h:mm A')}`;
-     }else if (messageData.isSame(today.subtract(1,'days'),'day')) {
-       return `Yesterday at ${messageData.format('h:mm A')}`;
-     }else if (messageData.isAfter(weekAgo)) {
-      return `${messageData.format('dddd')} at ${messageData.format('h:mm A')}`;
-     }else {
-      return `${messageData.format('MMM D')} at ${messageData.format('h:mm A')}`
-     }
-  }
   return (
     <div>
       {!switcher && (
