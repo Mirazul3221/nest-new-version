@@ -17,17 +17,17 @@ export class AllquestionscollectionService {
   async create(
     createAllquestionscollectionDto: CreateAllquestionscollectionDto,
   ) {
-    const {question,examName,otherExamName} = createAllquestionscollectionDto;
+    const {topic,question,examName,otherExamName} = createAllquestionscollectionDto;
     const existQuestions = await this.allquestionscollection.findOne({question})
     if (existQuestions?.question == question && existQuestions?.examName == examName && existQuestions?.otherExamName == otherExamName) {
       throw new ConflictException("This question already exist, please add new one")
     } else {
       const createSlug = (text)=>{
-          return  text.toLowerCase().trim().replace(/[^a-z0-9/s-]/g,'-')
+          return text.toLowerCase().trim().replace(/[^a-z0-9/s-]/g,'-')
             .replace(/\s+/g,'-').replace(/-+/g,'-');
       }
-      const date = new Date()
-      const slug = createSlug(createAllquestionscollectionDto.question+date)
+      const date = new Date().getTime()
+      const slug = createSlug(topic+'-'+createAllquestionscollectionDto.question+'-'+date)
       console.log(slug)
       const fullSchema = {slug,...createAllquestionscollectionDto}
       const created = await new this.allquestionscollection(
