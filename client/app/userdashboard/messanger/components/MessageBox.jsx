@@ -7,40 +7,45 @@ import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { fetchAllFriendsByMessage } from "./fetchdata";
 import { formatetime } from "../../components/messanger/components/time";
+import { useParams, useRouter } from "next/navigation";
 
 const MessageBox = ({}) => {
   const { store } = useContext(storeContext);
+  const router = useRouter()
+  const param = useParams()
+  console.log(param)
   const [messangerFriends, setMessangerFriends] = useState(null);
   useEffect(() => {
     async function loadmessage(params) {
       const data = await fetchAllFriendsByMessage(store.token);
       setMessangerFriends(data);
-      console.log(data);
     }
     loadmessage();
-  }, []);
+  }, [param.id]);
 
 
   const sortedMessages = messangerFriends?.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
-
+const handleUrl = (friend) => {
+  window.history.pushState(null, '', `${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`);
+ // 
+}
   return (
     <div className="w-full">
       {sortedMessages &&
         sortedMessages.map((friend, i) => {
           return (
-            <div key={i}>
-              <Link
-                href={`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`}
-              >
+            <div onClick={()=> {
+              handleUrl(friend)
+            }} key={i}>
                 <div className="px-6 flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
-                  <div className="">
+                  <div>
                     <img
                       className="w-12 rounded-full"
                       src={friend.UserProfile}
                       alt={friend.userName}
                     />
                   </div>
-                  <div className="">
+                  <div>
                       <div className="flex gap-4 items-center justify-between">
                       <h2 className="text-lg font-semibold text-slate-700">
                       {friend.userName}
@@ -58,7 +63,6 @@ const MessageBox = ({}) => {
                       </h4>
                   </div>
                 </div>
-              </Link>
             </div>
           );
         })}
