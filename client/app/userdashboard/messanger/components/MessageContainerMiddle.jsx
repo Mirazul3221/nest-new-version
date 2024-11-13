@@ -30,14 +30,13 @@ const Middle = ({ id }) => {
           <div key={i}>
             {messageBlog.map((msg, i) => {
               return (
-                <div
+                <div  key={i}
                   className={`flex ${
                     msg.senderId === store.userInfo.id ? "justify-end" : ""
                   }`}
                 >
                   <div className="max-w-[60%] mb-[1px]">
                     <h1
-                      key={i}
                       className={`w-full 
                           ${messageBlog.length === 1 ? "rounded-[30px]" : ""}
                         ${
