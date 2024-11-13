@@ -7,30 +7,27 @@ import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { fetchAllFriendsByMessage } from "./fetchdata";
 import { formatetime } from "../../components/messanger/components/time";
-import { useParams, useRouter } from "next/navigation";
 
-const MessageBox = ({}) => {
+const MessageBox = ({setId}) => {
   const { store } = useContext(storeContext);
-  const router = useRouter()
-  const param = useParams()
-  console.log(param)
   const [messangerFriends, setMessangerFriends] = useState(null);
   useEffect(() => {
-    async function loadmessage(params) {
+    async function loadmessage() {
       const data = await fetchAllFriendsByMessage(store.token);
       setMessangerFriends(data);
     }
     loadmessage();
-  }, [param.id]);
+  }, []);
 
 
   const sortedMessages = messangerFriends?.sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
 const handleUrl = (friend) => {
   window.history.pushState(null, '', `${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`);
+  setId(friend.userId)
  // 
 }
   return (
-    <div className="w-full">
+    <div className="w-full cursor-pointer">
       {sortedMessages &&
         sortedMessages.map((friend, i) => {
           return (

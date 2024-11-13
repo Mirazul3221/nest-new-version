@@ -1,9 +1,14 @@
-import Footer from '@/app/components/Footer'
+'use client'
 import SuperHeader from '@/app/userdashboard/components/SuperHeader'
-import React from 'react'
-import MessageBox from '../../components/MessageBox'
+import React, { useState } from 'react'
+import MessageBox from '../../components/MessageContainerLeft'
+import { useParams } from 'next/navigation'
+import Middle from '../../components/MessageContainerMiddle'
 
 const Page = () => {
+  const [messageData,setMessageData] = useState(null)
+  const path = useParams()
+  const [id,setId] = useState(path.id)
   return (
     <div className=' w-screen h-screen fixed top-0 left-0'>
       <div className='border-b bg-white px-8 py-2'><SuperHeader/></div>
@@ -14,11 +19,11 @@ const Page = () => {
               <input className='border px-2 outline-none rounded-md' type='text' placeholder='Search user'/>
            </div>
            <div>
-            <MessageBox/>
+                <MessageBox setId={setId}/>
            </div>
         </div>
-        <div className='middle w-6/12 bg-white h-full rounded-2xl shadow-sm border-gray-300 border p-4'>
-        middle
+        <div className='middle w-6/12 bg-white h-full overflow-y-scroll rounded-2xl shadow-sm border-gray-300 border p-4'>
+         <Middle id={id}/>
         </div>
         <div className='write w-3/12 bg-white'>right</div>
        </div>
