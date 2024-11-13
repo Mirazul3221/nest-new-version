@@ -22,36 +22,65 @@ const Middle = ({ id }) => {
     fetchMessage();
   }, [id]);
   const groupMessages = groupMessagesBysender(messages);
-  groupMessages?.map((m) => {
-    console.log(m);
-    m.map((n) => {
-      console.log(n);
-    });
-  });
 
   return (
     <div className="w-full">
-      {groupMessages?.map((messageBlog,i) => {
+      {groupMessages?.map((messageBlog, i) => {
         return (
           <div key={i}>
-            {messageBlog.map((msg,i) => {
+            {messageBlog.map((msg, i) => {
               return (
-                <h1 key={i}
-                  className={`
-                    ${
-                      messageBlog.length === 1 ? "rounded-full" : ""
-                    }
-                    ${
-                    msg.senderId === store.userInfo.id
-                      ? "bg-gray-400 text-right"
-                      : "bg-violet-500"
-                  } ${
-                     messageBlog.indexOf(msg) === 0 ? "rounded-tl-full" :  messageBlog.indexOf(msg) === messageBlog.length - 1 ? "rounded-bl-full" : ""
-
-                  }  `}
+                <div
+                  className={`flex ${
+                    msg.senderId === store.userInfo.id ? "justify-end" : ""
+                  }`}
                 >
-                  {msg.message}
-                </h1>
+                  <div className="max-w-[60%] mb-[1px]">
+                    <h1
+                      key={i}
+                      className={`w-full 
+                          ${messageBlog.length === 1 ? "rounded-[30px]" : ""}
+                        ${
+                        msg.senderId === store.userInfo.id
+                          ? "rounded-l-[30px]"
+                          : "rounded-r-[30px]"
+                      } px-5 py-2
+                    ${
+                      msg.senderId === store.userInfo.id
+                        ? "bg-gray-100 text-right text-gray-700"
+                        : "bg-violet-500 text-white"
+                    } ${
+                        messageBlog.indexOf(msg) === 0 &&
+                        messageBlog.length !== 1 &&
+                        msg.senderId !== store.userInfo.id
+                          ? "rounded-tl-[30px]"
+                          : messageBlog.indexOf(msg) ===
+                              messageBlog.length - 1 &&
+                            messageBlog.length !==1 &&
+                            msg.senderId !== store.userInfo.id
+                          ? "rounded-bl-[30px]"
+                          : ""
+                      } 
+                     ${
+                       messageBlog.indexOf(msg) === 0 &&
+                       messageBlog.length !== 1 &&
+                       msg.senderId === store.userInfo.id
+                         ? "rounded-tr-[30px]"
+                         : messageBlog.indexOf(msg) ===
+                             messageBlog.length - 1 &&
+                           messageBlog.length !== 1 &&
+                           msg.senderId === store.userInfo.id
+                         ? "rounded-br-[30px]"
+                         : ""
+                     }
+                    `}
+                    >
+                      {msg.message}
+                    </h1>
+                    {messageBlog.indexOf(msg) === messageBlog.length - 1 &&
+                      messageBlog.length > 0 && msg.senderId !== store.userInfo.id && <div><img src=""/></div>}
+                  </div>
+                </div>
               );
             })}
           </div>

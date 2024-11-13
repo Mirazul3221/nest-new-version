@@ -6,9 +6,10 @@ import { useParams } from 'next/navigation'
 import Middle from '../../components/MessageContainerMiddle'
 
 const Page = () => {
-  const [messageData,setMessageData] = useState(null)
+  const [userDetails,setUserDetails] = useState(null)
   const path = useParams()
   const [id,setId] = useState(path.id)
+  console.log(userDetails)
   return (
     <div className=' w-screen h-screen fixed top-0 left-0'>
       <div className='border-b bg-white px-8 py-2'><SuperHeader/></div>
@@ -19,7 +20,7 @@ const Page = () => {
               <input className='border px-2 outline-none rounded-md' type='text' placeholder='Search user'/>
            </div>
            <div>
-                <MessageBox setId={setId}/>
+                <MessageBox setId={setId} setUserDetails={setUserDetails}/>
            </div>
         </div>
         <div className='middle w-6/12 bg-white h-full overflow-y-scroll rounded-2xl shadow-sm border-gray-300 border p-4'>
