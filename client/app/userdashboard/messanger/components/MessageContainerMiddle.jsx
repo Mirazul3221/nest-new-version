@@ -31,12 +31,12 @@ const Middle = ({ id }) => {
 
   return (
     <div className="w-full">
-      {groupMessages?.map((messageBlog) => {
+      {groupMessages?.map((messageBlog,i) => {
         return (
-          <div>
-            {messageBlog.map((msg) => {
+          <div key={i}>
+            {messageBlog.map((msg,i) => {
               return (
-                <h1
+                <h1 key={i}
                   className={`
                     ${
                       messageBlog.length === 1 ? "rounded-full" : ""
