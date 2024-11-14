@@ -97,6 +97,11 @@ export class AuthController {
 async profile (){
   return await this.authService.profile()
 }
+//======================================
+@Get('get-profile/:id')
+async userProfileAndName (@Param('id') id){
+   return await this.authService.userProfileAndName(id)
+}
  //======================================
  //======================================
  //======LOGIN WITH FACEBOOK

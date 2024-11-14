@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { groupMessagesBysender } from "./group-message";
 
-const Middle = ({ id }) => {
+const Middle = ({ id,userDetails }) => {
   const { store } = useContext(storeContext);
   const [messages, setMessages] = useState(null);
   useEffect(() => {
@@ -22,9 +22,15 @@ const Middle = ({ id }) => {
     fetchMessage();
   }, [id]);
   const groupMessages = groupMessagesBysender(messages);
-
+console.log(userDetails)
   return (
     <div className="w-full">
+      <div className="flex justify-center mb-20">
+         <div>
+         <img className="rounded-full w-28 mx-auto" src={userDetails?.profile} alt={userDetails?.name} />
+         <h4 className="text-center text-gray-700 text-2xl font-semibold">{userDetails?.name}</h4>
+         </div>
+      </div>
       {groupMessages?.map((messageBlog, i) => {
         return (
           <div key={i}>

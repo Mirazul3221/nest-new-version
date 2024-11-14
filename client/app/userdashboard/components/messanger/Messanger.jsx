@@ -245,7 +245,7 @@ const Messanger = ({
               <p className="text-[9px] text-white">{status}</p>
             </div>
           </div>
-          <div className="flex justify-center gap-2 text-white">
+          <div className="flex justify-center gap-4 text-white">
             <EntryPoint
               user={{
                 myId: store.userInfo.id,
