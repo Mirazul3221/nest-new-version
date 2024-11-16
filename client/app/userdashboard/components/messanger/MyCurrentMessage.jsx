@@ -101,7 +101,6 @@ const MyCurrentMessage = ({
     removeMsgRef.current.remove();
   }
 
-  console.log(currentMessage);
   return (
     <div ref={removeMsgRef} className={`my-message py-2`}>
       <div className="w-full">

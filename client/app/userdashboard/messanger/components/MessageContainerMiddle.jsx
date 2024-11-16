@@ -9,12 +9,14 @@ import { useMessage } from "../../global/messageProvider";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import { RiSendPlaneLine } from "react-icons/ri";
 import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
+import CurrentMessage from "./CurrentMessage";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const { store } = useContext(storeContext);
+  const [shallowMessage,setShallowMessage] = useState([])
   useEffect(() => {
     async function fetchMessage() {
       try {
@@ -40,6 +42,26 @@ const Middle = ({ id, userDetails }) => {
       messangerRef.current.style.height = `${messangerRef.current.scrollHeight}px`;
     }
   }, [message]);
+
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSendMessage = ()=>{
+    if (message !== '') {
+      setShallowMessage(prev => [...prev, {content : message,receiverId : userDetails._id}])
+    }
+    setMessage('')
+    scrollToBottom()
+  }
+  console.log(messages)
+
+  if (shallowMessage.length > 0 && shallowMessage[0].receiverId !== id) {
+      setShallowMessage([])
+  }
   return (
 <div className="">
 <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -98,7 +120,7 @@ const Middle = ({ id, userDetails }) => {
             <div key={i}>
               {messageBlog.map((msg, i) => {
                 return (
-                  <div
+                  <div  ref={scrollRef} 
                     key={i}
                     className={`flex ${
                       msg?.senderId === store.userInfo.id ? "justify-end" : ""
@@ -106,7 +128,6 @@ const Middle = ({ id, userDetails }) => {
                   >
                     <div className="max-w-[60%] mb-[1px]">
                       <h1
-                        ref={scrollRef}
                         className={`w-full 
                           ${messageBlog.length === 1 ? "rounded-[30px]" : ""}
                         ${
@@ -161,7 +182,13 @@ const Middle = ({ id, userDetails }) => {
           );
         })}
 
-        {message && <h2>{message}</h2>}
+        {shallowMessage.length > 0 && shallowMessage[0].receiverId === id && <div  ref={scrollRef} >
+          {
+            shallowMessage.map((msg,i) => {
+               return <CurrentMessage key={i} allMsg={shallowMessage} msg={msg}/>
+            })
+          }
+          </div>}
       </div>
 
       {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
@@ -185,7 +212,7 @@ const Middle = ({ id, userDetails }) => {
             }}
           />
 
-          <div className="flex h-full items-start">
+          <div onClick={handleSendMessage} className="flex h-full items-start">
             <RiSendPlaneLine />
           </div>
         </div>
