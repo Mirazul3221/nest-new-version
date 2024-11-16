@@ -57,7 +57,7 @@ const handleUrl = (friend) => {
                         <span className="font-semibold text-slate-700">
                           {friend.senderId === store.userInfo.id ? "You :" : ""}
                         </span>{" "}
-                        {friend.lastMessage.length > 20 ? friend.lastMessage.slice(0,20)+'......' : friend.lastMessage}
+                        {friend.lastMessage.length > 20 ? friend.lastMessage.slice(0,20) + '......' : friend.lastMessage}
                       </h4>
                   </div>
                 </div>

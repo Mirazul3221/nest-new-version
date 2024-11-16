@@ -69,7 +69,6 @@ const UserDashboard = () => {
 
   const {socket,myActiveFriends} = useSocket()
   console.log(socket,myActiveFriends)
-  console.log('mdfkgdf gdfkgkdfgof hdfkjg;dn;k')
   return (
     <ProtectRoute>
       {/* <Script

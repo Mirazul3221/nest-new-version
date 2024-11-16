@@ -49,3 +49,30 @@ export const projectsData = [
         role: 'Full Stack Developer',
     }
 ];
+
+export const section2_data = [
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+    {
+        title:'Easy to learn',
+        description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
+    },
+]

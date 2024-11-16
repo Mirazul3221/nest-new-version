@@ -3,6 +3,7 @@ import "./globals.css";
 import DataProvider from "./global/DataProvider";
 import Head from "next/head";
 import SocketProvider from "./userdashboard/global/SocketProvider";
+import MessageProvider from "./userdashboard/global/messageProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
          <DataProvider>
            <SocketProvider>
-              <div className="max-w-[1440px] mx-auto">{children}</div>
+              <MessageProvider>
+                  <div className="max-w-[1440px] mx-auto">{children}</div>
+              </MessageProvider>
            </SocketProvider>
          </DataProvider>
         </body>

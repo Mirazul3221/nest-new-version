@@ -97,7 +97,6 @@ const createAnswer = async(offer)=>{
 ///////////////////////////////////////////////////////
 const setRemoteAns = async(ans)=>{
   if (peearConnectionRef.current) {
-    console.log(ans)
    await peearConnectionRef.current.setRemoteDescription(ans)
   }}
   /////////////////////////////////////////////////////

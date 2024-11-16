@@ -16,7 +16,6 @@ import messageader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f
 import Image from "next/image";
 import { useSocket } from "../../global/SocketProvider";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
-import moment from "moment";
 import { formatetime } from "./components/time";
 const Messanger = ({
   id,

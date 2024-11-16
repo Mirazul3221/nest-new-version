@@ -20,6 +20,7 @@ import Test from "./Test";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Footer from "./components/Footer";
 import MobileBanner from "./adsterra/MobileBanner320";
+import Section_02 from "./components/Section_02";
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
@@ -56,9 +57,10 @@ export default function Home() {
             <Header />
             <BannerSection />
             <Section_01 />
-            <div className="bg-[#1c1a24]">
+            {/* <Section_02 /> */}
+            {/* <div className="bg-[#1c1a24]">
               <Projects />
-            </div>
+            </div> */}
             <div className="bg-white flex justify-center py-10">
               <Image src={manymobile} alt="multiple mobile" />
             </div>
