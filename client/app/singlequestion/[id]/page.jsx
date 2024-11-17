@@ -152,9 +152,9 @@ const Page = () => {
                         </h4>
                       </div>
                       <div className="question py-2 text-gray-500 border-b-2 mb-4">
-                        <h4 className="text-lg mb-2 font-bold">
+                        <h1 className="text-lg mb-2 font-bold">
                           Question : {singleData?.question}
-                        </h4>
+                        </h1>
                         <div className="md:grid grid-cols-2 gap-6">
                           <h4>
                             {" "}
@@ -228,9 +228,9 @@ const Page = () => {
                               </h4>
                             </div>
                             <div className="question py-2 text-gray-500 border-b-2 mb-4">
-                              <h1 className="text-lg mb-2 font-bold">
+                              <h2 className="text-lg mb-2 font-bold">
                                 Question : {item?.question}
-                              </h1>
+                              </h2>
                               <div className="md:grid grid-cols-2 gap-6">
                                 <h4>
                                   {" "}
