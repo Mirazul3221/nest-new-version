@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
    console.log(params)
     return {
       title: Q.question,
-      description:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
+      description:`${Q.question}`,
       keywords:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
       alternates:{
         canonical:`${viewurl}/singlequestion/${params.id}`
