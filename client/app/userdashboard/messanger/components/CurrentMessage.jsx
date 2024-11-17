@@ -5,7 +5,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
 
-const CurrentMessage = ({allMsg, msg}) => {
+const CurrentMessage = ({setMessageAnim,allMsg, msg}) => {
     const { store } = useContext(storeContext);
     const element = useRef(null)
     const { dispatch } = useMessage();
@@ -13,6 +13,7 @@ const CurrentMessage = ({allMsg, msg}) => {
     const sendMessage = async () => {
       try {
         setIsSend(true)
+        setMessageAnim(false)
         const { data } = await axios.post(
           `${baseurl}/messanger/create`,
           { receiverId:msg.receiverId, message: msg.content ? msg.content : "Love" },
@@ -24,10 +25,10 @@ const CurrentMessage = ({allMsg, msg}) => {
         );
         dispatch({type:'send-message',payload:{senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}})
         setIsSend(false)
+        setMessageAnim(true)
         allMsg = allMsg.filter(m => m !== msg)
         element.current.remove()
        } catch (error) {
-        setIsSend(false)
         console.log(error)
        }
     }

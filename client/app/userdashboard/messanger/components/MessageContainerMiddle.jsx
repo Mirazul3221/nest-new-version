@@ -17,6 +17,7 @@ const Middle = ({ id, userDetails }) => {
   const scrollRef = useRef();
   const { store } = useContext(storeContext);
   const [shallowMessage,setShallowMessage] = useState([])
+  const [msgAnim,setMessageAnim] = useState(false)
   useEffect(() => {
     async function fetchMessage() {
       try {
@@ -128,7 +129,7 @@ const Middle = ({ id, userDetails }) => {
                   >
                     <div className="max-w-[60%] mb-[1px]">
                       <h1
-                        className={`w-full 
+                        className={`w-full duration-1000
                           ${messageBlog.length === 1 ? "rounded-[30px]" : ""}
                         ${
                           msg?.senderId === store.userInfo.id
@@ -160,8 +161,11 @@ const Middle = ({ id, userDetails }) => {
                              messageBlog.length - 1 &&
                            messageBlog.length !== 1 &&
                            msg?.senderId === store.userInfo.id
-                         ? "rounded-br-[30px]"
+                         ? ""
                          : ""
+                     }
+                     ${
+                      i === messageBlog.length - 1 && msgAnim ? "rounded-br-[30px] duration-1000" : ""
                      }
                     `}
                       >
@@ -185,7 +189,7 @@ const Middle = ({ id, userDetails }) => {
         {shallowMessage.length > 0 && shallowMessage[0].receiverId === id && <div  ref={scrollRef} >
           {
             shallowMessage.map((msg,i) => {
-               return <CurrentMessage key={i} allMsg={shallowMessage} msg={msg}/>
+               return <CurrentMessage key={i} setMessageAnim={setMessageAnim} allMsg={shallowMessage} msg={msg}/>
             })
           }
           </div>}

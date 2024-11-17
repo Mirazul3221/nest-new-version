@@ -1,0 +1,15 @@
+.msg_anim {
+  animation-name: anim;
+  animation-duration: 500ms;
+  /* font-size: 16px; */
+  opacity: 100;
+  border-bottom-right-radius: 30px;
+}
+
+@keyframes anim {
+    0%   {opacity: 0; font-size: 30px;}
+    25%  {opacity: 25; font-size: 50px;}
+    50%  {opacity: 50; font-size: 50px;}
+    75%  {opacity: 75; font-size: 50px;}
+    100%  {opacity: 100; font-size: 50px; border-bottom-right-radius: 30px;}
+  }
