@@ -10,6 +10,7 @@ import { baseurl } from "@/app/config";
 import { useContext } from "react";
 import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
+import ProtectRoute from "@/app/global/ProtectRoute";
 const Page = () => {
   const { store } = useContext(storeContext);
   const [userDetails, setUserDetails] = useState(null);
@@ -26,7 +27,8 @@ const Page = () => {
     fetchUser(id);
   }, [id]);
   return (
-    <div className=" w-screen h-screen fixed top-0 left-0">
+    <ProtectRoute>
+        <div className=" w-screen h-screen fixed top-0 left-0">
       <div className="border-b bg-white px-8 py-2">
         <SuperHeader />
       </div>
@@ -69,6 +71,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </ProtectRoute>
   );
 };
 

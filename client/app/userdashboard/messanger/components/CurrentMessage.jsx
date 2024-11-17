@@ -5,7 +5,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
 
-const CurrentMessage = ({allMsg, msg}) => {
+const CurrentMessage = ({allMsg, msg,setSendCurrentMsg}) => {
     const { store } = useContext(storeContext);
     const element = useRef(null)
     const { dispatch } = useMessage();
@@ -13,6 +13,7 @@ const CurrentMessage = ({allMsg, msg}) => {
     const sendMessage = async () => {
       try {
         setIsSend(true)
+        setSendCurrentMsg(true)
         const { data } = await axios.post(
           `${baseurl}/messanger/create`,
           { receiverId:msg.receiverId, message: msg.content ? msg.content : "Love" },
@@ -24,6 +25,7 @@ const CurrentMessage = ({allMsg, msg}) => {
         );
         dispatch({type:'send-message',payload:{senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}})
         setIsSend(false)
+        setSendCurrentMsg(false)
         allMsg = allMsg.filter(m => m !== msg)
         element.current.remove()
        } catch (error) {
@@ -34,11 +36,13 @@ const CurrentMessage = ({allMsg, msg}) => {
       sendMessage()
     }, [msg]);
   return (
-    <div ref={element} className="">
-    <h2>{msg.content}</h2>
+    <div ref={element} className="flex justify-end">
+   <div className="">
+   <h2 className='px-6 py-2 bg-violet-400 text-gray-600 rounded-full'>{msg.content}</h2>
     {
       isSend && <p>Sending...</p>
     }
+   </div>
   </div>
   )
 }

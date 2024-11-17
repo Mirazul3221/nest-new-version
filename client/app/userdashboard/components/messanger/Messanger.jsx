@@ -12,7 +12,7 @@ import { RxCross1 } from "react-icons/rx";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import MyCurrentMessage from "./MyCurrentMessage";
 import HTMLReactParser from "html-react-parser";
-import messageader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
+import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
 import Image from "next/image";
 import { useSocket } from "../../global/SocketProvider";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
@@ -109,10 +109,9 @@ const Messanger = ({
         receiverId: id,
         message,
       });
-
+//
       socket?.on("getTypingMsg", (data) => {
         setTypingMsg(data);
-        console.log(data);
       });
     }
     switcher
@@ -383,7 +382,7 @@ const Messanger = ({
                     {typingloading && (
                       <Image
                         className="w-10 absolute right-0 -bottom-5"
-                        src={messageader}
+                        src={messageloader}
                         alt="loader"
                       />
                     )}

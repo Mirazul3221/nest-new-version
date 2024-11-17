@@ -11,13 +11,19 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
 import CurrentMessage from "./CurrentMessage";
 import { formatetime } from "../../components/messanger/components/time";
+import "./css/message-animation.css";
+import { useSocket } from "../../global/SocketProvider";
+import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
+import Image from "next/image";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
+  const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const { store } = useContext(storeContext);
   const [shallowMessage, setShallowMessage] = useState([]);
+  const { socket } = useSocket();
   useEffect(() => {
     async function fetchMessage() {
       try {
@@ -60,13 +66,51 @@ const Middle = ({ id, userDetails }) => {
     setMessage("");
     scrollToBottom();
   };
-  console.log(messages);
+  useEffect(() => {
+    scrollToBottom();
+  }, [sendCurrentMsg]);
 
   if (shallowMessage.length > 0 && shallowMessage[0].receiverId !== id) {
     setShallowMessage([]);
   }
+
+  useEffect(() => {
+    socket?.emit("typingMsg", {
+      senderId: store.userInfo.id,
+      receiverId: id,
+      message,
+    });
+  }, [message, socket]);
+  ////////////////////////////////////////////////////////////////////////////////
+  const [typing, setTyping] = useState("");
+  const [typingloading, setTypingLoading] = useState();
+  useEffect(() => {
+    socket &&
+      socket.on("getTypingMsg", (data) => {
+        scrollToBottom();
+        setTyping(data);
+      });
+    return () => {
+      socket && socket.off("getTypingMsg");
+    };
+  }, [socket]);
+
+  useEffect(() => {
+      if (
+        (typing?.message?.length % 10 === 0 &&
+          typing?.message?.length > 0) ||
+          typing?.message?.length === 1
+      ) {
+        new Audio("/notification-soun/oneplus_allay.mp3").play();
+        setTypingLoading(true);
+
+        setTimeout(() => {
+          setTypingLoading(false);
+        }, 8000);
+      }
+  }, [typing]);
   return (
-    <div className="">
+    <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <img
@@ -131,7 +175,13 @@ const Middle = ({ id, userDetails }) => {
                       )}
                       <div className="flex justify-end">
                         <h2
-                          className={`text-right max-w-[60%] w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                          ref={scrollRef}
+                          className={`${
+                            i === messageBlog.length - 1 &&
+                            messageBlog.length > 1
+                              ? "msg_anim "
+                              : ""
+                          } text-right duration-500 max-w-[60%] w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
                             messageBlog.length === 1
                               ? "rounded-full"
                               : "rounded-l-[30px]"
@@ -142,7 +192,7 @@ const Middle = ({ id, userDetails }) => {
                               : messageBlog.indexOf(msg) ===
                                   messageBlog.length - 1 &&
                                 messageBlog.length > 1
-                              ? "rounded-br-[30px]"
+                              ? "rounded-br-[30px] duration-500"
                               : ""
                           }`}
                         >
@@ -177,18 +227,60 @@ const Middle = ({ id, userDetails }) => {
                           {msg?.message}
                         </h2>
                       </div>
+                      {messageBlog.indexOf(msg) === messageBlog.length - 1 && (
+                        <div className="profile w-10 ">
+                          <img
+                            className="w-full bg-white p-[2px] z-50 rounded-full"
+                            src={userDetails?.profile}
+                            alt={userDetails?.name}
+                          />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
             );
           })}
-
+                     {typing &&
+              typing.senderId === id &&
+              typing.receiverId === store.userInfo.id &&
+              typing.message !== "" && (
+                <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
+                  <div className="image-box absolute bottom-5">
+                    <img
+                      className="w-8 h-8 rounded-full border border-violet-700"
+                      src={userDetails?.profile}
+                      alt={userDetails?.name}
+                    />
+                    {typingloading && (
+                      <Image
+                        className="w-10 absolute right-0 -bottom-5"
+                        src={messageloader}
+                        alt="loader"
+                      />
+                    )}
+                  </div>
+                  <div
+                    style={{ borderRadius: "20px 20px 20px 0px" }}
+                    className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
+                  >
+                    <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
+                      {typing.message}
+                    </p>
+                  </div>
+                </div>
+              )}
           {shallowMessage.length > 0 && shallowMessage[0].receiverId === id && (
             <div ref={scrollRef}>
               {shallowMessage.map((msg, i) => {
                 return (
-                  <CurrentMessage key={i} allMsg={shallowMessage} msg={msg} />
+                  <CurrentMessage
+                    key={i}
+                    allMsg={shallowMessage}
+                    msg={msg}
+                    setSendCurrentMsg={setSendCurrentMsg}
+                  />
                 );
               })}
             </div>
@@ -218,9 +310,9 @@ const Middle = ({ id, userDetails }) => {
 
             <div
               onClick={handleSendMessage}
-              className="flex h-full items-start"
+              className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
             >
-              <RiSendPlaneLine />
+              <RiSendPlaneLine size={20} />
             </div>
           </div>
         </div>
