@@ -164,9 +164,6 @@ const Middle = ({ id, userDetails }) => {
                          ? ""
                          : ""
                      }
-                     ${
-                      i === messageBlog.length - 1 && msgAnim ? "rounded-br-[30px] duration-1000" : "rounded-br-[0px]"
-                     }
                     `}
                       >
                         {msg?.message}
