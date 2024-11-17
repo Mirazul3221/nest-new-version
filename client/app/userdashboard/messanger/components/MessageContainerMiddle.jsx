@@ -123,7 +123,7 @@ const Middle = ({ id, userDetails }) => {
               <div key={i} className="mt-10">
                 {messageBlog.map((msg, i) => {
                   return msg?.senderId === store.userInfo.id ? (
-                    <div className="">
+                    <div key={i}>
                       {messageBlog.indexOf(msg) === 0 && (
                         <p className="text-center text-sm text-gray-400 mt-4">
                           {formatetime(msg?.createdAt)}
@@ -151,7 +151,7 @@ const Middle = ({ id, userDetails }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="">
+                    <div key={i}>
                       {messageBlog.indexOf(msg) === 0 && (
                         <p className="text-center text-sm text-gray-400 mt-4">
                           {formatetime(msg?.createdAt)}
