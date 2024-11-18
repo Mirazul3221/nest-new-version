@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /private/
+Allow: /
+
+https://bcs-prep.vercel.app/sitemap.xml
