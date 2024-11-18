@@ -16,6 +16,7 @@ const Footer = () => {
          <div className="flex gap-2">
            <a href="/register">Sign Up</a>
            <a href="/login">Log In</a>
+           <a href="https://en.wikipedia.org/wiki/BCS_Examination">Learn more</a>
          </div>
         <div className="flex items-center md:gap-4 gap-2">
           <FaFacebook size={25} />
