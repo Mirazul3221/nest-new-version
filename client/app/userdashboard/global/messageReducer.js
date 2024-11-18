@@ -6,6 +6,9 @@ if (action.type === 'fetch-message') {
   if (action.type === 'send-message') {
   return state = [...state,action.payload]
   }
+  if (action.type === 'receive-message') {
+  return state = [...state,action.payload]
+  }
 
 return state
     

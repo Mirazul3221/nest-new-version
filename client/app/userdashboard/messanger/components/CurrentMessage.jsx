@@ -4,9 +4,11 @@ import storeContext from '@/app/global/createContex'
 import axios from 'axios'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
+import { useSocket } from '../../global/SocketProvider'
 
 const CurrentMessage = ({allMsg, msg,setSendCurrentMsg}) => {
     const { store } = useContext(storeContext);
+    const {socket} = useSocket()
     const element = useRef(null)
     const { dispatch } = useMessage();
     const [isSend,setIsSend] = useState(false)
@@ -23,7 +25,9 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg}) => {
             },
           }
         );
-        dispatch({type:'send-message',payload:{senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}})
+        const reformData = {senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}
+        socket && socket.emit('message-to',reformData)
+        dispatch({type:'send-message',payload:reformData})
         setIsSend(false)
         setSendCurrentMsg(false)
         allMsg = allMsg.filter(m => m !== msg)

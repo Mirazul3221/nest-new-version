@@ -68,11 +68,26 @@ export class NotificationsGateway
           });
         }
       });
+      //////////////////////////////////////////logi for new messanger/////////////////////////////
+      client.on('message-to',(data)=>{
+        if (this.socketUsers[data?.receiverId]?.length > 0) {
+          this.socketUsers[data?.receiverId]?.map(async (id) => {
+            await this.server.to(id).emit('message-from', data);
+          });
+        }
+      })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
             await this.server.to(id).emit('getTypingMsg', data);
+          });
+        }
+      });
+      client.on('typingalert', async (data) => {
+        if (this.socketUsers[data?.receiverId]?.length > 0) {
+          this.socketUsers[data?.receiverId]?.map(async (id) => {
+            await this.server.to(id).emit('typingalert', data);
           });
         }
       });

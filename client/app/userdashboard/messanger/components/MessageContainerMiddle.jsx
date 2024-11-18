@@ -81,6 +81,13 @@ const Middle = ({ id, userDetails }) => {
       message,
     });
   }, [message, socket]);
+  useEffect(() => {
+    socket?.emit("typingalert", {
+      senderId: store.userInfo.id,
+      receiverId: id,
+      message,
+    });
+  }, [message, socket]);
   ////////////////////////////////////////////////////////////////////////////////
   const [typing, setTyping] = useState("");
   const [typingloading, setTypingLoading] = useState();
@@ -96,19 +103,31 @@ const Middle = ({ id, userDetails }) => {
   }, [socket]);
 
   useEffect(() => {
-      if (
-        (typing?.message?.length % 10 === 0 &&
-          typing?.message?.length > 0) ||
-          typing?.message?.length === 1
-      ) {
-        new Audio("/notification-soun/oneplus_allay.mp3").play();
-        setTypingLoading(true);
+    if (
+      (typing?.message?.length % 10 === 0 && typing?.message?.length > 0) ||
+      typing?.message?.length === 1
+    ) {
+      new Audio("/notification-soun/oneplus_allay.mp3").play();
+      setTypingLoading(true);
 
-        setTimeout(() => {
-          setTypingLoading(false);
-        }, 8000);
-      }
+      setTimeout(() => {
+        setTypingLoading(false);
+      }, 8000);
+    }
   }, [typing]);
+
+  //////////////////////////////Here is the logic for getting message and add in store from sender//////////////////////////////
+  useEffect(() => {
+    socket &&
+      socket.on("message-from", (data) => {
+        dispatch({ type: "receive-message", payload: data });
+        scrollToBottom();
+      });
+    return () => {
+      socket && socket.off("message-from");
+    };
+  }, [socket]);
+  console.log(typing)
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -242,35 +261,35 @@ const Middle = ({ id, userDetails }) => {
               </div>
             );
           })}
-                     {typing &&
-              typing.senderId === id &&
-              typing.receiverId === store.userInfo.id &&
-              typing.message !== "" && (
-                <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
-                  <div className="image-box absolute bottom-5">
-                    <img
-                      className="w-8 h-8 rounded-full border border-violet-700"
-                      src={userDetails?.profile}
-                      alt={userDetails?.name}
+          {typing &&
+            typing.senderId === id &&
+            typing.receiverId === store.userInfo.id &&
+            typing.message !== "" && (
+              <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
+                <div className="image-box absolute bottom-5">
+                  <img
+                    className="w-8 h-8 rounded-full border border-violet-700"
+                    src={userDetails?.profile}
+                    alt={userDetails?.name}
+                  />
+                  {typingloading && (
+                    <Image
+                      className="w-10 absolute right-0 -bottom-5"
+                      src={messageloader}
+                      alt="loader"
                     />
-                    {typingloading && (
-                      <Image
-                        className="w-10 absolute right-0 -bottom-5"
-                        src={messageloader}
-                        alt="loader"
-                      />
-                    )}
-                  </div>
-                  <div
-                    style={{ borderRadius: "20px 20px 20px 0px" }}
-                    className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
-                  >
-                    <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
-                      {typing.message}
-                    </p>
-                  </div>
+                  )}
                 </div>
-              )}
+                <div
+                  style={{ borderRadius: "20px 20px 20px 0px" }}
+                  className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
+                >
+                  <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
+                    {typing.message}
+                  </p>
+                </div>
+              </div>
+            )}
           {shallowMessage.length > 0 && shallowMessage[0].receiverId === id && (
             <div ref={scrollRef}>
               {shallowMessage.map((msg, i) => {
