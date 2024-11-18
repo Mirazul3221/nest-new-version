@@ -6,8 +6,8 @@ export async function generateMetadata({ params }) {
     const Q = data[0];
    console.log(params)
     return {
-      title: `${Q.question} from BCS online platform`,
-      description:`You will get answer of ${Q.question.slice(0, 42)}... | proper job solution, BCS preparation guide line and more from BCS preparation platform`,
+      title: `${Q.question} from bcs online platform`,
+      description:`You will get answer of ${Q.question.slice(0, 42)}... | proper job solution, bcs preparation guide line and more from BCS preparation platform`,
       keywords:`${Q.topic},${Q.subject},${Q.option_01},${Q.option_02},${Q.option_03},${Q.option_04}`,
       alternates:{
         canonical:`${viewurl}/singlequestion/${params.id}`
