@@ -202,7 +202,7 @@ const Middle = ({ id, userDetails }) => {
                               : ""
                           } text-right duration-500 max-w-[60%] w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
                             messageBlog.length === 1
-                              ? "rounded-full"
+                              ? "rounded-md"
                               : "rounded-l-[30px]"
                           } ${
                             messageBlog.indexOf(msg) === 0 &&
@@ -230,7 +230,7 @@ const Middle = ({ id, userDetails }) => {
                         <h2
                           className={`text-right max-w-[60%] w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
                             messageBlog.length === 1
-                              ? "rounded-full"
+                              ? "rounded-md"
                               : "rounded-r-[30px]"
                           } ${
                             messageBlog.indexOf(msg) === 0 &&
