@@ -248,7 +248,7 @@ const Middle = ({ id, userDetails }) => {
                       </div>
                       {messageBlog.indexOf(msg) === messageBlog.length - 1 && (
                         <div className="profile w-10 ">
-                          <img
+                          <img  ref={scrollRef}
                             className="w-full bg-white p-[2px] z-50 rounded-full"
                             src={userDetails?.profile}
                             alt={userDetails?.name}
