@@ -9,7 +9,7 @@ import { useSocket } from "../../global/SocketProvider";
 
 const MessageBox = ({setId,setUserDetails}) => {
   const { store } = useContext(storeContext);
-  const {socket} = useSocket();
+  const {socket, myActiveFriends} = useSocket();
   const [messangerFriends, setMessangerFriends] = useState(null);
   useEffect(() => {
     async function loadmessage() {
@@ -52,7 +52,6 @@ useEffect(() => {
     socket && socket.off("message-from");
   };
 }, [socket]);
-console.log(typing)
   return (
     <div className="w-full cursor-pointer">
       {sortedMessages &&
@@ -62,12 +61,15 @@ console.log(typing)
               handleUrl(friend)
             }} key={i}>
                 <div className="px-6 flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
-                  <div>
+                  <div className="relative">
                     <img
                       className="w-12 rounded-full"
                       src={friend.UserProfile}
                       alt={friend.userName}
                     />
+                    {
+                      myActiveFriends?.includes(friend.userId) &&   <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
+                    }
                   </div>
                   <div>
                       <div className="flex gap-4 items-center justify-between">
