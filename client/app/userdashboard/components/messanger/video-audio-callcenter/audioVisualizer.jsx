@@ -49,7 +49,7 @@ export const visualEffect =(canvas,stream)=> {
         ctx.translate(canvas.width/2,canvas.height/2);
         ctx.rotate(i + Math.PI * 2 / bufferLength * i)
          const hue = i * 2;
-        ctx.fillStyle = `hsl(${hue},100%,50%)`;
+        ctx.fillStyle = `hsl(218,1%,8%)`;
         ctx.fillRect(0,0,barWidth,barHeight/2)
         x *= barHeight
         ctx.restore()
@@ -72,7 +72,7 @@ export const visualEffect =(canvas,stream)=> {
         ctx.translate(canvas.width/2,canvas.height/2);
         ctx.rotate(i + bufferLength)
          const hue = 250 + i * 2;
-        ctx.fillStyle = `hsl(${hue},100%,50%)`;
+        ctx.fillStyle = `hsl(218,1%,8%)`;
         ctx.beginPath();
         ctx.arc(0, barHeight/180 * i, barHeight/50,0,Math.PI * 2)
         ctx.fill()
@@ -97,7 +97,7 @@ export const visualEffect =(canvas,stream)=> {
         ctx.translate(canvas.width/2,canvas.height/2);
         ctx.rotate(i + bufferLength)
          const hue = i * 2;
-        ctx.fillStyle = `hsl(${hue},100%,50%)`;
+        ctx.fillStyle = `hsl(218,1%,8%)`;
         ctx.beginPath();
         ctx.arc(0, barHeight, barHeight/30,0,Math.PI * 2)
         ctx.fill()

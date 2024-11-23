@@ -11,8 +11,6 @@ import { useEffect } from "react";
 import storeContext from "@/app/global/createContex";
 import { useSocket } from "@/app/userdashboard/global/SocketProvider";
 import MyVideoStream from "./MyVideoStream";
-import { PeerConnection } from "./webRTC";
-import { HiOutlinePhoneMissedCall } from "react-icons/hi";
 import { LuScreenShare } from "react-icons/lu";
 import { LuScreenShareOff } from "react-icons/lu";
 import { IoVideocamOffOutline } from "react-icons/io5";
@@ -163,7 +161,6 @@ const Page = () => {
         type === "Video"
           ? (remoteVideo.current.srcObject = event.streams[0])
           : (remoteAudio.current.srcObject = event.streams[0]);
-        console.log(event.streams[0]);
       };
       ////////////////////////////////////////////////////////////////////////////////////////////////
       // listen for ice candidate
@@ -360,8 +357,6 @@ const Page = () => {
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
       if (event.candidate) {
-        console.log("Mirazul");
-        console.log(event.candidate);
         await socket?.emit("icecandidate", {
           me: myId,
           friend: fdId,

@@ -116,8 +116,6 @@ export class NotificationsGateway
 
       ////////////////////////////////////Logic for video and audio call system////////////////////////////////////////////
       await client.on('signal-call', (data) => {
-        console.log(data)
-        console.log('signal-call-data')
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
             await this.server.to(id).emit('signal-call', data);
