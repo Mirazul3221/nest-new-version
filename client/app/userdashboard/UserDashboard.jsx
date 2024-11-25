@@ -86,13 +86,13 @@ const UserDashboard = () => {
           </div>
         </div>
         <div className="wrapper md:px-10 px-4 md:py-4 pt-4">
-          <div className="py-4">
+          <div className="p-4">
             <h2 className="text-violet-700 md:text-2xl font-bold">
               Subject Based Study
             </h2>
             <Layout />
           </div>
-          <div className="py-4">
+          <div className="p-4">
             <h2 className="text-violet-700 md:text-2xl font-bold">
               Previous BCS Questions
             </h2>
