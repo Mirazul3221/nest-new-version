@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ProtectRoute from "../global/ProtectRoute";
 import Link from "next/link";
 import storeContext from "../global/createContex";
-import Layout from "./components/Layout";
+import Layout from "./components/Slider1";
 import { IoHomeOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineHeart } from "react-icons/ai";
@@ -12,7 +12,7 @@ import { Banner } from "../adsterra/Banner";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { baseurl } from "../config";
-import Test from "./components/Test";
+import Bcs from "./components/Slider2";
 import SuperHeader from "./components/SuperHeader";
 import { useSocket } from "./global/SocketProvider";
 // import Image from "next/image";
@@ -75,8 +75,8 @@ const UserDashboard = () => {
         type="text/javascript"
         src="//pl23641250.highrevenuenetwork.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
       /> */}
-      <div className="min-h-screen max-w-screen overflow-hidden bg-gray-100">
-        <div className="bg-white px-10 py-4">
+      <div className="min-h-screen max-w-screen overflow-hidden bg-gray-50">
+        <div className="bg-white border-b px-10 py-4">
           <SuperHeader/>
           <div className="gap-1 justify-between hidden md:flex my-3">
             <h2 className="md:text-2xl text-md font-semibold text-gray-500 w-1/2 text-balance">
@@ -97,7 +97,7 @@ const UserDashboard = () => {
               Previous BCS Questions
             </h2>
             {/* <BcsLayout/> */}
-            <Test />
+            <Bcs />
           </div>
           <div className="hidden md:block">
             <Banner />
