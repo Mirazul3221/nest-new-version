@@ -6,7 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import FriendRequest from './FriendRequest';
 const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
   return (
-    <div className="bg-gray-50 shadow-md fixed z-50 top-6 md:top-[90px] w-full md:w-4/12 right-0 md:right-12">
+    <div className="bg-gray-50 shadow-md absolute z-50 top-6 md:top-[90px] w-full md:w-4/12 right-0 md:right-12">
     <div className="text-center relative rounded-t-lg py-2 md:py-3 bg-gray-200 flex justify-center items-center">
       <div className="flex gap-1">
         <div className="w-2 h-2 bg-white rounded-full"></div>

@@ -11,6 +11,7 @@ import { CgProfile } from "react-icons/cg";
 import { GoHistory } from "react-icons/go";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import { HiOutlineEnvelope } from "react-icons/hi2";
 import Profile from "./Profile";
 import Search from "./Search";
 import { RiLogoutCircleRLine } from "react-icons/ri";
@@ -132,6 +133,22 @@ const SuperHeader = () => {
 
   const fullName = me.name?.split(" ");
   const firstname = fullName[0];
+  useEffect(() => {
+    window.addEventListener("click",handleHeaderBox)
+    return () => {
+      window.removeEventListener('click',handleHeaderBox)
+    };
+  }, []);
+  
+  const handleHeaderBox = (e) => {
+
+    const targetBox = e.target.classList.contains('header-box')
+    if (!targetBox) {
+    setOpenNotif(false)
+    setOpenMessage(false)
+    }
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -181,10 +198,11 @@ const SuperHeader = () => {
                 <li
                   onClick={() => {
                     setOpenMessage(!openMessage);
+                    setOpenNotif(false);
                   }}
-                  className={`text-lg font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+                  className={`text-lg header-box font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
                 >
-                  <div className={`absolute -top-1 -right-1`}>
+                  <div className={`absolute  -top-1 -right-1`}>
                     {unseenNotification?.length > 0 && (
                       <div
                         className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
@@ -195,14 +213,15 @@ const SuperHeader = () => {
                       </div>
                     )}
                   </div>
-                  <IoIosNotificationsOutline size={26} />
+                  <HiOutlineEnvelope className="header-box" size={26} />
                 </li>
                 <li
                   onClick={() => {
                     setOpenNotif(!openNotif);
+                    setOpenMessage(false)
                     seenAndDeleteNotif();
                   }}
-                  className={`text-lg font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+                  className={`text-lg header-box font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
                 >
                   <div className={`absolute -top-1 -right-1`}>
                     {unseenNotification?.length > 0 && (
@@ -215,7 +234,7 @@ const SuperHeader = () => {
                       </div>
                     )}
                   </div>
-                  <IoIosNotificationsOutline size={26} />
+                  <IoIosNotificationsOutline className="header-box" size={26} />
                 </li>
                 {/* ==================Open and close message==================== */}
 
