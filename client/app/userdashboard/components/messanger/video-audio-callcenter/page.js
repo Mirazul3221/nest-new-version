@@ -594,9 +594,6 @@ const Page = () => {
   function isDisplayMediaSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
   }
-
-  ////////////////////////////////////////////
-  console.log(myStream.current)
   return (
     <div
       className={`${

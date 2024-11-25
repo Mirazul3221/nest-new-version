@@ -101,7 +101,7 @@ export class AllquestionscollectionService {
   async findEnglish() {
     const english = await this.allquestionscollection
       .find({ subject: 'English' })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 }).limit(25);
     return english;
   }
 

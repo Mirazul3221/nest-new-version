@@ -70,7 +70,7 @@ export class AllquestionscollectionController {
   @Get('test/data')
   async ttt (@Query() all : any){
      console.log(all)
-  }//
+  }////
 
   @Get('publicUser/findbytopic')
   // @UseGuards(AuthGuard())/
