@@ -14,10 +14,41 @@ const AddQuestion = () => {
   const [option_03, setOption_03] = useState("");
   const [option_04, setOption_04] = useState("");
   const [content, setContent] = useState();
+  const [rightAns, setRightAns] = useState("");
   const editor = useRef(null);
+
+console.log(content)
+  const config = {
+    readonly: false, // set editor readonly
+    toolbar: [
+      'bold', 'italic', 'underline', '|',
+      'link', '|', 'insertImage', '|',
+      'youtube', '|', 'fullscreen', '|'
+    ],
+    uploader: {
+      insertImageAsBase64URI: true,
+    },
+  };
+
+
+  const handleSubmitAnswer = () => {
+    const questionSchema = {
+      subject,
+      topic,
+      prevExam,
+      option_01,
+      option_02,
+      option_03,
+      option_04,
+      rightAns,
+      content
+    }
+
+    console.log(questionSchema)
+  }
   return (
-    <div className="bg-white rounded-md px-4 py-2">
-      <h2 className="text-2xl font-bold text-gray-500 mb-2">
+    <div className="rounded-md px-4 py-2">
+      <h2 className="md:text-2xl font-bold text-gray-500 mb-2">
         Add your favourite question
       </h2>
       <div className="gap-2 flex items-center ">
@@ -76,7 +107,7 @@ const AddQuestion = () => {
             id="question"
             placeholder="question"
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
         {/* ------------------------------------------------------------------------------------- */}
@@ -89,9 +120,9 @@ const AddQuestion = () => {
               type="text"
               name="option_01"
               id="option_01"
-              placeholder="option_01"
+              placeholder="option 01"
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
           </div>
           <div className="flex flex-col w-full mb-2">
@@ -102,9 +133,9 @@ const AddQuestion = () => {
               type="text"
               name="option_02"
               id="option_02"
-              placeholder="option_02"
+              placeholder="option 02"
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
           </div>
         </div>
@@ -117,9 +148,9 @@ const AddQuestion = () => {
               type="text"
               name="option_03"
               id="option_03"
-              placeholder="option_03"
+              placeholder="option 03"
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
           </div>
           <div className="flex flex-col w-full mb-2">
@@ -130,18 +161,36 @@ const AddQuestion = () => {
               type="text"
               name="option_04"
               id="option_04"
-              placeholder="option_04"
+              placeholder="option 04"
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
           </div>
         </div>
+        <div className="flex justify-between md:justify-start items-center gap-3 my-2">
+        <select
+                required
+                value={rightAns}
+                className="outline-none flex w-fit py-1 px-2 rounded-md border"
+                onChange={(e) => setRightAns(e.target.value)}
+                name="rightans"
+                id="rightans"
+              >
+                <option disabled value="">Set a correct Answer</option>
+                <option value="1">option 01</option>
+                <option value="2">option 02</option>
+                <option value="3">option 03</option>
+                <option value="4">option 04</option>
+              </select>
+              <button onClick={handleSubmitAnswer} className="px-6 py-1 bg-violet-500 text-white rounded-md">Submit</button>
+        </div>
 
         <div className="text-editor">
+          <h2>Description</h2>
         <JoditEditorWrapper
             ref={editor}
             tabIndex={1}
-            value={content}
+            value=''
             onChange={(newContent) => setContent(newContent)}
           />
         </div>
