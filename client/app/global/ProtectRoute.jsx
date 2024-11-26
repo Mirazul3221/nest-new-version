@@ -21,7 +21,7 @@ const ProtectRoute = ({children}) => {
     router.push("/login")
   }
     if (store?.userInfo?.id) {
-      return <div>
+      return <div className="overflow-hidden">
           <CallReceiverRoom />
         {children}
         </div>  

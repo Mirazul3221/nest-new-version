@@ -78,11 +78,18 @@ const UserDashboard = () => {
       <div className="min-h-screen max-w-screen overflow-hidden bg-gray-50">
         <div className="bg-white border-b px-10 py-4">
           <SuperHeader/>
-          <div className="gap-1 justify-between hidden md:flex my-3">
-            <h2 className="md:text-2xl text-md font-semibold text-gray-500 w-1/2 text-balance">
+          <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3 px-4">
+            <h2 className="md:text-2xl text-md font-semibold text-gray-500 text-balance">
               Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
               Welcome back
             </h2>
+           <div className="md:flex items-center gap-4">
+           <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance">
+               <a href="./userdashboard/timeline/friend-posts"> See what your friend is doing</a>
+            </h2>
+            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance">Add a post</h2>
+            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance">Your post</h2>
+           </div>
           </div>
         </div>
         <div className="wrapper md:px-10 px-4 md:py-4 pt-4">

@@ -53,7 +53,6 @@ const AddQuestion = ({ addquestion }) => {
     }
   };
   //
-  console.log(content)
   return (
     <div className="">
       <div className="form">

@@ -14,7 +14,7 @@ const AssistantHome = () => {
       <div className="top flex justify-between items-center px-16 border-b-2 py-4">
         <div className="w-20">
           <Logo />
-        </div>{" "}
+        </div>
         <span className="font-bold text-violet-800 text-lg">
           {store.userInfo.name}
         </span>
