@@ -1,14 +1,14 @@
 import { banglaTopicValue } from "@/app/assistantdashboard/components/data";
 import React from "react";
 
-const Bangla = ({ setTopic, topic }) => {
+const Bangla = ({ chapter, setChapter }) => {
   return (
     <div>
       <label htmlFor="chapter">Chapter</label>
       <select
         required
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
+        value={chapter}
+        onChange={(e) => setChapter(e.target.value)}
         className="outline-none flex w-28 py-1 px-2 rounded-md border"
         name="সাহিত্য"
         id="সাহিত্য"

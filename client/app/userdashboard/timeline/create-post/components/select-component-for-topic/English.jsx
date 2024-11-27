@@ -2,14 +2,14 @@
 import { englishTopicValue } from "@/app/assistantdashboard/components/data";
 import React, { useState } from "react";
 
-const English = ({setTopic, topic}) => {
+const English = ({chapter, setChapter}) => {
   return (
     <div>
        <label htmlFor="chapter">Chapter</label>
       <select
         required
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
+        value={chapter}
+        onChange={(e) => setChapter(e.target.value)}
         className="outline-none flex w-28 py-1 px-2 rounded-md border"
         name="Literature"
         id="Literature"

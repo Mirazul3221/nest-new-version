@@ -15,6 +15,7 @@ import { FriendRequestModule } from './friend-request/friend-request.module';
 import { NotificationModule } from './notification/notification.module';
 import { MessangerModule } from './messanger/messanger.module';
 import { SocketServerModule } from './socket-server/socket-server.module';
+import { UserquestionsModule } from './userquestions/userquestions.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SocketServerModule } from './socket-server/socket-server.module';
     FriendRequestModule,
     NotificationModule,
     MessangerModule,
+    UserquestionsModule,
     SocketServerModule,
   ],
   controllers: [AppController],
