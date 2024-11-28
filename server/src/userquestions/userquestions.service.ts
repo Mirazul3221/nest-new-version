@@ -36,8 +36,7 @@ export class UserquestionsService {
 
   async findMyAllQuestions(id) {
     const allQuestions = await this.QuestionModel.find({userId:id})
-    console.log(allQuestions)
-    return `This action returns all userquestions`;
+    return allQuestions;
   }//
   findAll() {
     return `This action returns all userquestions`;

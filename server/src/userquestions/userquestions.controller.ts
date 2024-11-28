@@ -23,7 +23,6 @@ async create(@Req() req, @Body() createUserquestionDto: CreateUserquestionDto) {
   @Get('myquestions')
   async findMyAllQuestions(@Req() req) {
     const id = req.user._id
-    console.log(id)
     return await this.userquestionsService.findMyAllQuestions(id);
   }
 
