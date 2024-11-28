@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 const PaginationNumber = ({ totalPost, postPerPage, getPageNumber,scrollToTop }) => {
   const [activePage, setActivePage] = useState(1);
@@ -6,12 +6,10 @@ const PaginationNumber = ({ totalPost, postPerPage, getPageNumber,scrollToTop })
   for (let i = 1; i <= Math.ceil(totalPost/postPerPage); i++) {
     pageIndex.push(i);
   }
-  const handleClick = item => {
+  const handleClick = useCallback(item => {
     getPageNumber(item);
     setActivePage(item);
-  };//
-
-  console.log(postPerPage)
+  },[]);//
   return (
     <div>
       <ul className="flex flex-wrap gap-2 justify-center items-center">
@@ -35,4 +33,4 @@ const PaginationNumber = ({ totalPost, postPerPage, getPageNumber,scrollToTop })
   );
 };
 
-export default PaginationNumber;
+export default memo(PaginationNumber);

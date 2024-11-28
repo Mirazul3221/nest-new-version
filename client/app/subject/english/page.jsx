@@ -3,7 +3,6 @@ import { englishTopicValue } from "@/app/assistantdashboard/components/data";
 import { MdOutlineArrowRight, MdOutlineDoubleArrow } from "react-icons/md";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { GiBookmarklet } from "react-icons/gi";
-import Logo from "@/app/components/Logo";
 import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import Monitor from "@/app/userdashboard/components/examonitor/Monitor";

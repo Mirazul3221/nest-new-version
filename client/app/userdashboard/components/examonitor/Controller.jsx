@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { memo, useCallback, useContext, useEffect, useState } from "react";
 import loveAnim from "@/public/love.gif";
 import { CiCircleQuestion } from "react-icons/ci";
 import { LiaClipboardListSolid, LiaHandPointUpSolid } from "react-icons/lia";
@@ -71,7 +71,7 @@ const Controller = ({
   //====================================================================
   //====================================================
   //=====================================
-  const checkAns = (e, ans, index, singleQuestion) => {
+  const checkAns = useCallback((e, ans, index, singleQuestion) => {
     setMark.sub(singleQuestion.topic)
     let selectedData = questionsData[index].rightAns;
     const currentTerget = e.target;
@@ -97,9 +97,6 @@ const Controller = ({
           setMark.rf(setMark.r + 1)
           setCorrectMcq(correctMcq + 1);
           setSelectAll(selectAll + 1);
-          // if (volumeSound === "on") {
-          //   // correctVolume.play();
-          // }
 
           localStorage.setItem("crossBtn", "true");
           setPositiveMarks(positiveMarks + 1);
@@ -150,7 +147,7 @@ const Controller = ({
       localStorage.setItem("UUID", JSON.stringify(questionId));
     };
     checkReadingQuestion();
-  };
+  },[])
 
 
 //Here the collection of all questions function that is called in checkAns function call
@@ -219,12 +216,6 @@ const Controller = ({
         collectQuestions.push(singleQuestion)
     localStorage.setItem("collectedWrongQuestions", JSON.stringify(collectQuestions));
  }
-
-  // const findReadQuestions = question_data.filter((queId) => {
-  //   const getReadQuestion = JSON.parse(localStorage.getItem("UUID"));
-  //   // const length = getReadQuestion.map((item))
-  //   // return queId._id === "";
-  // });
   const getReadQuestion = JSON.parse(localStorage.getItem("UUID"));
   const exactReadQuestion = getReadQuestion?.filter((item, index) => {
     return index === getReadQuestion?.findIndex((item2) => item2 === item);
@@ -373,7 +364,6 @@ const Controller = ({
     document.body.style.overflow = "auto";
   }
   const pathname = usePathname();
-  console.log(pathname);
   const [copy,setCopy] = useState("copy")
   return (
     <div className={`pb-12 md:pb-0`}>
@@ -835,4 +825,4 @@ const Controller = ({
   );
 };
 
-export default Controller;
+export default memo(Controller);
