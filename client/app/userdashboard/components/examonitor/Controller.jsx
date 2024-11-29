@@ -161,7 +161,6 @@ const Controller = ({
       Authorization: `Bearer ${store.token}`,
     },
   })
-  console.log(data)
     const question = {
       time:new Date(),
       id:singleQuestion._id,
