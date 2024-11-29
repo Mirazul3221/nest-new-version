@@ -180,7 +180,7 @@ const Page = () => {
                       <h2>Question: {question.question}</h2>
                       {/* ////////////////////////////////////////Here Start all Question options//////////////////////////////////////////////// */}
                       <div data-select={question.rightAns} className="pb-2 space-y-2">
-                        <div
+                      <div
                           onClick={(e) => checkAns(e, index, 1, question)}
                           className="flex items-center gap-2 border pl-2 rounded-md cursor-pointer"
                         >
@@ -191,8 +191,8 @@ const Page = () => {
                               ? "A"
                               : "ক"}
                           </h2>
-                          <h3 className="__target_option__ w-full">
-                            {question.option_01}
+                          <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
+                            {question.option_01} <span className="hidden"><RxCross2 color="red" size={22}/></span> <span className="hidden"><GiCheckMark color="green" /></span>
                           </h3>
                         </div>
                         <div
