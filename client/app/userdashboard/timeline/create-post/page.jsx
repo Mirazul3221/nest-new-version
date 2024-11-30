@@ -8,7 +8,7 @@ const page = () => {
   return (
     <div>
       <ProtectRoute>
-        <div className="">
+        <div>
           <div className="header bg-white px-4 py-3 md:px-10">
             <SuperHeader />
           </div>

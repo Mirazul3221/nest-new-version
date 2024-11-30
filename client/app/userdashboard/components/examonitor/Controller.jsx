@@ -76,8 +76,7 @@ const Controller = ({
     let selectedData = questionsData[index].rightAns;
     const currentTerget = e.target;
     const tergetBox = e.target.parentElement.parentElement.children; // This tergetbox refers to the childer elements
-    const tergetExp =
-      e.target.parentElement.parentElement.parentElement.children[2]; // This tergetbox refers to the explanation elements
+    const tergetExp = e.target.parentElement.parentElement.parentElement.children[2]; // This tergetbox refers to the explanation elements
     //=============================================================
     const parentBox = e.target.parentElement.parentElement;
     const getAttribute = parentBox.getAttribute("data-select");
@@ -141,9 +140,6 @@ const Controller = ({
       //Find ID from localstorage =================
 
       questionId.push(uniqueId);
-
-
-
       localStorage.setItem("UUID", JSON.stringify(questionId));
     };
     checkReadingQuestion();
@@ -536,7 +532,7 @@ const Controller = ({
                   <></>
                 ) : (
                   <div
-                    className={`explanation relative hidden_scroll pt-2 mt-4 px-4 md:px-12 transform duration-500 bg-white max-h-[40vh] overflow-y-scroll`}
+                    className={`explanation relative hidden_scroll pt-2 mt-4 px-4 md:px-8 transform duration-500 bg-white max-h-[40vh] overflow-y-scroll`}
                   >
                     <p className="text-[12px] p-2 md:p-10">
                       {HTMLReactParser(`${value.description}`)}
