@@ -16,10 +16,14 @@ const CommentBox = () => {
       messangerRef.current.style.height = `${messangerRef.current.scrollHeight}px`;
     }
   }, [message]);
+
+  const handleSendComment = ()=>{
+    console.log(message)
+  }
   return (
     <div>
-      <div className="footer flex justify-between items-center px-2 mt-2 text-gray-500">
-        <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer py-2 px-4">
+      <div className="footer flex justify-between items-center mt-2 text-gray-500">
+        <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
           <FaRegThumbsUp size={22} />
           <span>Like</span>
         </div>
@@ -59,7 +63,7 @@ const CommentBox = () => {
           }}
         />
               <div
-            //   onClick={handleSendMessage}
+              onClick={handleSendComment}
               className="flex z-50 h-full items-start cursor-pointer mb-2 text-gray-500"
             >
               <RiSendPlaneLine size={20} />
