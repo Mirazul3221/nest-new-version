@@ -61,7 +61,7 @@ const AddQuestion = () => {
 
     try {
       const { data } = await axios.post(
-        `${baseurl}/userquestions/create`,
+        `${baseurl}/userquestions/create-question`,
         questionSchema,
         {
           headers: {
@@ -71,7 +71,7 @@ const AddQuestion = () => {
       );
 
     } catch (error) {
-
+       console.log(error)
     }
   };
   return (

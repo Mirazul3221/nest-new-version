@@ -1,21 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-
-@Schema({timestamps:true})
-export class Comment {
-    @Prop({ type: String, required: true })
-    userId: string; // ID of the user who commented
-
-   @Prop({type:String,required:true})
-    content:string
-
-    @Prop({type:[{type:String}]})
-    likes:string[]
-
-  @Prop({ type: [{ type: Comment }] })
-  replies: Comment[]; // Nested replies
-}
-
+import { CommentSchema } from "./comment.schema";
 @Schema({timestamps:true})
 export class UsersQuestion extends Document {
     @Prop({ type: String, required: true })
@@ -50,8 +35,8 @@ export class UsersQuestion extends Document {
     @Prop({ type: [{ type: String }] })
     likes: string[]; // Array of user IDs who liked the post
     ////////////////////////////////////////////////////////////
-    @Prop({ type: [] })
-    comments: []; // Nested comments
+    @Prop({ type:[] })
+    comments: Comment[]; // Nested comments
 }
 
 // export type QuestionDocument = Question & Document;

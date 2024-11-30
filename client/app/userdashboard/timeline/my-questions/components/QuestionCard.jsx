@@ -134,7 +134,7 @@ const QuestionCard = () => {
   return (
     <div>
                   <div>
-              {allQuestions?.map((question, index) => {
+              {allQuestions?.reverse().map((question, index) => {
                 return (
                   <div
                     key={index}
@@ -233,7 +233,7 @@ const QuestionCard = () => {
                       <h2> {HTMLReactParser(`${question.content}`)}</h2>
                     </div>
                     <div className="mt-2 duration-300">
-                      <CommentBox/>
+                      <CommentBox question={question}/>
                     </div>
                   </div>
                 );
