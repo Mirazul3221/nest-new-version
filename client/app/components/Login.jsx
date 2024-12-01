@@ -59,11 +59,6 @@ const InputForm = () => {
       setLoader(false);
     }
   };
-  //  async function request () {
-  //   const { data } =await axios.get("http://localhost:5050/auth/request");
-  //   console.log(data)
-  //  }
-  ////  request ()
   return (
     <div>
       <div className="p-8 md:w-[400px] md:h-[74vh]">
@@ -90,21 +85,6 @@ const InputForm = () => {
               />
             </div>
             <div className="mb-2">
-              {/* <label
-                htmlFor="password"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Password
-              </label>
-              <input
-                onChange={targetElement}
-                value={submitValue.password}
-                type="password"
-                id="password"
-                name="password"               
-                placeholder="•••"
-                required
-              /> */}
-
               <label
                 htmlFor="email"
                 className="block mt-4 text-sm font-medium text-gray-900 dark:text-white"

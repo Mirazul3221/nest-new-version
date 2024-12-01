@@ -6,44 +6,26 @@ import Math from "./select-component-for-topic/Math";
 import JoditEditorWrapper from "@/app/assistantdashboard/components/joditEditor";
 import axios from "axios";
 import { baseurl } from "@/app/config";
+import loader from "@/public/loading-buffer.gif";
 import storeContext from "@/app/global/createContex";
+import Image from "next/image";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
   const [chapter, setChapter] = useState("");
   const [prevExam, setPrevExm] = useState("");
-  const [question,setQuestion] = useState("");
+  const [question, setQuestion] = useState("");
   const [option_01, setOption_01] = useState("");
   const [option_02, setOption_02] = useState("");
   const [option_03, setOption_03] = useState("");
   const [option_04, setOption_04] = useState("");
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [rightAns, setRightAns] = useState("");
+  const [loading, setloading] = useState(false);
   const { store } = useContext(storeContext);
   const editor = useRef(null);
-
-  console.log(content);
-  const config = {
-    readonly: false, // set editor readonly
-    toolbar: [
-      "bold",
-      "italic",
-      "underline",
-      "|",
-      "link",
-      "|",
-      "insertImage",
-      "|",
-      "youtube",
-      "|",
-      "fullscreen",
-      "|",
-    ],
-    uploader: {
-      insertImageAsBase64URI: true,
-    },
-  };
-
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
     const questionSchema = {
@@ -60,6 +42,7 @@ const AddQuestion = () => {
     };
 
     try {
+      setloading(true);
       const { data } = await axios.post(
         `${baseurl}/userquestions/create-question`,
         questionSchema,
@@ -69,16 +52,20 @@ const AddQuestion = () => {
           },
         }
       );
-     setPrevExm('')
-     setQuestion('')
-     setOption_01('')
-     setOption_02('')
-     setOption_03('')
-     setOption_04('')
-     setRightAns('')
-     setContent('')
+      toast('Question added')
+      setPrevExm("");
+      setQuestion("");
+      setOption_01("");
+      setOption_02("");
+      setOption_03("");
+      setOption_04("");
+      setRightAns("");
+      setContent("");
+      setloading(false);
     } catch (error) {
-       console.log(error)
+      toast.error('Server error')
+      setloading(false);
+      console.log(error);
     }
   };
   return (
@@ -112,11 +99,15 @@ const AddQuestion = () => {
             </select>
           </div>
           {/* ------------------------------------------------------------------------------- */}
-          {subject === "বাংলা" && <Bangla chapter={chapter} setChapter={setChapter} />}
+          {subject === "বাংলা" && (
+            <Bangla chapter={chapter} setChapter={setChapter} />
+          )}
           {subject === "ইংরেজি" && (
             <English chapter={chapter} setChapter={setChapter} />
           )}
-          {subject === "গণিত" && <Math chapter={chapter} setChapter={setChapter} />}
+          {subject === "গণিত" && (
+            <Math chapter={chapter} setChapter={setChapter} />
+          )}
           {/* ------------------------------------------------------------------------------- */}
           <div>
             <label htmlFor="title">Previous exam session</label>
@@ -136,7 +127,7 @@ const AddQuestion = () => {
           <div className="mt-6 w-1/2 pr-4">
             <label htmlFor="title">Question</label>
             <input
-              onChange={(e)=>setQuestion(e.target.value)}
+              onChange={(e) => setQuestion(e.target.value)}
               value={question}
               type="text"
               name="question"
@@ -220,12 +211,18 @@ const AddQuestion = () => {
               <option value="3">option 03</option>
               <option value="4">option 04</option>
             </select>
-            <button
-              type="submit"
-              className="px-6 py-1 bg-violet-500 text-white rounded-md"
-            >
-              Submit
-            </button>
+            {loading ? (
+             <div className="bg-white rounded-md overflow-hidden border">
+               <Image className="w-8" src={loader} alt="Loding image"/>
+             </div>
+            ) : (
+              <button
+                type="submit"
+                className="px-6 py-1 bg-violet-500 text-white rounded-md"
+              >
+                Submit
+              </button>
+            )}
           </div>
 
           <div className="text-editor">
@@ -239,6 +236,7 @@ const AddQuestion = () => {
           </div>
         </div>
       </form>
+      <ToastContainer/>
     </div>
   );
 };
