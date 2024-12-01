@@ -117,7 +117,6 @@ const CommentBox = ({ question }) => {
         )}
       </div>
       <div>
-      <div onClick={() => setPutLike(!putLike)}>czsc</div>
         <div className="footer flex justify-between items-center text-gray-500">
           <div
             onClick={handleSendLike}

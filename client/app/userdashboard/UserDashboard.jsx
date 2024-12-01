@@ -15,6 +15,11 @@ import { baseurl } from "../config";
 import Bcs from "./components/Slider2";
 import SuperHeader from "./components/SuperHeader";
 import { useSocket } from "./global/SocketProvider";
+
+import { HiOutlineDocumentAdd } from "react-icons/hi";
+import { GrDocumentText } from "react-icons/gr";
+import { GoPlus } from "react-icons/go";
+import { LuMinus } from "react-icons/lu";
 // import Image from "next/image";
 // import logo from "@/public/bcs-logo.png"
 // import { TextEditor } from './components/TextEditor';
@@ -25,7 +30,7 @@ const UserDashboard = () => {
     profile: "",
   });
   const { store} = useContext(storeContext);
-
+  const [show,setShow] = useState(false)
   // useEffect(() => {
   //   async function fetchData() {
   //     try {
@@ -90,6 +95,32 @@ const UserDashboard = () => {
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/create-post">Add a post</a></h2>
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/my-questions">Your post</a> </h2>
            </div>
+          </div>
+          {/* /////////////mobile Responsive///////////////// */}
+          <div className="md:hidden duration-500 text-gray-700 space-y-1">
+          <div className="flex justify-end mt-2">
+            {
+              show ? <div onClick={()=>setShow(false)} className="p-1 w-fit bg-gray-50 border border-gray-100 rounded-md"><LuMinus size={25}/></div> : <div onClick={()=>setShow(true)} className="p-1 w-fit bg-gray-50 border border-gray-100 rounded-md"> <GoPlus size={25}/></div>
+            }
+          </div>
+        <div className={`overflow-hidden ${show ? "max-h-[300px] duration-500" : "max-h-0 duration-500"}`}>
+        <div className="flex items-center gap-1 bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3">
+              <GrDocumentText/>
+               Friend's Questions
+            </div>
+              <a href="/userdashboard/timeline/create-post">
+                <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
+                <GrDocumentText/>
+                My Questions
+                </p>
+              </a>
+              <a href="/userdashboard/timeline/my-questions">
+                <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
+                <HiOutlineDocumentAdd/>
+                Add a Questions
+                </p>
+              </a>
+        </div>
           </div>
         </div>
         <div className="wrapper md:px-10 px-4 md:py-4 pt-4">

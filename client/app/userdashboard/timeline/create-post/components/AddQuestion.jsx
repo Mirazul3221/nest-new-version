@@ -109,7 +109,7 @@ const AddQuestion = () => {
             <Math chapter={chapter} setChapter={setChapter} />
           )}
           {/* ------------------------------------------------------------------------------- */}
-          <div>
+          <div className="hidden md:block">
             <label htmlFor="title">Previous exam session</label>
             <input
               onChange={(e) => setPrevExm(e.target.value)}
@@ -122,9 +122,22 @@ const AddQuestion = () => {
             />
           </div>
         </div>
+
+        <div className="mt-2">
+            <label htmlFor="title">Previous exam session</label>
+            <input
+              onChange={(e) => setPrevExm(e.target.value)}
+              value={prevExam}
+              type="text"
+              name="exam"
+              id="exam"
+              placeholder="optional"
+              className="outline-none flex w-10/12 py-1 px-2 rounded-md border"
+            />
+          </div>
         {/* ------------------------------------------------------------------------------------- */}
         <div>
-          <div className="mt-6 w-1/2 pr-4">
+          <div className="mt-6 md:w-1/2 md:pr-4">
             <label htmlFor="title">Question</label>
             <input
               onChange={(e) => setQuestion(e.target.value)}
