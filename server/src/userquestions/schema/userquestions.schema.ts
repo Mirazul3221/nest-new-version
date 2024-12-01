@@ -32,7 +32,7 @@ export class UsersQuestion extends Document {
     @Prop({type:String,required:false})
     content : string
     ///////////////////////////////////////////////////////////////
-    @Prop({ type: [{ type: String }] })
+    @Prop({ type: [{ type: String, unique : true }] })
     likes: string[]; // Array of user IDs who liked the post
     ////////////////////////////////////////////////////////////
     @Prop({ type:[] })

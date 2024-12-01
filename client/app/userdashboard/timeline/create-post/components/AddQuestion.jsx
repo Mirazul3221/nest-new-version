@@ -17,7 +17,7 @@ const AddQuestion = () => {
   const [option_02, setOption_02] = useState("");
   const [option_03, setOption_03] = useState("");
   const [option_04, setOption_04] = useState("");
-  const [content, setContent] = useState();
+  const [content, setContent] = useState('');
   const [rightAns, setRightAns] = useState("");
   const { store } = useContext(storeContext);
   const editor = useRef(null);
@@ -69,7 +69,14 @@ const AddQuestion = () => {
           },
         }
       );
-
+     setPrevExm('')
+     setQuestion('')
+     setOption_01('')
+     setOption_02('')
+     setOption_03('')
+     setOption_04('')
+     setRightAns('')
+     setContent('')
     } catch (error) {
        console.log(error)
     }
@@ -226,7 +233,7 @@ const AddQuestion = () => {
             <JoditEditorWrapper
               ref={editor}
               tabIndex={1}
-              value=""
+              value={content}
               onChange={(newContent) => setContent(newContent)}
             />
           </div>

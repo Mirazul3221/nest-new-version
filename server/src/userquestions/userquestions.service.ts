@@ -22,7 +22,6 @@ export class UserquestionsService {
   const date = new Date().getTime()
   const slug = createSlug('bcs-preparation-online-'+subject + '-' + chapter +'-'+question +'-'+ date)
   const fullSchema = {slug,userId:user._id,userName:user.name,userProfile:user.profile,...createUserquestionDto}
-  // console.log(fullSchema)
   const existedQuestion = await this.QuestionModel.find({question})
   if (existedQuestion[0]?.question === question && existedQuestion[0]?.chapter === chapter && existedQuestion[0]?.prevExam === prevExam && existedQuestion[0]?.content == content
   ) {
@@ -44,8 +43,12 @@ export class UserquestionsService {
   /////////////////////////////////////////////////////////////////////////////////////
     async createLike(userId,questionId){
       const targetQuestion = await this.QuestionModel.findById(questionId)
-      targetQuestion.likes.push(userId)
-      await targetQuestion.save()
+       if (targetQuestion.likes.includes(userId)) {
+         return 'Already Liked the question'
+       }else {
+        targetQuestion.likes.push(userId)
+        await targetQuestion.save()
+       }
     }
   
   /////////////////////////////////////////////////////////////////////////////////////
@@ -54,11 +57,12 @@ export class UserquestionsService {
   const filteredQuestions = await this.QuestionModel.aggregate([
     { $match: { userId: id.toString() } },
 
-    { $unwind: "$comments" },
+    { $unwind: { path: "$comments", preserveNullAndEmptyArrays: true } },
 
     // Sort the comments in descending order by their `createdAt`
     { $sort: { "comments.createdAt": -1 } },
  // Group back all fields and collect the sorted comments
+ 
  {
   $group: {
     _id: "$_id", // Group by question ID
@@ -82,7 +86,7 @@ export class UserquestionsService {
     __v: { $first: "$__v" },
     recentComments: { $push: "$comments" }, // Collect all sorted comments
   }},
-
+  { $sort: { createdAt: 1 } },
   {
     $project: {
       chapter: 1,
@@ -108,6 +112,8 @@ export class UserquestionsService {
     },
   },
   ])
+
+  console.log(filteredQuestions)
     return filteredQuestions;
   }//
   findAll() {

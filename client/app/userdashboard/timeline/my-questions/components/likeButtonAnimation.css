@@ -1,0 +1,40 @@
+.likeButtonAnimation {
+    transition: 500ms;
+    animation-name: likeModify;
+    animation-duration: .5s;
+    opacity: 1;
+}
+
+@keyframes likeModify {
+    0%{
+        transform: scale(1) rotate(-10deg) translateZ(10px) translateY(-10px) translateX(0px);
+    }
+    20%{
+        transform: scale(1.3) rotate(-20deg) translateZ(20px) translateY(-30px) translateX(0px);
+    }
+    40%{
+        opacity: .8;
+        transform: scale(1.2)  rotate(-30deg) translateZ(30px) translateY(-70px) translateX(30px);
+    }
+    60%{
+        opacity: .5;
+        transform: scale(.6) rotate(-20deg) translateZ(20px) translateY(-100px) translateX(30px);
+    }
+    70%{
+        opacity: 0;
+        transform: scale(.4) rotate(-10deg) translateZ(10px) translateY(-80px) translateX(40px);
+    }
+
+    80%{
+        opacity: 0;
+        transform: scale(0) rotate(0deg) translateZ(0px) translateY(0px) translateX(0px);
+    }
+    90%{
+        opacity: 0;
+        transform: scale(0) rotate(0deg) translateZ(0px) translateY(0px) translateX(0px);
+    }
+    100%{
+        opacity: 0;
+        transform: scale(0) rotate(0deg) translateZ(0px) translateY(0px) translateX(0px);
+    }
+}
