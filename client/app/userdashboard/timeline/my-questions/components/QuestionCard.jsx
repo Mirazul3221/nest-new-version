@@ -138,7 +138,7 @@ const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
                   <h2 className="md:text-2xl text-lg mb-2">
                     Do you want to delete the question?
                   </h2>
-                  <h4 className="text-sm md:text-md">"{myQuestion.question}"</h4>
+                  <h4 className="text-sm md:text-md">{`"${myQuestion.question}"`}</h4>
                   <div className="flex gap-2 justify-center mt-3">
                      <button  onClick={() => setDelete(false)} className="bg-gray-100 px-2 rounded-md">No</button>
                      <button onClick={()=>{handleDelete()}} className="bg-rose-200 px-2 rounded-md">Yes</button>
