@@ -27,6 +27,10 @@ const Page = () => {
     fetchMyData();
   }, []);
   console.log(allQuestions)
+  const questionsAfterDelete =(question)=>{
+    const filteredQuestions = allQuestions?.filter(q=>q._id !== question._id)
+     setAllQuestions(filteredQuestions)
+  }
   return (
     <div>
       <ProtectRoute>
@@ -41,7 +45,7 @@ const Page = () => {
             {
               allQuestions?.map((question,i)=> {
                 return <div key={i} className="">
-                         <QuestionCard myQuestion={question}/>
+                         <QuestionCard questionsAfterDelete={questionsAfterDelete} myQuestion={question}/>
                 </div>
               })
             }

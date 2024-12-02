@@ -12,6 +12,20 @@ export class UserquestionsController {
 async createQuestion(@Req() req, @Body() createUserquestionDto: CreateUserquestionDto) {
     return await this.userquestionsService.create(createUserquestionDto,req.user);
   }
+
+  
+  @UseGuards(AuthGuard())
+  @Post('edit-question/:id')
+async editQuestion(@Param("id") id, @Body() createUserquestionDto: CreateUserquestionDto) {
+    return await this.userquestionsService.edit(createUserquestionDto,id);
+  }
+
+
+  @UseGuards(AuthGuard())
+  @Get('delete-question/:id')
+async deleteQuestion(@Param("id") id) {
+    return await this.userquestionsService.deleteQuestion(id);
+  }
 ///////////////////////////////////////////////////////////////////
   @Post('create-comment')
   @UseGuards(AuthGuard())

@@ -53,14 +53,6 @@ const AddQuestion = () => {
         }
       );
       toast('Question added')
-      setPrevExm("");
-      setQuestion("");
-      setOption_01("");
-      setOption_02("");
-      setOption_03("");
-      setOption_04("");
-      setRightAns("");
-      setContent("");
       setloading(false);
     } catch (error) {
       toast.error('Server error')

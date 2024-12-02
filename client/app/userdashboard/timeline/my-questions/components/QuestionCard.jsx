@@ -8,7 +8,6 @@ import React, {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
 import { GiCheckMark } from "react-icons/gi";
@@ -18,27 +17,11 @@ import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../../create-post/components/EditQuestion";
 
-const QuestionCard = ({ myQuestion }) => {
+const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
   const [edit, setEdit] = useState(false);
-  const fetchMyData = async () => {
-    try {
-      const { data } = await axios.get(`${baseurl}/userquestions/myQuestion`, {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-        },
-      });
-      setAllQuestions(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMyData();
-  }, []);
-
+  const [deleteQ, setDelete] = useState(false);
   const dateFormate = (createdAt) => {
     const currentYear = moment().year();
     const postYear = moment(createdAt).year();
@@ -103,6 +86,20 @@ const QuestionCard = ({ myQuestion }) => {
     }
   }, []);
 
+  const handleDelete =async ()=> {
+    try {
+      const { data } = await axios.get(`${baseurl}/userquestions/delete-question/${myQuestion._id}`, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
+      questionsAfterDelete(myQuestion)
+      setDelete(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {myQuestion && (
@@ -125,17 +122,41 @@ const QuestionCard = ({ myQuestion }) => {
                   onClick={() => setEdit(true)}
                   className="cursor-pointer hover:text-black duration-300"
                 />
-                <RiDeleteBin7Line className="cursor-pointer hover:text-rose-600 duration-300" />
+                <RiDeleteBin7Line
+                  onClick={() => setDelete(true)}
+                  className="cursor-pointer hover:text-rose-600 duration-300"
+                />
               </div>
+              <div className={`${deleteQ ? "scale-105" : "scale-0"} md:max-w-1/2 w-10/12 md:w-auto duration-150 px-4 md:px-10 py-6 shadow-md border-2 rounded-2xl bg-white -translate-x-[50%] -translate-y-[50%] fixed top-[50%] left-[50%]`}>
+                  <div className="flex justify-end">
+                    <RxCross2
+                      onClick={() => setDelete(false)}
+                      className="cursor-pointer -mt-4 -mr-2 md:-mr-6"
+                      size={18}
+                    />
+                  </div>
+                  <h2 className="md:text-2xl text-lg mb-2">
+                    Do you want to delete the question?
+                  </h2>
+                  <h4 className="text-sm md:text-md">"{myQuestion.question}"</h4>
+                  <div className="flex gap-2 justify-center mt-3">
+                     <button  onClick={() => setDelete(false)} className="bg-gray-100 px-2 rounded-md">No</button>
+                     <button onClick={()=>{handleDelete()}} className="bg-rose-200 px-2 rounded-md">Yes</button>
+                  </div>
+                </div>
             </div>
             {/* ///////////////////////////////////////////////////////Edit Question Form//////////////////////////////////////////////// */}
             {edit && (
-              <div className="fixed z-50 flex justify-center items-center bg-slate-500/10 top-0 left-0 w-screen h-screen">
+              <div className="fixed z-50 flex justify-center items-center bg-slate-300/70 top-0 left-0 w-screen h-screen">
                 <div className="bg-white">
                   <h2 className="md:text-2xl p-4 text-center font-bold text-gray-500 mb-2">
                     Edit the question
                   </h2>
-                  <button onClick={() => setEdit(false)}>Close</button>
+                  <div className="flex justify-end pr-10">
+                    <button onClick={() => setEdit(false)}>
+                      <RxCross2 size={25} />
+                    </button>
+                  </div>
                   <div className="h-[80vh] p-2 rounded-md overflow-auto">
                     <EditQuestion Q={myQuestion} />
                   </div>

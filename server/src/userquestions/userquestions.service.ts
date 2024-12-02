@@ -33,6 +33,14 @@ export class UserquestionsService {
   }
   }
 
+  async edit(question,id){
+    await this.QuestionModel.findByIdAndUpdate(id,question,{new:true})
+    return null
+  }
+  async deleteQuestion(id){
+    await this.QuestionModel.findByIdAndDelete(id)
+    return null
+  }
 
   async createComment(commentSchema,questionId){
 
@@ -86,7 +94,7 @@ export class UserquestionsService {
     __v: { $first: "$__v" },
     recentComments: { $push: "$comments" }, // Collect all sorted comments
   }},
-  { $sort: { createdAt: 1 } },
+  { $sort: { createdAt: -1 } },
   {
     $project: {
       chapter: 1,
@@ -112,8 +120,6 @@ export class UserquestionsService {
     },
   },
   ])
-
-  console.log(filteredQuestions)
     return filteredQuestions;
   }//
   findAll() {

@@ -44,7 +44,7 @@ const EditQuestion = ({Q}) => {
     try {
       setloading(true);
       const { data } = await axios.post(
-        `${baseurl}/userquestions/create-question`,
+        `${baseurl}/userquestions/edit-question/${Q._id}`,
         questionSchema,
         {
           headers: {
@@ -52,15 +52,7 @@ const EditQuestion = ({Q}) => {
           },
         }
       );
-      toast('Question added')
-      setPrevExm("");
-      setQuestion("");
-      setOption_01("");
-      setOption_02("");
-      setOption_03("");
-      setOption_04("");
-      setRightAns("");
-      setContent("");
+      toast('Question Edit Success')
       setloading(false);
     } catch (error) {
       toast.error('Server error')
