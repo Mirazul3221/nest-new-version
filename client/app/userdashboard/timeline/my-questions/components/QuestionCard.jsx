@@ -18,13 +18,13 @@ import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../../create-post/components/EditQuestion";
 
-const QuestionCard = () => {
+const QuestionCard = ({ myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
   const [edit, setEdit] = useState(false);
   const fetchMyData = async () => {
     try {
-      const { data } = await axios.get(`${baseurl}/userquestions/myquestions`, {
+      const { data } = await axios.get(`${baseurl}/userquestions/myQuestion`, {
         headers: {
           Authorization: `Bearer ${store.token}`,
         },
@@ -101,216 +101,153 @@ const QuestionCard = () => {
         }
       }
     }
-    // if (getAtterIntoNumber === selectedData) {
-    //   if (questionsData[index].rightAns === ans) {
-    //     increaseBalanceByperQuestionRead()
-    //     currentTerget.classList.add("true");
-    //     currentTerget.children[1].classList.remove("hidden")
-    //     setMark.rf(setMark.r + 1)
-    //     setCorrectMcq(correctMcq + 1);
-    //     setSelectAll(selectAll + 1);
-
-    //     localStorage.setItem("crossBtn", "true");
-    //     setPositiveMarks(positiveMarks + 1);
-    //     if (isSaveInHistory == 'on') {
-    //       allRightQuestionsCollection(singleQuestion)
-    //     }
-    //   } else {
-    //     currentTerget.classList.add("false");
-    //     currentTerget.children[0].classList.remove("hidden")
-    //     allOpton[mainTerget - 1].children[1].classList.add("true");
-    //     allOpton[mainTerget - 1].children[1].children[1].classList.remove("hidden");
-    //     //   if (volumeSound === "on") {
-    //     //     wrongVolume.play();
-    //     //   }
-    //     setMark.wf(setMark.w + 1)
-    //     setWrongAns(wrongAns + 1);
-    //     setTimeout(() => {
-    //       tergetExp?.classList.add("scale-110");
-    //       tergetExp?.classList.remove("scale-0");
-    //     }, 100);
-    //     tergetExp?.classList.remove("hidden");
-    //     setSelectAll(selectAll + 1);
-    //     setNegitiveMarks(negitiveMarks + 0.25);
-    //     if (isSaveInHistory == 'on') {
-    //       allWrongQuestionsCollection(singleQuestion)
-    //     }
-    //   }
-    // }
-
-    // useEffect(() => {
-    //   // localStorage.stringify()
-    // }, []);
-    //tish function has been set for counting reading questions
-    const checkReadingQuestion = () => {
-      // localStorage.setItem("")
-      const uniqueId = singleQuestion._id;
-      const questionId = localStorage.getItem("UUID")
-        ? JSON.parse(localStorage.getItem("UUID"))
-        : [];
-      //Find ID from localstorage =================
-
-      questionId.push(uniqueId);
-
-      localStorage.setItem("UUID", JSON.stringify(questionId));
-    };
-    // checkReadingQuestion();
   }, []);
 
   return (
     <div>
-      <div>
-        {allQuestions?.reverse().map((question, index) => {
-          return (
-            <div
-              key={index}
-              className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md border"
-            >
-              <div className="flex justify-between">
-                <div className="top flex items-center gap-2">
-                  <img
-                    className="w-10"
-                    src={question.userProfile}
-                    alt={question.userName}
-                  />
-                  <div className="">
-                    <h2 className="font-semibold text-md">
-                      {question.userName}
-                    </h2>
-                    <p className="text-sm">{dateFormate(question.createdAt)}</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex gap-2 bg-slate-50 py-1 px-2 rounded-lg border">
-                    <RiFileEditLine
-                      onClick={() => setEdit(true)}
-                      className="cursor-pointer hover:text-black duration-300"
-                    />
-                    <RiDeleteBin7Line className="cursor-pointer hover:text-rose-600 duration-300" />
-                  </div>
-                </div>
-                {/* ///////////////////////////////////////////////////////Edit Question Form//////////////////////////////////////////////// */}
-                {edit && (
-                  <div className="fixed z-50 flex justify-center items-center bg-slate-500/10 top-0 left-0 w-screen h-screen">
-                    <div className="bg-white">
-                    <h2 className="md:text-2xl p-4 text-center font-bold text-gray-500 mb-2">
-                        Edit the question
-                      </h2>
-                      <button onClick={()=>setEdit(false)}>Close</button>
-                      <div className="h-[80vh] p-2 rounded-md overflow-auto">
-                      <EditQuestion Q={question} />
-                    </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="middle mt-2">
-                <h2 className="mb-2 border-b pb-2">
-                  <span className="px-2 mr-2 rounded-lg bg-gray-50 border">
-                    {question.subject}
-                  </span>
-                  | {question.chapter}
-                </h2>
-                <h2>Question: {question.question}</h2>
-                {/* ////////////////////////////////////////Here Start all Question options//////////////////////////////////////////////// */}
-                <div data-select={question.rightAns} className="py-2 space-y-2">
-                  <div
-                    onClick={(e) => checkAns(e, 1, question)}
-                    className="flex items-center gap-2 border bg-gray-50 pl-2 rounded-md cursor-pointer"
-                  >
-                    <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
-                      {question.subject === "বাংলা"
-                        ? "ক"
-                        : question.subject === "ইংরেজি"
-                        ? "A"
-                        : "ক"}
-                    </h2>
-                    <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
-                      {question.option_01}{" "}
-                      <span className="hidden">
-                        <RxCross2 color="red" size={22} />
-                      </span>{" "}
-                      <span className="hidden">
-                        <GiCheckMark color="green" />
-                      </span>
-                    </h3>
-                  </div>
-                  <div
-                    onClick={(e) => checkAns(e, 2, question)}
-                    className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
-                  >
-                    <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
-                      {question.subject === "বাংলা"
-                        ? "ক"
-                        : question.subject === "ইংরেজি"
-                        ? "B"
-                        : "ক"}
-                    </h2>
-                    <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
-                      {question.option_02}{" "}
-                      <span className="hidden">
-                        <RxCross2 color="red" size={22} />
-                      </span>{" "}
-                      <span className="hidden">
-                        <GiCheckMark color="green" />
-                      </span>
-                    </h3>
-                  </div>
-                  <div
-                    onClick={(e) => checkAns(e, 3, question)}
-                    className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
-                  >
-                    <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
-                      {question.subject === "বাংলা"
-                        ? "ক"
-                        : question.subject === "ইংরেজি"
-                        ? "C"
-                        : "ক"}
-                    </h2>
-                    <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
-                      {question.option_03}{" "}
-                      <span className="hidden">
-                        <RxCross2 color="red" size={22} />
-                      </span>{" "}
-                      <span className="hidden">
-                        <GiCheckMark color="green" />
-                      </span>
-                    </h3>
-                  </div>
-                  <div
-                    onClick={(e) => checkAns(e, 4, question)}
-                    className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
-                  >
-                    <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
-                      {question.subject === "বাংলা"
-                        ? "ক"
-                        : question.subject === "ইংরেজি"
-                        ? "D"
-                        : "ক"}
-                    </h2>
-                    <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
-                      {question.option_04}{" "}
-                      <span className="hidden">
-                        <RxCross2 color="red" size={22} />
-                      </span>{" "}
-                      <span className="hidden">
-                        <GiCheckMark color="green" />
-                      </span>
-                    </h3>
-                  </div>
-                </div>
-                {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
-              </div>
-              <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
-                <h2> {HTMLReactParser(`${question.content}`)}</h2>
-              </div>
-              <div className="mt-2 duration-300">
-                <CommentBox question={question} />
+      {myQuestion && (
+        <div className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md border">
+          <div className="flex justify-between">
+            <div className="top flex items-center gap-2">
+              <img
+                className="w-10"
+                src={myQuestion.userProfile}
+                alt={myQuestion.userName}
+              />
+              <div className="">
+                <h2 className="font-semibold text-md">{myQuestion.userName}</h2>
+                <p className="text-sm">{dateFormate(myQuestion.createdAt)}</p>
               </div>
             </div>
-          );
-        })}
-      </div>
+            <div>
+              <div className="flex gap-2 bg-slate-50 py-1 px-2 rounded-lg border">
+                <RiFileEditLine
+                  onClick={() => setEdit(true)}
+                  className="cursor-pointer hover:text-black duration-300"
+                />
+                <RiDeleteBin7Line className="cursor-pointer hover:text-rose-600 duration-300" />
+              </div>
+            </div>
+            {/* ///////////////////////////////////////////////////////Edit Question Form//////////////////////////////////////////////// */}
+            {edit && (
+              <div className="fixed z-50 flex justify-center items-center bg-slate-500/10 top-0 left-0 w-screen h-screen">
+                <div className="bg-white">
+                  <h2 className="md:text-2xl p-4 text-center font-bold text-gray-500 mb-2">
+                    Edit the question
+                  </h2>
+                  <button onClick={() => setEdit(false)}>Close</button>
+                  <div className="h-[80vh] p-2 rounded-md overflow-auto">
+                    <EditQuestion Q={myQuestion} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="middle mt-2">
+            <h2 className="mb-2 border-b pb-2">
+              <span className="px-2 mr-2 rounded-lg bg-gray-50 border">
+                {myQuestion.subject}
+              </span>
+              | {myQuestion.chapter}
+            </h2>
+            <h2>Question: {myQuestion.question}</h2>
+            {/* ////////////////////////////////////////Here Start all Question options//////////////////////////////////////////////// */}
+            <div data-select={myQuestion.rightAns} className="py-2 space-y-2">
+              <div
+                onClick={(e) => checkAns(e, 1, myQuestion)}
+                className="flex items-center gap-2 border bg-gray-50 pl-2 rounded-md cursor-pointer"
+              >
+                <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
+                  {myQuestion.subject === "বাংলা"
+                    ? "ক"
+                    : myQuestion.subject === "ইংরেজি"
+                    ? "A"
+                    : "ক"}
+                </h2>
+                <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
+                  {myQuestion.option_01}{" "}
+                  <span className="hidden">
+                    <RxCross2 color="red" size={22} />
+                  </span>{" "}
+                  <span className="hidden">
+                    <GiCheckMark color="green" />
+                  </span>
+                </h3>
+              </div>
+              <div
+                onClick={(e) => checkAns(e, 2, myQuestion)}
+                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+              >
+                <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
+                  {myQuestion.subject === "বাংলা"
+                    ? "ক"
+                    : myQuestion.subject === "ইংরেজি"
+                    ? "B"
+                    : "ক"}
+                </h2>
+                <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
+                  {myQuestion.option_02}{" "}
+                  <span className="hidden">
+                    <RxCross2 color="red" size={22} />
+                  </span>{" "}
+                  <span className="hidden">
+                    <GiCheckMark color="green" />
+                  </span>
+                </h3>
+              </div>
+              <div
+                onClick={(e) => checkAns(e, 3, myQuestion)}
+                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+              >
+                <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
+                  {myQuestion.subject === "বাংলা"
+                    ? "ক"
+                    : myQuestion.subject === "ইংরেজি"
+                    ? "C"
+                    : "ক"}
+                </h2>
+                <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
+                  {myQuestion.option_03}{" "}
+                  <span className="hidden">
+                    <RxCross2 color="red" size={22} />
+                  </span>{" "}
+                  <span className="hidden">
+                    <GiCheckMark color="green" />
+                  </span>
+                </h3>
+              </div>
+              <div
+                onClick={(e) => checkAns(e, 4, myQuestion)}
+                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+              >
+                <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
+                  {myQuestion.subject === "বাংলা"
+                    ? "ক"
+                    : myQuestion.subject === "ইংরেজি"
+                    ? "D"
+                    : "ক"}
+                </h2>
+                <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
+                  {myQuestion.option_04}{" "}
+                  <span className="hidden">
+                    <RxCross2 color="red" size={22} />
+                  </span>{" "}
+                  <span className="hidden">
+                    <GiCheckMark color="green" />
+                  </span>
+                </h3>
+              </div>
+            </div>
+            {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
+          </div>
+          <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
+            <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
+          </div>
+          <div className="mt-2 duration-300">
+            <CommentBox question={myQuestion} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,10 +1,32 @@
 "use client";
 import ProtectRoute from "@/app/global/ProtectRoute";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import Footer from "@/app/components/Footer";
 import QuestionCard from "./components/QuestionCard";
+import storeContext from "@/app/global/createContex";
+import axios from "axios";
+import { baseurl } from "@/app/config";
 const Page = () => {
+  const { store } = useContext(storeContext);
+  const [allQuestions, setAllQuestions] = useState();
+  const fetchMyData = async () => {
+    try {
+      const { data } = await axios.get(`${baseurl}/userquestions/myquestions`, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
+      setAllQuestions(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMyData();
+  }, []);
+  console.log(allQuestions)
   return (
     <div>
       <ProtectRoute>
@@ -16,7 +38,13 @@ const Page = () => {
             <h2 className="text-2xl text-center mb-4 font-semibold text-gray-700">
               All the questions you have added
             </h2>
-            <QuestionCard/>
+            {
+              allQuestions?.map((question,i)=> {
+                return <div key={i} className="">
+                         <QuestionCard myQuestion={question}/>
+                </div>
+              })
+            }
           </div>
         </div>
         <div className="footer">
