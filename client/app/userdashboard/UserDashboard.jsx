@@ -108,13 +108,13 @@ const UserDashboard = () => {
               <GrDocumentText/>
                {"Friend's Questions"}
             </div>
-              <a href="/userdashboard/timeline/create-post">
+              <a href="/userdashboard/timeline/my-questions">
                 <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
                 <GrDocumentText/>
                 My Questions
                 </p>
               </a>
-              <a href="/userdashboard/timeline/my-questions">
+              <a href="/userdashboard/timeline/create-post">
                 <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
                 <HiOutlineDocumentAdd/>
                 Add a Questions

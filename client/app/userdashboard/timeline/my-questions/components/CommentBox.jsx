@@ -4,7 +4,7 @@ import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import axios from "axios";
 import moment from "moment";
-import '../components/likeButtonAnimation.css'
+import "../components/likeButtonAnimation.css";
 import React, {
   useCallback,
   useContext,
@@ -36,7 +36,7 @@ const CommentBox = ({ question }) => {
   }, [message]);
 
   const handleSendLike = useCallback(async () => {
-    new Audio('/like-justify-sound/pick-92276.mp3').play()
+    new Audio("/like-justify-sound/pick-92276.mp3").play();
     try {
       const { data } = await axios.post(
         `${baseurl}/userquestions/create-like`,
@@ -77,8 +77,6 @@ const CommentBox = ({ question }) => {
     }, 100);
   }
 
-  console.log(question);
-
   function formatRelativeTime(timestamp) {
     const now = moment(); // Current time
     const createdAt = moment(timestamp); // Parse the createdAt timestamp
@@ -94,8 +92,6 @@ const CommentBox = ({ question }) => {
       return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
     }
   }
-
-  console.log(question?.likes?.includes(store.userInfo.id));
   return (
     <div>
       <div
@@ -103,12 +99,18 @@ const CommentBox = ({ question }) => {
           question.likes?.length === 0 ? "justify-end" : "justify-between"
         } items-center py-2 text-gray-400`}
       >
-        {question?.likes?.length > 0 && (
-          <div className="countcomments gap-2 flex items-center">
-            <h4>{question.likes.length}</h4>
-            <FaThumbsUp size={18} />
+        {
+          putLike ? <div className="w-full">{
+            question?.likes?.length == 0 ? <h4>You like the question</h4> : <h4>{`You and ${question?.likes?.length} people like the question`}</h4>
+            }</div> :  <div>
+            {question?.likes?.length > 0 && (
+            <div className="countcomments gap-2 flex items-center">
+              <h4>{question.likes.length}</h4>
+              <FaThumbsUp size={18} />
+            </div>
+          )}
           </div>
-        )}
+        }
         {question.comments.length > 0 && (
           <div className="countcomments gap-2 flex items-center">
             <h4>{question.comments.length}</h4>
@@ -117,23 +119,37 @@ const CommentBox = ({ question }) => {
         )}
       </div>
       <div>
-        <div className="footer flex justify-between items-center text-gray-500">
-          <div
-            onClick={handleSendLike}
-            className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
-          >
-            {putLike === false && (
-              <div>
-                {question?.likes?.includes(store.userInfo.id) ? (
-                  <FaThumbsUp color="#292929" size={22} />
-                ) : (
-                  <FaRegThumbsUp onClick={() => setPutLike(true)} size={22} />
-                )}
+        {/* <div onClick={()=>setPutLike(!putLike)} className="">gdsg</div> */}
+        <div className="footer flex justify-between items-center text-gray-500 mt-2">
+          {putLike === false && (
+            <div>
+              {question?.likes?.includes(store.userInfo.id) ? (
+                <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+                  {" "}
+                  <FaThumbsUp color="#292929" size={22} /> <span>Like</span>
+                </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    setPutLike(true);
+                    handleSendLike();
+                  }}
+                  className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
+                >
+                  <FaRegThumbsUp size={22} /> <span>Like</span>{" "}
+                </div>
+              )}
+            </div>
+          )}
+          {putLike && (
+            <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+              <div className={`${putLike ? "likeButtonAnimation" : ""}`}>
+                <FaThumbsUp color="#292929" size={22} />
               </div>
-            )}
-            {putLike && <div className={`${putLike ? "likeButtonAnimation" : ""}`}><FaThumbsUp color="#292929" size={22} /></div>}
-            <span>Like</span>
-          </div>
+              <span>Like</span>
+            </div>
+          )}
+
           {question.comments.length > 0 ? (
             <div className="comment flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
               <FaRegCommentDots size={22} />

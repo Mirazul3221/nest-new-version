@@ -12,17 +12,17 @@ import Image from "next/image";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AddQuestion = () => {
-  const [subject, setSubject] = useState("");
-  const [chapter, setChapter] = useState("");
-  const [prevExam, setPrevExm] = useState("");
-  const [question, setQuestion] = useState("");
-  const [option_01, setOption_01] = useState("");
-  const [option_02, setOption_02] = useState("");
-  const [option_03, setOption_03] = useState("");
-  const [option_04, setOption_04] = useState("");
-  const [content, setContent] = useState("");
-  const [rightAns, setRightAns] = useState("");
+const EditQuestion = ({Q}) => {
+  const [subject, setSubject] = useState(Q.subject);
+  const [chapter, setChapter] = useState(Q.chapter);
+  const [prevExam, setPrevExm] = useState(Q.prevExam);
+  const [question, setQuestion] = useState(Q.question);
+  const [option_01, setOption_01] = useState(Q.option_01);
+  const [option_02, setOption_02] = useState(Q.option_02);
+  const [option_03, setOption_03] = useState(Q.option_03);
+  const [option_04, setOption_04] = useState(Q.option_04);
+  const [content, setContent] = useState(Q.content);
+  const [rightAns, setRightAns] = useState(Q.rightAns);
   const [loading, setloading] = useState(false);
   const { store } = useContext(storeContext);
   const editor = useRef(null);
@@ -68,11 +68,9 @@ const AddQuestion = () => {
       console.log(error);
     }
   };
+  console.log(Q)
   return (
     <div className="rounded-md px-4 py-2">
-      <h2 className="md:text-2xl font-bold text-gray-500 mb-2">
-        Add your favourite question
-      </h2>
       <form onSubmit={handleSubmitAnswer}>
         <div className="gap-2 flex items-center ">
           <div>
@@ -233,7 +231,7 @@ const AddQuestion = () => {
                 type="submit"
                 className="px-6 py-1 bg-violet-500 text-white rounded-md"
               >
-                Submit
+                Edit
               </button>
             )}
           </div>
@@ -254,4 +252,4 @@ const AddQuestion = () => {
   );
 };
 
-export default AddQuestion;
+export default EditQuestion;

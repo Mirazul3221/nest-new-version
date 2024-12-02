@@ -5,7 +5,7 @@ import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { GoHistory } from "react-icons/go";
@@ -101,10 +101,11 @@ const SuperHeader = () => {
       socket && socket.off();
     };
   }, [socket, openNotif]);
-  console.log(openNotif)
   useEffect(() => {
     openNotif && handleNotification();
   }, [openNotif]);
+
+
   useEffect(() => {
     handleNotification();
   }, []);
@@ -113,7 +114,8 @@ const SuperHeader = () => {
   const unseenNotification = notificationList?.filter(
     (item) => item.seen === false
   );
- console.log('shjkjk hfuhedhik')
+
+
   const sayThanks = async (id) => {
     try {
       const { data } = await axios.post(
@@ -133,22 +135,22 @@ const SuperHeader = () => {
 
   const fullName = me.name?.split(" ");
   const firstname = fullName[0];
-  useEffect(() => {
-    window.addEventListener("click",handleHeaderBox)
-    return () => {
-      window.removeEventListener('click',handleHeaderBox)
-    };
-  }, []);
-  
-  const handleHeaderBox = (e) => {
+  const handleHeaderBox = useCallback((e) => {
 
     const targetBox = e.target.classList.contains('header-box')
     if (!targetBox) {
     setOpenNotif(false)
     setOpenMessage(false)
     }
-  }
+  },[])
+  useEffect(() => {
+    window.addEventListener("click",handleHeaderBox)
+    return () => {
+      window.removeEventListener('click',handleHeaderBox)
+    };
+  }, []);
 
+  console.log(openNotif)
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -259,7 +261,7 @@ const SuperHeader = () => {
               setOpenNotif(!openNotif);
               seenAndDeleteNotif();
             }}
-            className={`text-lg font-normal md:hidden border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+            className={`text-lg header-box font-normal md:hidden border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
           >
             <div className={`absolute -top-1 -right-1`}>
               {unseenNotification?.length > 0 && (
@@ -272,7 +274,7 @@ const SuperHeader = () => {
                 </div>
               )}
             </div>
-            <IoIosNotificationsOutline size={26} />
+            <IoIosNotificationsOutline className="header-box" size={26} />
           </div>
           {openNotif && (
                    <NotificationContainer notificationList={notificationList} sayThanks={sayThanks} setOpenNotif={setOpenNotif}/>

@@ -14,10 +14,14 @@ import React, {
 import { GiCheckMark } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 import CommentBox from "./CommentBox";
+import { RiFileEditLine } from "react-icons/ri";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import EditQuestion from "../../create-post/components/EditQuestion";
 
 const QuestionCard = () => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
+  const [edit, setEdit] = useState(false);
   const fetchMyData = async () => {
     try {
       const { data } = await axios.get(`${baseurl}/userquestions/myquestions`, {
@@ -162,16 +166,43 @@ const QuestionCard = () => {
               key={index}
               className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md border"
             >
-              <div className="top flex items-center gap-2">
-                <img
-                  className="w-10"
-                  src={question.userProfile}
-                  alt={question.userName}
-                />
-                <div className="">
-                  <h2 className="font-semibold text-md">{question.userName}</h2>
-                  <p className="text-sm">{dateFormate(question.createdAt)}</p>
+              <div className="flex justify-between">
+                <div className="top flex items-center gap-2">
+                  <img
+                    className="w-10"
+                    src={question.userProfile}
+                    alt={question.userName}
+                  />
+                  <div className="">
+                    <h2 className="font-semibold text-md">
+                      {question.userName}
+                    </h2>
+                    <p className="text-sm">{dateFormate(question.createdAt)}</p>
+                  </div>
                 </div>
+                <div>
+                  <div className="flex gap-2 bg-slate-50 py-1 px-2 rounded-lg border">
+                    <RiFileEditLine
+                      onClick={() => setEdit(true)}
+                      className="cursor-pointer hover:text-black duration-300"
+                    />
+                    <RiDeleteBin7Line className="cursor-pointer hover:text-rose-600 duration-300" />
+                  </div>
+                </div>
+                {/* ///////////////////////////////////////////////////////Edit Question Form//////////////////////////////////////////////// */}
+                {edit && (
+                  <div className="fixed z-50 flex justify-center items-center bg-slate-500/10 top-0 left-0 w-screen h-screen">
+                    <div className="bg-white">
+                    <h2 className="md:text-2xl p-4 text-center font-bold text-gray-500 mb-2">
+                        Edit the question
+                      </h2>
+                      <button onClick={()=>setEdit(false)}>Close</button>
+                      <div className="h-[80vh] p-2 rounded-md overflow-auto">
+                      <EditQuestion Q={question} />
+                    </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="middle mt-2">
                 <h2 className="mb-2 border-b pb-2">
