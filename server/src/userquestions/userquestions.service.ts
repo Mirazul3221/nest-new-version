@@ -28,10 +28,10 @@ export class UserquestionsService {
     throw new ConflictException("This question already exist, please add new one")
   } else {
     const createQuestion = await new this.QuestionModel(fullSchema)
-     createQuestion.save()
+    await createQuestion.save()
     return 'Question create success';
   }
-  }
+  }//
 
   async edit(question,id){
     await this.QuestionModel.findByIdAndUpdate(id,question,{new:true})
@@ -59,7 +59,7 @@ export class UserquestionsService {
        }
     }
   
-  /////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////
 
   async findMyAllQuestions(id) {
   const filteredQuestions = await this.QuestionModel.aggregate([
@@ -122,6 +122,16 @@ export class UserquestionsService {
   ])
     return filteredQuestions;
   }//
+
+
+  async findMyFriendsAllQuestions (id,limit,skip){
+    // Find all questions except those created by the current user
+    const questions = await this.QuestionModel
+      .find({ userId: { $ne: id } }) // Exclude user's questions
+      .sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
+      const totalQuestions = await this.QuestionModel.countDocuments({ userId: {$ne : id} });
+      return {questions,totalQuestions}
+  }
   findAll() {
     return `This action returns all userquestions`;
   }

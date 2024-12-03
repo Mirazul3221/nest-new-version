@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { UserquestionsService } from './userquestions.service';
 import { CreateUserquestionDto } from './dto/create-userquestion.dto';
 import { UpdateUserquestionDto } from './dto/update-userquestion.dto';
@@ -56,11 +56,21 @@ async deleteQuestion(@Param("id") id) {
     return this.userquestionsService.findAll();
   }
 
+
   @UseGuards(AuthGuard())
   @Get('myquestions')
   async findMyAllQuestions(@Req() req) {
     const id = req.user._id
     return await this.userquestionsService.findMyAllQuestions(id);
+  }
+
+
+  @UseGuards(AuthGuard())//
+  @Get('all-friends-questions')
+  async findMyFriendsAllQuestions(@Query('page') page : number, @Query('limit') limit : number, @Req() req) {
+    const id = req.user._id
+    const skip = (page-1) * limit;
+    return await this.userquestionsService.findMyFriendsAllQuestions(id,limit,skip);
   }
 
   @Get(':id')

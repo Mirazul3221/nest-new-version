@@ -32,7 +32,7 @@ export class UsersQuestion extends Document {
     @Prop({type:String,required:false})
     content : string
     ///////////////////////////////////////////////////////////////
-    @Prop({ type: [{ type: String, unique : true }] })
+    @Prop({ type: [{ type: String, required:false }] })
     likes: string[]; // Array of user IDs who liked the post
     ////////////////////////////////////////////////////////////
     @Prop({ type:[] })
@@ -42,5 +42,4 @@ export class UsersQuestion extends Document {
 // export type QuestionDocument = Question & Document;
 
 export type QuestionDocument = UsersQuestion & Document;
-export const QuestionSchema = SchemaFactory.createForClass(UsersQuestion);
-
+export const QuestionSchema = SchemaFactory.createForClass(UsersQuestion);//

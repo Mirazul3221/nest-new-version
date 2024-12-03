@@ -89,9 +89,7 @@ const UserDashboard = () => {
               Welcome back
             </h2>
            <div className="md:flex items-center gap-4">
-           <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance">
-                See what your friend is doing
-            </h2>
+            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/friends-question">{`Questions added by friends`}</a></h2>
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/create-post">Add a post</a></h2>
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/my-questions">Your post</a> </h2>
            </div>

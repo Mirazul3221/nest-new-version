@@ -80,7 +80,7 @@ const Page = () => {
       ) {
         fetchChunkData(layoutData);
       }
-    };
+    };//
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading,layoutData]);

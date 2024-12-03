@@ -4,20 +4,15 @@ import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser";
 import moment from "moment";
-import React, {
-  memo,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import React, { memo, useCallback, useContext, useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 import CommentBox from "./CommentBox";
 import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
-import EditQuestion from "../../create-post/components/EditQuestion";
+import EditQuestion from "../create-post/components/EditQuestion";
 
-const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
+const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
   const [edit, setEdit] = useState(false);
@@ -86,24 +81,26 @@ const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
     }
   }, []);
 
-  const handleDelete =async ()=> {
+  const handleDelete = async () => {
     try {
-      const { data } = await axios.get(`${baseurl}/userquestions/delete-question/${myQuestion._id}`, {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-        },
-      });
-      questionsAfterDelete(myQuestion)
-      setDelete(false)
+      const { data } = await axios.get(
+        `${baseurl}/userquestions/delete-question/${myQuestion._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      questionsAfterDelete(myQuestion);
+      setDelete(false);
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
   return (
     <div>
       {myQuestion && (
-        <div className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md border">
+        <div className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md md:border">
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
               <img
@@ -117,33 +114,53 @@ const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
               </div>
             </div>
             <div>
-              <div className="flex gap-2 bg-slate-50 py-1 px-2 rounded-lg border">
-                <RiFileEditLine
-                  onClick={() => setEdit(true)}
-                  className="cursor-pointer hover:text-black duration-300"
-                />
-                <RiDeleteBin7Line
-                  onClick={() => setDelete(true)}
-                  className="cursor-pointer hover:text-rose-600 duration-300"
-                />
-              </div>
-              <div className={`${deleteQ ? "scale-105" : "scale-0"} md:max-w-1/2 w-10/12 md:w-auto duration-150 px-4 md:px-10 py-6 shadow-md border-2 rounded-2xl bg-white -translate-x-[50%] -translate-y-[50%] fixed top-[50%] left-[50%]`}>
-                  <div className="flex justify-end">
-                    <RxCross2
-                      onClick={() => setDelete(false)}
-                      className="cursor-pointer -mt-4 -mr-2 md:-mr-6"
-                      size={18}
-                    />
-                  </div>
-                  <h2 className="md:text-2xl text-lg mb-2">
-                    Do you want to delete the question?
-                  </h2>
-                  <h4 className="text-sm md:text-md">{`"${myQuestion.question}"`}</h4>
-                  <div className="flex gap-2 justify-center mt-3">
-                     <button  onClick={() => setDelete(false)} className="bg-gray-100 px-2 rounded-md">No</button>
-                     <button onClick={()=>{handleDelete()}} className="bg-rose-200 px-2 rounded-md">Yes</button>
-                  </div>
+              {myQuestion.userId === store.userInfo.id ? (
+                <div className="flex gap-2 bg-slate-50 py-1 px-2 rounded-lg border">
+                  <RiFileEditLine
+                    onClick={() => setEdit(true)}
+                    className="cursor-pointer hover:text-black duration-300"
+                  />
+                  <RiDeleteBin7Line
+                    onClick={() => setDelete(true)}
+                    className="cursor-pointer hover:text-rose-600 duration-300"
+                  />
                 </div>
+              ) : (
+                 <div  className="cursor-pointer" onClick={()=>questionsAfterDelete(myQuestion)} ><RxCross2 size={20}/></div>
+              )}
+              <div
+                className={`${
+                  deleteQ ? "scale-105" : "scale-0"
+                } z-50 md:max-w-1/2 w-10/12 md:w-auto duration-150 px-4 md:px-10 py-6 shadow-md border-2 rounded-2xl bg-white -translate-x-[50%] -translate-y-[50%] fixed top-[50%] left-[50%]`}
+              >
+                <div className="flex justify-end">
+                  <RxCross2
+                    onClick={() => setDelete(false)}
+                    className="cursor-pointer -mt-4 -mr-2 md:-mr-6"
+                    size={18}
+                  />
+                </div>
+                <h2 className="md:text-2xl text-lg mb-2">
+                  Do you want to delete the question?
+                </h2>
+                <h4 className="text-sm md:text-md">{`"${myQuestion.question}"`}</h4>
+                <div className="flex gap-2 justify-center mt-3">
+                  <button
+                    onClick={() => setDelete(false)}
+                    className="bg-gray-100 px-2 rounded-md"
+                  >
+                    No
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDelete();
+                    }}
+                    className="bg-rose-200 px-2 rounded-md"
+                  >
+                    Yes
+                  </button>
+                </div>
+              </div>
             </div>
             {/* ///////////////////////////////////////////////////////Edit Question Form//////////////////////////////////////////////// */}
             {edit && (
@@ -261,9 +278,11 @@ const QuestionCard = ({questionsAfterDelete, myQuestion }) => {
             </div>
             {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
           </div>
-          <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
+           {
+            myQuestion.content && <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
             <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
           </div>
+           }
           <div className="mt-2 duration-300">
             <CommentBox question={myQuestion} />
           </div>

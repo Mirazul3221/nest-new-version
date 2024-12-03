@@ -3,7 +3,7 @@ import ProtectRoute from "@/app/global/ProtectRoute";
 import React, { useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import Footer from "@/app/components/Footer";
-import QuestionCard from "./components/QuestionCard";
+import QuestionCard from "../components/QuestionCard";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import { baseurl } from "@/app/config";
