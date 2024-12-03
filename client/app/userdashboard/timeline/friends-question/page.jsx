@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
 
-const page = () => {
+const Page = () => {
   const [questions, setQuestions] = useState();
   const [allQuestions, setAllQuestions] = useState();
   const { store } = useContext(storeContext);
@@ -96,4 +96,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
