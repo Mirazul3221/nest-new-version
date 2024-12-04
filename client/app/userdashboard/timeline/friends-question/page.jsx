@@ -3,9 +3,11 @@ import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import axios from "axios";
+import loder from '@/public/loading-buffer.gif'
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
+import Image from "next/image";
 
 const Page = () => {
   const { store } = useContext(storeContext);
@@ -48,7 +50,7 @@ const Page = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 10 &&
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 20 &&
         !isLoading
       ) {
         fetchChunkData();
@@ -89,7 +91,7 @@ const Page = () => {
             );
           })}
 
-          {isLoading && <h2 className="text-center text-gray-500">Loading...</h2>}
+          {isLoading && <div className="flex justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
         </div>
       </ProtectRoute>
     </div>

@@ -20,9 +20,11 @@ import {
 } from "react-icons/fa";
 import { LuShare2 } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
+import CommentsContainer from "./CommentsContainer";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
   const [open, setOpen] = useState(false);
+  const [openCommentsBox,setOpenCommentsBox] = useState(false)
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
@@ -171,8 +173,12 @@ const CommentBox = ({ question }) => {
         </div>
 
         <div className="display_comments p-2">
-          {question.comments && (
+          {question.comments.length > 0 && (
             <div>
+              <button onClick={()=>setOpenCommentsBox(true)} className="underline">View more comments</button>
+              {
+                openCommentsBox &&  <CommentsContainer setOpenCommentsBox={setOpenCommentsBox} question={question}/>
+              }
               {question.comments.map((c) => {
                 return (
                   <div key={c._id} className="flex py-2 gap-2 text-gray-900">
@@ -220,7 +226,7 @@ const CommentBox = ({ question }) => {
           />
           <div
             onClick={handleSendComment}
-            className="flex z-50 h-full items-start cursor-pointer mb-2 text-gray-500"
+            className="flex h-full items-start cursor-pointer mb-2 text-gray-500"
           >
             <RiSendPlaneLine size={20} />
           </div>

@@ -125,11 +125,6 @@ export class UserquestionsService {
 
 
   async findMyFriendsAllQuestions (id,skip){
-    console.log(typeof skip)
-    // // Find all questions except those created by the current user
-    // const questions = await this.QuestionModel
-    //   .find({ userId: { $ne: id } }) // Exclude user's questions
-    //   .sort({ createdAt: -1 }).skip(skip).limit(limit).select({ comments: { $slice: 2 } }).exec()
 
       const questions = await this.QuestionModel.aggregate([
         {
@@ -172,6 +167,13 @@ export class UserquestionsService {
       // const totalQuestions = await this.QuestionModel.countDocuments({ userId: {$ne : id} });
       return questions
   }
+
+  async findMyFriendsAllQuestionComments(id,skip){
+   const result = await this.QuestionModel.findById(id)
+   const sliceComments = result.comments.slice((skip-1) * 5,skip * 5)
+   return sliceComments
+  };
+
   findAll() {
     return `This action returns all userquestions`;
   }
