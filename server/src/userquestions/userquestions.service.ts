@@ -124,13 +124,53 @@ export class UserquestionsService {
   }//
 
 
-  async findMyFriendsAllQuestions (id,limit,skip){
-    // Find all questions except those created by the current user
-    const questions = await this.QuestionModel
-      .find({ userId: { $ne: id } }) // Exclude user's questions
-      .sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
-      const totalQuestions = await this.QuestionModel.countDocuments({ userId: {$ne : id} });
-      return {questions,totalQuestions}
+  async findMyFriendsAllQuestions (id,skip){
+    console.log(typeof skip)
+    // // Find all questions except those created by the current user
+    // const questions = await this.QuestionModel
+    //   .find({ userId: { $ne: id } }) // Exclude user's questions
+    //   .sort({ createdAt: -1 }).skip(skip).limit(limit).select({ comments: { $slice: 2 } }).exec()
+
+      const questions = await this.QuestionModel.aggregate([
+        {
+          $match: {
+            userId: { $ne: id }, // Exclude user's questions
+          },
+        },
+        {
+          $sort: { createdAt: -1 }, // Sort questions by creation date (newest first)
+        },
+        {
+          $skip: +skip, // Skip the required number of documents
+        },
+        {
+          $limit: 10, // Limit the number of documents
+        },
+        {
+          $project: {
+            comments: { $slice: ['$comments', -2] }, // Include only the last 2 comments
+            totalComments: { $size: '$comments' }, // Count the total number of comments
+            otherFields: 1, // Include other fields (replace with actual fields you want to include)
+            userId:1,
+            userName:1,
+            userProfile:1,
+            subject:1,
+            chapter:1,
+            prevExam:1,
+            question:1,
+            option_01:1,
+            option_02:1,
+            option_03:1,
+            option_04:1,
+            rightAns:1,
+            content:1,
+            likes:1,
+            createdAt:1
+          },
+        },
+      ]);
+      // const totalQuestions = await this.QuestionModel.countDocuments({ userId: {$ne : id} });
+      return questions
   }
   findAll() {
     return `This action returns all userquestions`;
