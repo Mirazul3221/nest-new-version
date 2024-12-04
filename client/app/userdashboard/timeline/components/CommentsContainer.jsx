@@ -15,6 +15,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const [page,setPage] = useState(1)
     const [loading,setLoading] = useState(false)
     const [comments,setComments] = useState([])
+    const [totalComments,setTotalComments] = useState(0)
 
     useEffect(() => {
         // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
@@ -24,6 +25,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         }
       }, [message]);
     const fetchData =async () => {
+        // if(totalComments == comments.length) return
         try {
             setLoading(true)
             const { data } = await axios.get(
@@ -34,9 +36,10 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
                 },
               }
             );
-            setComments(prev=>[...prev,...data]);
+            setComments(prev=>[...prev,...data.comments]);
             setPage(prev=>prev + 1)
             setLoading(false)
+            setTotalComments(data.total)
             console.log(data)
           } catch (error) {
             console.log(error);
@@ -49,13 +52,14 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
 
     const fullName = question.userName.split(" ");
     const firstname = fullName[0];
+    console.log(totalComments)
   return (
 <div className="bg-gray-500/20 w-screen h-screen fixed top-0 left-0 flex justify-center items-center">
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">
    <span onClick={()=>setOpenCommentsBox(false)} className='absolute flex justify-center rounded-full cursor-pointer items-center p-2 bg-gray-100 top-1 right-1'><RxCross2 size={20}/></span>
    <div className="py-3 border-b text-center font-bold">{`${firstname}'s question`}</div>
     <div className="flex flex-col justify-center">
-    <div className="overflow-y-scroll h-[60vh]">
+    <div className="overflow-y-scroll h-[50vh] md:h-[60vh]">
         <OnlyCard question={question}/>
         <div className='px-4'>
             {
@@ -64,7 +68,9 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
                 })
             }
             {
-                loading ? 'Loading...' : <p onClick={fetchData} className='underline mt-2'>View more comments...</p>
+                loading ? 'Loading...' : <div className="">
+                    {totalComments == comments.length ? "" : <p onClick={fetchData} className='underline mt-2'>View more comments...</p> }
+                </div>
             }
         </div>
       </div>
