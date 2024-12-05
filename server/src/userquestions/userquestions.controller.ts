@@ -69,7 +69,6 @@ async deleteQuestion(@Param("id") id) {
   @Get('all-friends-questions')
   async findMyFriendsAllQuestions(@Query('skip') skip : number, @Req() req) {
     const id = req.user._id
-    console.log(skip)
     return await this.userquestionsService.findMyFriendsAllQuestions(id,skip);
   }//
 

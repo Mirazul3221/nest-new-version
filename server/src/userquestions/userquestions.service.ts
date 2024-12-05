@@ -129,7 +129,7 @@ export class UserquestionsService {
       const questions = await this.QuestionModel.aggregate([
         {
           $match: {
-            userId: { $ne: id }, // Exclude user's questions
+            userId: { $ne: id.toString() }, // Exclude user's questions
           },
         },
         {
@@ -145,7 +145,6 @@ export class UserquestionsService {
           $project: {
             comments: { $slice: ['$comments', -2] }, // Include only the last 2 comments
             totalComments: { $size: '$comments' }, // Count the total number of comments
-            otherFields: 1, // Include other fields (replace with actual fields you want to include)
             userId:1,
             userName:1,
             userProfile:1,
@@ -164,7 +163,6 @@ export class UserquestionsService {
           },
         },
       ]);
-      // const totalQuestions = await this.QuestionModel.countDocuments({ userId: {$ne : id} });
       return questions
   }
 

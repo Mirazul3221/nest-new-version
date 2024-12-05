@@ -115,7 +115,7 @@ const CommentBox = ({ question }) => {
         }
         {question.comments.length > 0 && (
           <div className="countcomments gap-2 flex items-center">
-            <h4>{question.comments.length}</h4>
+            <h4>{question.totalComments}</h4>
             <FaComments size={18} />
           </div>
         )}
