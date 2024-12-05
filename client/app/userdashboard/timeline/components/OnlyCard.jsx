@@ -197,3 +197,5 @@ const OnlyCard = ({question}) => {
 }
 
 export default OnlyCard
+
+///////////////////////////////////
