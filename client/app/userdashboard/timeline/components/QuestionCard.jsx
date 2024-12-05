@@ -113,7 +113,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                   src={myQuestion.userProfile}
                   alt={myQuestion.userName}
                 />
-                {profileContainer && (
+                {profileContainer && store.userInfo.id !== myQuestion.userId && (
                   <div
                     onMouseEnter={() => setProfileContainer(true)}
                     onMouseLeave={() => setProfileContainer(false)}
