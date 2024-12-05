@@ -11,12 +11,14 @@ import CommentBox from "./CommentBox";
 import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../create-post/components/EditQuestion";
+import ProfileCard from "./ProfileCard";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
+  const [profileContainer, setProfileContainer] = useState(false);
   const dateFormate = (createdAt) => {
     const currentYear = moment().year();
     const postYear = moment(createdAt).year();
@@ -100,14 +102,27 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   return (
     <div>
       {myQuestion && (
-        <div className="py-4 mb-4 text-gray-700 px-6 bg-white rounded-md md:border">
+        <div className="py-4 mb-4 relative text-gray-700 px-6 bg-white rounded-md md:border">
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
-              <img
-                className="w-10"
-                src={myQuestion.userProfile}
-                alt={myQuestion.userName}
-              />
+              <div className="">
+                <img
+                  onMouseEnter={() => setProfileContainer(true)}
+                  onMouseLeave={() => setProfileContainer(false)}
+                  className="w-10"
+                  src={myQuestion.userProfile}
+                  alt={myQuestion.userName}
+                />
+                {profileContainer && (
+                  <div
+                    onMouseEnter={() => setProfileContainer(true)}
+                    onMouseLeave={() => setProfileContainer(false)}
+                    className="absolute top-5 -translate-x-[50%] left-10"
+                  >
+                    <ProfileCard id={myQuestion.userId} />
+                  </div>
+                )}
+              </div>
               <div className="">
                 <h2 className="font-semibold text-md">{myQuestion.userName}</h2>
                 <p className="text-sm">{dateFormate(myQuestion.createdAt)}</p>
@@ -126,7 +141,12 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                   />
                 </div>
               ) : (
-                 <div  className="cursor-pointer" onClick={()=>questionsAfterDelete(myQuestion)} ><RxCross2 size={20}/></div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => questionsAfterDelete(myQuestion)}
+                >
+                  <RxCross2 size={20} />
+                </div>
               )}
               <div
                 className={`${
@@ -278,11 +298,11 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
             </div>
             {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
           </div>
-           {
-            myQuestion.content && <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
-            <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
-          </div>
-           }
+          {myQuestion.content && (
+            <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
+              <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
+            </div>
+          )}
           <div className="mt-2 duration-300">
             <CommentBox question={myQuestion} />
           </div>
