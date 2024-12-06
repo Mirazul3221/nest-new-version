@@ -39,5 +39,24 @@ export const dataReducer = (state,action) => {
  if (type === "INCOMINGMESSAGE") {
     state.incomingMessage.push(paylod.incomingMessage)
  }
+
+ /////////////////////////////////////////////////////
+ if (type === 'AcceptedFriend') {
+  console.log(action)
+  localStorage.setItem('allAcceptedFriend',JSON.stringify(action.payload))
+  // state.getAllAcceptedFriend = [...action.payload]
+ }
+ /////////////////////////////////////////////////////
+ if (type === 'PendingFriend') {
+  console.log(action)
+  localStorage.setItem('PendingFriend',JSON.stringify(action.payload))
+  // state.getAllPendingFriend = [...action.payload]
+ }
+ /////////////////////////////////////////////////////
+ if (type === 'requestedFriendId') {
+  console.log(action)
+  localStorage.setItem('requestedFriendId',JSON.stringify([action.payload]))
+  // state.getAllPendingFriend = [...action.payload]
+ }
  return state
 }

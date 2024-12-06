@@ -20,6 +20,7 @@ import { HiOutlineDocumentAdd } from "react-icons/hi";
 import { GrDocumentText } from "react-icons/gr";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
+import { useStore } from "../global/DataProvider";
 // import Image from "next/image";
 // import logo from "@/public/bcs-logo.png"
 // import { TextEditor } from './components/TextEditor';
@@ -30,7 +31,7 @@ const UserDashboard = () => {
     profile: "",
   });
   
-  const { store} = useContext(storeContext);
+  const {dispatch,store} = useStore()
   const [show,setShow] = useState(false)
   // useEffect(() => {
   //   async function fetchData() {
@@ -74,7 +75,40 @@ const UserDashboard = () => {
   }, []);
 
   const {socket,myActiveFriends} = useSocket()
-  console.log(socket,myActiveFriends)
+
+  //////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    async function getAllFriends() {
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/friend-request/get-friend/pending`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+    console.log(data)
+        dispatch({type:'PendingFriend', payload:data})
+        //====================================================================================
+        //====================================================================================
+        //====================================================================================
+        const accepted = await axios.get(
+          `${baseurl}/friend-request/get-friend/accepted`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+       dispatch({type:'AcceptedFriend', payload:accepted.data})
+      } catch (error) {
+        //   setLoader(false);
+      }
+    }
+
+    getAllFriends();
+  }, []);
   return (
     <ProtectRoute>
       {/* <Script

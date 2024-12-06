@@ -8,9 +8,10 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
 import Image from "next/image";
+import { useStore } from "@/app/global/DataProvider";
 
 const Page = () => {
-  const { store } = useContext(storeContext);
+    const {dispatch,store} = useStore()
   const [questions, setQuestions] = useState([]); // Store fetched comments
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
@@ -72,6 +73,7 @@ const Page = () => {
     setQuestions(filteredQuestions);
   };
 
+  console.log(store)
   return (
     <div>
       <ProtectRoute>

@@ -61,12 +61,6 @@ export class FriendRequestService {
       requester: new mongoose.mongo.ObjectId( recipientId),
       recipient: new mongoose.mongo.ObjectId( requesterId),
     }).exec();
-    // const hello = await this.friendRequestModel.findOne({
-    //        requester: new mongoose.mongo.ObjectId(recipientId) ,
-    //       recipient: new mongoose.mongo.ObjectId(requesterId),
-    // })
-
-    // console.log(hello)
   }
 
   async respond(recipientId: string, requestId: string, respondFriendRequestDto: RespondFriendRequestDto): Promise<FriendRequest> {
@@ -204,5 +198,17 @@ export class FriendRequestService {
      })
 
      return await allAcceptedUsersId
+  }
+
+  /////////////////////////////////////////////////
+  async allFriendsIdSendReqByMe(id,status){
+    const result = []
+    const ids = await this.friendRequestModel.find({
+       requester: new mongoose.mongo.ObjectId(id), status : status
+    })
+    ids.map(user=>{
+       result.push(user.recipient)
+    })
+     return result
   }
 }

@@ -117,7 +117,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                   <div
                     onMouseEnter={() => setProfileContainer(true)}
                     onMouseLeave={() => setProfileContainer(false)}
-                    className="absolute top-5 -translate-x-[50%] left-10"
+                    className="absolute top-5 md:-translate-x-[50%] md:left-10"
                   >
                     <ProfileCard id={myQuestion.userId} />
                   </div>

@@ -3,7 +3,6 @@ import { FriendRequestService } from './friend-request.service';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { RespondFriendRequestDto } from './dto/respond-friend-request.dto';
 import { AuthGuard } from '@nestjs/passport';
-
 @Controller('friend-request')
 export class FriendRequestController {
   constructor(private readonly friendRequestService: FriendRequestService) {}
@@ -58,4 +57,14 @@ export class FriendRequestController {
       return await this.friendRequestService.yourFriends(id,status);
      }
   }
-}
+
+
+  @Get('get-your-friend-send-req-by-me/:status')
+  @UseGuards(AuthGuard())
+  async allFriendsIdSendReqByMe(@Req() req, @Param("status" ) status:string) {
+    const userId = req.user._id;
+     if (status !== undefined) {
+      return await this.friendRequestService.allFriendsIdSendReqByMe(userId,status);
+     }
+  }
+}///

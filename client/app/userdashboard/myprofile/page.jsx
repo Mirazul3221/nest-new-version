@@ -217,7 +217,7 @@ const Page = () => {
   }, []);
   const [getAllPendingFriend, setGetAllPendingFriend] = useState(null);
   const [getAllAcceptedFriend, setGetAllAcceptedFriend] = useState(null);
-  ///////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     async function getAllFriends() {
       try {

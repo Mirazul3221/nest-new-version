@@ -54,7 +54,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const firstname = fullName[0];
     console.log(totalComments)
   return (
-<div className="bg-gray-500/20 w-screen h-screen fixed top-0 left-0 flex justify-center items-center">
+<div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">
    <span onClick={()=>setOpenCommentsBox(false)} className='absolute flex justify-center rounded-full cursor-pointer items-center p-2 bg-gray-100 top-1 right-1'><RxCross2 size={20}/></span>
    <div className="py-3 border-b text-center font-bold">{`${firstname}'s question`}</div>

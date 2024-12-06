@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
 import { dataReducer } from "./dataReducer";
 import storeContext from "./createContex";
 import { decode_token } from "./extract_jwt";
@@ -7,20 +7,25 @@ import axios from "axios";
 import { baseurl } from "../config";
 
 const DataProvider = ({ children }) => {
-  const localstoreToken = {};
+  const localstore = {};
   if (typeof window !== "undefined") {
     // now access your localStorage
-    localstoreToken.token = localStorage.getItem("token");
+    localstore.token = localStorage.getItem("token");
+    localstore.allAcceptedFriend = JSON.parse(localStorage.getItem("allAcceptedFriend"));
+    localstore.getAllPendingFriend = JSON.parse(localStorage.getItem("PendingFriend"));
   }
   const [store, dispatch] = useReducer(dataReducer, {
-    userInfo: decode_token(localstoreToken.token || ""),
-    token: localstoreToken.token,
+    userInfo: decode_token(localstore.token || ""),
+    token: localstore.token,
     searchReasultFromGeneralUser: "",
     searchReasultFromAuthenticUser: "",
     incomingMessage: [],
+    getAllPendingFriend:[],
+    getAllAcceptedFriend:localstore.allAcceptedFriend,
+    requestedFriendId : ''
   });
 
-  /////////////////////////////collect all my friend ids///////////////////////////////////
+  /////////////////////////////collect all my friend ids/////////////////////////////////////
   async function getAllMyFriendsId() {
    try {
     const { data } = await axios.get(
@@ -48,3 +53,12 @@ const DataProvider = ({ children }) => {
 };
 
 export default DataProvider;///////
+
+export const useStore = ()=>{
+  const store = useContext(storeContext)
+  return store
+}
+
+
+// console.log(useStore())
+
