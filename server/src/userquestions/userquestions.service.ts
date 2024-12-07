@@ -168,7 +168,7 @@ export class UserquestionsService {
 
   async findMyFriendsAllQuestionComments(id,skip){
    const result = await this.QuestionModel.findById(id)
-   const sliceComments = result.comments.slice((skip-1) * 5,skip * 5)
+   const sliceComments = result.comments.reverse().slice((skip-1) * 5,skip * 5)
    return {comments:sliceComments,total:result.comments.length}
   };
 

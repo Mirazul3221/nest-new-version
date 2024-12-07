@@ -23,12 +23,30 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import CommentsContainer from "./CommentsContainer";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
+  const initialComments = [question?.comments[1],question?.comments[0]]
   const [open, setOpen] = useState(false);
   const [openCommentsBox,setOpenCommentsBox] = useState(false)
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
-
+  const [comments,setComments] = useState(initialComments)
+  console.log(comments)
+  const insertANewComment = (newComment) => {
+    const newObject = {
+      userId:store.userInfo.id,
+      name:store.userInfo.name,
+      profile:store.userInfo.profile,
+      comment:newComment,
+      createdAt:new Date().toISOString()
+    }
+    if (comments[0] == undefined) {
+      setComments([newObject])
+      setOpen(true);
+    } else {
+      setComments(prev=>[newObject,prev[0]])
+    }
+   
+  }
   useEffect(() => {
     // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
     if (messangerRef.current) {
@@ -66,12 +84,12 @@ const CommentBox = ({ question }) => {
           },
         }
       );
-      setOpen(false);
+      insertANewComment(message)
       setMessage("");
     } catch (error) {
       console.log(error);
     }
-  }, [message]);
+  }, [message,comments]);
 
   if (question.comments.length > 0) {
     setTimeout(() => {
@@ -94,6 +112,7 @@ const CommentBox = ({ question }) => {
       return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
     }
   }
+  /////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <div
@@ -173,25 +192,25 @@ const CommentBox = ({ question }) => {
         </div>
 
         <div className="display_comments p-2">
-          {question.comments.length > 0 && (
+          {comments.length > 0 && comments[0] !== undefined && (
             <div>
               <button onClick={()=>setOpenCommentsBox(true)} className="underline">View more comments</button>
               {
                 openCommentsBox &&  <CommentsContainer setOpenCommentsBox={setOpenCommentsBox} question={question}/>
               }
-              {question.comments.map((c) => {
+              {comments?.map((c) => {
                 return (
-                  <div key={c._id} className="flex py-2 gap-2 text-gray-900">
+                  <div key={c?.userId} className="flex py-2 gap-2 text-gray-900">
                     <div>
-                      <img className="w-6" src={c.profile} alt={c.name} />
+                      <img className="w-6" src={c?.profile} alt={c?.name} />
                     </div>
                     <div className="w-fit max-w-11/12">
                       <div className="px-3 py-1 rounded-[20px] bg-gray-100">
-                        <p className="text-lg">{c.name}</p>
-                        <p className="text-sm">{c.comment}</p>
+                        <p className="text-lg">{c?.name}</p>
+                        <p className="text-sm">{c?.comment}</p>
                       </div>
                       <p className={"text-[10px] ml-2"}>
-                        {formatRelativeTime(c.createdAt)}
+                        {formatRelativeTime(c?.createdAt)}
                       </p>
                     </div>
                   </div>

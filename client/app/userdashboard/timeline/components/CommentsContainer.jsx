@@ -53,6 +53,32 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const fullName = question.userName.split(" ");
     const firstname = fullName[0];
     console.log(totalComments)
+
+    const newObject = {
+      userId:store.userInfo.id,
+      name:store.userInfo.name,
+      profile:store.userInfo.profile,
+      comment:message,
+      createdAt:new Date().toISOString()
+    }  
+    const handleSendComment =async ()=>{
+      try {
+        const { data } = await axios.post(
+          `${baseurl}/userquestions/create-comment`,
+          { questionId: question._id, comment: message },
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+        setComments(prev=>[...prev,newObject])
+        setTotalComments(totalComments + 1)
+        setMessage("");
+      } catch (error) {
+        console.log(error);
+      }
+    }
   return (
 <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">
@@ -64,11 +90,13 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         <div className='px-4'>
             {
                 comments?.map((item,i)=>{
-                   return <UserComment key={i} item={item}/>
+                   return <div>
+                    <UserComment key={i} item={item}/>
+                   </div>
                 })
             }
             {
-                loading ? 'Loading...' : <div className="">
+                loading ? 'Loading...' : <div className='mb-20'>
                     {totalComments == comments.length ? "" : <p onClick={fetchData} className='underline mt-2'>View more comments...</p> }
                 </div>
             }
@@ -102,7 +130,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
           <div
             className="flex h-full items-start cursor-pointer mb-2 text-gray-500"
           >
-            <RiSendPlaneLine size={20} />
+            <RiSendPlaneLine onClick={handleSendComment} size={20} />
           </div>
         </div>
    </div>

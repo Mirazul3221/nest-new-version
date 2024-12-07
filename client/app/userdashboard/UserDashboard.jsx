@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import ProtectRoute from "../global/ProtectRoute";
 import Link from "next/link";
-import storeContext from "../global/createContex";
 import Layout from "./components/Slider1";
 import { IoHomeOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
