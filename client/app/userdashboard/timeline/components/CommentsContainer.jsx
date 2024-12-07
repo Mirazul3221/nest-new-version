@@ -90,9 +90,8 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         <div className='px-4'>
             {
                 comments?.map((item,i)=>{
-                   return <div>
-                    <UserComment key={i} item={item}/>
-                   </div>
+                   return <UserComment key={i} item={item}/>
+
                 })
             }
             {
