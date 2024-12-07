@@ -1,17 +1,18 @@
 "use client";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import HTMLReactParser from "html-react-parser";
 import moment from "moment";
 import React, { memo, useCallback, useContext, useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
-import { RxCross2 } from "react-icons/rx";
+import { RxCross2, RxOpenInNewWindow } from "react-icons/rx";
 import CommentBox from "./CommentBox";
 import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../create-post/components/EditQuestion";
 import ProfileCard from "./ProfileCard";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
@@ -113,15 +114,16 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                   src={myQuestion.userProfile}
                   alt={myQuestion.userName}
                 />
-                {profileContainer && store.userInfo.id !== myQuestion.userId && (
-                  <div
-                    onMouseEnter={() => setProfileContainer(true)}
-                    onMouseLeave={() => setProfileContainer(false)}
-                    className="absolute top-5 md:-translate-x-[50%] md:left-10"
-                  >
-                    <ProfileCard id={myQuestion.userId} />
-                  </div>
-                )}
+                {profileContainer &&
+                  store.userInfo.id !== myQuestion.userId && (
+                    <div
+                      onMouseEnter={() => setProfileContainer(true)}
+                      onMouseLeave={() => setProfileContainer(false)}
+                      className="absolute top-5 md:-translate-x-[50%] md:left-10"
+                    >
+                      <ProfileCard id={myQuestion.userId} />
+                    </div>
+                  )}
               </div>
               <div className="">
                 <h2 className="font-semibold text-md">{myQuestion.userName}</h2>
@@ -141,11 +143,17 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                   />
                 </div>
               ) : (
-                <div
-                  className="cursor-pointer"
-                  onClick={() => questionsAfterDelete(myQuestion)}
-                >
-                  <RxCross2 size={20} />
+                <div className="flex gap-2 justify-center items-center">
+                  <div className="group relative duration-500">
+                      <HiOutlineDotsHorizontal size={20} />
+                      <div className="hidden absolute -right-6 group-hover:inline-block w-[190px] text-center cursor-pointer bg-gray-100 py-1 px-4"> <a className="flex items-center gap-2" target="_blank" href={`${viewurl}/userdashboard/timeline/${myQuestion.slug}`}> <RxOpenInNewWindow /> <span>Open in a new tab</span></a> </div>
+                  </div>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => questionsAfterDelete(myQuestion)}
+                  >
+                    <RxCross2 size={20} />
+                  </div>
                 </div>
               )}
               <div
@@ -286,10 +294,10 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                     : "ক"}
                 </h2>
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
-                  {myQuestion.option_04}{" "}
+                  {myQuestion.option_04}
                   <span className="hidden">
                     <RxCross2 color="red" size={22} />
-                  </span>{" "}
+                  </span>
                   <span className="hidden">
                     <GiCheckMark color="green" />
                   </span>

@@ -143,8 +143,7 @@ export class UserquestionsService {
         },
         {
           $project: {
-            comments: { $slice: ['$comments', -2] }, // Include only the last 2 comments
-            totalComments: { $size: '$comments' }, // Count the total number of comments
+            slug:1,
             userId:1,
             userName:1,
             userProfile:1,
@@ -159,6 +158,8 @@ export class UserquestionsService {
             rightAns:1,
             content:1,
             likes:1,
+            comments: { $slice: ['$comments', -2] }, // Include only the last 2 comments
+            totalComments: { $size: '$comments' }, // Count the total number of comments
             createdAt:1
           },
         },
