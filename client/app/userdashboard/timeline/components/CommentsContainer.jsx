@@ -16,7 +16,12 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const [loading,setLoading] = useState(false)
     const [comments,setComments] = useState([])
     const [totalComments,setTotalComments] = useState(0)
-
+    const commentRef = useRef()
+    const scrollToBottom = () => {
+      if (commentRef.current) {
+        commentRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
     useEffect(() => {
         // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
         if (messangerRef.current) {
@@ -40,7 +45,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
             setPage(prev=>prev + 1)
             setLoading(false)
             setTotalComments(data.total)
-            console.log(data)
+            scrollToBottom()
           } catch (error) {
             console.log(error);
           }
@@ -72,6 +77,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
             },
           }
         );
+        scrollToBottom()
         setComments(prev=>[...prev,newObject])
         setTotalComments(totalComments + 1)
         setMessage("");
@@ -90,13 +96,14 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         <div className='px-4'>
             {
                 comments?.map((item,i)=>{
-                   return <UserComment key={i} item={item}/>
-
+                   return <div ref={commentRef} key={i}>
+                    <UserComment item={item}/>
+                   </div>
                 })
             }
             {
-                loading ? 'Loading...' : <div className='mb-20'>
-                    {totalComments == comments.length ? "" : <p onClick={fetchData} className='underline mt-2'>View more comments...</p> }
+                loading ? 'Loading...' : <div className='mb-12'>
+                    {totalComments == comments.length ? "" : <p onClick={fetchData} className='mt-2 hover:underline cursor-pointer'>View more comments...</p> }
                 </div>
             }
         </div>
