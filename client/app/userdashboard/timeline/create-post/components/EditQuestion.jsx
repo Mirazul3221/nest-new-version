@@ -61,6 +61,7 @@ const EditQuestion = ({Q}) => {
     }
   };
   console.log(Q)
+  
   return (
     <div className="rounded-md px-4 py-2">
       <form onSubmit={handleSubmitAnswer}>

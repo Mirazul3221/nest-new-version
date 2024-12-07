@@ -165,8 +165,8 @@ const UserComment = ({item})=>{
         }
       }
    return (
-    <div className="">
-                    <div key={item._id} className="flex py-2 gap-2 text-gray-900">
+    <div>
+                    <div className="flex py-2 gap-2 text-gray-900">
                     <div>
                       <img className="w-6" src={item.profile} alt={item.name} />
                     </div>

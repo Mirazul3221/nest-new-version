@@ -1,6 +1,5 @@
 "use client";
 import { baseurl } from "@/app/config";
-import storeContext from "@/app/global/createContex";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import axios from "axios";
 import loder from '@/public/loading-buffer.gif'
@@ -9,7 +8,6 @@ import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
 import Image from "next/image";
 import { useStore } from "@/app/global/DataProvider";
-
 const Page = () => {
     const {dispatch,store} = useStore()
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -72,13 +70,10 @@ const Page = () => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
   };
-
-  console.log(store)
   return (
     <div>
       <ProtectRoute>
         <div className="md:px-10 px-4 py-3">
-          {" "}
           <SuperHeader />
         </div>
         <div className="md:px-10 bg-gray-50">
@@ -92,7 +87,6 @@ const Page = () => {
               </div>
             );
           })}
-
           {isLoading && <div className="flex justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
         </div>
       </ProtectRoute>

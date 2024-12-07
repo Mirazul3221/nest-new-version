@@ -198,9 +198,9 @@ const CommentBox = ({ question }) => {
               {
                 openCommentsBox &&  <CommentsContainer setOpenCommentsBox={setOpenCommentsBox} question={question}/>
               }
-              {comments?.map((c) => {
+              {comments?.map((c,i) => {
                 return (
-                  <div key={c?.userId} className="flex py-2 gap-2 text-gray-900">
+                  <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
                       <img className="w-6" src={c?.profile} alt={c?.name} />
                     </div>

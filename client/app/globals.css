@@ -28,3 +28,9 @@
    background-color: aqua;
    border-top-right-radius: 30px;
   }
+
+  iframe {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
