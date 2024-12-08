@@ -19,7 +19,7 @@ const Header = ({getSearchValue}) => {
  useEffect(() => {
   window.addEventListener("scroll",scrollHeader)
   return () => {
-    window.addEventListener("scroll",scrollHeader)
+    window.removeEventListener("scroll",scrollHeader)
   };
  }, []);
 

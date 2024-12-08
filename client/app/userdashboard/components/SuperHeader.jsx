@@ -150,9 +150,23 @@ const SuperHeader = () => {
     };
   }, []);
 
-  console.log(openNotif)
+ //=============set scroll for header================
+ const [header,setHeader] = useState(false)
+ const scrollHeader = ()=>{
+    if (window.scrollY >= 40) {
+      setHeader(true)
+    } else {
+      setHeader(false)
+    }
+ }
+ useEffect(() => {
+  window.addEventListener("scroll",scrollHeader)
+  return () => {
+    window.removeEventListener("scroll",scrollHeader)
+  };
+ }, []);
   return (
-    <div>
+    <div className={`${header ? 'fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-20 py-2' : ''}`}>
       <div className="flex justify-between items-center">
         <div className="md:w-20 w-16">
           <Link href="/">

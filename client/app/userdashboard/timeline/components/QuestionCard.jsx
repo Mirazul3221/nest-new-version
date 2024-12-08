@@ -73,15 +73,17 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
           tergetContainers[
             question.rightAns - 1
           ].children[1].children[1].classList.remove("hidden");
-          tergetDescBox.classList.remove("hidden");
+          tergetDescBox?.classList.remove("hidden");
           setTimeout(() => {
-            tergetDescBox.classList.remove("scale-0");
-            tergetDescBox.classList.add("scale-100");
-            tergetDescBox.classList.add("duration-500");
+            tergetDescBox?.classList.remove("scale-0");
+            tergetDescBox?.classList.add("scale-100");
+            tergetDescBox?.classList.add("duration-500");
           }, 100);
         }
       }
     }
+    // console.log(question)
+    // console.log(ans)
   }, []);
 
   const handleDelete = async () => {
@@ -101,9 +103,9 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     }
   };
   return (
-    <div>
+    <div className="py-4 mb-4 relative text-gray-700 px-6 bg-white rounded-md md:border">
       {myQuestion && (
-        <div className="py-4 mb-4 relative text-gray-700 px-6 bg-white rounded-md md:border">
+        <div>
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
               <div className="">
@@ -145,8 +147,18 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
               ) : (
                 <div className="flex gap-2 justify-center items-center">
                   <div className="group relative duration-500">
-                      <HiOutlineDotsHorizontal size={20} />
-                      <div className="hidden absolute -right-6 group-hover:inline-block w-[190px] text-center cursor-pointer bg-gray-100 py-1 px-4"> <a className="flex items-center gap-2" target="_blank" href={`${viewurl}/userdashboard/timeline/${myQuestion.slug}`}> <RxOpenInNewWindow /> <span>Open in a new tab</span></a> </div>
+                    <HiOutlineDotsHorizontal size={20} />
+                    <div className="hidden absolute -right-6 group-hover:inline-block w-[200px] rounded-md text-center cursor-pointer bg-gray-100 py-1 px-4">
+                      {" "}
+                      <a
+                        className="flex items-center gap-2"
+                        target="_blank"
+                        href={`${viewurl}/userdashboard/timeline/${myQuestion.slug}`}
+                      >
+                        {" "}
+                        <RxOpenInNewWindow /> <span>Open in a new tab</span>
+                      </a>{" "}
+                    </div>
                   </div>
                   <div
                     className="cursor-pointer"
@@ -311,13 +323,14 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
               <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
             </div>
           )}
-          <div className="mt-2 duration-300">
-            <CommentBox question={myQuestion} />
-          </div>
         </div>
       )}
+
+      <div className="mt-2 duration-300">
+        <CommentBox question={myQuestion} />
+      </div>
     </div>
   );
 };
 
-export default memo(QuestionCard);
+export default memo(QuestionCard); //
