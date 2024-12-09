@@ -52,7 +52,6 @@ async deleteQuestion(@Param("id") id) {
 
   @Get('don')
   findAll() {
-    console.log('don')
     return this.userquestionsService.findAll();
   }
 

@@ -218,7 +218,7 @@ const SuperHeader = () => {
                   }}
                   className={`text-lg header-box font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
                 >
-                  <div className={`absolute  -top-1 -right-1`}>
+                  {/* <div className={`absolute  -top-1 -right-1`}>
                     {unseenNotification?.length > 0 && (
                       <div
                         className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
@@ -228,7 +228,7 @@ const SuperHeader = () => {
                         </p>
                       </div>
                     )}
-                  </div>
+                  </div> */}
                   <HiOutlineEnvelope className="header-box" size={26} />
                 </li>
                 <li

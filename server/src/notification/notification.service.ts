@@ -95,7 +95,6 @@ export class NotificationService {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if (body.type === 'comment-question') {
       const allUserDetails = await this.readerService.findAllUserForRequestedFriend(info.user.id);
-      console.log(body)
       schema = {
         readerId:body.readerId,
         type:body.type,

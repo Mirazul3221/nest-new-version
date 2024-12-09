@@ -52,7 +52,7 @@ const Page = () => {
     }
   }, [message]);
   const fetchComments = async (id) => {
-    // if(totalComments == comments.length) return
+    if(totalComments == comments.length) return
     try {
       setLoading(true);
       const { data } = await axios.get(
@@ -104,10 +104,10 @@ const Page = () => {
   return (
     <div>
       <ProtectRoute>
-        <div className="px-20">
+        <div className="md:px-20 px-4 pt-2">
           <SuperHeader />
         </div>
-        <div className="min-h-[80vh] w-1/2 mx-auto">
+        <div className="min-h-[80vh] md:w-1/2 mx-auto">
           <OnlyCard question={question} />
           <div className="px-4">
             {comments?.map((item, i) => {
@@ -162,8 +162,10 @@ const Page = () => {
                 background: "#f5f5f5",
               }}
             />
-            <div className="flex h-full items-start cursor-pointer mb-2 text-gray-500">
-              <RiSendPlaneLine onClick={handleSendComment} size={20} />
+            <div className="flex h-full items-start mb-2 text-gray-500">
+             {
+              message ?  <RiSendPlaneLine className="cursor-pointer" color="black" onClick={handleSendComment} size={20} /> :  <RiSendPlaneLine size={20} />
+             }
             </div>
           </div>
         </div>

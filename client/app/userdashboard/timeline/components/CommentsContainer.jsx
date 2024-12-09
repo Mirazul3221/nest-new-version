@@ -7,9 +7,11 @@ import axios from 'axios';
 import { baseurl } from '@/app/config';
 import storeContext from '@/app/global/createContex';
 import moment from 'moment';
+import { useSocket } from '../../global/SocketProvider';
 
 const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const { store } = useContext(storeContext);
+    const {socket} = useSocket();
     const messangerRef = useRef(null);
     const [message, setMessage] = useState("");
     const [page,setPage] = useState(1)
@@ -80,10 +82,42 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         setComments(prev=>[...prev,newObject])
         setTotalComments(totalComments + 1)
         setMessage("");
+        store.userInfo.id !== question.userId &&
+        handleNotification("comment-question");
       } catch (error) {
         console.log(error);
       }
     }
+
+    
+      ////////////////notification api////////////////////////
+  const handleNotification = async (type) => {
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/notification/create`,
+        type === "like-question"
+          ? {
+              readerId: question.userId,
+              question: question.question,
+              slug: question.slug,
+              type,
+            }
+          : {
+              readerId: question.userId,
+              question: question.question,
+              slug: question.slug,
+              comment:message,
+              type,
+            },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      socket && (await socket.emit("new-notification", question.userId));
+    } catch (error) {}
+  };
   return (
 <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">
@@ -133,9 +167,11 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
             }}
           />
           <div
-            className="flex h-full items-start cursor-pointer mb-2 text-gray-500"
+            className="flex h-full items-start mb-2 text-gray-500"
           >
-            <RiSendPlaneLine onClick={handleSendComment} size={20} />
+                       {
+              message ?  <RiSendPlaneLine className="cursor-pointer" color="black" onClick={handleSendComment} size={20} /> :  <RiSendPlaneLine size={20} />
+             }
           </div>
         </div>
    </div>

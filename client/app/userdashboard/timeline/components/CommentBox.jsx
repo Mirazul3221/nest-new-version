@@ -146,8 +146,6 @@ const CommentBox = ({ question }) => {
       return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
     }
   }
-
-  console.log(question);
   /////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
@@ -294,10 +292,11 @@ const CommentBox = ({ question }) => {
             }}
           />
           <div
-            onClick={handleSendComment}
-            className="flex h-full items-start cursor-pointer mb-2 text-gray-500"
+            className="flex h-full items-start mb-2 text-gray-500"
           >
-            <RiSendPlaneLine size={20} />
+                       {
+              message ?  <RiSendPlaneLine className="cursor-pointer" color="black" onClick={handleSendComment} size={20} /> :  <RiSendPlaneLine size={20} />
+             }
           </div>
         </div>
       </div>
