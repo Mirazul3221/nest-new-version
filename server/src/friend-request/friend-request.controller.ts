@@ -21,9 +21,7 @@ export class FriendRequestController {
     return await this.friendRequestService.cancel(requesterId, body.ID);
   }
 
-
-
-
+  
   @Get(':requestId/respond')
   @UseGuards(AuthGuard())
   respond(

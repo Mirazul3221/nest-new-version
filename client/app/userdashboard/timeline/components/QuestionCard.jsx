@@ -102,6 +102,8 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       console.log(error);
     }
   };
+
+  console.log(myQuestion)
   return (
     <div className="py-4 mb-4 relative text-gray-700 px-6 bg-white rounded-md md:border">
       {myQuestion && (
@@ -155,7 +157,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                         target="_blank"
                         href={`${viewurl}/userdashboard/timeline/${myQuestion.slug}`}
                       >
-                        {" "}
+                     
                         <RxOpenInNewWindow /> <span>Open in a new tab</span>
                       </a>{" "}
                     </div>

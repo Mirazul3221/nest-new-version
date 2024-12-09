@@ -4,6 +4,8 @@ import { IoNotificationsOffOutline } from "react-icons/io5";
 import InvitationCard from './InvitationCard';
 import { RxCross2 } from "react-icons/rx";
 import FriendRequest from './FriendRequest';
+import QuestionLikeCard from './QuestionLikeCard';
+import QuestionCommentCard from './QuestionCommentCard';
 const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
   return (
     <div className="bg-gray-50 shadow-md absolute z-50 top-6 md:top-[90px] w-full md:w-4/12 right-0 md:right-12">
@@ -126,6 +128,26 @@ const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
                   </div>
                 </div>
               );
+            }
+            //-------------------------------------------------------------------------------------------------------------------------
+            if(item.type === 'like-question'){
+               return (
+                <div className="bg-gray-100 w-full " key={i}>
+                <QuestionLikeCard
+                  item={item}
+                />
+              </div>
+               )
+            }
+            //-------------------------------------------------------------------------------------------------------------------------
+            if(item.type === 'comment-question'){
+               return (
+                <div className="bg-gray-100 w-full " key={i}>
+                <QuestionCommentCard
+                  item={item}
+                />
+              </div>
+               )
             }
             //-------------------------------------------------------------------------------------------------------------------------
           })}

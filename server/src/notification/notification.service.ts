@@ -77,15 +77,45 @@ export class NotificationService {
         seen:false
       }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if (body.type === 'like-question') {
+      const allUserDetails = await this.readerService.findAllUserForRequestedFriend(info.user.id);
+      schema = {
+        readerId:body.readerId,
+        type:body.type,
+        message:{
+          requesterName:allUserDetails[0].name,
+          requesterProfile:allUserDetails[0].profile,
+          question:body.question,
+          slug:body.slug
+        },
+        seen:false
+      }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if (body.type === 'comment-question') {
+      const allUserDetails = await this.readerService.findAllUserForRequestedFriend(info.user.id);
+      console.log(body)
+      schema = {
+        readerId:body.readerId,
+        type:body.type,
+        message:{
+          requesterName:allUserDetails[0].name,
+          requesterProfile:allUserDetails[0].profile,
+          question:body.question,
+          Comment:body.comment,
+          slug:body.slug
+        },
+        seen:false
+      }
+    }
    const sendNotification =await new this.notificationModel(schema)
    await sendNotification.save()
 
   ///////////////////////delete notification more than twenty//////////////////////////
   const notificationCount = await this.notificationModel.countDocuments({readerId:body.readerId})
-   console.log(notificationCount)
-   
-   if (notificationCount > 90) {
-     const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-90);
+   if (notificationCount > 30) {
+     const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-30);
      const excessIds = excessNotification.map((notif)=>notif._id)
       await this.notificationModel.deleteMany({
         _id : { $in : excessIds }
@@ -108,8 +138,8 @@ export class NotificationService {
         const allNotif = await this.notificationModel.find({readerId : id}).sort({createdAt : -1})
         const notifIndex = allNotif?.length
         let deletableId = []
-        if (notifIndex > 20) {
-          for (let i = 0; i < notifIndex-20; i++) {
+        if (notifIndex > 30) {
+          for (let i = 0; i < notifIndex-30; i++) {
           const id =await allNotif[20 + i]?._id
          await deletableId.push(id)
           }

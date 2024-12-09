@@ -72,6 +72,11 @@ async deleteQuestion(@Param("id") id) {
     return await this.userquestionsService.findMyFriendsAllQuestions(id,skip);
   }//
 
+  @Get('single-questions')
+  async getAQuestion(@Query('slug') slug) {
+    return await this.userquestionsService.getAQuestion(slug);
+  }//
+
 
   @UseGuards(AuthGuard())//
   @Get('get-all-comments')

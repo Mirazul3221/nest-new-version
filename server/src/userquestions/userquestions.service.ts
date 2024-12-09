@@ -123,6 +123,11 @@ export class UserquestionsService {
     return filteredQuestions;
   }//
 
+  async getAQuestion (slug){
+    const result = await this.QuestionModel.find({slug},{comments:{$slice:-1}})
+    console.log(slug)
+    return result
+  }
 
   async findMyFriendsAllQuestions (id,skip){
 

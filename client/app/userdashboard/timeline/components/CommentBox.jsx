@@ -21,32 +21,34 @@ import {
 import { LuShare2 } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
 import CommentsContainer from "./CommentsContainer";
+import { useSocket } from "../../global/SocketProvider";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
-  const initialComments = [question?.comments[1],question?.comments[0]]
+  const { socket } = useSocket();
+  const sortComments = question?.comments.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
   const [open, setOpen] = useState(false);
-  const [openCommentsBox,setOpenCommentsBox] = useState(false)
+  const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
-  const [comments,setComments] = useState(initialComments)
-  console.log(comments)
+  const [comments, setComments] = useState(sortComments);
   const insertANewComment = (newComment) => {
     const newObject = {
-      userId:store.userInfo.id,
-      name:store.userInfo.name,
-      profile:store.userInfo.profile,
-      comment:newComment,
-      createdAt:new Date().toISOString()
-    }
+      userId: store.userInfo.id,
+      name: store.userInfo.name,
+      profile: store.userInfo.profile,
+      comment: newComment,
+      createdAt: new Date().toISOString(),
+    };
     if (comments[0] == undefined) {
-      setComments([newObject])
+      setComments([newObject]);
       setOpen(true);
     } else {
-      setComments(prev=>[newObject,prev[0]])
+      setComments((prev) => [newObject, prev[0]]);
     }
-   
-  }
+  };
   useEffect(() => {
     // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
     if (messangerRef.current) {
@@ -54,6 +56,34 @@ const CommentBox = ({ question }) => {
       messangerRef.current.style.height = `${messangerRef.current.scrollHeight}px`;
     }
   }, [message]);
+  ////////////////notification api////////////////////////
+  const handleNotification = async (type) => {
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/notification/create`,
+        type === "like-question"
+          ? {
+              readerId: question.userId,
+              question: question.question,
+              slug: question.slug,
+              type,
+            }
+          : {
+              readerId: question.userId,
+              question: question.question,
+              slug: question.slug,
+              comment:message,
+              type,
+            },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      socket && (await socket.emit("new-notification", question.userId));
+    } catch (error) {}
+  };
 
   const handleSendLike = useCallback(async () => {
     new Audio("/like-justify-sound/pick-92276.mp3").play();
@@ -69,6 +99,8 @@ const CommentBox = ({ question }) => {
       );
       setOpen(false);
       setMessage("");
+      store.userInfo.id !== question.userId &&
+        handleNotification("like-question");
     } catch (error) {
       console.log(error);
     }
@@ -84,12 +116,14 @@ const CommentBox = ({ question }) => {
           },
         }
       );
-      insertANewComment(message)
+      store.userInfo.id !== question.userId &&
+        handleNotification("comment-question");
+      insertANewComment(message);
       setMessage("");
     } catch (error) {
       console.log(error);
     }
-  }, [message,comments]);
+  }, [message, comments]);
 
   if (question.comments.length > 0) {
     setTimeout(() => {
@@ -112,6 +146,8 @@ const CommentBox = ({ question }) => {
       return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
     }
   }
+
+  console.log(question);
   /////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
@@ -120,18 +156,24 @@ const CommentBox = ({ question }) => {
           question.likes?.length === 0 ? "justify-end" : "justify-between"
         } items-center py-2 text-gray-400`}
       >
-        {
-          putLike ? <div className="w-full">{
-            question?.likes?.length == 0 ? <h4>You like the question</h4> : <h4>{`You and ${question?.likes?.length} people like the question`}</h4>
-            }</div> :  <div>
-            {question?.likes?.length > 0 && (
-            <div className="countcomments gap-2 flex items-center">
-              <h4>{question.likes.length}</h4>
-              <FaThumbsUp size={18} />
-            </div>
-          )}
+        {putLike ? (
+          <div className="w-full">
+            {question?.likes?.length == 0 ? (
+              <h4>You like the question</h4>
+            ) : (
+              <h4>{`You and ${question?.likes?.length} people like the question`}</h4>
+            )}
           </div>
-        }
+        ) : (
+          <div>
+            {question?.likes?.length > 0 && (
+              <div className="countcomments gap-2 flex items-center">
+                <h4>{question.likes.length}</h4>
+                <FaThumbsUp size={18} />
+              </div>
+            )}
+          </div>
+        )}
         {question.comments.length > 0 && (
           <div className="countcomments gap-2 flex items-center">
             <h4>{question.totalComments}</h4>
@@ -194,11 +236,19 @@ const CommentBox = ({ question }) => {
         <div className="display_comments p-2">
           {comments.length > 0 && comments[0] !== undefined && (
             <div>
-              <button onClick={()=>setOpenCommentsBox(true)} className="underline">View more comments</button>
-              {
-                openCommentsBox &&  <CommentsContainer setOpenCommentsBox={setOpenCommentsBox} question={question}/>
-              }
-              {comments?.map((c,i) => {
+              <button
+                onClick={() => setOpenCommentsBox(true)}
+                className="underline"
+              >
+                View more comments
+              </button>
+              {openCommentsBox && (
+                <CommentsContainer
+                  setOpenCommentsBox={setOpenCommentsBox}
+                  question={question}
+                />
+              )}
+              {comments?.map((c, i) => {
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>

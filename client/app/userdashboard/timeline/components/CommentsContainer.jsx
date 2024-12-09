@@ -57,7 +57,6 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
 
     const fullName = question.userName.split(" ");
     const firstname = fullName[0];
-    console.log(totalComments)
 
     const newObject = {
       userId:store.userInfo.id,

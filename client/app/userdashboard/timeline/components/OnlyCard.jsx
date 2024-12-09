@@ -49,11 +49,11 @@ const OnlyCard = ({question}) => {
               tergetContainers[
                 question.rightAns - 1
               ].children[1].children[1].classList.remove("hidden");
-              tergetDescBox.classList.remove("hidden");
+              tergetDescBox?.classList.remove("hidden");
               setTimeout(() => {
-                tergetDescBox.classList.remove("scale-0");
-                tergetDescBox.classList.add("scale-100");
-                tergetDescBox.classList.add("duration-500");
+                tergetDescBox?.classList.remove("scale-0");
+                tergetDescBox?.classList.add("scale-100");
+                tergetDescBox?.classList.add("duration-500");
               }, 100);
             }
           }
