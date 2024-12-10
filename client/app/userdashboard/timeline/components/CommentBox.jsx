@@ -22,6 +22,9 @@ import { LuShare2 } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
 import CommentsContainer from "./CommentsContainer";
 import { useSocket } from "../../global/SocketProvider";
+import { HiOutlineFaceFrown } from "react-icons/hi2";
+import { imojis } from "../../components/imoji";
+import { BiCross } from "react-icons/bi";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
   const { socket } = useSocket();
@@ -34,6 +37,7 @@ const CommentBox = ({ question }) => {
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
   const [comments, setComments] = useState(sortComments);
+  const [hideImoji, setHideImoji] = useState(false);
   const insertANewComment = (newComment) => {
     const newObject = {
       userId: store.userInfo.id,
@@ -72,7 +76,7 @@ const CommentBox = ({ question }) => {
               readerId: question.userId,
               question: question.question,
               slug: question.slug,
-              comment:message,
+              comment: message,
               type,
             },
         {
@@ -148,7 +152,7 @@ const CommentBox = ({ question }) => {
   }
   /////////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
+    <div className="relative">
       <div
         className={`border-b flex ${
           question.likes?.length === 0 ? "justify-end" : "justify-between"
@@ -186,7 +190,6 @@ const CommentBox = ({ question }) => {
             <div>
               {question?.likes?.includes(store.userInfo.id) ? (
                 <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
-                  {" "}
                   <FaThumbsUp color="#292929" size={22} /> <span>Like</span>
                 </div>
               ) : (
@@ -197,7 +200,7 @@ const CommentBox = ({ question }) => {
                   }}
                   className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
                 >
-                  <FaRegThumbsUp size={22} /> <span>Like</span>{" "}
+                  <FaRegThumbsUp size={22} /> <span>Like</span>
                 </div>
               )}
             </div>
@@ -234,12 +237,14 @@ const CommentBox = ({ question }) => {
         <div className="display_comments p-2">
           {comments.length > 0 && comments[0] !== undefined && (
             <div>
-              <button
+              {
+                question.totalComments > 2 &&                <button
                 onClick={() => setOpenCommentsBox(true)}
                 className="underline"
               >
                 View more comments
               </button>
+              }
               {openCommentsBox && (
                 <CommentsContainer
                   setOpenCommentsBox={setOpenCommentsBox}
@@ -291,13 +296,56 @@ const CommentBox = ({ question }) => {
               background: "#f5f5f5",
             }}
           />
-          <div
-            className="flex h-full items-start mb-2 text-gray-500"
-          >
-                       {
-              message ?  <RiSendPlaneLine className="cursor-pointer" color="black" onClick={handleSendComment} size={20} /> :  <RiSendPlaneLine size={20} />
-             }
+          <div className="flex h-full gap-2 items-start mb-2 text-gray-500">
+            <span
+              onClick={() => setHideImoji(!hideImoji)}
+              className="text-gray-300 cursor-pointer"
+            >
+              <HiOutlineFaceFrown color="gray" size={22} />
+            </span>
+            {message ? (
+              <RiSendPlaneLine
+                className="cursor-pointer"
+                color="black"
+                onClick={()=>{
+                  handleSendComment(), setHideImoji(false)
+                }}
+                size={20}
+              />
+            ) : (
+              <RiSendPlaneLine size={20} />
+            )}
           </div>
+          {hideImoji && (
+            <div className="bg-white px-4 rounded-lg pb-4 border absolute bottom-12 shadow-lg right-0">
+              <span onClick={()=>setHideImoji(false)} className="absolute top-2 bg-slate-50 cursor-pointer right-3 rotate-45 p-1 rounded-full border"><BiCross/></span>
+              <h2 className="text-center font-bold py-2">Imoji corner</h2>
+           <div className="h-[25vh] overflow-y-auto">
+           {imojis.map((imj, i) => {
+                return (
+                  <div key={i} className="">
+                    <h3 className="text-gray-400 font-bold pb-[2px] mb-3 border-b">
+                      {imj.type}
+                    </h3>
+                    <div className="grid grid-cols-6 gap-1">
+                      {imj.obj.map((mg, i) => {
+                        return (
+                          <h2
+                            key={i}
+                            onClick={(e) => setMessage(message + mg)}
+                            className="p-1 duration-300 hover:bg-slate-200 hover:scale-110 hover:rotate-12 cursor-pointer rounded-full border"
+                          >
+                            {mg}
+                          </h2>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+           </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
