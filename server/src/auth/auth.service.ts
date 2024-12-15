@@ -371,6 +371,7 @@ export class AuthService {
     return reader;
   }
   async questionCollecton(questions, req) {
+    console.log(questions)
     const { _id, totalCountQuestions } = req.user;
     const { status, subject,id } = questions;
    const targetUser = await this.userModel.findById(_id);
@@ -380,27 +381,27 @@ export class AuthService {
     targetUser?.totalCountQuestionsId.push(id)//
     await targetUser.save()
       //=============UPDATE ENGLISH===============
-      if (subject == 'English' && status == 'right') {
+      if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
         totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
         await this.userModel.findByIdAndUpdate(_id, {
           totalCountQuestions: totalCountQuestions,
         });
       }
-      if (subject == 'English' && status == 'wrong') {
+      if ((subject == 'English' || subject == 'ইংরেজি') && status == 'wrong') {
         totalCountQuestions[1].wrongAns = totalCountQuestions[1].wrongAns + 1;
         await this.userModel.findByIdAndUpdate(_id, {
           totalCountQuestions: totalCountQuestions,
         });
       }
-  
+  //
       //=============UPDATE BANGLA===============
-      if (subject == 'Bangla' && status == 'right') {
+      if ((subject == 'Bangla' || subject == 'বাংলা') && status == 'right') {
         totalCountQuestions[0].rightAns = totalCountQuestions[0].rightAns + 1;
         await this.userModel.findByIdAndUpdate(_id, {
           totalCountQuestions: totalCountQuestions,
         });
       }
-      if (subject == 'Bangla' && status == 'wrong') {
+      if ((subject == 'Bangla' || subject == 'বাংলা') && status == 'wrong') {
         totalCountQuestions[0].wrongAns = totalCountQuestions[0].wrongAns + 1;
         await this.userModel.findByIdAndUpdate(_id, {
           totalCountQuestions: totalCountQuestions,

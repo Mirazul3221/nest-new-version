@@ -41,6 +41,7 @@ import gmail from "@/public/share-icone/gmail.png"
 import telegram from "@/public/share-icone/telegram.png"
 import twitter from "@/public/share-icone/twitter.png"
 import pinterest from "@/public/share-icone/pinterast.png"
+import { CountQuestionsCollection } from "../../global/common";
 
 const Controller = ({
   getLocalVal,
@@ -102,7 +103,7 @@ const Controller = ({
           localStorage.setItem("crossBtn", "true");
           setPositiveMarks(positiveMarks + 1);
           if (isSaveInHistory == 'on') {
-            CountQuestionsCollection('right',singleQuestion)
+            CountQuestionsCollection('right',singleQuestion,store.token)
           }
         } else {
           currentTerget.classList.add("false");
@@ -119,7 +120,7 @@ const Controller = ({
           tergetExp?.classList.remove("hidden");
           setNegitiveMarks(negitiveMarks + 0.25);
           if (isSaveInHistory == 'on') {
-            CountQuestionsCollection('wrong',singleQuestion)
+            CountQuestionsCollection('wrong',singleQuestion,store.token)
           }
         }
       }
@@ -185,39 +186,7 @@ const Controller = ({
   }
   
     }
-  const CountQuestionsCollection =async (status,singleQuestion)=> {
-    const manageQuestion = {
-      status,
-      subject:singleQuestion.subject,
-      id:singleQuestion._id
-    }
-    const {data} = await axios.post(`${baseurl}/auth/collect-all-questions`,manageQuestion,{
-      headers: {
-        Authorization: `Bearer ${store.token}`,
-      },
-    })
-    const question = {
-      time:new Date(),
-      id:singleQuestion._id,
-      sub : singleQuestion.subject,
-      question:singleQuestion.question,
-      option_01: singleQuestion.option_01,
-      option_02: singleQuestion.option_02,
-      option_03: singleQuestion.option_03,
-      option_04: singleQuestion.option_04,
-      rightAns:singleQuestion.rightAns
-    }
 
-    if (status=='right') {
-      const collectRQuestions = localStorage.getItem("collectedRightQuestions") ? JSON.parse(localStorage.getItem("collectedRightQuestions")) : []
-        collectRQuestions.push(singleQuestion)
-    localStorage.setItem("collectedRightQuestions", JSON.stringify(collectRQuestions));
-    }else { 
-    const collectWQuestions = localStorage.getItem("collectedWrongQuestions") ? JSON.parse(localStorage.getItem("collectedWrongQuestions")) : []
-    collectWQuestions.push(singleQuestion)
-    localStorage.setItem("collectedWrongQuestions", JSON.stringify(collectWQuestions));
-    }
- }
   const getReadQuestion = JSON.parse(localStorage.getItem("UUID"));
   const exactReadQuestion = getReadQuestion?.filter((item, index) => {
     return index === getReadQuestion?.findIndex((item2) => item2 === item);

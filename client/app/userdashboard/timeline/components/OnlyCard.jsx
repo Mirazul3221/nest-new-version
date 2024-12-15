@@ -1,10 +1,13 @@
+import { useStore } from '@/app/global/DataProvider';
 import HTMLReactParser from 'html-react-parser';
 import moment from 'moment';
 import React, { useCallback } from 'react'
 import { GiCheckMark } from 'react-icons/gi';
 import { RxCross2 } from 'react-icons/rx';
+import { CountQuestionsCollection } from '../../global/common';
 
 const OnlyCard = ({question}) => {
+  const {store} = useStore()
     const checkAns = useCallback((e, ans, question) => {
         /////////////////////////////////////////////////////////////////////////////////////////
         // const mainTerget = questionsData[index].rightAns;
@@ -28,12 +31,14 @@ const OnlyCard = ({question}) => {
         if (e.target.classList.contains("__target_option__")) {
           if (getAtterIntoNumber == question.rightAns) {
             if (ans === question.rightAns) {
+              store.userInfo.id !== question.userId && CountQuestionsCollection('right',question,store.token)
               e.target.parentElement.classList.add("bg-green-100");
               e.target.parentElement.classList.add("border-green-500");
               e.target.parentElement.children[1].children[1].classList.remove(
                 "hidden"
               );
             } else {
+               store.userInfo.id !== question.userId && CountQuestionsCollection('wrong',question,store.token)
               const tergetDescBox =
                 e.target.parentElement.parentElement.parentElement.parentElement
                   .children[2];

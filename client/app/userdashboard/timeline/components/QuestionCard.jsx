@@ -13,6 +13,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../create-post/components/EditQuestion";
 import ProfileCard from "./ProfileCard";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { CountQuestionsCollection } from "../../global/common";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
@@ -52,12 +53,14 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     if (e.target.classList.contains("__target_option__")) {
       if (getAtterIntoNumber == question.rightAns) {
         if (ans === question.rightAns) {
+          store.userInfo.id !== question.userId && CountQuestionsCollection('right',question,store.token)
           e.target.parentElement.classList.add("bg-green-100");
           e.target.parentElement.classList.add("border-green-500");
           e.target.parentElement.children[1].children[1].classList.remove(
             "hidden"
           );
         } else {
+          store.userInfo.id !== question.userId && CountQuestionsCollection('wrong',question,store.token)
           const tergetDescBox =
             e.target.parentElement.parentElement.parentElement.parentElement
               .children[2];
