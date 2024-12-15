@@ -50,6 +50,7 @@ export class AuthService {
           'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
         otp: '',
         totalCountQuestions: allSubject,
+        totalCountQuestionsId:[]
       });
       return { msg: 'User register success' };
       //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
@@ -371,34 +372,41 @@ export class AuthService {
   }
   async questionCollecton(questions, req) {
     const { _id, totalCountQuestions } = req.user;
-    const { status, subject } = questions;
-    //=============UPDATE ENGLISH===============
-    if (subject == 'English' && status == 'right') {
-      totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
-      await this.userModel.findByIdAndUpdate(_id, {
-        totalCountQuestions: totalCountQuestions,
-      });
-    }
-    if (subject == 'English' && status == 'wrong') {
-      totalCountQuestions[1].wrongAns = totalCountQuestions[1].wrongAns + 1;
-      await this.userModel.findByIdAndUpdate(_id, {
-        totalCountQuestions: totalCountQuestions,
-      });
-    }
-
-    //=============UPDATE BANGLA===============
-    if (subject == 'Bangla' && status == 'right') {
-      totalCountQuestions[0].rightAns = totalCountQuestions[0].rightAns + 1;
-      await this.userModel.findByIdAndUpdate(_id, {
-        totalCountQuestions: totalCountQuestions,
-      });
-    }
-    if (subject == 'Bangla' && status == 'wrong') {
-      totalCountQuestions[0].wrongAns = totalCountQuestions[0].wrongAns + 1;
-      await this.userModel.findByIdAndUpdate(_id, {
-        totalCountQuestions: totalCountQuestions,
-      });
-    }
+    const { status, subject,id } = questions;
+   const targetUser = await this.userModel.findById(_id);
+   if (targetUser.totalCountQuestionsId.includes(id)) {
+    return null
+   } else {
+    targetUser?.totalCountQuestionsId.push(id)//
+    await targetUser.save()
+      //=============UPDATE ENGLISH===============
+      if (subject == 'English' && status == 'right') {
+        totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
+        await this.userModel.findByIdAndUpdate(_id, {
+          totalCountQuestions: totalCountQuestions,
+        });
+      }
+      if (subject == 'English' && status == 'wrong') {
+        totalCountQuestions[1].wrongAns = totalCountQuestions[1].wrongAns + 1;
+        await this.userModel.findByIdAndUpdate(_id, {
+          totalCountQuestions: totalCountQuestions,
+        });
+      }
+  
+      //=============UPDATE BANGLA===============
+      if (subject == 'Bangla' && status == 'right') {
+        totalCountQuestions[0].rightAns = totalCountQuestions[0].rightAns + 1;
+        await this.userModel.findByIdAndUpdate(_id, {
+          totalCountQuestions: totalCountQuestions,
+        });
+      }
+      if (subject == 'Bangla' && status == 'wrong') {
+        totalCountQuestions[0].wrongAns = totalCountQuestions[0].wrongAns + 1;
+        await this.userModel.findByIdAndUpdate(_id, {
+          totalCountQuestions: totalCountQuestions,
+        });
+      }
+   }
   }
 
 

@@ -68,7 +68,6 @@ const Page = () => {
       setData(data);
     } catch (error) {
       setLoadingGif(false);
-      console.log(error);
     }
   };
 

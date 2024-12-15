@@ -125,7 +125,6 @@ export class UserquestionsService {
 
   async getAQuestion (slug){
     const result = await this.QuestionModel.find({slug},{comments:{$slice:-1}})
-    console.log(slug)
     return result
   }
 

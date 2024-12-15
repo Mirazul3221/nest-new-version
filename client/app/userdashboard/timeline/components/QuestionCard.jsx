@@ -102,10 +102,8 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       console.log(error);
     }
   };
-
-  console.log(myQuestion)
   return (
-    <div className="py-4 mb-4 relative text-gray-700 px-6 bg-white rounded-md md:border">
+    <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border">
       {myQuestion && (
         <div>
           <div className="flex justify-between">

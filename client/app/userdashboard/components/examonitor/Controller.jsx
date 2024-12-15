@@ -54,11 +54,8 @@ const Controller = ({
   setMark
 }) => {
   const { store } = useContext(storeContext);
-  const [selectAll, setSelectAll] = useState(0);
   const [countReadingQuestion, setCountReadingQuestion] = useState(0);
   //Here is the statement about correct and inCorrect ans
-  const [correctMcq, setCorrectMcq] = useState(0);
-  const [wrongAns, setWrongAns] = useState(0);
   //Here is thatement about negitive and positive marks
   const [positiveMarks, setPositiveMarks] = useState(0);
   const [negitiveMarks, setNegitiveMarks] = useState(0);
@@ -69,11 +66,20 @@ const Controller = ({
   //   const wrongVolume = new Audio(wrong);
   //  console.log(singleUserData)
   //====================================================================
+  const justifyAns = useCallback(( ans, question)=>{
+    console.log(ans)
+    console.log(question.rightAns)
+      if (ans == question.rightAns) {
+        setMark.rf(setMark.r + 1)
+      } else {
+        setMark.wf(setMark.w + 1)
+        console.log(setMark.w)
+      }
+  },[setMark.w])
   //====================================================
   //=====================================
   const checkAns = useCallback((e, ans, index, singleQuestion) => {
-    setMark.sub(singleQuestion.topic)
-    let selectedData = questionsData[index].rightAns;
+    let selectedData = singleQuestion.rightAns;
     const currentTerget = e.target;
     const tergetBox = e.target.parentElement.parentElement.children; // This tergetbox refers to the childer elements
     const tergetExp = e.target.parentElement.parentElement.parentElement.children[2]; // This tergetbox refers to the explanation elements
@@ -86,21 +92,17 @@ const Controller = ({
     }, 100);
     //=============================================================
     const allOpton = [tergetBox[0], tergetBox[1], tergetBox[2], tergetBox[3]];
-    const mainTerget = questionsData[index].rightAns;
+    const mainTerget = singleQuestion.rightAns;
     if (heyRobot === "on") {
       if (getAtterIntoNumber === selectedData) {
-        if (questionsData[index].rightAns === ans) {
+        if (singleQuestion.rightAns === ans) {
           increaseBalanceByperQuestionRead()
           currentTerget.classList.add("true");
           currentTerget.children[1].classList.remove("hidden")
-          setMark.rf(setMark.r + 1)
-          setCorrectMcq(correctMcq + 1);
-          setSelectAll(selectAll + 1);
-
           localStorage.setItem("crossBtn", "true");
           setPositiveMarks(positiveMarks + 1);
           if (isSaveInHistory == 'on') {
-            allRightQuestionsCollection(singleQuestion)
+            CountQuestionsCollection('right',singleQuestion)
           }
         } else {
           currentTerget.classList.add("false");
@@ -110,17 +112,14 @@ const Controller = ({
           //   if (volumeSound === "on") {
           //     wrongVolume.play();
           //   }
-          setMark.wf(setMark.w + 1)
-          setWrongAns(wrongAns + 1);
           setTimeout(() => {
             tergetExp?.classList.add("scale-110");
             tergetExp?.classList.remove("scale-0");
           }, 100);
           tergetExp?.classList.remove("hidden");
-          setSelectAll(selectAll + 1);
           setNegitiveMarks(negitiveMarks + 0.25);
           if (isSaveInHistory == 'on') {
-            allWrongQuestionsCollection(singleQuestion)
+            CountQuestionsCollection('wrong',singleQuestion)
           }
         }
       }
@@ -186,10 +185,11 @@ const Controller = ({
   }
   
     }
-  const allWrongQuestionsCollection =async (singleQuestion)=> {
+  const CountQuestionsCollection =async (status,singleQuestion)=> {
     const manageQuestion = {
-      status:"wrong",
-      subject:singleQuestion.subject
+      status,
+      subject:singleQuestion.subject,
+      id:singleQuestion._id
     }
     const {data} = await axios.post(`${baseurl}/auth/collect-all-questions`,manageQuestion,{
       headers: {
@@ -207,9 +207,16 @@ const Controller = ({
       option_04: singleQuestion.option_04,
       rightAns:singleQuestion.rightAns
     }
-    const collectQuestions = localStorage.getItem("collectedWrongQuestions") ? JSON.parse(localStorage.getItem("collectedWrongQuestions")) : []
-        collectQuestions.push(singleQuestion)
-    localStorage.setItem("collectedWrongQuestions", JSON.stringify(collectQuestions));
+
+    if (status=='right') {
+      const collectRQuestions = localStorage.getItem("collectedRightQuestions") ? JSON.parse(localStorage.getItem("collectedRightQuestions")) : []
+        collectRQuestions.push(singleQuestion)
+    localStorage.setItem("collectedRightQuestions", JSON.stringify(collectRQuestions));
+    }else { 
+    const collectWQuestions = localStorage.getItem("collectedWrongQuestions") ? JSON.parse(localStorage.getItem("collectedWrongQuestions")) : []
+    collectWQuestions.push(singleQuestion)
+    localStorage.setItem("collectedWrongQuestions", JSON.stringify(collectWQuestions));
+    }
  }
   const getReadQuestion = JSON.parse(localStorage.getItem("UUID"));
   const exactReadQuestion = getReadQuestion?.filter((item, index) => {
@@ -454,6 +461,7 @@ const Controller = ({
                     <p
                       onClick={(e) => {
                         checkAns(e, 1, index, value);
+                        justifyAns( 1, value);
                       }}
                       className="__option_value__ cursor-pointer ml-8 w-[90%] rounded-full px-4 py-[5px] mx-5 text-[12px] md:text-[14px] flex justify-between items-center"
                     >
@@ -472,6 +480,7 @@ const Controller = ({
                     <p
                       onClick={(e) => {
                         checkAns(e, 2, index, value);
+                        justifyAns( 2, value);
                       }}
                       className="__option_value__ cursor-pointer ml-8 w-[90%] rounded-full px-4 py-[5px] mx-5 text-[12px] md:text-[14px] flex justify-between items-center"
                     >
@@ -490,6 +499,7 @@ const Controller = ({
                     <p
                       onClick={(e) => {
                         checkAns(e, 3, index, value);
+                        justifyAns( 3, value);
                       }}
                       className="__option_value__ cursor-pointer ml-8 w-[90%] rounded-full px-4 py-[5px] mx-5 text-[12px] md:text-[14px] flex justify-between items-center"
                     >
@@ -508,6 +518,7 @@ const Controller = ({
                     <p
                       onClick={(e) => {
                         checkAns(e, 4, index, value);
+                        justifyAns( 4, value);
                       }}
                       className="__option_value__ cursor-pointer ml-8 w-[90%] rounded-full px-4 py-[5px] mx-5 text-[12px] md:text-[14px] flex justify-between items-center"
                     >

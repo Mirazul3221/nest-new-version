@@ -21,7 +21,6 @@ const Monitor = ({ questions,megaQuestions,isSave ,isSaveInHistory,pagination = 
   //=============================================================
   const [wright,setWright] = useState(0)
   const [wrong,setWrong] = useState(0)
-  const [sub,setSub] = useState("")
   const [getLocalVal,setGetLocalVal] = useState('')
 const [getRobot,setGetRobotic] = useState('on')
 const { store } = useContext(storeContext);
@@ -191,7 +190,7 @@ const { store } = useContext(storeContext);
                         megaQuestions={megaQuestions}
                         isSave={isSave}
                         isSaveInHistory={isSaveInHistory}
-                        setMark={{rf:setWright,r:wright,wf:setWrong,w:wrong,sub:setSub}}
+                        setMark={{rf:setWright,r:wright,wf:setWrong,w:wrong}}
                       />
                     </div>
                   );

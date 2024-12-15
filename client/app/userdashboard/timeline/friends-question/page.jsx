@@ -79,7 +79,7 @@ const Page = () => {
         <div className="md:px-10 bg-gray-50">
           {questions?.map((question, i) => {
             return (
-              <div key={i} className="pt-4 md:w-1/2 mx-auto">
+              <div key={i} className="md:pt-4 md:w-1/2 mx-auto">
                 <QuestionCard
                   questionsAfterDelete={questionsAfterDelete}
                   myQuestion={question}
@@ -87,7 +87,7 @@ const Page = () => {
               </div>
             );
           })}
-          {isLoading && <div className="flex justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
+          {isLoading && <div className="flex bg-white justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
         </div>
       </ProtectRoute>
     </div>
