@@ -26,6 +26,7 @@ import AvatarWrapper from "../components/profileWrapper";
 import { GoHistory } from "react-icons/go";
 import { FaFacebook } from "react-icons/fa";
 import { useSocket } from "../global/SocketProvider";
+import SuperHeader from "../components/SuperHeader";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -320,16 +321,13 @@ const Page = () => {
 const {socket,myActiveFriends} = useSocket()
   return (
     <ProtectRoute>
-      <div className="md:px-10 px-4 mb-2 md:min-h-[91vh] duration-300 relative">
-        <div className="flex justify-between">
-          <Logo w={80} />
-          <Navbar />
-        </div>
-        <div className="md:flex justify-between gap-5">
-          <div className="md:w-4/12 border-t-4 bg-white rounded-lg border-violet-700 shadow-md p-10 relative min-h-80">
+      <div className="md:px-10 px-4 mb-2 pt-2 bg-gray-50 md:min-h-[91vh] duration-300 relative">
+        <SuperHeader/>
+        <div className="md:flex mt-6 justify-between gap-5">
+          <div className="md:w-4/12 bg-white shadow-md p-10 relative min-h-80">
             <div className="absolute w-full h-[25vh] md:h-40 bg-violet-50 top-0 left-0">
               <Image
-                className="w-full h-full rounded-t-sm"
+                className="w-full h-full rounded-t-lg"
                 src={profileBanner}
                 alt="Profile cover photo"
               />
@@ -663,7 +661,7 @@ const {socket,myActiveFriends} = useSocket()
               )}
             </div>
           </div>
-          <div className="md:w-8/12 bg-white border-t-4 border-violet-700 rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
+          <div className="md:w-8/12 bg-white border-t rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
             <h2 className="text-center text-violet-700">
               All The Questions You Have read
             </h2>
