@@ -47,10 +47,6 @@ const Page = () => {
   const type = data.get("type");
   const action = data.get("action");
   const [callInv, setCallInv] = useState(action);
-  //  const invokeSocket = useCallback(()=>{
-  //    const {socket} = useSocket()
-  //   return socket
-  //  },[])
   const { socket } = useSocket();
   const myStream = useRef(null);
   const remoteStream = useRef(null);
@@ -368,12 +364,13 @@ const Page = () => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const startCall = async () => {
+    const user = JSON.parse(localStorage.getItem('myDetails'))
     if (callInv === "call-start") {
       await socket?.emit("signal-call", {
-        senderId: store.userInfo.id,
+        senderId: user._id,
         receiverId: fdId,
-        name: store.userInfo.name,
-        profile: store.userInfo.profile,
+        name: user.name,
+        profile: user.profile,
         type,
       });
     }

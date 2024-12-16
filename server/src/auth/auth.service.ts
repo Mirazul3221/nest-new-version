@@ -88,7 +88,7 @@ export class AuthService {
   findSingleUser(id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid User!', 404);
-    return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0, totalCountQuestions:0 });
+    return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
   }
   //================================
   async findSingleUserByPublic(user) {

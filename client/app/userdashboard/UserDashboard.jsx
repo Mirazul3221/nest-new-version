@@ -32,7 +32,9 @@ const UserDashboard = () => {
   });
   const {dispatch,store} = useStore()
   const [show,setShow] = useState(false)
+ useEffect(() => {
   myDetailsApi(store.token)
+ }, []);
   // useEffect(() => {
   //   async function fetchData() {
   //     try {
