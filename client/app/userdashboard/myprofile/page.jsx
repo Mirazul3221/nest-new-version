@@ -27,6 +27,8 @@ import { GoHistory } from "react-icons/go";
 import { FaFacebook } from "react-icons/fa";
 import { useSocket } from "../global/SocketProvider";
 import SuperHeader from "../components/SuperHeader";
+import { RiUserReceived2Line } from "react-icons/ri";
+import { HiOutlineUserGroup } from "react-icons/hi";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -132,7 +134,6 @@ const Page = () => {
   };
 
   const updateFacebookLink = async () => {
-    alert("Hi");
     try {
       await axios.post(
         `${baseurl}/auth/updatemyprofile`,
@@ -143,6 +144,8 @@ const Page = () => {
           },
         }
       );
+
+      setLink(false);
     } catch (error) {}
   };
   //   useEffect(() => {
@@ -219,6 +222,7 @@ const Page = () => {
   const [getAllPendingFriend, setGetAllPendingFriend] = useState(null);
   const [getAllAcceptedFriend, setGetAllAcceptedFriend] = useState(null);
   //////////////////////////////////////////////////////////////////////////////
+  console.log(getAllPendingFriend?.length)
   useEffect(() => {
     async function getAllFriends() {
       try {
@@ -517,79 +521,79 @@ const Page = () => {
             </div>
             {userDetails && (
               <div>
-                            <div className="flex gap-2 items-center mt-2">
-              <div className="flex">Online Status : </div>
-              <div className="border border-green-500 flex gap-1 justify-center items-center py-1 px-5 rounded-full">
-                <div className="h-3 w-3 bg-green-500 rounded-full"></div>{" "}
-                <p className="text-green-500 text-[12px]">Active</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 w-full mt-4 text-gray-700">
-              <LuUser2 />
-              <h3>
-                {" "}
-                Member since{" "}
-                <span className="font-semibold">
-                  {moment(userDetails.createdAt).format("MMM YYYY")}
-                </span>
-              </h3>
-            </div>
-            <div className="mt-3">
-              <h2 className=" text-gray-600 font-bold">About Me</h2>
-              {controlDesc ? (
-                <>
-                  <textarea
-                    value={updateDesc}
-                    className="updateDesc outline-none w-full border-[1px] p-2"
-                    onChange={(e) => {
-                      setUpdateDesc(e.target.value);
-                    }}
-                    rows="5"
-                    placeholder="Update description"
-                    name="text"
-                    id=""
-                  ></textarea>
-                  <div className="flex justify-between items-center gap-4 mt-2">
-                    <div
-                      onClick={() => setControlDesc(false)}
-                      className="updateTitle w-1/2 cursor-pointer py-1 px-6 bg-gray-200 rounded-md"
-                    >
-                      Cancel
-                    </div>
-                    <div
-                      onClick={() => {
-                        updateUserDescription(), setControlDesc(false);
-                      }}
-                      className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
-                    >
-                      Update
-                    </div>
+                <div className="flex gap-2 items-center mt-2">
+                  <div className="flex">Online Status : </div>
+                  <div className="border border-green-500 flex gap-1 justify-center items-center py-1 px-5 rounded-full">
+                    <div className="h-3 w-3 bg-green-500 rounded-full"></div>{" "}
+                    <p className="text-green-500 text-[12px]">Active</p>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="relative w-full group">
-                    <p
-                      className={`updateDesc ${
-                        userDetails.description?.length <= 0
-                          ? "font-semibold"
-                          : ""
-                      }`}
-                    >
-                      {userDetails.description?.length <= 0
-                        ? "Write Something about you."
-                        : userDetails.description}
-                    </p>
-                    <div
-                      onClick={() => setControlDesc(true)}
-                      className="group-hover:flex descriptionValue cursor-pointer hidden bg-white w-8 h-8 rounded-full absolute right-0 top-0 justify-center items-center shadow-md"
-                    >
-                      <PiPenLight size={22} />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+                </div>
+                <div className="flex items-center gap-2 w-full mt-4 text-gray-700">
+                  <LuUser2 />
+                  <h3>
+                    {" "}
+                    Member since{" "}
+                    <span className="font-semibold">
+                      {moment(userDetails.createdAt).format("MMM YYYY")}
+                    </span>
+                  </h3>
+                </div>
+                <div className="mt-3">
+                  <h2 className=" text-gray-600 font-bold">About Me</h2>
+                  {controlDesc ? (
+                    <>
+                      <textarea
+                        value={updateDesc}
+                        className="updateDesc outline-none w-full border-[1px] p-2"
+                        onChange={(e) => {
+                          setUpdateDesc(e.target.value);
+                        }}
+                        rows="5"
+                        placeholder="Update description"
+                        name="text"
+                        id=""
+                      ></textarea>
+                      <div className="flex justify-between items-center gap-4 mt-2">
+                        <div
+                          onClick={() => setControlDesc(false)}
+                          className="updateTitle w-1/2 cursor-pointer py-1 px-6 text-center bg-gray-200 rounded-md"
+                        >
+                          Cancel
+                        </div>
+                        <div
+                          onClick={() => {
+                            updateUserDescription(), setControlDesc(false);
+                          }}
+                          className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                        >
+                          Update
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="relative w-full group">
+                        <p
+                          className={`updateDesc ${
+                            userDetails.description?.length <= 0
+                              ? "font-semibold"
+                              : ""
+                          }`}
+                        >
+                          {userDetails.description?.length <= 0
+                            ? "Write Something about you."
+                            : userDetails.description}
+                        </p>
+                        <div
+                          onClick={() => setControlDesc(true)}
+                          className="group-hover:flex descriptionValue cursor-pointer hidden bg-white w-8 h-8 rounded-full absolute right-0 top-0 justify-center items-center shadow-md"
+                        >
+                          <PiPenLight size={22} />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
                 {userDetails?.fblink && !link ? (
                   <div className="mt-4 border-t py-2">
                     <div>
@@ -644,7 +648,7 @@ const Page = () => {
                         <div className="flex justify-between items-center gap-4 mt-2">
                           <div
                             onClick={() => setLink(false)}
-                            className=" w-1/2 cursor-pointer py-1 px-6 bg-gray-200 rounded-md"
+                            className=" w-1/2 cursor-pointer text-center py-1 px-6 bg-gray-200 rounded-md"
                           >
                             Cancel
                           </div>
@@ -708,49 +712,55 @@ const Page = () => {
               </div>
             </div>
           ) : (
-            <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">Loading...</div>
+            <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">
+              Loading...
+            </div>
           )}
         </div>
 
         <div className="mt-4 p-4 bg-white border-t-2 shadow-md">
-          <div className="box1">
-            <div className="md:grid grid-cols-4 gap-4">
-              <h2 className="md:text-2xl font-semibold">
-                All your unaccepted Friends
-              </h2>
-              {getAllPendingFriend !== null &&
-                getAllPendingFriend?.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`mt-4 bg-gray-100 p-4 ${
-                      accptReq ? "hidden" : ""
-                    }`}
-                  >
-                    <img
-                      className="w-48 mx-auto border-2 md:border-4 rounded-full"
-                      src={item.profile}
-                    />
-                    <h2 className="text-center text-2xl text-gray-700 mt-2">
-                      {item.name}
-                    </h2>
-                    <div className="flex gap-2 mt-2 justify-center items-center">
-                      <h2 className="py-2 px-4 bg-white rounded-md">Cancel</h2>
-                      <h2
-                        onClick={() => {
-                          handleAcceptRequest(item);
-                        }}
-                        className="py-2 px-4 bg-violet-700 rounded-md text-white"
-                      >
-                        Accept
+          {getAllPendingFriend?.length > 0 && (
+            <div className="box1 mb-4 md:mb-10">
+              <h2 className="md:text-2xl flex gap-2 items-center font-semibold"><RiUserReceived2Line /> Incoming Friends</h2>
+              <div className="md:grid grid-cols-4 gap-4">
+                {getAllPendingFriend !== null &&
+                  getAllPendingFriend?.map((item, i) => (
+                    <div
+                      key={i}
+                      className={`mt-4 bg-gray-100 p-4 ${
+                        accptReq ? "hidden" : ""
+                      }`}
+                    >
+                      <img
+                        className="w-48 mx-auto border-2 md:border-4 rounded-full"
+                        src={item.profile}
+                      />
+                      <h2 className="text-center text-2xl mt-2">
+                        {item.name}
                       </h2>
+                      <div className="flex gap-2 mt-2 justify-center items-center">
+                        <h2
+                          onClick={() => setAcceptReq(true)}
+                          className="py-2 px-4 cursor-pointer bg-white rounded-md"
+                        >
+                          Cancel
+                        </h2>
+                        <h2
+                          onClick={() => {
+                            handleAcceptRequest(item);
+                          }}
+                          className="py-2 px-4 cursor-pointer bg-violet-700 rounded-md text-white"
+                        >
+                          Accept
+                        </h2>
+                      </div>
                     </div>
-                    <h2>{item._id}</h2>
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
-          </div>
-          <div className="box1 mt-6 md:mt-10">
-            <h2 className="md:text-2xl font-semibold">All your Friends</h2>
+          )}
+          <div className="box2">
+            <h2 className="md:text-2xl flex gap-2 items-center font-semibold"><HiOutlineUserGroup /> Friends</h2>
             <div className="md:grid grid-cols-4 gap-4">
               {getAllAcceptedFriend !== null &&
                 getAllAcceptedFriend?.map((item, i) => (
@@ -758,7 +768,7 @@ const Page = () => {
                     key={i}
                     className="mt-4 bg-gray-100 p-4 rounded-lg border"
                   >
-                    <div className="relative rounded-full bg-black w-fit mx-auto">
+                    <div className="relative rounded-full w-fit mx-auto">
                       {myActiveFriends &&
                       myActiveFriends?.some((O) => O === item._id) ? (
                         <div className="w-5 h-5 border-2 border-white bg-green-500 absolute rounded-full right-10 bottom-1"></div>
