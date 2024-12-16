@@ -40,7 +40,7 @@ const Page = () => {
   const [openMOdel, setOpenModel] = useState(false);
   // const isBrowser = typeof window !== undefined;
   const [percentage, setPercentage] = useState(0);
-  const { store  } = useContext(storeContext);
+  const { store } = useContext(storeContext);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -261,10 +261,9 @@ const Page = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      socket && await socket.emit('new-notification',user._id)
+      socket && (await socket.emit("new-notification", user._id));
       handleNotification(user);
       setAcceptReq(true);
-     
     } catch (error) {
       console.log(error);
     }
@@ -313,16 +312,16 @@ const Page = () => {
           },
         }
       );
-      socket && await socket.emit('new-notification',id)
+      socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
     }
   };
-const {socket,myActiveFriends} = useSocket()
+  const { socket, myActiveFriends } = useSocket();
   return (
     <ProtectRoute>
       <div className="md:px-10 px-4 mb-2 pt-2 bg-gray-50 md:min-h-[91vh] duration-300 relative">
-        <SuperHeader/>
+        <SuperHeader />
         <div className="md:flex mt-6 justify-between gap-5">
           <div className="md:w-4/12 bg-white shadow-md p-10 relative min-h-80">
             <div className="absolute w-full h-[25vh] md:h-40 bg-violet-50 top-0 left-0">
@@ -516,7 +515,9 @@ const {socket,myActiveFriends} = useSocket()
                 )}
               </div>
             </div>
-            <div className="flex gap-2 items-center mt-2">
+            {userDetails && (
+              <div>
+                            <div className="flex gap-2 items-center mt-2">
               <div className="flex">Online Status : </div>
               <div className="border border-green-500 flex gap-1 justify-center items-center py-1 px-5 rounded-full">
                 <div className="h-3 w-3 bg-green-500 rounded-full"></div>{" "}
@@ -589,122 +590,126 @@ const {socket,myActiveFriends} = useSocket()
                 </>
               )}
             </div>
-            <div>
-              {userDetails?.fblink && !link ? (
-                <div className="mt-4 border-t py-2">
-                  <div>
-                    <h2 className="text-gray-600 font-bold mb-2">
-                      Varified facebook profile
-                    </h2>
-                    <div className="w-fit relative">
-                      <label htmlFor="fblink">
-                        <div
-                          onClick={() => setLink(true)}
-                          className="absolute w-5 h-5 hover:scale-150 cursor-pointer duration-300 flex justify-center items-center bottom-0 right-0 bg-white rounded-full"
+                {userDetails?.fblink && !link ? (
+                  <div className="mt-4 border-t py-2">
+                    <div>
+                      <h2 className="text-gray-600 font-bold mb-2">
+                        Varified facebook profile
+                      </h2>
+                      <div className="w-fit relative">
+                        <label htmlFor="fblink">
+                          <div
+                            onClick={() => setLink(true)}
+                            className="absolute w-5 h-5 hover:scale-150 cursor-pointer duration-300 flex justify-center items-center bottom-0 right-0 bg-white rounded-full"
+                          >
+                            <GrFormEdit size={20} />
+                          </div>
+                        </label>
+                        <Link
+                          className="w-20 h-20"
+                          target="blaunk"
+                          href={`${userDetails.fblink}`}
                         >
-                          <GrFormEdit size={20} />
-                        </div>
-                      </label>
-                      <Link
-                        className="w-20 h-20"
-                        target="blaunk"
-                        href={`${userDetails.fblink}`}
-                      >
-                        <FaFacebook size={80} />
-                      </Link>
+                          <FaFacebook size={80} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="mt-4 border-t-2 py-4">
-                    <h2 className="text-gray-600 font-bold">
-                      Set your facebook profile link
-                    </h2>
+                ) : (
+                  <div>
+                    <div className="mt-4 border-t-2 py-4">
+                      <h2 className="text-gray-600 font-bold">
+                        Set your facebook profile link
+                      </h2>
 
-                    <label
-                      className={`cursor-pointer w-fit ${
-                        link ? "hidden" : "block"
-                      }`}
-                      onClick={() => setLink(true)}
-                      htmlFor="fblink"
-                    >
-                      <FaFacebook size={30} />
-                    </label>
+                      <label
+                        className={`cursor-pointer w-fit ${
+                          link ? "hidden" : "block"
+                        }`}
+                        onClick={() => setLink(true)}
+                        htmlFor="fblink"
+                      >
+                        <FaFacebook size={30} />
+                      </label>
 
-                    <div className={`mt-2 ${link ? "block" : "hidden"}`}>
-                      <input
-                        id="fblink"
-                        value={facebookLink}
-                        onChange={(e) => setFacebookLink(e.target.value)}
-                        className="py-2 px-4 w-full"
-                        type="text"
-                        placeholder="Put your facebook profile link"
-                      />
-                      <div className="flex justify-between items-center gap-4 mt-2">
-                        <div
-                          onClick={() => setLink(false)}
-                          className=" w-1/2 cursor-pointer py-1 px-6 bg-gray-200 rounded-md"
-                        >
-                          Cancel
-                        </div>
-                        <div
-                          onClick={updateFacebookLink}
-                          className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
-                        >
-                          Update
+                      <div className={`mt-2 ${link ? "block" : "hidden"}`}>
+                        <input
+                          id="fblink"
+                          value={facebookLink}
+                          onChange={(e) => setFacebookLink(e.target.value)}
+                          className="py-2 px-4 w-full"
+                          type="text"
+                          placeholder="Put your facebook profile link"
+                        />
+                        <div className="flex justify-between items-center gap-4 mt-2">
+                          <div
+                            onClick={() => setLink(false)}
+                            className=" w-1/2 cursor-pointer py-1 px-6 bg-gray-200 rounded-md"
+                          >
+                            Cancel
+                          </div>
+                          <div
+                            onClick={updateFacebookLink}
+                            className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                          >
+                            Update
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
-          <div className="md:w-8/12 bg-white border-t rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
-            <h2 className="text-center text-violet-700">
-              All The Questions You Have read
-            </h2>
-            <div>
-              <RadarChart resize={resize} userDetails={userDetails} />
-            </div>
-            <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
-              {percentage > 0 && (
-                <div
-                  style={{ width: percentage + "%" }}
-                  className={`duration-300 ${
-                    percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                  } h-[3px] rounded-full relative`}
-                >
+          {userDetails ? (
+            <div className="md:w-8/12 bg-white border-t rounded-md mt-10 md:mt-0 shadow-md px-10 py-6">
+              <h2 className="text-center text-violet-700">
+                All The Questions You Have read
+              </h2>
+              <div>
+                <RadarChart resize={resize} userDetails={userDetails} />
+              </div>
+              <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
+                {percentage > 0 && (
                   <div
-                    className={`absolute -right-[14px] text-white ${
+                    style={{ width: percentage + "%" }}
+                    className={`duration-300 ${
                       percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                    } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
+                    } h-[3px] rounded-full relative`}
                   >
-                    {percentage + "%"}
                     <div
-                      className={`w-[3px] ${
+                      className={`absolute -right-[14px] text-white ${
                         percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                      } h-4 absolute top-6 left-[43%]`}
-                    ></div>
+                      } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
+                    >
+                      {percentage + "%"}
+                      <div
+                        className={`w-[3px] ${
+                          percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                        } h-4 absolute top-6 left-[43%]`}
+                      ></div>
+                    </div>
                   </div>
+                )}
+                <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
+                  <span>0</span>
+                  <span>10</span>
+                  <span>20</span>
+                  <span>30</span>
+                  <span>40</span>
+                  <span>50</span>
+                  <span>60</span>
+                  <span>70</span>
+                  <span>80</span>
+                  <span>90</span>
+                  <span>100</span>
                 </div>
-              )}
-              <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
-                <span>0</span>
-                <span>10</span>
-                <span>20</span>
-                <span>30</span>
-                <span>40</span>
-                <span>50</span>
-                <span>60</span>
-                <span>70</span>
-                <span>80</span>
-                <span>90</span>
-                <span>100</span>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">Loading...</div>
+          )}
         </div>
 
         <div className="mt-4 p-4 bg-white border-t-2 shadow-md">
@@ -754,7 +759,8 @@ const {socket,myActiveFriends} = useSocket()
                     className="mt-4 bg-gray-100 p-4 rounded-lg border"
                   >
                     <div className="relative rounded-full bg-black w-fit mx-auto">
-                      { myActiveFriends && myActiveFriends?.some(O=> O === item._id) ? (
+                      {myActiveFriends &&
+                      myActiveFriends?.some((O) => O === item._id) ? (
                         <div className="w-5 h-5 border-2 border-white bg-green-500 absolute rounded-full right-10 bottom-1"></div>
                       ) : (
                         <div className="w-5 h-5 border-2 border-white bg-gray-400 absolute rounded-full right-10 bottom-1"></div>
@@ -783,16 +789,17 @@ const {socket,myActiveFriends} = useSocket()
                           View Details
                         </h2>
                       </a>
-                      { myActiveFriends && myActiveFriends?.some(O=> O === item._id) && (
-                        <h2
-                          onClick={() => {
-                            inviteYourFriend(item._id);
-                          }}
-                          className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
-                        >
-                          Invite
-                        </h2>
-                      )}
+                      {myActiveFriends &&
+                        myActiveFriends?.some((O) => O === item._id) && (
+                          <h2
+                            onClick={() => {
+                              inviteYourFriend(item._id);
+                            }}
+                            className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                          >
+                            Invite
+                          </h2>
+                        )}
                     </div>
                   </div>
                 ))}
