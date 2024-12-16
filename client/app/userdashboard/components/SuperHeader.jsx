@@ -24,8 +24,11 @@ const SuperHeader = () => {
   const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
-    profile: "",
+    profile: store.userInfo.profile,
+    balance:0
   });
+
+  console.log(me)
   useEffect(() => {
     async function fetchData() {
       try {
@@ -295,13 +298,13 @@ const SuperHeader = () => {
               <div className="relative">
                 <Profile profile={me.profile} myId={me.id} />
                  <div className="absolute w-full">
-                 {me.balance === 0 ? (
+                 {me?.balance === 0 ? (
                   <h2 className="text-center flex justify-center items-center gap-1">
                     0.00 <span className="font-bold text-[12px]">৳</span>{" "}
                   </h2>
                 ) : (
                   <h2 className="text-center text-gray-700">
-                    {me.balance.toFixed(2) + " ৳"}
+                    {me?.balance?.toFixed(2) + " ৳"}
                   </h2>
                 )}
                  </div>
