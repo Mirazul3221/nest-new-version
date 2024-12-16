@@ -113,8 +113,9 @@ export class NotificationService {
 
   ///////////////////////delete notification more than twenty//////////////////////////
   const notificationCount = await this.notificationModel.countDocuments({readerId:body.readerId})
-   if (notificationCount > 30) {
-     const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-30);
+  console.log(notificationCount)
+   if (notificationCount > 10) {
+     const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-10);
      const excessIds = excessNotification.map((notif)=>notif._id)
       await this.notificationModel.deleteMany({
         _id : { $in : excessIds }

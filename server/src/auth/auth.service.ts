@@ -88,7 +88,7 @@ export class AuthService {
   findSingleUser(id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid User!', 404);
-    return this.userModel.findById({ _id: id });
+    return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0, totalCountQuestions:0 });
   }
   //================================
   async findSingleUserByPublic(user) {
@@ -187,7 +187,7 @@ export class AuthService {
     //   if (user.key == 'level') {
     //    await this.userModel.findByIdAndUpdate(id,{status:user.value},{new:true})
     //   //  await this.userModel.findByIdAndUpdate(id,{balance:previousBalance + },{new:true})
-    //  }//
+    //  }////
   }
   //=================addLevel================
   async addLevel(user) {
@@ -380,7 +380,7 @@ export class AuthService {
    } else {
     targetUser?.totalCountQuestionsId.push(id)//
     await targetUser.save()
-      //=============UPDATE ENGLISH===============
+      //=============UPDATE ENGLISH=================
       if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
         totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
         await this.userModel.findByIdAndUpdate(_id, {
