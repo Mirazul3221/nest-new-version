@@ -20,6 +20,7 @@ import { GrDocumentText } from "react-icons/gr";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useStore } from "../global/DataProvider";
+import { myDetailsApi } from "./components/common";
 // import Image from "next/image";
 // import logo from "@/public/bcs-logo.png"
 // import { TextEditor } from './components/TextEditor';
@@ -29,9 +30,9 @@ const UserDashboard = () => {
     name: "",
     profile: "",
   });
-  
   const {dispatch,store} = useStore()
   const [show,setShow] = useState(false)
+  myDetailsApi(store.token)
   // useEffect(() => {
   //   async function fetchData() {
   //     try {

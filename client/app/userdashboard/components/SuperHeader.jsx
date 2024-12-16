@@ -29,19 +29,15 @@ const SuperHeader = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data } = await axios.get(`${baseurl}/auth/find`, {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        });
+        const myDetails =JSON.parse(localStorage.getItem('myDetails'))
         setMe({
-          id: data._id,
-          isOnline: data.isOnline,
-          name: data.name,
-          profile: data.profile,
-          balance: data.balance,
+          id: myDetails._id,
+          isOnline: myDetails.isOnline,
+          name: myDetails.name,
+          profile: myDetails.profile,
+          balance: myDetails.balance,
         });
-        localStorage.setItem("userId", data._id);
+        localStorage.setItem("userId", myDetails._id);
       } catch (error) {
         console.log(error);
       }
