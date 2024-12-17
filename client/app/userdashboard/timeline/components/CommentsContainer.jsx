@@ -146,7 +146,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
    <div
           className={`flex items-end gap-2`}
         >
-          <textarea
+          <textarea id='comment'
           className=' max-h-[20vh] duration-[2s] hidden_scroll overflow-auto'
             ref={messangerRef}
             value={message}

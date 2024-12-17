@@ -3,7 +3,6 @@ import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import axios from "axios";
-import moment from "moment";
 import "../components/likeButtonAnimation.css";
 import React, {
   useCallback,
@@ -25,6 +24,7 @@ import { useSocket } from "../../global/SocketProvider";
 import { HiOutlineFaceFrown } from "react-icons/hi2";
 import { imojis } from "../../components/imoji";
 import { BiCross } from "react-icons/bi";
+import { formatRelativeTime } from "./common";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
   const { socket } = useSocket();
@@ -102,7 +102,6 @@ const CommentBox = ({ question }) => {
         }
       );
       setOpen(false);
-      setMessage("");
       store.userInfo.id !== question.userId &&
         handleNotification("like-question");
     } catch (error) {
@@ -134,22 +133,7 @@ const CommentBox = ({ question }) => {
       setOpen(true);
     }, 100);
   }
-
-  function formatRelativeTime(timestamp) {
-    const now = moment(); // Current time
-    const createdAt = moment(timestamp); // Parse the createdAt timestamp
-    const duration = moment.duration(now.diff(createdAt)); // Calculate duration
-
-    if (duration.asMinutes() < 1) {
-      return `${Math.floor(duration.asSeconds())}s`; // Less than a minute, show in seconds
-    } else if (duration.asHours() < 1) {
-      return `${Math.floor(duration.asMinutes())}m`; // Less than an hour, show in minutes
-    } else if (duration.asDays() < 1) {
-      return `${Math.floor(duration.asHours())}h`; // Less than a day, show in hours
-    } else {
-      return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
-    }
-  }
+console.log(question)
   /////////////////////////////////////////////////////////////////////////////////
   return (
     <div className="relative">
@@ -237,14 +221,14 @@ const CommentBox = ({ question }) => {
         <div className="display_comments p-2">
           {comments.length > 0 && comments[0] !== undefined && (
             <div>
-              {
-                question.totalComments > 2 &&                <button
-                onClick={() => setOpenCommentsBox(true)}
-                className="underline"
-              >
-                View more comments
-              </button>
-              }
+              {question.totalComments > 2 && (
+                <button
+                  onClick={() => setOpenCommentsBox(true)}
+                  className="underline"
+                >
+                  View more comments
+                </button>
+              )}
               {openCommentsBox && (
                 <CommentsContainer
                   setOpenCommentsBox={setOpenCommentsBox}
@@ -307,8 +291,8 @@ const CommentBox = ({ question }) => {
               <RiSendPlaneLine
                 className="cursor-pointer"
                 color="black"
-                onClick={()=>{
-                  handleSendComment(), setHideImoji(false)
+                onClick={() => {
+                  handleSendComment(), setHideImoji(false);
                 }}
                 size={20}
               />
@@ -318,32 +302,37 @@ const CommentBox = ({ question }) => {
           </div>
           {hideImoji && (
             <div className="bg-white px-4 rounded-lg pb-4 border absolute bottom-12 shadow-lg right-0">
-              <span onClick={()=>setHideImoji(false)} className="absolute top-2 bg-slate-50 cursor-pointer right-3 rotate-45 p-1 rounded-full border"><BiCross/></span>
+              <span
+                onClick={() => setHideImoji(false)}
+                className="absolute top-2 bg-slate-50 cursor-pointer right-3 rotate-45 p-1 rounded-full border"
+              >
+                <BiCross />
+              </span>
               <h2 className="text-center font-bold py-2">Imoji corner</h2>
-           <div className="h-[25vh] overflow-y-auto">
-           {imojis.map((imj, i) => {
-                return (
-                  <div key={i} className="">
-                    <h3 className="text-gray-400 font-bold pb-[2px] mb-3 border-b">
-                      {imj.type}
-                    </h3>
-                    <div className="grid grid-cols-6 gap-1">
-                      {imj.obj.map((mg, i) => {
-                        return (
-                          <h2
-                            key={i}
-                            onClick={(e) => setMessage(message + mg)}
-                            className="p-1 duration-300 hover:bg-slate-200 hover:scale-110 hover:rotate-12 cursor-pointer rounded-full border"
-                          >
-                            {mg}
-                          </h2>
-                        );
-                      })}
+              <div className="h-[25vh] overflow-y-auto">
+                {imojis.map((imj, i) => {
+                  return (
+                    <div key={i} className="">
+                      <h3 className="text-gray-400 font-bold pb-[2px] mb-3 border-b">
+                        {imj.type}
+                      </h3>
+                      <div className="grid grid-cols-6 gap-1">
+                        {imj.obj.map((mg, i) => {
+                          return (
+                            <h2
+                              key={i}
+                              onClick={(e) => setMessage(message + mg)}
+                              className="p-1 duration-300 hover:bg-slate-200 hover:scale-110 hover:rotate-12 cursor-pointer rounded-full border"
+                            >
+                              {mg}
+                            </h2>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-           </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

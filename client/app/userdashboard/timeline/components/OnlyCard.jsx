@@ -5,6 +5,7 @@ import React, { useCallback } from 'react'
 import { GiCheckMark } from 'react-icons/gi';
 import { RxCross2 } from 'react-icons/rx';
 import { CountQuestionsCollection } from '../../global/common';
+import LikeCommentShare from './Like-comment-share';
 
 const OnlyCard = ({question}) => {
   const {store} = useStore()
@@ -197,6 +198,8 @@ const OnlyCard = ({question}) => {
         </div> */}
       </div>
     )}
+
+   <LikeCommentShare question={question}/>
   </div>
   )
 }

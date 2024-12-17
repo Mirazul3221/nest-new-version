@@ -116,6 +116,7 @@ export class UserquestionsService {
       userProfile: 1,
       __v: 1,
       comments: { $slice: ["$recentComments", 0, 2] }, // Limit to two comments
+      totalComments: { $size: '$recentComments' }, // Count the total number of comments
       // comments: { $reverseArray: { $slice: ["$recentComments", 0, 2] } }, // Reverse the array
     },
   },
