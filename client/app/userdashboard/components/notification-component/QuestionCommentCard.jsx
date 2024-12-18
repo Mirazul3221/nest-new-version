@@ -27,7 +27,7 @@ const QuestionCommentCard = ({ item }) => {
                 <span className="font-bold text-[#7305fa]">
                   {item?.message[0]?.requesterName}
                 </span> {' '}
-                comments as {`"${item?.message[0]?.Comment}"`} on your question {` "${item?.message[0]?.question}"`}
+                commented {`"${item?.message[0]?.Comment}"`} on your question {` "${item?.message[0]?.question}"`}
               </h2>
             </div>
           </div>
