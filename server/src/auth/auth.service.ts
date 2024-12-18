@@ -377,7 +377,6 @@ export class AuthService {
     return reader;
   }
   async questionCollecton(questions, req) {
-    console.log(questions)
     const { _id, totalCountQuestions } = req.user;
     const { status, subject,id } = questions;
    const targetUser = await this.userModel.findById(_id);

@@ -54,6 +54,7 @@ const AddQuestion = () => {
       );
       toast(data)
       setloading(false);
+      setQuestion('')
       setPrevExm('')
       setOption_01('')
       setOption_02('')
