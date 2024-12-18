@@ -49,7 +49,7 @@ const Page = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 1200 &&
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 1500 &&
         !isLoading
       ) {
         fetchChunkData();
