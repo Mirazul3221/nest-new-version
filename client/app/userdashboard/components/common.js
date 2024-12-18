@@ -8,7 +8,6 @@ export const myDetailsApi =  async (token)=>{
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data)
       localStorage.setItem('myDetails', JSON.stringify(data))
     } catch (error) {
       console.log(error);
@@ -16,7 +15,19 @@ export const myDetailsApi =  async (token)=>{
   }
 
 
+export const profileApi =async (token,id) => {
+  try {
+    const { data } = await axios.get(`${baseurl}/auth/user/find-user-profile-by-id/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    return data
+  } catch (error) {
+    console.log(error);
+  }
+}
 // export const notificationApi = async (token) => {
 //     try {
 //       const { data } = await axios.get(`${baseurl}/notification/find`, {

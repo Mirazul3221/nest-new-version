@@ -52,10 +52,17 @@ const AddQuestion = () => {
           },
         }
       );
-      toast('Question added')
+      toast(data)
       setloading(false);
+      setPrevExm('')
+      setOption_01('')
+      setOption_02('')
+      setOption_03('')
+      setOption_04('')
+      setRightAns('')
+      setContent('')
     } catch (error) {
-      toast.error('Server error')
+      toast.error(error.response.data)
       setloading(false);
       console.log(error);
     }

@@ -97,6 +97,12 @@ export class AuthController {
 async profile (){
   return await this.authService.profile()
 }
+
+@UseGuards(AuthGuard())
+@Get('user/find-user-profile-by-id/:id')
+async userProfile (@Param('id') id){
+  return await this.authService.userProfile(id)
+}
 //======================================
 @Get('get-profile/:id')
 async userProfileAndName (@Param('id') id){

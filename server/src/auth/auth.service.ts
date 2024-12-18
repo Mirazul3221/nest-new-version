@@ -305,6 +305,12 @@ export class AuthService {
   }
 
   //========profile update==============
+  async userProfile(id) {
+    const user = await this.userModel.findById(id)
+    console.log()
+    return user.profile;
+  }
+  //========profile update==============
   async profile() {
     return 'Profile Update Done';
   }

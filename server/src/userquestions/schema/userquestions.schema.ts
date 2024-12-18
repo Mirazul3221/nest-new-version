@@ -9,8 +9,6 @@ export class UsersQuestion extends Document {
     userId: string; // Author of the post
     @Prop({ type: String, required: true })
     userName: string; // Author of the post
-    @Prop({ type: String, required: true })
-    userProfile: string; // Author of the post
     @Prop({type:String,required:true})
     subject : string
     @Prop({type:String,required:true})

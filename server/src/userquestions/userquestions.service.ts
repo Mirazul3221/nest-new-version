@@ -21,11 +21,17 @@ export class UserquestionsService {
   }
   const date = new Date().getTime()
   const slug = createSlug('bcs-preparation-online-'+subject + '-' + chapter +'-'+question +'-'+ date)
-  const fullSchema = {slug,userId:user._id,userName:user.name,userProfile:user.profile,...createUserquestionDto}
+  const fullSchema = {slug,userId:user._id,userName:user.name,...createUserquestionDto}
   const existedQuestion = await this.QuestionModel.find({question})
-  if (existedQuestion[0]?.question === question && existedQuestion[0]?.chapter === chapter && existedQuestion[0]?.prevExam === prevExam && existedQuestion[0]?.content == content
-  ) {
-    throw new ConflictException("This question already exist, please add new one")
+  
+  const hasExistingQuestion = existedQuestion.some(ex => ex.question == question)
+  const hasExistingChapter = existedQuestion.some(ex => ex.chapter == chapter)
+  const hasExistingPrevExam = existedQuestion.some(ex => ex.prevExam == prevExam)
+  const hasExistingContent = existedQuestion.some(ex => ex.content == content)
+
+
+  if (hasExistingQuestion && hasExistingChapter && hasExistingPrevExam && hasExistingContent) {
+    throw new ConflictException("This question already exist, please add a new one")
   } else {
     const createQuestion = await new this.QuestionModel(fullSchema)
     await createQuestion.save()

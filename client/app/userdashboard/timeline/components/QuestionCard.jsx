@@ -14,10 +14,13 @@ import EditQuestion from "../create-post/components/EditQuestion";
 import ProfileCard from "./ProfileCard";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { CountQuestionsCollection } from "../../global/common";
+import { useEffect } from "react";
+import { profileApi } from "../../components/common";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
+  const [myProfile, setMyProfile] = useState("");
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
   const [profileContainer, setProfileContainer] = useState(false);
@@ -30,6 +33,14 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     return formattedDate;
   };
 
+  const fetChProfile = async () => {
+    const res = await profileApi(store.token, myQuestion.userId);
+    setMyProfile(res);
+  };
+
+  useEffect(() => {
+    fetChProfile();
+  }, []);
   const checkAns = useCallback((e, ans, question) => {
     /////////////////////////////////////////////////////////////////////////////////////////
     // const mainTerget = questionsData[index].rightAns;
@@ -53,14 +64,16 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     if (e.target.classList.contains("__target_option__")) {
       if (getAtterIntoNumber == question.rightAns) {
         if (ans === question.rightAns) {
-          store.userInfo.id !== question.userId && CountQuestionsCollection('right',question,store.token)
+          store.userInfo.id !== question.userId &&
+            CountQuestionsCollection("right", question, store.token);
           e.target.parentElement.classList.add("bg-green-100");
           e.target.parentElement.classList.add("border-green-500");
           e.target.parentElement.children[1].children[1].classList.remove(
             "hidden"
           );
         } else {
-          store.userInfo.id !== question.userId && CountQuestionsCollection('wrong',question,store.token)
+          store.userInfo.id !== question.userId &&
+            CountQuestionsCollection("wrong", question, store.token);
           const tergetDescBox =
             e.target.parentElement.parentElement.parentElement.parentElement
               .children[2];
@@ -112,13 +125,17 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
               <div className="">
-                <img
-                  onMouseEnter={() => setProfileContainer(true)}
-                  onMouseLeave={() => setProfileContainer(false)}
-                  className="w-10"
-                  src={myQuestion.userProfile}
-                  alt={myQuestion.userName}
-                />
+                {myProfile !== "" ? (
+                  <img
+                    onMouseEnter={() => setProfileContainer(true)}
+                    onMouseLeave={() => setProfileContainer(false)}
+                    className="w-10"
+                    src={myProfile}
+                    alt={myQuestion.userName}
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
+                )}
                 {profileContainer &&
                   store.userInfo.id !== myQuestion.userId && (
                     <div
@@ -158,7 +175,6 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                         target="_blank"
                         href={`${viewurl}/userdashboard/timeline/${myQuestion.slug}`}
                       >
-                     
                         <RxOpenInNewWindow /> <span>Open in a new tab</span>
                       </a>{" "}
                     </div>
