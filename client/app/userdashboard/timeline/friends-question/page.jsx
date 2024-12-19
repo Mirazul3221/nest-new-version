@@ -75,7 +75,11 @@ const Page = () => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
   };
-  const myDetails =JSON.parse(localStorage.getItem('myDetails'))
+
+  const [myDetails,setMyDetails] = useState()
+   useEffect(() => {
+    setMyDetails(JSON.parse(localStorage.getItem('myDetails')))
+   }, []);
   return (
     <div>
       <ProtectRoute>
@@ -86,7 +90,7 @@ const Page = () => {
           <div className="w-3/12 h-[60vh] sticky top-24">
             <div className=" text-gray-700">
               <a className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center" href="https://bcs-prep.vercel.app/userdashboard/myprofile">
-              <img className="w-10" src={myDetails.profile} alt={store.userInfo.name}/>
+              <img className="w-10" src={myDetails?.profile} alt={store.userInfo.name}/>
               <h2 className="font-bold">{store.userInfo.name}</h2></a>
               <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
                 <BsCardText/> About
