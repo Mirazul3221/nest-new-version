@@ -147,32 +147,6 @@ const Page = () => {
       setLink(false);
     } catch (error) {}
   };
-  //   useEffect(() => {
-  //     window.addEventListener("click", (e) => {
-  //       if (e.target.classList.contains("updateTitle")) {
-  //         setControlTitle(true);
-  //       } else {
-  //         setControlTitle(false);
-  //         if (controltitle) {
-  //           insertTitle()
-  //         }
-  //       }
-  //       if (e.target.classList.contains("updateDesc")) {
-  //         setControlDesc(true);
-  //       } else {
-  //         setControlDesc(false);
-  //       }
-  //     }); //
-  //   }, [updateTitle,controltitle]);//
-  // console.log(test)
-  //================================================
-  //================ LEVEL SECTION =================
-  //================================================
-  // if (1000 <= allQuestions === 5000 && percentage >= 60) {
-  //   levelUp = level_02
-  // } else if (5000 <= allQuestions == 10000 && percentage >= 60) {
-  //   levelUp = level_03
-  // }
   const popup = () => {
     setOpenModel(true);
   };
@@ -324,8 +298,9 @@ const Page = () => {
 
   const [randNum,setRandNum] = useState()
   useEffect(() => {
-    setRandNum(Math.floor(Math.random() * 15))
+    setRandNum(Math.floor(Math.random() * 15) + 1)
   }, []);
+ console.log(randNum)
   return (
     <ProtectRoute>
               <div className="md:px-10 px-4 md:py-5 py-2">
@@ -335,7 +310,7 @@ const Page = () => {
             <img className="rounded-t-5xl" src={`/cover-photo/background-${randNum}.jpg`}  alt="" />
         </div>
           <div className="md:w-10/12 md:-translate-y-20 md:border md:rounded-t-2xl mx-auto bg-white shadow-md px-5 pb-5">
-          <div className="md:-translate-y-[8%] -translate-y-[4%]">
+          <div className="md:-translate-y-[7%] -translate-y-[4%]">
           <div>
             <div className="---profile---">
               <div className="md:w-[200px] w-[120px] md:mx-auto relative">
@@ -370,16 +345,16 @@ const Page = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="absolute w-[200px] h-[200px] bg-white left-0 border-4 border-white rounded-full flex justify-center items-center overflow-hidden">
+                  <div className="absolute md:-translate-y-[45%] w-[200px] h-[200px] bg-white left-0 border-4 border-white rounded-full flex justify-center items-center overflow-hidden">
                     <Image src={waitingImg} alt="loading image" />
                   </div>
                 )}
               </div>
 
-              <h1 className="text-center text-gray-700 text-2xl font-semibold mt-3">
+              <h1 className="text-center text-2xl text-gray-700 md:text-5xl font-semibold mt-8">
                 {userDetails.name}
               </h1>
-              <div className="py-2 mx-auto w-3/12">
+              <div className="py-2 mx-auto md:w-3/12">
                 {controltitle ? (
                   <>
                     <input
@@ -412,7 +387,7 @@ const Page = () => {
                   </>
                 ) : (
                   <>
-                    <div className="relative w-full group">
+                    <div className="relative w-full text-2xl group">
                       <h2
                         className={`updateTitle ${
                           userDetails.title?.length <= 30
@@ -439,7 +414,7 @@ const Page = () => {
             </div>
             {userDetails && (
               <div>
-                <div className="flex gap-2 items-center mt-2">
+                <div className="flex gap-2 items-center mt-10">
                   <div className="flex">Online Status : </div>
                   <div className="border border-green-500 flex gap-1 justify-center items-center py-1 px-5 rounded-full">
                     <div className="h-3 w-3 bg-green-500 rounded-full"></div>{" "}
@@ -471,7 +446,8 @@ const Page = () => {
                         name="text"
                         id=""
                       ></textarea>
-                      <div className="flex justify-between items-center gap-4 mt-2">
+                       <div className="md:flex justify-end pr-4">
+                       <div className="flex justify-between items-center md:w-2/12 gap-4 mt-2">
                         <div
                           onClick={() => setControlDesc(false)}
                           className="updateTitle w-1/2 cursor-pointer py-1 px-6 text-center bg-gray-200 rounded-md"
@@ -487,6 +463,7 @@ const Page = () => {
                           Update
                         </div>
                       </div>
+                       </div>
                     </>
                   ) : (
                     <>
@@ -563,7 +540,7 @@ const Page = () => {
                           type="text"
                           placeholder="Put your facebook profile link"
                         />
-                        <div className="flex justify-between items-center gap-4 mt-2">
+                        <div className="flex md:w-2/12 justify-between items-center gap-4 mt-2">
                           <div
                             onClick={() => setLink(false)}
                             className=" w-1/2 cursor-pointer text-center py-1 px-6 bg-gray-200 rounded-md"

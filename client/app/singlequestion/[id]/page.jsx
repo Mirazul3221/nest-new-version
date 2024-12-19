@@ -99,7 +99,7 @@ const Page = () => {
     targetBox.classList.add("h-auto");
     targetBox.classList.add("max-h-[500vh]");
     targetBox.classList.add("duration-1000");
-  };
+  };//
   return (
     <>
       <div className="py-2 min-h-screen">

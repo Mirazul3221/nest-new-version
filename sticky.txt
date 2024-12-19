@@ -1,0 +1,13 @@
+            <div className=" md:w-6/12">
+            {questions?.map((question, i) => {
+            return (
+              <div key={i} className="mx-auto">
+                <QuestionCard
+                  questionsAfterDelete={questionsAfterDelete}
+                  myQuestion={question}
+                />
+              </div>
+            );
+          })}
+          {isLoading && <div className="flex bg-white justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
+            </div>

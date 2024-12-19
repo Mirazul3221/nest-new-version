@@ -8,6 +8,11 @@ import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
 import Image from "next/image";
 import { useStore } from "@/app/global/DataProvider";
+import Footer from "@/app/components/Footer";
+import { IoMdSettings } from "react-icons/io";
+import { FiFileText } from "react-icons/fi";
+import { LuLogOut } from "react-icons/lu";
+import { BsCardText } from "react-icons/bs";
 const Page = () => {
     const {dispatch,store} = useStore()
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -70,6 +75,7 @@ const Page = () => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
   };
+  const myDetails =JSON.parse(localStorage.getItem('myDetails'))
   return (
     <div>
       <ProtectRoute>
@@ -77,12 +83,23 @@ const Page = () => {
           <SuperHeader />
         </div>
         <div className="md:px-10 flex md:pt-4 gap-4 bg-gray-50">
-          <div className="w-3/12">
-            <div className="">
-              <div className="">About</div>
-              <div className="">Bcs Question</div>
-              <div className="">Setting</div>
-              <div className="">Log out</div>
+          <div className="w-3/12 h-[60vh] sticky top-24">
+            <div className=" text-gray-700">
+              <a className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center" href="https://bcs-prep.vercel.app/userdashboard/myprofile">
+              <img className="w-10" src={myDetails.profile} alt={store.userInfo.name}/>
+              <h2 className="font-bold">{store.userInfo.name}</h2></a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <BsCardText/> About
+              </a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <IoMdSettings/> Setting
+              </a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <FiFileText/> Bcs Question
+              </a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <LuLogOut/> Log out
+              </a>
             </div>
           </div>
             <div className=" md:w-6/12">
@@ -100,6 +117,8 @@ const Page = () => {
             </div>
             <div className="w-3/12">Right site</div>
         </div>
+
+        <Footer/>
       </ProtectRoute>
     </div>
   );
