@@ -67,7 +67,7 @@ export class UserquestionsService {
   
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  async findMyAllQuestions(id) {
+  async findMyAllQuestions(id,skip) {
   const filteredQuestions = await this.QuestionModel.aggregate([
     { $match: { userId: id.toString() } },
 
@@ -75,6 +75,12 @@ export class UserquestionsService {
 
     // Sort the comments in descending order by their `createdAt`
     { $sort: { "comments.createdAt": -1 } },
+    {
+      $skip: +skip, // Skip the required number of documents
+    },
+    {
+      $limit: 10, // Limit the number of documents
+    },
  // Group back all fields and collect the sorted comments
  
  {
@@ -101,6 +107,7 @@ export class UserquestionsService {
     recentComments: { $push: "$comments" }, // Collect all sorted comments
   }},
   { $sort: { createdAt: -1 } },
+
   {
     $project: {
       chapter: 1,

@@ -1,6 +1,6 @@
 "use client";
 import ProtectRoute from "@/app/global/ProtectRoute";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import Footer from "@/app/components/Footer";
 import QuestionCard from "../components/QuestionCard";
@@ -9,24 +9,58 @@ import axios from "axios";
 import { baseurl } from "@/app/config";
 const Page = () => {
   const { store } = useContext(storeContext);
-  const [allQuestions, setAllQuestions] = useState();
-  const fetchMyData = async () => {
+  const [allQuestions, setAllQuestions] = useState([]);
+   const [page, setPage] = useState(0);
+     const [isLoading, setIsLoading] = useState(false); // Loading state
+       const [hasMore, setHasMore] = useState(true);
+
+       
+  const fetchMyData = useCallback(async () => {
+    if (isLoading || !hasMore) return; // Avoid duplicate requests
+    setIsLoading(true);
     try {
-      const { data } = await axios.get(`${baseurl}/userquestions/myquestions`, {
+      const { data } = await axios.get(`${baseurl}/userquestions/myquestions?skip=${page * 10}`, {
         headers: {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setAllQuestions(data);
+
+      if (data.length === 0) {
+        setHasMore(false); // No more comments to fetch
+      } else {
+        setAllQuestions(prev => [...prev,...data]);
+        setPage((prev) => prev + 1); // Increment page
+      }
     } catch (error) {
       console.log(error);
+    }finally {
+      setIsLoading(false);
     }
-  };
+  },[page, isLoading, hasMore]);
 
   useEffect(() => {
     fetchMyData();
   }, []);
-  console.log(allQuestions)
+
+
+
+
+  // Infinite Scroll Event Listener//
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+        !isLoading
+      ) {
+        fetchMyData();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll); // Cleanup
+  }, [fetchMyData, isLoading]);
+
+
   const questionsAfterDelete =(question)=>{
     const filteredQuestions = allQuestions?.filter(q=>q._id !== question._id)
      setAllQuestions(filteredQuestions)

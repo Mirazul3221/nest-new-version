@@ -14,7 +14,7 @@ const Page = () => {
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
-
+//
   const fetchChunkData = useCallback(async () => {
     if (isLoading || !hasMore) return; // Avoid duplicate requests
     setIsLoading(true);
@@ -76,10 +76,19 @@ const Page = () => {
         <div className="md:px-10 px-4 py-3">
           <SuperHeader />
         </div>
-        <div className="md:px-10 bg-gray-50">
-          {questions?.map((question, i) => {
+        <div className="md:px-10 flex md:pt-4 gap-4 bg-gray-50">
+          <div className="w-3/12">
+            <div className="">
+              <div className="">About</div>
+              <div className="">Bcs Question</div>
+              <div className="">Setting</div>
+              <div className="">Log out</div>
+            </div>
+          </div>
+            <div className=" md:w-6/12">
+            {questions?.map((question, i) => {
             return (
-              <div key={i} className="md:pt-4 md:w-1/2 mx-auto">
+              <div key={i} className="mx-auto">
                 <QuestionCard
                   questionsAfterDelete={questionsAfterDelete}
                   myQuestion={question}
@@ -88,6 +97,8 @@ const Page = () => {
             );
           })}
           {isLoading && <div className="flex bg-white justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
+            </div>
+            <div className="w-3/12">Right site</div>
         </div>
       </ProtectRoute>
     </div>

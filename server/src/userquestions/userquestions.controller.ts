@@ -58,9 +58,10 @@ async deleteQuestion(@Param("id") id) {
 
   @UseGuards(AuthGuard())
   @Get('myquestions')
-  async findMyAllQuestions(@Req() req) {
+  async findMyAllQuestions(@Query('skip') skip : number, @Req() req) {
     const id = req.user._id
-    return await this.userquestionsService.findMyAllQuestions(id);
+    console.log(skip)
+    return await this.userquestionsService.findMyAllQuestions(id,skip);
   }
 
 
