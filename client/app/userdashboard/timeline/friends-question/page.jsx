@@ -87,7 +87,7 @@ const Page = () => {
           <SuperHeader />
         </div>
         <div className="md:px-10 flex md:pt-4 gap-4 bg-gray-50">
-          <div className="w-3/12 h-[60vh] sticky top-24">
+          <div className="w-3/12 pl-6 h-[60vh] sticky top-24">
             <div className=" text-gray-700">
               <a className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center" href="https://bcs-prep.vercel.app/userdashboard/myprofile">
               <img className="w-10" src={myDetails?.profile} alt={store.userInfo.name}/>

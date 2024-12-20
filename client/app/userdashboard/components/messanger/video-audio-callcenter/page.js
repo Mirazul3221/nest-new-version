@@ -352,6 +352,7 @@ const Page = () => {
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
+      console.log(event.candidate)
       if (event.candidate) {
         await socket?.emit("icecandidate", {
           me: myId,
