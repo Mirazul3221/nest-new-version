@@ -112,18 +112,19 @@ const Page = () => {
     if (typeof window !== undefined) {
       const configuration = {
         iceServers: [
-          // STUN server
+          { urls: ["stun:bn-turn1.xirsys.com"] },
           {
-            urls: "stun:stun.l.google.com:19302", // Replace with your STUN server address
-          },
-          {
-            urls: "stun:global.stun.twilio.com:3478", // Replace with your STUN server address
-          },
-          // TURN server with credentials
-          {
-            urls: "turn:relay1.expressturn.com:3478", // Your TURN server
-            username: "efNFMA7S3AXKL4C9FV", // Your username
-            credential: "qHpAu3uMlVCiUAlR", // Your password
+            username:
+              "u6n-PrwG4CFv-5mcQ-zmck8qMTaOFu9WbjBVQ9x3zTepTOp_ODSWG6X9xfRkSsiiAAAAAGdl3wd0b3JpcTMyMjE=",
+            credential: "e3c6e8e0-bf17-11ef-8ded-0242ac140004",
+            urls: [
+              "turn:bn-turn1.xirsys.com:80?transport=udp",
+              "turn:bn-turn1.xirsys.com:3478?transport=udp",
+              "turn:bn-turn1.xirsys.com:80?transport=tcp",
+              "turn:bn-turn1.xirsys.com:3478?transport=tcp",
+              "turns:bn-turn1.xirsys.com:443?transport=tcp",
+              "turns:bn-turn1.xirsys.com:5349?transport=tcp",
+            ],
           },
         ],
       };
@@ -316,10 +317,10 @@ const Page = () => {
       sender[1].replaceTrack(videotrack);
     }
     if (perviousAudioTracks.enabled === false) {
-      audiotrack.enabled = false
+      audiotrack.enabled = false;
     }
     if (perviousVideoTracks.enabled === false) {
-      videotrack.enabled = false
+      videotrack.enabled = false;
     }
     myStream.current = stm;
     setToggleCam(false);
@@ -340,10 +341,10 @@ const Page = () => {
     }
 
     if (perviousAudioTracks.enabled === false) {
-      audiotrack.enabled = false
+      audiotrack.enabled = false;
     }
     if (perviousVideoTracks.enabled === false) {
-      videotrack.enabled = false
+      videotrack.enabled = false;
     }
     myStream.current = stm;
     setToggleCam(true);
@@ -352,7 +353,7 @@ const Page = () => {
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
-      console.log(event.candidate)
+      console.log(event.candidate);
       if (event.candidate) {
         await socket?.emit("icecandidate", {
           me: myId,
@@ -365,7 +366,7 @@ const Page = () => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const startCall = async () => {
-    const user = JSON.parse(localStorage.getItem('myDetails'))
+    const user = JSON.parse(localStorage.getItem("myDetails"));
     if (callInv === "call-start") {
       await socket?.emit("signal-call", {
         senderId: user._id,
