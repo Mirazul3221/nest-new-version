@@ -121,11 +121,11 @@ const UserDashboard = () => {
         <div className="bg-white border-b px-10 py-4">
           <SuperHeader/>
           <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3 px-4">
-            <h2 className="md:text-2xl text-md font-semibold text-gray-500 text-balance">
+            <h2 className="font-title md:text-2xl text-md font-semibold text-gray-500 text-balance">
               Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
               Welcome back
             </h2>
-           <div className="md:flex items-center gap-4">
+           <div className="md:flex items-center gap-4 font-title">
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/friends-question">{`Questions added by friends`}</a></h2>
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/create-post">Add a post</a></h2>
             <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/my-questions">Your post</a> </h2>

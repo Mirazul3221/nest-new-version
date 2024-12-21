@@ -13,6 +13,9 @@ import { IoMdSettings } from "react-icons/io";
 import { FiFileText } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
 import { BsCardText } from "react-icons/bs";
+import VerticleBanner from "@/app/adsterra/VerticleBanner";
+import MobileBanner from "@/app/adsterra/MobileBanner320";
+import { useRouter } from "next/navigation";
 const Page = () => {
     const {dispatch,store} = useStore()
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -80,14 +83,20 @@ const Page = () => {
    useEffect(() => {
     setMyDetails(JSON.parse(localStorage.getItem('myDetails')))
    }, []);
+
+   const route = useRouter();
+   const logout = () => {
+     dispatch({ type: "logout" });
+     route.push("/login");
+   };
   return (
     <div>
       <ProtectRoute>
         <div className="md:px-10 px-4 py-3">
           <SuperHeader />
         </div>
-        <div className="md:px-10 flex md:pt-4 gap-4 bg-gray-50">
-          <div className="w-3/12 pl-6 h-[60vh] sticky top-24">
+        <div className="md:px-6 flex md:pt-4 gap-4 bg-gray-50">
+          <div className="w-3/12 h-[60vh] sticky hidden md:block top-24">
             <div className=" text-gray-700">
               <a className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center" href="https://bcs-prep.vercel.app/userdashboard/myprofile">
               <img className="w-10" src={myDetails?.profile} alt={store.userInfo.name}/>
@@ -96,14 +105,14 @@ const Page = () => {
                 <BsCardText/> About
               </a>
               <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <IoMdSettings/> Setting
-              </a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
                 <FiFileText/> Bcs Question
               </a>
               <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <LuLogOut/> Log out
+                <IoMdSettings/> Setting
               </a>
+              <div onClick={logout} className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <LuLogOut/> Log out
+              </div>
             </div>
           </div>
             <div className=" md:w-6/12">
@@ -119,7 +128,14 @@ const Page = () => {
           })}
           {isLoading && <div className="flex bg-white justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
             </div>
-            <div className="w-3/12">Right site</div>
+            <div className="w-3/12 hidden md:block">
+            <div className="">
+               <VerticleBanner/>
+            </div>
+            {/* <div className="">
+               <MobileBanner/>
+            </div> */}
+            </div>
         </div>
 
         <Footer/>

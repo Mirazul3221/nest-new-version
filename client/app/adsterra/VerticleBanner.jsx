@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
-export default function MobileBanner() {
+export default function VerticleBanner() {
     const banner = useRef()
 
-    const atOptions = {
-		'key' : '2dbd91b79084ba024a268a8debd1c11c',
+	const atOptions = {
+		'key' : '0d3e5bc30b579ee2841b922929a369db',
 		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
+		'height' : 600,
+		'width' : 160,
 		'params' : {}
 	};
 
@@ -23,6 +23,6 @@ export default function MobileBanner() {
     }
 }, [banner])
 
-    return <div className="mx-2 my-5 justify-center items-center text-white text-center" ref={banner}></div>
+    return <div className="mx-2 my-5 border justify-center items-center text-white text-center" ref={banner}></div>
 }
 

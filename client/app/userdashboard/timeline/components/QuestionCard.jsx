@@ -118,6 +118,8 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       console.log(error);
     }
   };
+
+  const randomCount = Math.floor(Math.random() * 360 + 1)
   return (
     <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border">
       {myQuestion && (
@@ -134,7 +136,11 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
                     alt={myQuestion.userName}
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
+                  <div style={{background:`hsl(${randomCount}, 65%, 40%)`}} className="w-10 h-10 text-white flex justify-center items-center uppercase text-2xl rounded-full">
+                    {
+                    myQuestion.userName.split('')[0]
+                    }
+                  </div>
                 )}
                 {profileContainer &&
                   store.userInfo.id !== myQuestion.userId && (

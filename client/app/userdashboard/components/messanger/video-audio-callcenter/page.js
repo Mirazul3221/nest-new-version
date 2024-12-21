@@ -112,6 +112,9 @@ const Page = () => {
     if (typeof window !== undefined) {
       const configuration = {
         iceServers: [
+          {
+            urls: ["stun:stun.l.google.com:19302"]
+          },
           { urls: ["stun:bn-turn1.xirsys.com"] },
           {
             username:

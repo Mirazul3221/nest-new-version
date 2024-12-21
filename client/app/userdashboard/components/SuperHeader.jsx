@@ -165,7 +165,7 @@ const SuperHeader = () => {
   };
  }, []);
   return (
-    <div className={`${header ? 'fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-20 py-2' : ''}`}>
+    <div className={`font-title ${header ? 'fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-10 py-2' : ''}`}>
       <div className="flex justify-between items-center">
         <div className="md:w-20 w-16">
           <Link href="/">

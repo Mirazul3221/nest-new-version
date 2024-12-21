@@ -21,5 +21,5 @@ export default function BannerMobile1({key,format="iframe",height,width,}) {
     }
 }, [banner])
 
-    return <div className="mx-2 my-5 border border-gray-200 justify-center items-center text-white text-center" ref={banner}></div>
+    return <div className="mx-2 my-5 justify-center items-center text-white text-center" ref={banner}></div>
 }
