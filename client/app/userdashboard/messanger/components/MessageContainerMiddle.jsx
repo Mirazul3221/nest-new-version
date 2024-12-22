@@ -233,7 +233,7 @@ const Middle = ({ id, userDetails }) => {
                           {formatetime(msg?.createdAt)}
                         </p>
                       )}
-                      <div className="flex justify-start">
+                      <div className="flex justify-start items-center gap-3 group">
                         <h2
                           className={`text-right max-w-[60%] w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
                             messageBlog.length === 1
@@ -252,6 +252,11 @@ const Middle = ({ id, userDetails }) => {
                         >
                           {msg?.message}
                         </h2>
+                        <div className="hidden group-hover:flex gap-4 text-gray-700">  
+                        <GrEmoji size={20} /> 
+                        <BsReply size={20} />
+                      <BsThreeDotsVertical size={20} />
+                      </div>
                       </div>
                       {messageBlog.indexOf(msg) === messageBlog.length - 1 && (
                         <div className="profile w-10 ">
