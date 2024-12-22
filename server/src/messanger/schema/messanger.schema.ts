@@ -3,7 +3,7 @@ import mongoose, { Document } from "mongoose";
 @Schema({
     timestamps: true,
   })
-  
+
 export class Messanger extends Document {
    @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Reader',requiredPaths:true})
    senderId:mongoose.Schema.Types.ObjectId;
@@ -11,6 +11,10 @@ export class Messanger extends Document {
    receiverId:mongoose.Schema.Types.ObjectId
   @Prop({required:true})
   message:string
+  @Prop({type:String})
+  emoji:string
+  @Prop({type:String})
+  reply:string
   @Prop({required:true})
   seenMessage:boolean
 }

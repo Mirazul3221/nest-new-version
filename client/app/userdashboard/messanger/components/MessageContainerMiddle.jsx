@@ -17,6 +17,8 @@ import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d
 import Image from "next/image";
 import { BsReply, BsThreeDotsVertical } from "react-icons/bs";
 import { GrEmoji } from "react-icons/gr";
+import moment from "moment";
+import { RxCross2 } from "react-icons/rx";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -129,7 +131,57 @@ const Middle = ({ id, userDetails }) => {
       socket && socket.off("message-from");
     };
   }, [socket]);
-  console.log(typing)
+  const controllEmoji = (e,ctl,identifire) => {
+   if (identifire === 'me') {
+     e.target.parentElement.children[2].classList.add('-left-[150px]')
+   }
+   if (identifire === 'friend') {
+     e.target.parentElement.children[2].classList.add('-left-[90px]')
+   }
+
+    if(ctl == "add"){
+      e.target.parentElement.children[0].classList.add('hidden')
+      e.target.parentElement.children[1].classList.remove('hidden')
+      e.target.parentElement.children[2].classList.remove('hidden')
+    }
+    if(ctl == "remove"){
+      e.target.parentElement.children[0].classList.remove('hidden')
+      e.target.parentElement.children[1].classList.add('hidden')
+      e.target.parentElement.children[2].classList.add('hidden')
+    }
+    //  e.target.parentElement.children[1].classList.remove('hidden')
+  }
+  const emojies = ['❤️','😍','😭','😮','😡'];
+  const sendEmoji = async (e,msg,identifire)=>{
+    const emj = document.createElement('p');
+    e.target.parentElement.parentElement.children[2].classList.add('hidden')
+    emj.classList.add('-mt-5')
+    emj.classList.add('text-[12px]')
+    emj.classList.add('bg-white')
+    emj.classList.add('p-[1px]')
+    emj.classList.add('w-fit')
+    emj.classList.add('rounded-full')
+    emj.classList.add('border')
+    emj.classList.add('border-gray-400')
+   
+    if(identifire === 'me'){
+      if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].children.length <= 1) {
+        emj.textContent=  e.target.innerText
+        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].appendChild(emj); 
+       } else {
+        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].children[1].textContent = e.target.innerText
+      }
+    } else {
+      emj.classList.add('ml-auto')
+      if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].children.length <= 1) {
+        emj.textContent=  e.target.innerText
+        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].appendChild(emj); 
+       } else {
+        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].children[1].textContent = e.target.innerText
+      }
+    }
+
+  }
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -194,12 +246,31 @@ const Middle = ({ id, userDetails }) => {
                           {formatetime(msg?.createdAt)}
                         </p>
                       )}
-                      <div className="flex justify-end items-center gap-3 group">
-                      <div className="hidden group-hover:flex gap-4 text-gray-700">   
-                      <BsThreeDotsVertical size={20} />
-                      <BsReply size={20} />
-                      <GrEmoji size={20} />
-                      </div>
+                      <div className="flex relative justify-end items-center gap-3 group">
+                        <div className="hidden relative group-hover:block text-gray-700">
+                          <div className="flex gap-4 items-center">
+                            <BsThreeDotsVertical size={20} />
+                            <BsReply size={20} />
+                            <div className="group relative">
+                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','me')}} size={20} className="cursor-pointer" />
+                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="cursor-pointer hidden" />
+                            <div className="absolute z-50 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                              {
+                                emojies.map((em,i)=>{
+                                   return <span onClick={(e)=>{sendEmoji(e,msg,'me')}} key={i} className="px-1 cursor-pointer">{em}</span>
+                                })
+                              }
+                            </div>
+                            </div>
+                           
+                          </div>
+                          <div className="flex justify-end">
+                            <h4 className="text-[12px] bg-gray-50 px-2 rounded-full w-fit border block">
+                              {moment(msg?.createdAt).format("MM/DD/YY, HH:mm")}
+                            </h4>
+                          </div>
+                        </div>
+                        <div className="max-w-[60%] w-fit">
                         <h2
                           ref={scrollRef}
                           className={`${
@@ -207,7 +278,7 @@ const Middle = ({ id, userDetails }) => {
                             messageBlog.length > 1
                               ? "msg_anim "
                               : ""
-                          } text-right duration-500 max-w-[60%] w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                          } text-right duration-500 w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
                             messageBlog.length === 1
                               ? "rounded-[30px]"
                               : "rounded-l-[30px]"
@@ -224,6 +295,7 @@ const Middle = ({ id, userDetails }) => {
                         >
                           {msg?.message}
                         </h2>
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -234,8 +306,9 @@ const Middle = ({ id, userDetails }) => {
                         </p>
                       )}
                       <div className="flex justify-start items-center gap-3 group">
+                      <div className="max-w-[60%] w-fit">
                         <h2
-                          className={`text-right max-w-[60%] w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                          className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
                             messageBlog.length === 1
                               ? "rounded-[30px]"
                               : "rounded-r-[30px]"
@@ -252,15 +325,34 @@ const Middle = ({ id, userDetails }) => {
                         >
                           {msg?.message}
                         </h2>
-                        <div className="hidden group-hover:flex gap-4 text-gray-700">  
-                        <GrEmoji size={20} /> 
-                        <BsReply size={20} />
-                      <BsThreeDotsVertical size={20} />
-                      </div>
+                        </div>
+                        <div className="hidden group-hover:block text-gray-700">
+                          <div className="flex gap-4 items-center">
+                          <div className="group relative">
+                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','friend')}} size={20} className="cursor-pointer" />
+                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="cursor-pointer hidden" />
+                            <div className="absolute z-50 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                              {
+                                emojies.map((em,i)=>{
+                                   return <span onClick={(e)=>{sendEmoji(e,msg,'friend')}} key={i} className="px-1 cursor-pointer">{em}</span>
+                                })
+                              }
+                            </div>
+                            </div>
+                            <BsReply size={18} />
+                            <BsThreeDotsVertical size={18} />
+                          </div>
+                          <div className="flex justify-end">
+                            <h4 className="text-[12px] bg-gray-50 px-2 rounded-full w-fit border block">
+                              {moment(msg?.createdAt).format("MM/DD/YY, HH:mm")}
+                            </h4>
+                          </div>
+                        </div>
                       </div>
                       {messageBlog.indexOf(msg) === messageBlog.length - 1 && (
                         <div className="profile w-10 ">
-                          <img  ref={scrollRef}
+                          <img
+                            ref={scrollRef}
                             className="w-full bg-white p-[2px] z-50 rounded-full"
                             src={userDetails?.profile}
                             alt={userDetails?.name}
