@@ -15,6 +15,8 @@ import "./css/message-animation.css";
 import { useSocket } from "../../global/SocketProvider";
 import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
 import Image from "next/image";
+import { BsReply, BsThreeDotsVertical } from "react-icons/bs";
+import { GrEmoji } from "react-icons/gr";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -192,7 +194,12 @@ const Middle = ({ id, userDetails }) => {
                           {formatetime(msg?.createdAt)}
                         </p>
                       )}
-                      <div className="flex justify-end">
+                      <div className="flex justify-end items-center gap-3 group">
+                      <div className="hidden group-hover:flex gap-4 text-gray-700">   
+                      <BsThreeDotsVertical size={20} />
+                      <BsReply size={20} />
+                      <GrEmoji size={20} />
+                      </div>
                         <h2
                           ref={scrollRef}
                           className={`${

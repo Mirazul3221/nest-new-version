@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 @Schema({
     timestamps: true,
   })
+  
 export class Messanger extends Document {
    @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Reader',requiredPaths:true})
    senderId:mongoose.Schema.Types.ObjectId;

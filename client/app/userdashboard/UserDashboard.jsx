@@ -21,6 +21,7 @@ import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useStore } from "../global/DataProvider";
 import { myDetailsApi, profileApi } from "./components/common";
+import VerticleBanner from "../adsterra/VerticleBanner";
 // import Image from "next/image";
 // import logo from "@/public/bcs-logo.png"
 // import { TextEditor } from './components/TextEditor';
@@ -120,15 +121,15 @@ const UserDashboard = () => {
       <div className="min-h-screen max-w-screen overflow-hidden bg-gray-50">
         <div className="bg-white border-b px-10 py-4">
           <SuperHeader/>
-          <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3 px-4">
+          <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3">
             <h2 className="font-title md:text-2xl text-md font-semibold text-gray-500 text-balance">
               Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
               Welcome back
             </h2>
-           <div className="md:flex items-center gap-4 font-title">
-            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/friends-question">{`Questions added by friends`}</a></h2>
-            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/create-post">Add a post</a></h2>
-            <h2 className="text-md cursor-pointer font-semibold text-gray-500 text-balance"> <a href="./userdashboard/timeline/my-questions">Your post</a> </h2>
+           <div className="md:flex items-center gap-2 font-title">
+            <h2 className="text-md cursor-pointer font-semibold text-gray-200 text-balance bg-gray-700 duration-300 hover:bg-gray-900 py-1 px-4 rounded-md border"> <a href="./userdashboard/timeline/friends-question">{`Browse MCQ`}</a></h2>
+            <h2 className="text-md cursor-pointer font-semibold text-gray-200 text-balance bg-gray-700 duration-300 hover:bg-gray-900 py-1 px-4 rounded-md border"> <a href="./userdashboard/timeline/my-questions">Your MCQ</a> </h2>
+            <h2 className="text-md cursor-pointer font-semibold text-gray-200 text-balance bg-gray-700 duration-300 hover:bg-gray-900 py-1 px-4 rounded-md border"> <a href="./userdashboard/timeline/create-post">Add a MCQ</a></h2>
            </div>
           </div>
           {/* /////////////mobile Responsive///////////////// */}
@@ -142,19 +143,19 @@ const UserDashboard = () => {
             <a href="/userdashboard/timeline/friends-question">
                 <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
                 <GrDocumentText/>
-                 {"Friend's Questions"}
+                 {"Browse MCQ"}
                 </p>
               </a>
               <a href="/userdashboard/timeline/my-questions">
                 <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
                 <GrDocumentText/>
-                My Questions
+                My MCQ
                 </p>
               </a>
               <a href="/userdashboard/timeline/create-post">
                 <p className="flex items-center gap-1  bg-gray-50 mt-2 border border-gray-100 rounded-md w-fit py-1 px-3" >
                 <HiOutlineDocumentAdd/>
-                Add a Questions
+                Add a MCQ
                 </p>
               </a>
         </div>
@@ -221,6 +222,8 @@ const UserDashboard = () => {
         {" "}
         <Footer />
       </div>
+
+      <VerticleBanner/>
     </ProtectRoute>
   );
 };

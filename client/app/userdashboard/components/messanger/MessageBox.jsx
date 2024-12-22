@@ -44,7 +44,6 @@ const MessageBox = ({}) => {
     }
     loadmessage();
   }, []);
-  console.log(sortedMessages);
   return (
     <div className="absolute pl-2 top-20 shadow-2xl py-4 right-20 bg-white md:w-3/12 md:h-[80vh] border rounded-2xl z-50">
        <h2 className="text-2xl pl-4 mb-2">Chats</h2>
