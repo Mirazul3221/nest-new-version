@@ -155,6 +155,7 @@ const Middle = ({ id, userDetails }) => {
   const sendEmoji = async (e,msg,identifire)=>{
     const emj = document.createElement('p');
     e.target.parentElement.parentElement.children[2].classList.add('hidden')
+    emj.classList.add('emoji_container')
     emj.classList.add('-mt-5')
     emj.classList.add('text-[12px]')
     emj.classList.add('bg-white')
@@ -182,6 +183,15 @@ const Middle = ({ id, userDetails }) => {
     }
 
   }
+
+  useEffect(() => {
+  const allContainer = document.querySelectorAll('.emoji_container');
+     allContainer.length > 0 &&  allContainer?.forEach(cont => cont.remove())
+  const GrEmoji = document.querySelectorAll('.GrEmoji');
+  const RxCross2 = document.querySelectorAll('.RxCross2');
+  RxCross2 && RxCross2.forEach(c => c.classList.add('hidden'))
+  GrEmoji && GrEmoji.forEach(c => c.classList.remove('hidden'))
+  }, [id]);
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -252,8 +262,8 @@ const Middle = ({ id, userDetails }) => {
                             <BsThreeDotsVertical size={20} />
                             <BsReply size={20} />
                             <div className="group relative">
-                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','me')}} size={20} className="cursor-pointer" />
-                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="cursor-pointer hidden" />
+                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','me')}} size={20} className="GrEmoji cursor-pointer" />
+                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="RxCross2 cursor-pointer hidden" />
                             <div className="absolute z-50 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
                               {
                                 emojies.map((em,i)=>{
@@ -329,8 +339,8 @@ const Middle = ({ id, userDetails }) => {
                         <div className="hidden group-hover:block text-gray-700">
                           <div className="flex gap-4 items-center">
                           <div className="group relative">
-                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','friend')}} size={20} className="cursor-pointer" />
-                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="cursor-pointer hidden" />
+                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','friend')}} size={20} className="GrEmoji cursor-pointer" />
+                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="RxCross2 cursor-pointer hidden" />
                             <div className="absolute z-50 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
                               {
                                 emojies.map((em,i)=>{
