@@ -1,8 +1,7 @@
 "use client";
 import { baseurl } from "@/app/config";
-import storeContext from "@/app/global/createContex";
 import axios from "axios";
-import React, { useContext, useRef, useState } from "react";
+import React, {useRef, useState } from "react";
 import { useEffect } from "react";
 import { groupMessagesBysender } from "./group-message";
 import { useMessage } from "../../global/messageProvider";
@@ -19,15 +18,16 @@ import { BsReply, BsThreeDotsVertical } from "react-icons/bs";
 import { GrEmoji } from "react-icons/gr";
 import moment from "moment";
 import { RxCross2 } from "react-icons/rx";
+import { useStore } from "@/app/global/DataProvider";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
-  const { store } = useContext(storeContext);
-  const [shallowMessage, setShallowMessage] = useState([]);
+  const {store} = useStore()
   const { socket } = useSocket();
+  const [shallowMessage, setShallowMessage] = useState([]);
   useEffect(() => {
     async function fetchMessage() {
       try {
@@ -152,7 +152,19 @@ const Middle = ({ id, userDetails }) => {
     //  e.target.parentElement.children[1].classList.remove('hidden')
   }
   const emojies = ['❤️','😍','😭','😮','😡'];
+
+
   const sendEmoji = async (e,msg,identifire)=>{
+    try {
+      await axios.post(`${baseurl}/messanger/update-emoji-in-message`,{questionId:msg._id,senderId:store.userInfo.id, senderName:store.userInfo.name, senderProfile:store.userInfo.profile, emoji:e.target.innerText}, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
+    } catch (error) {console.log(error)}
+    socket && socket.emit('sendEmojiInMessage',{emoji:e.target.innerText, msg})
+    e.target.parentElement.parentElement.children[0].classList.remove('hidden')
+    e.target.parentElement.parentElement.children[1].classList.add('hidden')
     const emj = document.createElement('p');
     e.target.parentElement.parentElement.children[2].classList.add('hidden')
     emj.classList.add('emoji_container')
@@ -187,10 +199,6 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
   const allContainer = document.querySelectorAll('.emoji_container');
      allContainer.length > 0 &&  allContainer?.forEach(cont => cont.remove())
-  const GrEmoji = document.querySelectorAll('.GrEmoji');
-  const RxCross2 = document.querySelectorAll('.RxCross2');
-  RxCross2 && RxCross2.forEach(c => c.classList.add('hidden'))
-  GrEmoji && GrEmoji.forEach(c => c.classList.remove('hidden'))
   }, [id]);
   return (
     <div>
