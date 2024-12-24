@@ -366,7 +366,7 @@ console.log(messages)
                             >
                               {msg?.emoji?.map((emj, i) => {
                                 return (
-                                  <span className="text-[10px]">
+                                  <span key={i} className="text-[10px]">
                                     {emj.emoji}
                                   </span>
                                 );
