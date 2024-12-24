@@ -69,7 +69,6 @@ export class NotificationsGateway
       });
       //////////////////////////////////////////logi for new messanger/////////////////////////////
       client.on('message-to',(data)=>{
-        console.log(data)//
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
             await this.server.to(id).emit('message-from', data);
@@ -102,16 +101,14 @@ export class NotificationsGateway
 
       //////////////////////////////logic for emoji message send to friendMessage//////////////////////
       client.on('sendEmojiInMessage', async (data) => {
-        // if (this.socketUsers[data?.receiverId]?.length > 0) {
-        //   this.socketUsers[data?.receiverId]?.map(async (id) => {
-        //     await client.to(id).emit('getOpenMessageWindow', data.status);
-        //   });
-        // }
-        console.log(data)
+        if (this.socketUsers[data?.receiverId]?.length > 0) {
+          this.socketUsers[data?.receiverId]?.map(async (id) => {
+            await client.to(id).emit('sendEmojiInMessage', data);
+          });
+        }
       });
       /////////////////////////////Here is the logic for notification/////////////////////////////
       client.on('new-notification', async (data) => {
-        console.log('notif' , data)
         if (this.socketUsers[data]?.length > 0) {
           this.socketUsers[data]?.map(async (id) => {
             await this.server.to(id).emit('new-notification', 'new message');

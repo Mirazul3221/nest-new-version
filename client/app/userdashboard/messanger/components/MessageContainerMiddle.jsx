@@ -154,8 +154,15 @@ const Middle = ({ id, userDetails }) => {
   const emojies = ["❤️", "😍", "😭", "😮", "😡"];
 
   const sendEmoji = async (e, msg, identifire) => {
-    const emojiElements = {messageId: msg._id, senderId:store.userInfo.id, senderName: store.userInfo.name,senderProfile: store.userInfo.profile,emoji: e.target.innerText}
-    dispatch({type:'send-emoji', payload:emojiElements})
+    const emojiElements = {
+      messageId: msg._id,
+      senderId: store.userInfo.id,
+      receiverId:msg?.senderId,
+      senderName: store.userInfo.name,
+      senderProfile: store.userInfo.profile,
+      emoji: e.target.innerText,
+    };
+    dispatch({ type: "concate-emoji", payload: emojiElements });
     try {
       await axios.post(
         `${baseurl}/messanger/update-emoji-in-message`,
@@ -175,27 +182,50 @@ const Middle = ({ id, userDetails }) => {
     } catch (error) {
       console.log(error);
     }
-    socket &&
-      socket.emit("sendEmojiInMessage", { emoji: e.target.innerText, msg });
+    if(store.userInfo.id !== msg.senderId){
+      socket &&
+      socket.emit("sendEmojiInMessage", emojiElements);
+    }else {
+      socket &&
+      socket.emit("sendEmojiInMessage", {
+        messageId: msg._id,
+        senderId: store.userInfo.id,
+        receiverId:msg?.receiverId,
+        senderName: store.userInfo.name,
+        senderProfile: store.userInfo.profile,
+        emoji: e.target.innerText,
+      });
+    }
     e.target.parentElement.parentElement.children[0].classList.remove("hidden");
     e.target.parentElement.parentElement.children[1].classList.add("hidden");
     e.target.parentElement.parentElement.children[2].classList.add("hidden");
-    
   };
+
+  useEffect(() => {
+    socket && socket.on('sendEmojiInMessage',(data)=>{
+      dispatch({ type: "concate-emoji", payload: data });
+    })
+    return () => {
+      socket && socket.off('sendEmojiInMessage')
+    };
+  }, [socket]);
+
 
   useEffect(() => {
     const allContainer = document.querySelectorAll(".emoji_container");
     allContainer.length > 0 && allContainer?.forEach((cont) => cont.remove());
   }, [id]);
 
-
-const handleEmojiSenderIdentity = (e) => {
-  e.target.parentElement.children[e.target.parentElement.children.length - 1].classList.remove('hidden')
-  setTimeout(() => {
-    e.target.parentElement.children[e.target.parentElement.children.length - 1].classList.add('hidden')
-  }, 1000);
-}
-console.log(messages)
+  const handleEmojiSenderIdentity = (e) => {
+    e.target.parentElement.children[
+      e.target.parentElement.children.length - 1
+    ].classList.remove("hidden");
+    setTimeout(() => {
+      e.target.parentElement.children[
+        e.target.parentElement.children.length - 1
+      ].classList.add("hidden");
+    }, 1000);
+  };
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -266,19 +296,21 @@ console.log(messages)
                             <BsThreeDotsVertical size={20} />
                             <BsReply size={20} />
                             <div className="group relative">
-                              <GrEmoji
+                              <span
                                 onClick={(e) => {
                                   controllEmoji(e, "add", "me");
                                 }}
-                                size={20}
                                 className="GrEmoji cursor-pointer"
-                              />
-                              <RxCross2
+                              >
+                                ☹
+                              </span>
+                              <img
                                 onClick={(e) => {
                                   controllEmoji(e, "remove");
                                 }}
-                                size={20}
-                                className="RxCross2 cursor-pointer hidden"
+                                className="w-6 RxCross2 cursor-pointer hidden"
+                                src="/crossed.png"
+                                alt="cross"
                               />
                               <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
                                 {emojies.map((em, i) => {
@@ -328,6 +360,50 @@ console.log(messages)
                           >
                             {msg?.message}
                           </h2>
+                          {msg?.emoji?.length > 0 && (
+                            <div
+                              onClick={(e) => handleEmojiSenderIdentity(e)}
+                              className={`flex ${
+                                msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                              } relative cursor-pointer group items-center -translate-x-[10px] ml-5 -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                            >
+                              {msg?.emoji?.map((emj, i) => {
+                                return (
+                                  <span key={i} className="text-[10px]">
+                                    {emj.emoji}
+                                  </span>
+                                );
+                              })}
+                              {msg?.emoji?.length > 1 && (
+                                <span className="text-gray-500 text-sm">
+                                  {msg?.emoji?.length}
+                                </span>
+                              )}
+
+                              <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[140%] -left-[120px] bg-white z-50 w-[100px] p-2 border">
+                                {msg?.emoji?.map((em, i) => {
+                                  return (
+                                    <div
+                                      key={i}
+                                      className="flex items-center gap-2"
+                                    >
+                                      <img
+                                        className="w-5 h-5"
+                                        src={em.senderProfile}
+                                        alt="em.senderName"
+                                      />
+                                      <div className="text-sm">
+                                        {em.senderName.split(" ")[0]}
+                                      </div>
+                                      <span className="text-[10px]">
+                                        {em.emoji}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -359,7 +435,8 @@ console.log(messages)
                             {msg?.message}
                           </h2>
                           {msg?.emoji?.length > 0 && (
-                            <div onClick={(e)=>handleEmojiSenderIdentity(e)}
+                            <div
+                              onClick={(e) => handleEmojiSenderIdentity(e)}
                               className={`flex ${
                                 msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
                               } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
@@ -376,40 +453,49 @@ console.log(messages)
                                   {msg?.emoji?.length}
                                 </span>
                               )}
-
-                             <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden top-[100%] -left-[100px] bg-white z-50 w-[100px] p-2 border">
-                                 {
-                                  msg?.emoji?.map((em,i)=>{
-                                     return <div key={i} className="flex items-center gap-2">
-                                        <img className="w-5 h-5" src={em.senderProfile} alt="em.senderName" />
-                                        <div className="text-sm">
-                                      {em.senderName.split(' ')[0]}
+                              <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[100%] -right-[120px] bg-white z-50 w-[100px] p-2 border">
+                                {msg?.emoji?.map((em, i) => {
+                                  return (
+                                    <div
+                                      key={i}
+                                      className="flex items-center gap-2"
+                                    >
+                                      <img
+                                        className="w-5 h-5"
+                                        src={em.senderProfile}
+                                        alt="em.senderName"
+                                      />
+                                      <div className="text-sm">
+                                        {em.senderName.split(" ")[0]}
                                       </div>
-                                      <span className="text-[10px]">{em.emoji}</span>
-                                     </div>
-                                  })
-                                 }
-                             </div>
+                                      <span className="text-[10px]">
+                                        {em.emoji}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
                           )}
                         </div>
                         <div className="hidden group-hover:block text-gray-700">
                           <div className="flex gap-4 -z-10 items-center">
                             <div className="relative z-10">
-                              <GrEmoji
-                               className="GrEmoji cursor-pointer"
+                              <span
+                                className="GrEmoji cursor-pointer"
                                 onClick={(e) => {
                                   controllEmoji(e, "add", "friend");
                                 }}
-                                size={20}
-                               
-                              />
-                              <RxCross2
+                              >
+                                ☹
+                              </span>
+                              <img
                                 onClick={(e) => {
                                   controllEmoji(e, "remove");
                                 }}
-                                size={20}
-                                className="RxCross2 cursor-pointer hidden"
+                                className="w-6 RxCross2 cursor-pointer hidden"
+                                src="/crossed.png"
+                                alt="cross"
                               />
                               <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
                                 {emojies.map((em, i) => {

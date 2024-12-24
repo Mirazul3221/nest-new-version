@@ -10,13 +10,14 @@ if (action.type === 'fetch-message') {
   return state = [...state,action.payload]
   }
    
-  if (action.type === 'send-emoji'){
+  if (action.type === 'concate-emoji'){
       // // const tergatMessage = state?.filter(m=>m._id == action.payload)
       const {messageId,senderId,senderName,senderProfile,emoji} = action.payload
          const index = state?.findIndex(m=>m._id == messageId)
-         console.log(state[index])
         if('emoji' in state[index]){
-          state[index].emoji = [...state[index].emoji,{senderId,senderName,senderProfile,emoji}]
+          const duplicateEmoCheck = state[index].emoji.filter(em=> em.senderId !== senderId);
+          console.log(duplicateEmoCheck)
+          state[index].emoji = [...duplicateEmoCheck,{senderId,senderName,senderProfile,emoji}]
         }else {
                state[index].emoji = [{senderId,senderName,senderProfile,emoji}]
         }
