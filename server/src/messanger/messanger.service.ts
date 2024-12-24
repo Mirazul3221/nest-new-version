@@ -129,6 +129,25 @@ export class MessangerService {
     return await allFriends
   }
 
+  async updateEmojiInMessanger(message){
+    const {questionId,senderId,senderName,senderProfile,emoji} = message
+   const targetMessage = await this.MessangerModel.findById(questionId);
+   const senderIds = targetMessage?.emoji?.map(m => m.senderId)
+   const checkDuplicate = senderIds?.includes(senderId)
+if (!checkDuplicate) {
+  targetMessage.emoji.push({senderId,senderName,senderProfile,emoji})
+} else {
+    // Update existing emoji object if senderId is already present
+    const index = targetMessage.emoji.findIndex((em) => em.senderId == senderId);
+    if (index !== -1) {
+      targetMessage.emoji[index].emoji = emoji;
+      // Mark the specific array element as modified
+      targetMessage.markModified(`emoji.${index}`);
+    }
+}
+   await targetMessage.save()
+  }//
+
  async findMyFriendAllMessage(user,id) {
   const allMessage = await this.MessangerModel.find({
     $or : [

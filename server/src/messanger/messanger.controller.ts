@@ -29,6 +29,12 @@ export class MessangerController {
  }
 
 
+ @Post('update-emoji-in-message')
+ @UseGuards(AuthGuard())
+ async updateEmojiInMessanger(@Body() message:any){
+  return await this.messangerService.updateEmojiInMessanger(message)
+ }
+
 
   @Get('get/:id')
   @UseGuards(AuthGuard())

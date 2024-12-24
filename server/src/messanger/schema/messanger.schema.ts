@@ -1,5 +1,19 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
+
+class EmojiObject {
+  @Prop({ required: true })
+  senderId: string;
+
+  @Prop({ required: true })
+  senderName: string;
+  
+  @Prop({ required: true })
+  senderProfile: string;
+
+  @Prop({ required: true })
+  emoji: string;
+}
 @Schema({
     timestamps: true,
   })
@@ -11,8 +25,8 @@ export class Messanger extends Document {
    receiverId:mongoose.Schema.Types.ObjectId
   @Prop({required:true})
   message:string
-  @Prop({type:String})
-  emoji:string
+  @Prop({ type: [EmojiObject], _id: false })
+  emoji:EmojiObject[]
   @Prop({type:String})
   reply:string
   @Prop({required:true})

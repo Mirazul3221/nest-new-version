@@ -58,7 +58,6 @@ export class NotificationsGateway
       client.on('checkSenderOnlineStatus', async (data) => {
         let isOnline = Object.keys(this.socketUsers)?.some((u) => u === data);
         client.emit('getSenderOnlineStatus', isOnline);
-        console.log(data);
       });
       /////////////////////////////////////////Here is the logic for messaging////////////////////////////////////////////
       client.on('send-message-to-my-friend', async (data) => {
@@ -70,6 +69,7 @@ export class NotificationsGateway
       });
       //////////////////////////////////////////logi for new messanger/////////////////////////////
       client.on('message-to',(data)=>{
+        console.log(data)//
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
             await this.server.to(id).emit('message-from', data);
@@ -100,6 +100,15 @@ export class NotificationsGateway
         }
       });
 
+      //////////////////////////////logic for emoji message send to friendMessage//////////////////////
+      client.on('sendEmojiInMessage', async (data) => {
+        // if (this.socketUsers[data?.receiverId]?.length > 0) {
+        //   this.socketUsers[data?.receiverId]?.map(async (id) => {
+        //     await client.to(id).emit('getOpenMessageWindow', data.status);
+        //   });
+        // }
+        console.log(data)
+      });
       /////////////////////////////Here is the logic for notification/////////////////////////////
       client.on('new-notification', async (data) => {
         console.log('notif' , data)

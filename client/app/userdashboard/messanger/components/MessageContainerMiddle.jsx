@@ -1,7 +1,7 @@
 "use client";
 import { baseurl } from "@/app/config";
 import axios from "axios";
-import React, {useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { groupMessagesBysender } from "./group-message";
 import { useMessage } from "../../global/messageProvider";
@@ -25,7 +25,7 @@ const Middle = ({ id, userDetails }) => {
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
-  const {store} = useStore()
+  const { store } = useStore();
   const { socket } = useSocket();
   const [shallowMessage, setShallowMessage] = useState([]);
   useEffect(() => {
@@ -131,75 +131,71 @@ const Middle = ({ id, userDetails }) => {
       socket && socket.off("message-from");
     };
   }, [socket]);
-  const controllEmoji = (e,ctl,identifire) => {
-   if (identifire === 'me') {
-     e.target.parentElement.children[2].classList.add('-left-[150px]')
-   }
-   if (identifire === 'friend') {
-     e.target.parentElement.children[2].classList.add('-left-[90px]')
-   }
-
-    if(ctl == "add"){
-      e.target.parentElement.children[0].classList.add('hidden')
-      e.target.parentElement.children[1].classList.remove('hidden')
-      e.target.parentElement.children[2].classList.remove('hidden')
+  const controllEmoji = (e, ctl, identifire) => {
+    if (identifire === "me") {
+      e.target.parentElement.children[2].classList.add("-left-[150px]");
     }
-    if(ctl == "remove"){
-      e.target.parentElement.children[0].classList.remove('hidden')
-      e.target.parentElement.children[1].classList.add('hidden')
-      e.target.parentElement.children[2].classList.add('hidden')
+    if (identifire === "friend") {
+      e.target.parentElement.children[2].classList.add("-left-[90px]");
+    }
+
+    if (ctl == "add") {
+      e.target.parentElement.children[0].classList.add("hidden");
+      e.target.parentElement.children[1].classList.remove("hidden");
+      e.target.parentElement.children[2].classList.remove("hidden");
+    }
+    if (ctl == "remove") {
+      e.target.parentElement.children[0].classList.remove("hidden");
+      e.target.parentElement.children[1].classList.add("hidden");
+      e.target.parentElement.children[2].classList.add("hidden");
     }
     //  e.target.parentElement.children[1].classList.remove('hidden')
-  }
-  const emojies = ['❤️','😍','😭','😮','😡'];
+  };
+  const emojies = ["❤️", "😍", "😭", "😮", "😡"];
 
-
-  const sendEmoji = async (e,msg,identifire)=>{
+  const sendEmoji = async (e, msg, identifire) => {
+    const emojiElements = {messageId: msg._id, senderId:store.userInfo.id, senderName: store.userInfo.name,senderProfile: store.userInfo.profile,emoji: e.target.innerText}
+    dispatch({type:'send-emoji', payload:emojiElements})
     try {
-      await axios.post(`${baseurl}/messanger/update-emoji-in-message`,{questionId:msg._id,senderId:store.userInfo.id, senderName:store.userInfo.name, senderProfile:store.userInfo.profile, emoji:e.target.innerText}, {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
+      await axios.post(
+        `${baseurl}/messanger/update-emoji-in-message`,
+        {
+          questionId: msg._id,
+          senderId: store.userInfo.id,
+          senderName: store.userInfo.name,
+          senderProfile: store.userInfo.profile,
+          emoji: e.target.innerText,
         },
-      });
-    } catch (error) {console.log(error)}
-    socket && socket.emit('sendEmojiInMessage',{emoji:e.target.innerText, msg})
-    e.target.parentElement.parentElement.children[0].classList.remove('hidden')
-    e.target.parentElement.parentElement.children[1].classList.add('hidden')
-    const emj = document.createElement('p');
-    e.target.parentElement.parentElement.children[2].classList.add('hidden')
-    emj.classList.add('emoji_container')
-    emj.classList.add('-mt-5')
-    emj.classList.add('text-[12px]')
-    emj.classList.add('bg-white')
-    emj.classList.add('p-[1px]')
-    emj.classList.add('w-fit')
-    emj.classList.add('rounded-full')
-    emj.classList.add('border')
-    emj.classList.add('border-gray-400')
-   
-    if(identifire === 'me'){
-      if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].children.length <= 1) {
-        emj.textContent=  e.target.innerText
-        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].appendChild(emj); 
-       } else {
-        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[1].children[1].textContent = e.target.innerText
-      }
-    } else {
-      emj.classList.add('ml-auto')
-      if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].children.length <= 1) {
-        emj.textContent=  e.target.innerText
-        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].appendChild(emj); 
-       } else {
-        e.target.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].children[1].textContent = e.target.innerText
-      }
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
     }
-
-  }
+    socket &&
+      socket.emit("sendEmojiInMessage", { emoji: e.target.innerText, msg });
+    e.target.parentElement.parentElement.children[0].classList.remove("hidden");
+    e.target.parentElement.parentElement.children[1].classList.add("hidden");
+    e.target.parentElement.parentElement.children[2].classList.add("hidden");
+    
+  };
 
   useEffect(() => {
-  const allContainer = document.querySelectorAll('.emoji_container');
-     allContainer.length > 0 &&  allContainer?.forEach(cont => cont.remove())
+    const allContainer = document.querySelectorAll(".emoji_container");
+    allContainer.length > 0 && allContainer?.forEach((cont) => cont.remove());
   }, [id]);
+
+
+const handleEmojiSenderIdentity = (e) => {
+  e.target.parentElement.children[e.target.parentElement.children.length - 1].classList.remove('hidden')
+  setTimeout(() => {
+    e.target.parentElement.children[e.target.parentElement.children.length - 1].classList.add('hidden')
+  }, 1000);
+}
+console.log(messages)
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -270,17 +266,36 @@ const Middle = ({ id, userDetails }) => {
                             <BsThreeDotsVertical size={20} />
                             <BsReply size={20} />
                             <div className="group relative">
-                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','me')}} size={20} className="GrEmoji cursor-pointer" />
-                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="RxCross2 cursor-pointer hidden" />
-                            <div className="absolute z-50 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
-                              {
-                                emojies.map((em,i)=>{
-                                   return <span onClick={(e)=>{sendEmoji(e,msg,'me')}} key={i} className="px-1 cursor-pointer">{em}</span>
-                                })
-                              }
+                              <GrEmoji
+                                onClick={(e) => {
+                                  controllEmoji(e, "add", "me");
+                                }}
+                                size={20}
+                                className="GrEmoji cursor-pointer"
+                              />
+                              <RxCross2
+                                onClick={(e) => {
+                                  controllEmoji(e, "remove");
+                                }}
+                                size={20}
+                                className="RxCross2 cursor-pointer hidden"
+                              />
+                              <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                {emojies.map((em, i) => {
+                                  return (
+                                    <span
+                                      onClick={(e) => {
+                                        sendEmoji(e, msg, "me");
+                                      }}
+                                      key={i}
+                                      className="px-1 cursor-pointer"
+                                    >
+                                      {em}
+                                    </span>
+                                  );
+                                })}
+                              </div>
                             </div>
-                            </div>
-                           
                           </div>
                           <div className="flex justify-end">
                             <h4 className="text-[12px] bg-gray-50 px-2 rounded-full w-fit border block">
@@ -289,30 +304,30 @@ const Middle = ({ id, userDetails }) => {
                           </div>
                         </div>
                         <div className="max-w-[60%] w-fit">
-                        <h2
-                          ref={scrollRef}
-                          className={`${
-                            i === messageBlog.length - 1 &&
-                            messageBlog.length > 1
-                              ? "msg_anim "
-                              : ""
-                          } text-right duration-500 w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
-                            messageBlog.length === 1
-                              ? "rounded-[30px]"
-                              : "rounded-l-[30px]"
-                          } ${
-                            messageBlog.indexOf(msg) === 0 &&
-                            messageBlog.length > 1
-                              ? "rounded-tr-[30px]"
-                              : messageBlog.indexOf(msg) ===
-                                  messageBlog.length - 1 &&
-                                messageBlog.length > 1
-                              ? "rounded-br-[30px] duration-500"
-                              : ""
-                          }`}
-                        >
-                          {msg?.message}
-                        </h2>
+                          <h2
+                            ref={scrollRef}
+                            className={`${
+                              i === messageBlog.length - 1 &&
+                              messageBlog.length > 1
+                                ? "msg_anim "
+                                : ""
+                            } text-right duration-500 w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                              messageBlog.length === 1
+                                ? "rounded-[30px]"
+                                : "rounded-l-[30px]"
+                            } ${
+                              messageBlog.indexOf(msg) === 0 &&
+                              messageBlog.length > 1
+                                ? "rounded-tr-[30px]"
+                                : messageBlog.indexOf(msg) ===
+                                    messageBlog.length - 1 &&
+                                  messageBlog.length > 1
+                                ? "rounded-br-[30px] duration-500"
+                                : ""
+                            }`}
+                          >
+                            {msg?.message}
+                          </h2>
                         </div>
                       </div>
                     </div>
@@ -324,38 +339,93 @@ const Middle = ({ id, userDetails }) => {
                         </p>
                       )}
                       <div className="flex justify-start items-center gap-3 group">
-                      <div className="max-w-[60%] w-fit">
-                        <h2
-                          className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
-                            messageBlog.length === 1
-                              ? "rounded-[30px]"
-                              : "rounded-r-[30px]"
-                          } ${
-                            messageBlog.indexOf(msg) === 0 &&
-                            messageBlog.length > 1
-                              ? "rounded-tl-[30px]"
-                              : messageBlog.indexOf(msg) ===
-                                  messageBlog.length - 1 &&
-                                messageBlog.length > 1
-                              ? "rounded-bl-[30px]"
-                              : ""
-                          }`}
-                        >
-                          {msg?.message}
-                        </h2>
+                        <div className="max-w-[60%] w-fit">
+                          <h2
+                            className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                              messageBlog.length === 1
+                                ? "rounded-[30px]"
+                                : "rounded-r-[30px]"
+                            } ${
+                              messageBlog.indexOf(msg) === 0 &&
+                              messageBlog.length > 1
+                                ? "rounded-tl-[30px]"
+                                : messageBlog.indexOf(msg) ===
+                                    messageBlog.length - 1 &&
+                                  messageBlog.length > 1
+                                ? "rounded-bl-[30px]"
+                                : ""
+                            }`}
+                          >
+                            {msg?.message}
+                          </h2>
+                          {msg?.emoji?.length > 0 && (
+                            <div onClick={(e)=>handleEmojiSenderIdentity(e)}
+                              className={`flex ${
+                                msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                              } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                            >
+                              {msg?.emoji?.map((emj, i) => {
+                                return (
+                                  <span className="text-[10px]">
+                                    {emj.emoji}
+                                  </span>
+                                );
+                              })}
+                              {msg?.emoji?.length > 1 && (
+                                <span className="text-gray-500 text-sm">
+                                  {msg?.emoji?.length}
+                                </span>
+                              )}
+
+                             <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden top-[100%] -left-[100px] bg-white z-50 w-[100px] p-2 border">
+                                 {
+                                  msg?.emoji?.map((em,i)=>{
+                                     return <div key={i} className="flex items-center gap-2">
+                                        <img className="w-5 h-5" src={em.senderProfile} alt="em.senderName" />
+                                        <div className="text-sm">
+                                      {em.senderName.split(' ')[0]}
+                                      </div>
+                                      <span className="text-[10px]">{em.emoji}</span>
+                                     </div>
+                                  })
+                                 }
+                             </div>
+                            </div>
+                          )}
                         </div>
                         <div className="hidden group-hover:block text-gray-700">
-                          <div className="flex gap-4 items-center">
-                          <div className="group relative">
-                            <GrEmoji onClick={(e)=>{controllEmoji(e,'add','friend')}} size={20} className="GrEmoji cursor-pointer" />
-                            <RxCross2  onClick={(e)=>{controllEmoji(e,'remove')}} size={20} className="RxCross2 cursor-pointer hidden" />
-                            <div className="absolute z-50 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
-                              {
-                                emojies.map((em,i)=>{
-                                   return <span onClick={(e)=>{sendEmoji(e,msg,'friend')}} key={i} className="px-1 cursor-pointer">{em}</span>
-                                })
-                              }
-                            </div>
+                          <div className="flex gap-4 -z-10 items-center">
+                            <div className="relative z-10">
+                              <GrEmoji
+                               className="GrEmoji cursor-pointer"
+                                onClick={(e) => {
+                                  controllEmoji(e, "add", "friend");
+                                }}
+                                size={20}
+                               
+                              />
+                              <RxCross2
+                                onClick={(e) => {
+                                  controllEmoji(e, "remove");
+                                }}
+                                size={20}
+                                className="RxCross2 cursor-pointer hidden"
+                              />
+                              <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                {emojies.map((em, i) => {
+                                  return (
+                                    <span
+                                      onClick={(e) => {
+                                        sendEmoji(e, msg, "friend");
+                                      }}
+                                      key={i}
+                                      className="px-1 cursor-pointer"
+                                    >
+                                      {em}
+                                    </span>
+                                  );
+                                })}
+                              </div>
                             </div>
                             <BsReply size={18} />
                             <BsThreeDotsVertical size={18} />
@@ -371,7 +441,7 @@ const Middle = ({ id, userDetails }) => {
                         <div className="profile w-10 ">
                           <img
                             ref={scrollRef}
-                            className="w-full bg-white p-[2px] z-50 rounded-full"
+                            className="w-full bg-white p-[2px] z-40 rounded-full"
                             src={userDetails?.profile}
                             alt={userDetails?.name}
                           />

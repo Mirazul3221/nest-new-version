@@ -25,7 +25,7 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg}) => {
             },
           }
         );
-        const reformData = {senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}
+        const reformData = {_id:data._id, senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}
         socket && socket.emit('message-to',reformData)
         dispatch({type:'send-message',payload:reformData})
         setIsSend(false)
