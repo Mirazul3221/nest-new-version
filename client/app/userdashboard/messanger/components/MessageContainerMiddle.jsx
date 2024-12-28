@@ -406,8 +406,8 @@ const Middle = ({ id, userDetails }) => {
                             }
                             ${
                               ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
-                                msg?.emoji?.length > 0) &&
-                              "rounded-br-[30px]"
+                                msg?.emoji?.length > 0) ?
+                              "rounded-br-[30px]" : ''
                             }
                             `}
                           >
@@ -506,8 +506,8 @@ const Middle = ({ id, userDetails }) => {
                                                         ${
                                                           ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
                                                             msg?.emoji?.length >
-                                                              0) &&
-                                                          "rounded-bl-[30px]"
+                                                              0) ?
+                                                          "rounded-bl-[30px]" : ''
                                                         }`}
                           >
                             {msg?.message}
