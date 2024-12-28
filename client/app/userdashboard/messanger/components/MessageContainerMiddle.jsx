@@ -684,10 +684,10 @@ const Middle = ({ id, userDetails }) => {
               <div>
                 <div className="flex items-center gap-2">
                   <IoArrowRedoOutline size={18} />
-                  <h4 id="replying_to"> You replied to XXX</h4>
+                  <h4 id="replying_to"></h4>
                 </div>
 
-                <p id="replying_content">Hello world</p>
+                <p id="replying_content"></p>
               </div>
             </div>
             <div>
