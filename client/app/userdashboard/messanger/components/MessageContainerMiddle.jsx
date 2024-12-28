@@ -378,7 +378,7 @@ const Middle = ({ id, userDetails }) => {
                               You reply to {userDetails.name}
                             </h2>
                           )}
-                          {msg?.reply?.length > 0 && (
+                          {(msg?.reply?.length > 0 && msg?.reply[0] !== null)  && (
                             <h2 className="w-fit text-gray-400 py-2 px-4 ml-auto rounded-l-[30px] rounded-tr-[30px] bg-gray-100 text-[12px]">
                               {msg?.reply[0]}
                             </h2>
@@ -405,7 +405,7 @@ const Middle = ({ id, userDetails }) => {
                                 : ""
                             }
                             ${
-                              (msg?.reply?.length > 0 ||
+                              ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
                                 msg?.emoji?.length > 0) &&
                               "rounded-br-[30px]"
                             }
@@ -483,7 +483,7 @@ const Middle = ({ id, userDetails }) => {
                               {userDetails.name} reply to himself/herself
                             </h2>
                           )}
-                          {msg?.reply?.length > 0 && (
+                          {(msg?.reply?.length > 0 && msg?.reply[0] !== null) && (
                             <h2 className="w-fit text-gray-400 py-2 px-4 rounded-r-[30px] rounded-tl-[30px] bg-gray-100 text-[12px]">
                               {msg?.reply[0]}
                             </h2>
@@ -504,8 +504,7 @@ const Middle = ({ id, userDetails }) => {
                                 : ""
                             }
                                                         ${
-                                                          (msg?.reply?.length >
-                                                            0 ||
+                                                          ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
                                                             msg?.emoji?.length >
                                                               0) &&
                                                           "rounded-bl-[30px]"
@@ -666,6 +665,7 @@ const Middle = ({ id, userDetails }) => {
                     setReplyContent={setReplyContent}
                     replyMsgStatus={showReply}
                     toReplyerId={toReplyerId}
+                    setToReplyerId={setToReplyerId}
                   />
                 );
               })}

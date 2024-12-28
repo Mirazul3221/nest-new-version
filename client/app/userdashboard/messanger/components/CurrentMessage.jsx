@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
 import { useSocket } from '../../global/SocketProvider'
 
-const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyContent,replyMsgStatus,toReplyerId}) => {
+const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyContent,replyMsgStatus,toReplyerId,setToReplyerId}) => {
     const { store } = useContext(storeContext);
     const {socket} = useSocket()
     const element = useRef(null)
@@ -27,7 +27,7 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyC
           }
         );
         setReplyContent('')
-
+        setToReplyerId(null)
         const reformData = {_id:data._id, senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,reply:data.reply,seenMessage:data.seenMessage,createdAt:data.createdAt}
         socket && socket.emit('message-to',reformData)
         dispatch({type:'send-message',payload:reformData})
