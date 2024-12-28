@@ -27,8 +27,8 @@ export class Messanger extends Document {
   message:string
   @Prop({ type: [EmojiObject], _id: false })
   emoji:EmojiObject[]
-  @Prop({type:String})
-  reply:string
+  @Prop({type:[]})
+  reply:string[]
   @Prop({required:true})
   seenMessage:boolean
 }

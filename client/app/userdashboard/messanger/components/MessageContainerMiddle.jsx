@@ -19,9 +19,13 @@ import { GrEmoji } from "react-icons/gr";
 import moment from "moment";
 import { RxCross2 } from "react-icons/rx";
 import { useStore } from "@/app/global/DataProvider";
+import { IoArrowRedoOutline } from "react-icons/io5";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
+  const [showReply, setShowReply] = useState(false);
+  const [replyContent, setReplyContent] = useState("");
+  const [toReplyerId, setToReplyerId] = useState(null);
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
@@ -61,6 +65,10 @@ const Middle = ({ id, userDetails }) => {
   };
 
   const handleSendMessage = () => {
+    if (showReply) {
+      setShowReply(false);
+      setReplyContent(document.getElementById("replying_content"));
+    }
     if (message !== "") {
       setShallowMessage((prev) => [
         ...prev,
@@ -157,7 +165,7 @@ const Middle = ({ id, userDetails }) => {
     const emojiElements = {
       messageId: msg._id,
       senderId: store.userInfo.id,
-      receiverId:msg?.senderId,
+      receiverId: msg?.senderId,
       senderName: store.userInfo.name,
       senderProfile: store.userInfo.profile,
       emoji: e.target.innerText,
@@ -182,19 +190,18 @@ const Middle = ({ id, userDetails }) => {
     } catch (error) {
       console.log(error);
     }
-    if(store.userInfo.id !== msg.senderId){
+    if (store.userInfo.id !== msg.senderId) {
+      socket && socket.emit("sendEmojiInMessage", emojiElements);
+    } else {
       socket &&
-      socket.emit("sendEmojiInMessage", emojiElements);
-    }else {
-      socket &&
-      socket.emit("sendEmojiInMessage", {
-        messageId: msg._id,
-        senderId: store.userInfo.id,
-        receiverId:msg?.receiverId,
-        senderName: store.userInfo.name,
-        senderProfile: store.userInfo.profile,
-        emoji: e.target.innerText,
-      });
+        socket.emit("sendEmojiInMessage", {
+          messageId: msg._id,
+          senderId: store.userInfo.id,
+          receiverId: msg?.receiverId,
+          senderName: store.userInfo.name,
+          senderProfile: store.userInfo.profile,
+          emoji: e.target.innerText,
+        });
     }
     e.target.parentElement.parentElement.children[0].classList.remove("hidden");
     e.target.parentElement.parentElement.children[1].classList.add("hidden");
@@ -202,14 +209,14 @@ const Middle = ({ id, userDetails }) => {
   };
 
   useEffect(() => {
-    socket && socket.on('sendEmojiInMessage',(data)=>{
-      dispatch({ type: "concate-emoji", payload: data });
-    })
+    socket &&
+      socket.on("sendEmojiInMessage", (data) => {
+        dispatch({ type: "concate-emoji", payload: data });
+      });
     return () => {
-      socket && socket.off('sendEmojiInMessage')
+      socket && socket.off("sendEmojiInMessage");
     };
   }, [socket]);
-
 
   useEffect(() => {
     const allContainer = document.querySelectorAll(".emoji_container");
@@ -226,21 +233,35 @@ const Middle = ({ id, userDetails }) => {
       ].classList.add("hidden");
     }, 1000);
   };
+
+  ///////////////////////replying logic///////////////////
+  const handleReply = (msg) => {
+    setToReplyerId(msg.senderId);
+    setShowReply(true);
+    const replyingTo = document.getElementById("replying_to");
+    const replyingText = document.getElementById("replying_content");
+    replyingText.innerText = msg.message;
+    if (msg.senderId == store.userInfo.id) {
+      replyingTo.innerText = "Replying to yourself";
+    } else {
+      replyingTo.innerText = `Replying to ${userDetails?.name}`;
+    }
+  };
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <img
-            className="rounded-full w-12"
+            className="rounded-full w-8"
             src={userDetails?.profile}
             alt={userDetails?.name}
           />
           <div className="text-white">
-            <h2>{userDetails?.name}</h2>
-            <p className="text-[12px]">{userDetails?.status}</p>
+            <h2 className="text-[18px]">{userDetails?.name}</h2>
+            {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
         </div>
-        <div className="flex justify-center gap-4 text-white">
+        <div className="flex justify-center gap-6 text-white">
           <EntryPoint
             user={{
               myId: store.userInfo.id,
@@ -249,7 +270,7 @@ const Middle = ({ id, userDetails }) => {
               profile: userDetails?.profile,
               title: userDetails?.title,
               type: "Audio",
-              size: 35,
+              size: 30,
             }}
           />
           <EntryPoint
@@ -260,7 +281,7 @@ const Middle = ({ id, userDetails }) => {
               profile: userDetails?.profile,
               title: userDetails?.title,
               type: "Video",
-              size: 35,
+              size: 30,
             }}
           />
         </div>
@@ -294,7 +315,14 @@ const Middle = ({ id, userDetails }) => {
                         <div className="hidden relative group-hover:block text-gray-700">
                           <div className="flex gap-4 items-center">
                             <BsThreeDotsVertical size={20} />
-                            <BsReply size={20} />
+                            <label
+                              className="cursor-pointer"
+                              onClick={() => handleReply(msg)}
+                              htmlFor="message_text"
+                            >
+                              <IoArrowRedoOutline size={20} />
+                            </label>
+
                             <div className="group relative">
                               <span
                                 onClick={(e) => {
@@ -336,6 +364,25 @@ const Middle = ({ id, userDetails }) => {
                           </div>
                         </div>
                         <div className="max-w-[60%] w-fit">
+                          {msg?.reply[1] === store.userInfo.id && (
+                            <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
+                              {" "}
+                              <IoArrowRedoOutline size={10} />
+                              You reply to yourself
+                            </h2>
+                          )}
+                          {msg?.reply[1] === id && (
+                            <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
+                              {" "}
+                              <IoArrowRedoOutline size={10} />
+                              You reply to {userDetails.name}
+                            </h2>
+                          )}
+                          {msg?.reply?.length > 0 && (
+                            <h2 className="w-fit text-gray-400 py-2 px-4 ml-auto rounded-l-[30px] rounded-tr-[30px] bg-gray-100 text-[12px]">
+                              {msg?.reply[0]}
+                            </h2>
+                          )}
                           <h2
                             ref={scrollRef}
                             className={`${
@@ -343,7 +390,7 @@ const Middle = ({ id, userDetails }) => {
                               messageBlog.length > 1
                                 ? "msg_anim "
                                 : ""
-                            } text-right duration-500 w-fit bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                            } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
                               messageBlog.length === 1
                                 ? "rounded-[30px]"
                                 : "rounded-l-[30px]"
@@ -356,7 +403,13 @@ const Middle = ({ id, userDetails }) => {
                                   messageBlog.length > 1
                                 ? "rounded-br-[30px] duration-500"
                                 : ""
-                            }`}
+                            }
+                            ${
+                              (msg?.reply?.length > 0 ||
+                                msg?.emoji?.length > 0) &&
+                              "rounded-br-[30px]"
+                            }
+                            `}
                           >
                             {msg?.message}
                           </h2>
@@ -416,6 +469,25 @@ const Middle = ({ id, userDetails }) => {
                       )}
                       <div className="flex justify-start items-center gap-3 group">
                         <div className="max-w-[60%] w-fit">
+                          {msg?.reply[1] === store.userInfo.id && (
+                            <h2 className="px-4 text-[10px] flex items-center gap-2">
+                              {" "}
+                              <BsReply size={10} /> {userDetails.name} reply to
+                              you
+                            </h2>
+                          )}
+                          {msg?.reply[1] === id && (
+                            <h2 className="px-4 text-[10px] flex items-center gap-2">
+                              {" "}
+                              <BsReply size={10} />
+                              {userDetails.name} reply to himself/herself
+                            </h2>
+                          )}
+                          {msg?.reply?.length > 0 && (
+                            <h2 className="w-fit text-gray-400 py-2 px-4 rounded-r-[30px] rounded-tl-[30px] bg-gray-100 text-[12px]">
+                              {msg?.reply[0]}
+                            </h2>
+                          )}
                           <h2
                             className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
                               messageBlog.length === 1
@@ -430,7 +502,14 @@ const Middle = ({ id, userDetails }) => {
                                   messageBlog.length > 1
                                 ? "rounded-bl-[30px]"
                                 : ""
-                            }`}
+                            }
+                                                        ${
+                                                          (msg?.reply?.length >
+                                                            0 ||
+                                                            msg?.emoji?.length >
+                                                              0) &&
+                                                          "rounded-bl-[30px]"
+                                                        }`}
                           >
                             {msg?.message}
                           </h2>
@@ -513,7 +592,13 @@ const Middle = ({ id, userDetails }) => {
                                 })}
                               </div>
                             </div>
-                            <BsReply size={18} />
+                            <label
+                              className="cursor-pointer"
+                              onClick={() => handleReply(msg)}
+                              htmlFor="message_text"
+                            >
+                              <BsReply size={20} />
+                            </label>
                             <BsThreeDotsVertical size={18} />
                           </div>
                           <div className="flex justify-end">
@@ -577,6 +662,10 @@ const Middle = ({ id, userDetails }) => {
                     allMsg={shallowMessage}
                     msg={msg}
                     setSendCurrentMsg={setSendCurrentMsg}
+                    replyMsgContent={replyContent}
+                    setReplyContent={setReplyContent}
+                    replyMsgStatus={showReply}
+                    toReplyerId={toReplyerId}
                   />
                 );
               })}
@@ -586,8 +675,36 @@ const Middle = ({ id, userDetails }) => {
 
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
         <div className={"bottom"}>
+          <div
+            className={`${
+              showReply ? "flex" : "hidden"
+            } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
+          >
+            <div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <IoArrowRedoOutline size={18} />
+                  <h4 id="replying_to"> You replied to XXX</h4>
+                </div>
+
+                <p id="replying_content">Hello world</p>
+              </div>
+            </div>
+            <div>
+              <img
+                onClick={(e) => {
+                  setShowReply(false);
+                  setReplyContent("");
+                }}
+                className="w-6 RxCross2 cursor-pointer"
+                src="/crossed.png"
+                alt="cross"
+              />
+            </div>
+          </div>
           <div className="p-4 flex justify-between items-end gap-2">
             <textarea
+              id="message_text"
               ref={messangerRef}
               value={message}
               onChange={(e) => handleMessage(e)}

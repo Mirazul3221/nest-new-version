@@ -6,26 +6,29 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
 import { useSocket } from '../../global/SocketProvider'
 
-const CurrentMessage = ({allMsg, msg,setSendCurrentMsg}) => {
+const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyContent,replyMsgStatus,toReplyerId}) => {
     const { store } = useContext(storeContext);
     const {socket} = useSocket()
     const element = useRef(null)
     const { dispatch } = useMessage();
     const [isSend,setIsSend] = useState(false)
+    const replyText = replyMsgContent.innerText;
     const sendMessage = async () => {
       try {
         setIsSend(true)
         setSendCurrentMsg(true)
         const { data } = await axios.post(
           `${baseurl}/messanger/create`,
-          { receiverId:msg.receiverId, message: msg.content ? msg.content : "Love" },
+          { receiverId:msg.receiverId, message: msg.content ? msg.content : "Love", reply: [replyText,toReplyerId]},
           {
             headers: {
               Authorization: `Bearer ${store.token}`,
             },
           }
         );
-        const reformData = {_id:data._id, senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,seenMessage:data.seenMessage,createdAt:data.createdAt}
+        setReplyContent('')
+
+        const reformData = {_id:data._id, senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,reply:data.reply,seenMessage:data.seenMessage,createdAt:data.createdAt}
         socket && socket.emit('message-to',reformData)
         dispatch({type:'send-message',payload:reformData})
         setIsSend(false)

@@ -6,4 +6,6 @@ export class CreateMessangerDto {
     receiverId:mongoose.Schema.Types.ObjectId
     @IsNotEmpty()
     message:any
+    @IsNotEmpty()
+    reply:any
 }//
