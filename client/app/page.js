@@ -23,6 +23,7 @@ import MobileBanner from "./adsterra/MobileBanner320";
 import Section_02 from "./components/Section_02";
 import SvgBg from "./components/SvgBg";
 import SvgBgM from "./components/SvgBgM";
+import GridSection from "./components/GridSection";
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
@@ -55,17 +56,18 @@ export default function Home() {
     return (
       <div>
         {isClient ? (
-          <main className="max-w-[1440px] relative mx-auto">
-            <div className="absolute md:block hidden w-full top-0 left-0 -z-10">
+          <main className="max-w-[1440px] relative mx-auto bg-gradient-to-r from-[#1d0021] via-[#1e0133] to-[#012233]">
+            {/* <div className="absolute md:block hidden w-full top-0 left-0 -z-10">
               <SvgBg/>
             </div>
             <div className="absolute md:hidden  w-full top-0 left-0 -z-10">
              <SvgBgM/>
-            </div>
+            </div> */}
             <Header />
             <BannerSection />
             <Section_01 />
             <Section_02 />
+            {/* <GridSection/> */}
             {/* <div className="bg-[#1c1a24]">
               <Projects />
             </div> */}

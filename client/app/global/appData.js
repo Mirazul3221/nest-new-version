@@ -4,6 +4,12 @@ import banner03 from '@/public/banner/banner03.jpg'
 import banner04 from '@/public/banner/banner04.jpg'
 import mobile01 from "@/public/banner/mobile01.png"
 import mobile02 from "@/public/banner/mobile02.png"
+import { BsEmojiGrin } from "react-icons/bs";
+import { LuScrollText } from "react-icons/lu";
+import { CiViewList } from "react-icons/ci";
+import { TbFileDatabase } from "react-icons/tb";
+import { AiOutlineMessage } from "react-icons/ai";
+import { MdOutlineCreate } from "react-icons/md";
 
 export const projectsData = [
     {
@@ -51,27 +57,28 @@ export const projectsData = [
 ];
 
 export const section2_data = [
-    {
+    { emoji:<BsEmojiGrin size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
     {
+        emoji:<LuScrollText size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    {
+    { emoji:<CiViewList size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    {
+    { emoji:<TbFileDatabase size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    {
+    { emoji:<AiOutlineMessage size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    {
+    { emoji:<MdOutlineCreate size={60}/>,
         title:'Easy to learn',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },

@@ -39,7 +39,9 @@ const Header = ({}) => {
 
         <div className="hidden sm:3/12 w-7/12 md:flex gap-5 items-center">
           <Logo w={100} />
-          {/* <Search/> */}
+          <div className="w-1/2">
+          <Search/>
+          </div>
         </div>
         <div className="md:hidden block">
           <Logo w={60} />
@@ -138,7 +140,7 @@ const Header = ({}) => {
           </div>
         </Link>
       </div>
-       {/* <div className="py-3 md:hidden"> <Search /></div> */}
+       <div className="py-3 md:hidden"> <Search /></div>
     </div>
   );
 };
