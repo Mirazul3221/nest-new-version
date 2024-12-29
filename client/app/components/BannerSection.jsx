@@ -19,7 +19,7 @@ const BannerSection = () => {
             {"Let's start A New Way to Learn"}
           </h2>
           <h2 className="text-[28px] md:hidden font-semibold text-center">
-            Let's start A New Way to Learn
+          {"Let's start A New Way to Learn"}
           </h2>
           <h2 className="text-lg text-center md:w-9/12 mx-auto">
             This is the best platform to help you enhance your skills, expand
