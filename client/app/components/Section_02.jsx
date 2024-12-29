@@ -3,8 +3,8 @@ import { section2_data } from '../global/appData'
 
 const Section_02 = () => {
   return (
-    <div className='bg-gray-50 h-screen w-full border-t flex justify-center items-center'>
-       <div className="card md:grid grid-cols-3 items-center gap-4 w-10/12">
+    <div className='bg-gray-50 min-h-screen w-full border-t flex justify-center items-center'>
+       <div className="card md:grid grid-cols-3 items-center gap-4 md:w-10/12">
          {
             section2_data.map((item,i)=>{
                 return (

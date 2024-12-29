@@ -21,6 +21,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import Footer from "./components/Footer";
 import MobileBanner from "./adsterra/MobileBanner320";
 import Section_02 from "./components/Section_02";
+import SvgBg from "./components/SvgBg";
+import SvgBgM from "./components/SvgBgM";
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
 
@@ -53,11 +55,17 @@ export default function Home() {
     return (
       <div>
         {isClient ? (
-          <main className="max-w-[1440px] mx-auto">
+          <main className="max-w-[1440px] relative mx-auto">
+            <div className="absolute md:block hidden w-full top-0 left-0 -z-10">
+              <SvgBg/>
+            </div>
+            <div className="absolute md:hidden  w-full top-0 left-0 -z-10">
+             <SvgBgM/>
+            </div>
             <Header />
             <BannerSection />
             <Section_01 />
-            {/* <Section_02 /> */}
+            <Section_02 />
             {/* <div className="bg-[#1c1a24]">
               <Projects />
             </div> */}
@@ -79,7 +87,7 @@ export default function Home() {
               src="//pl23641250.highrevenuenetwork.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
             />
             <Footer />
-            <Test />
+            {/* <Test /> */}
             {/* <Card/> */}
           </main>
         ) : (

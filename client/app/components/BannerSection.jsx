@@ -4,10 +4,10 @@ import Image from "next/image";
 const BannerSection = () => {
   return (
     <div className="md:px-20 md:h-screen relative">
-      <div className="fixed -z-10 top-0 left-0 overflow-hidden w-screen h-screen">
+      {/* <div className="fixed -z-10 top-0 left-0 overflow-hidden w-screen h-screen">
         <div className="absolute -top-10 md:h-[110vh] h-[70vh] w-[200vw] bg-gray-300 -z-10 rotate-12 -left-20 md:-left-48"></div>
-      </div>
-      <div className="md:flex justify-between items-center p-4">
+      </div> */}
+      <div className="md:flex justify-between md:mt-10 items-center p-4">
         <div className="md:w-1/2 laptop-anim hidden md:block">
           <Image className="md:pt-20" src={laptop} alt="laptop-view" />
         </div>
