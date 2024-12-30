@@ -57,29 +57,39 @@ export const projectsData = [
 ];
 
 export const section2_data = [
-    { emoji:<BsEmojiGrin size={60}/>,
-        title:'Easy to learn',
+    { emoji:<BsEmojiGrin size={50}/>,
+        title:'সহজ প্রক্রিয়া',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
     {
-        emoji:<LuScrollText size={60}/>,
-        title:'Easy to learn',
+        emoji:<LuScrollText size={50}/>,
+        title:'সোশ্যাল মিডিয়া প্ল্যাটফর্মের মতো অধ্যয়ন',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    { emoji:<CiViewList size={60}/>,
-        title:'Easy to learn',
+    { emoji:<CiViewList size={50}/>,
+        title:'বিষয়ভিত্তিক অধ্যয়ন',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    { emoji:<TbFileDatabase size={60}/>,
-        title:'Easy to learn',
+    { emoji:<TbFileDatabase size={50}/>,
+        title:'প্রশ্ন সংরক্ষণ করে পরে পড়ার সুবিধা',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    { emoji:<AiOutlineMessage size={60}/>,
-        title:'Easy to learn',
+    { emoji:<AiOutlineMessage size={50}/>,
+        title:'সোশ্যাল মিডিয়া প্ল্যাটফর্মের মতো সহজ যোগাযোগ',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
-    { emoji:<MdOutlineCreate size={60}/>,
-        title:'Easy to learn',
+    { emoji:<MdOutlineCreate size={50}/>,
+        title:'নিজের মতামত ব্যবহার করে এমসিকিউ (Multiple Choice Question) তৈরির সুবিধাগুলো',
         description:'This platform helps you to understand questions and the relevent answer better. You can easily understand a question and find the answer in a better quality'
     },
 ]
+
+
+// `প্রশ্ন সংরক্ষণ করে পরে পড়ার সুবিধা":
+
+// সময় সাশ্রয়: গুরুত্বপূর্ণ প্রশ্নগুলো সংরক্ষণ করে রাখলে পরে সহজে পুনরায় দেখতে পারেন, বারবার খোঁজার প্রয়োজন হয় না।
+// ফোকাসড লার্নিং: সংরক্ষিত প্রশ্নগুলো থেকে প্রাসঙ্গিক বিষয়গুলোতে মনোযোগ দেওয়া সহজ হয়।
+// রিভিশন সহজ করা: পরে পড়ার জন্য প্রশ্ন সংরক্ষণ করলে রিভিশনের সময় সেগুলো কাজে আসে।
+// গভীর বিশ্লেষণ: জটিল প্রশ্নগুলো সংরক্ষণ করে পরে সময় নিয়ে বিশ্লেষণ করতে পারেন।
+// লং-টার্ম রেফারেন্স: ভবিষ্যতে কোনো নির্দিষ্ট বিষয়ের উপর পুনরায় পড়তে হলে এগুলো রেফারেন্স হিসেবে কাজে লাগে।
+// এটি বিশেষত শিক্ষার্থীদের জন্য কার্যকরী, যারা স্ট্রাকচার্ড এবং পরিকল্পিতভাবে পড়াশোনা করতে চান।`

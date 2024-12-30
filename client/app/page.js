@@ -57,6 +57,9 @@ export default function Home() {
       <div>
         {isClient ? (
           <main className="max-w-[1440px] relative mx-auto bg-gradient-to-r from-[#1d0021] via-[#1e0133] to-[#012233]">
+          {/* <div className="absolute">
+            <img className="w-10" src="/banner/ballad.png"/>
+          </div> */}
             {/* <div className="absolute md:block hidden w-full top-0 left-0 -z-10">
               <SvgBg/>
             </div>
