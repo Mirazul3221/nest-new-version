@@ -113,18 +113,19 @@ async userProfileAndName (@Param('id') id){
  //======LOGIN WITH FACEBOOK
  //======================================
  //======================================
- @Get("/login/facebook")
- @UseGuards(AuthGuard("facebook"))
- async facebookLogin(): Promise<any> {
-   return HttpStatus.OK;
+ @Get('login/facebook')
+ @UseGuards(AuthGuard('facebook'))
+ async facebookLogin(): Promise<void> {
+   // Redirect to Facebook login page
  }
 
- @Get("/facebook/redirect")
- @UseGuards(AuthGuard("facebook"))
- async facebookLoginRedirect(@Req() req: ExpReq): Promise<any> {
+ @Get('facebook/callback')
+ @UseGuards(AuthGuard('facebook'))
+ async facebookLoginCallback(@Req() req: any): Promise<any> {
+   // Handle successful authentication
    return {
-     statusCode: HttpStatus.OK,
-     data: req.user,
+     message: 'Facebook login successful',
+     user: req.user,
    };
  }
  //======================================

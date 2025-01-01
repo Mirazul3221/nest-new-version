@@ -340,7 +340,7 @@ export class AuthService {
     <h2 style="font-weight: bolder;font-size: 26;">Hi ${firstName}</h2>
    <p style="font-size: 20px">We received a request to reset your password.
    Enter the following password reset code:</p>
-   <h3 style="padding-top: 10px; font-size: 30px;"><span style="border:1px solid rgb(235, 9, 133);padding-left: 20px; padding-right: 20px;font-weight: bold; background: #ffd7e8; border-radius: 4px;padding-top: 10px;padding-bottom: 10px;color: rgb(50, 51, 51); font-size:25px;">${otp}</span></h3>
+   <h3 style="padding-top: 10px; font-size: 30px;"><span style="border:1px solid rgb(235, 9, 133);padding-left: 20px; padding-right: 20px;font-weight: bold; background: #ffd7e8; border-radius: 4px;padding-top: 10px;padding-bottom: 10px;color: rgb(50, 51, 51); font-size:22px;">${otp}</span></h3>
 <h4 style="font-weight: bolder;font-size: 22px;">thank you</h4>
 </div>`,
       };
