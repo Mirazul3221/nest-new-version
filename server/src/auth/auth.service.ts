@@ -27,7 +27,7 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
-  async register_user(createAuthDto: CreateAuthDto): Promise<{ msg: string }> {
+  async register_user(createAuthDto: CreateAuthDto): Promise<{token:string, msg: string }> {
     const { name, email, password, role, status, balance } = createAuthDto;
     const userInfo = await this.userModel.findOne({ email });
     if (userInfo) {
@@ -37,7 +37,7 @@ export class AuthService {
         { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
         { sub: 'English', rightAns: 0, wrongAns: 0 },
       ];
-      const new_user = this.userModel.create({
+      const new_user =await this.userModel.create({
         role: role,
         status: status,
         balance: balance,
@@ -52,7 +52,13 @@ export class AuthService {
         totalCountQuestions: allSubject,
         totalCountQuestionsId:[]
       });
-      return { msg: 'User register success' };
+      const token = await this.jwtService.sign({
+        id: (await new_user)._id,
+        name: (await new_user).name,
+        profile: (await new_user).profile,
+        role: (await new_user).role,
+      });//
+      return {token, msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform` };
       //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
     }
   }
@@ -65,16 +71,18 @@ export class AuthService {
     const loginInfo = await this.userModel
       .findOne({ email })
       .select('+password');
-
+     console.log(loginInfo)
     if (loginInfo) {
       const check_password = await bcrypt.compare(password, loginInfo.password);
       if (check_password) {
         const token = await this.jwtService.sign({
-          id: (await loginInfo).id,
+          id: (await loginInfo)._id,
           name: (await loginInfo).name,
           profile: (await loginInfo).profile,
           role: (await loginInfo).role,
         });//
+
+        console.log(token)
         return { token, message: 'User login success' };
       } else {
         throw new UnauthorizedException('Invalied password !');

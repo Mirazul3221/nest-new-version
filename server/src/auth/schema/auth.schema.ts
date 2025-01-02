@@ -20,7 +20,7 @@ export class Reader extends Document {
   name: string;
   @Prop({ unique: [true, 'Email already exist'] })
   email: string;
-  @Prop({ required: true, select: false })
+  @Prop({ required: false, select: false })
   password: string;
   @IsOptional()
   @Prop({ required: false })

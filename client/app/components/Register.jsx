@@ -9,8 +9,10 @@ import { FcGoogle } from "react-icons/fc";
 import Logo from "./Logo";
 import loaderImg from "@/public/loader.gif";
 import Image from "next/image";
+import { useStore } from "../global/DataProvider";
 const InputForm = () => {
   const router = useRouter();
+  const {dispatch} = useStore()
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
   const [submitValue, setSubmitValue] = useState({
@@ -37,9 +39,15 @@ const InputForm = () => {
       setLoader(true)
       const { data } = await axios.post(uri, submitValue);
       setAlert(data.msg);
+      if(typeof window !== 'undefined'){
+        localStorage.setItem("token", data.token);
+      }
+
+      dispatch({ type: "login_success", paylod: { token: data.token } });
       setTimeout(() => {
-        router.push("/login");
-      }, 3000);
+        router.push("/");
+      }, 100);
+       console.log(data)
       setLoader(false)
     } catch (error) {
       console.log(error);
@@ -48,6 +56,19 @@ const InputForm = () => {
      
     }
   };
+
+//   // Assuming you are using fetch
+// fetch('http://localhost:5050/auth/facebook/callback', {
+//   credentials: 'include',
+// })
+//   .then(response => response.json())
+//   .then(data => {
+//     console.log('Login successful:', data);
+//     // Save user data or redirect user to another page
+//   })
+//   .catch(error => {
+//     console.error('Error during Facebook login:', error);
+//   });
   return (
     <div>
       <div className="md:p-12 md:w-[400px] md:max-h-[99vh] w-full">

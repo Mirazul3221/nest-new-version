@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
 
 export class CreateAuthDto {
     @IsString()
@@ -14,9 +14,9 @@ export class CreateAuthDto {
     @IsNotEmpty()
     @IsEmail({}, { message: 'Please Provide valid email' })
     readonly email: string;
-    @IsNotEmpty()
+    @ValidateIf((o) => o.password !== undefined && o.password !== null && o.password !== '')
     @MinLength(6)
-    readonly password: string;
+    readonly password?: string;
     @IsString()
     @IsOptional()
     title?:string
