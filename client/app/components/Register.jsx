@@ -32,7 +32,6 @@ const InputForm = () => {
   };
   const handlesubmit = async (e) => {
     e.preventDefault();
-    // redirect("/dashboard")
     console.log(submitValue);
     try {
       let uri = `${baseurl}/auth/user/register`;

@@ -1,12 +1,10 @@
 import Image from 'next/image'
 import React from 'react'
-import registerImg from "@/public/register.png"
+import registerImg from "@/public/register.jpg"
 
 const RegisterScenery = () => {
   return (
-    <div className=' h-full'>
-       <Image className='h-full' src={registerImg} alt='Register your account'/>
-    </div>
+    <Image className='w-full' src={registerImg} alt='Register your account'/>
   )
 }
 

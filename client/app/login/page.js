@@ -8,11 +8,13 @@ import InputForm from "../components/Login";
 const page = () => {
   return (
     <div className="md:h-screen h-[94vh] md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] mx-auto">
-      <div className="md:flex bg-white rounded-md md:drop-shadow-2xl shadow-black md:w-2/3">
-      <div className="hidden md:block">
-      <RegisterScenery />
+      <div className="md:flex md:p-10 bg-white rounded-md md:drop-shadow-2xl shadow-black md:w-2/3">
+      <div className="hidden w-1/2 md:block">
+       <img className="" src="login.jpg" alt="login"/>
       </div>
-      <InputForm />
+        <div className="w-1/2">
+          <InputForm />
+        </div>
       </div>
       <div className="absolute -z-10 left-0 bottom-0 w-full">
         <Image className="h-[30vh] md:h-auto" src={register_background} alt="background"></Image>

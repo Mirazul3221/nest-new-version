@@ -16,12 +16,12 @@ const Page = () => {
     // }
   return (
     <div className="h-screen md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] mx-auto">
-      <div className="md:flex bg-white rounded-md md:drop-shadow-2xl shadow-black md:w-2/3">
+      <div className="md:flex overflow-hidden bg-white rounded-md md:drop-shadow-2xl shadow-black">
       <div className="hidden md:block">
-      <RegisterScenery />
+     <img className="h-full" src="/recoverypass.jpg" alt="recoverypass" />
       </div>
       {key == "mailbox" && <ForgetPass setKey={setKey} setMail={setMail} getMyProfile={getMyProfile} />}
-      {key ==='myprofile' && <MyProfile myProfile={myProfile} setKey={setKey} />}
+      {key ==='myprofile' && <MyProfile myProfile={myProfile} setKey={setKey} mail={mail}/>}
       {key == "otpbox" && <Otp setKey={setKey} mail={mail}/>}
       {key == "setpass" && <RecoveryPass mail={mail}/>}
       </div>

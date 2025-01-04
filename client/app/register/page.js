@@ -7,7 +7,7 @@ import RegisterScenery from "../components/RegisterScenery";
 const page = () => {
   return (
     <div className="h-screen flex items-center justify-center relative max-w-[1440px] mx-auto">
-      <div className="md:flex md:p-10 rounded-md bg-white/95 md:drop-shadow-2xl shadow-black md:w-2/3 md:h-[90vh] overflow-hidden w-full p-8">
+      <div className="md:flex items-center md:p-10 rounded-md bg-white md:drop-shadow-2xl shadow-black md:w-2/3 md:h-[90vh] overflow-hidden w-full p-8">
         <div className="hidden md:block">
           <RegisterScenery />
         </div>

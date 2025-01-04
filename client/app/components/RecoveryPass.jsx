@@ -38,7 +38,6 @@ const RecoveryPass = ({mail}) => {
   };
   return (
     <div>
-      {pass}
       <div className="p-8 md:w-[400px] md:h-[74vh]">
         <form onSubmit={handlesubmit}>
           <div>

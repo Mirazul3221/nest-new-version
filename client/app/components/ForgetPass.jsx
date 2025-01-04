@@ -30,12 +30,12 @@ const ForgetPass = ({ setKey, setMail,getMyProfile }) => {
     // redirect("/dashboard")
     try {
       setLoader(true);
-      let uri = `${baseurl}/auth/sendmail`;
-      const { data } = await axios.post(uri, submitValue);
-      // setTimeout(() => {
-      //   setKey("otpbox");
-      // }, 1000);
-      // getmyprofile
+      // let uri = `${baseurl}/auth/sendmail`;
+      // const { data } = await axios.post(uri, submitValue);
+      // // setTimeout(() => {
+      // //   setKey("otpbox");
+      // // }, 1000);
+      // // getmyprofile
      const userDetails = await axios.post(`${baseurl}/auth/getmyprofile`, submitValue);
      if (userDetails) {
       setKey("myprofile");
