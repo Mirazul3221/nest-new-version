@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { CommentSchema } from "./comment.schema";
 @Schema({timestamps:true})
 export class UsersQuestion extends Document {
     @Prop({ type: String, required: true })
     slug: string; // Author of the post
-    @Prop({ type: String, required: true })
-    userId: string; // Author of the post
+    @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Reader' })
+    userId: mongoose.Schema.Types.ObjectId; // Reference to the User model
     @Prop({ type: String, required: true })
     userName: string; // Author of the post
     @Prop({type:String,required:true})

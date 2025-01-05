@@ -127,12 +127,12 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
               <div className="">
-                {myProfile !== "" ? (
+                {myQuestion.profile !== "" ? (
                   <img
                     onMouseEnter={() => setProfileContainer(true)}
                     onMouseLeave={() => setProfileContainer(false)}
                     className="w-10"
-                    src={myProfile}
+                    src={myQuestion.profile}
                     alt={myQuestion.userName}
                   />
                 ) : (

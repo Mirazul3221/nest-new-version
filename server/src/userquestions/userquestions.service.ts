@@ -69,12 +69,26 @@ export class UserquestionsService {
 
   async findMyAllQuestions(id,skip) {
   const filteredQuestions = await this.QuestionModel.aggregate([
-    { $match: { userId: id.toString() } },
+    { $match: { userId: id } },
 
     { $unwind: { path: "$comments", preserveNullAndEmptyArrays: true } },
 
     // Sort the comments in descending order by their `createdAt`
     { $sort: { "comments.createdAt": -1 } },
+    {
+      $lookup: {
+        from: "readers", // The name of the user profiles collection
+        localField: "userId", // The field in the questions collection
+        foreignField: "_id", // The field in the users collection
+        as: "userProfile", // The name of the new field to store the joined data
+      },
+    },
+    {
+      $unwind: {
+        path: "$userProfile",
+        preserveNullAndEmptyArrays: true, // Optional: keep questions even if user profile doesn't exist
+      },
+    },
     {
       $skip: +skip, // Skip the required number of documents
     },
@@ -82,6 +96,7 @@ export class UserquestionsService {
       $limit: 10, // Limit the number of documents
     },
  // Group back all fields and collect the sorted comments
+
  
  {
   $group: {
@@ -126,7 +141,7 @@ export class UserquestionsService {
       updatedAt: 1,
       userId: 1,
       userName: 1,
-      userProfile: 1,
+      profile:"$userProfile.profile",
       __v: 1,
       comments: { $slice: ["$recentComments", 0, 2] }, // Limit to two comments
       totalComments: { $size: '$recentComments' }, // Count the total number of comments
@@ -147,7 +162,21 @@ export class UserquestionsService {
       const questions = await this.QuestionModel.aggregate([
         {
           $match: {
-            userId: { $ne: id.toString() }, // Exclude user's questions
+            userId: { $ne: id }, // Exclude user's questions
+          },
+        },
+        {
+          $lookup: {
+            from: "readers", // The name of the user profiles collection
+            localField: "userId", // The field in the questions collection
+            foreignField: "_id", // The field in the users collection
+            as: "userProfile", // The name of the new field to store the joined data
+          },
+        },
+        {
+          $unwind: {
+            path: "$userProfile",
+            preserveNullAndEmptyArrays: true, // Optional: keep questions even if user profile doesn't exist
           },
         },
         {
@@ -164,7 +193,7 @@ export class UserquestionsService {
             slug:1,
             userId:1,
             userName:1,
-            userProfile:1,
+            profile:"$userProfile.profile",
             subject:1,
             chapter:1,
             prevExam:1,
@@ -183,6 +212,10 @@ export class UserquestionsService {
         },
       ]);
       return questions
+  }
+
+ async testQ(){
+  return await this.QuestionModel.find()
   }
 
   async findMyFriendsAllQuestionComments(id,skip){

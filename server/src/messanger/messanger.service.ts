@@ -34,13 +34,13 @@ export class MessangerService {
       ]
     });
    
-    const uniqueIds = new Set <string>();
-    allMessage.forEach((question)=>{
-      uniqueIds.add(question.senderId.toString());
-      uniqueIds.add(question.receiverId.toString());
-    })
-     const getAll = Array.from(uniqueIds);
-    const getAllIds = getAll.map(id => new Types.ObjectId(id))
+    // const uniqueIds = new Set <string>();
+    // allMessage.forEach((question)=>{
+    //   uniqueIds.add(question.senderId.toString());
+    //   uniqueIds.add(question.receiverId.toString());
+    // })
+    //  const getAll = Array.from(uniqueIds);
+    // const getAllIds = getAll.map(id => new Types.ObjectId(id))
     const myObjectId = new Types.ObjectId(myId)
     
     const result = await this.MessangerModel.aggregate([

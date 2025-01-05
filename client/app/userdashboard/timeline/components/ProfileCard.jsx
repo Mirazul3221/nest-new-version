@@ -165,7 +165,7 @@ const ProfileCard = ({ id }) => {
                     onClick={() => cancleFriendRequest(user._id)}
                     className="py-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white"
                   >
-                    Cancel{" "}
+                    Cancel
                   </div>
                 ) : (
                   <div

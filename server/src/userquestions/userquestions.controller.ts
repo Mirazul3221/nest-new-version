@@ -7,12 +7,17 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('userquestions')
 export class UserquestionsController {
   constructor(private readonly userquestionsService: UserquestionsService) {}
+  @Get('test-q')
+  async test(){
+    return await this.userquestionsService.testQ()
+  }
+
   @UseGuards(AuthGuard())
   @Post('create-question')
 async createQuestion(@Req() req, @Body() createUserquestionDto: CreateUserquestionDto) {
     return await this.userquestionsService.create(createUserquestionDto,req.user);
   }
-
+//
   
   @UseGuards(AuthGuard())
   @Post('edit-question/:id')
