@@ -209,7 +209,7 @@ export class UserquestionsService {
             totalComments: { $size: '$comments' }, // Count the total number of comments
             createdAt:1
           },
-        },
+        }
       ]);
       return questions
   }

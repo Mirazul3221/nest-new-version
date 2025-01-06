@@ -8,6 +8,7 @@ import { baseurl } from '@/app/config';
 import storeContext from '@/app/global/createContex';
 import moment from 'moment';
 import { useSocket } from '../../global/SocketProvider';
+import CommentProfile from './CommentProfile';
 
 const CommentsContainer = ({setOpenCommentsBox,question}) => {
     const { store } = useContext(storeContext);
@@ -195,15 +196,19 @@ const UserComment = ({item})=>{
           return `${Math.floor(duration.asMinutes())}m`; // Less than an hour, show in minutes
         } else if (duration.asDays() < 1) {
           return `${Math.floor(duration.asHours())}h`; // Less than a day, show in hours
-        } else {
+        } else if (duration.asWeeks() < 1){
           return `${Math.floor(duration.asDays())}d`; // More than a day, show in days
+        } else if (duration.asMonths() < 1) {
+          return `${Math.floor(duration.asWeeks())}w`; 
+        } else {
+           return `${Math.floor(duration.asMonths())}m`;
         }
       }
    return (
     <div>
                     <div className="flex py-2 gap-2 text-gray-900">
                     <div>
-                      <img className="w-6" src={item.profile} alt={item.name} />
+                      <CommentProfile id={item.userId} name={item.name}/>
                     </div>
                     <div className="w-fit max-w-11/12">
                       <div className="px-3 py-1 rounded-[20px] bg-gray-100">

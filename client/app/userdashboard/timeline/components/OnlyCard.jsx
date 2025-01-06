@@ -82,7 +82,7 @@ const OnlyCard = ({question}) => {
           <div className="top flex items-center gap-2">
             <img
               className="w-10"
-              src={question.userProfile}
+              src={question.profile}
               alt={question.userName}
             />
             <div className="">

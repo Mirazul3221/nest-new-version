@@ -318,7 +318,8 @@ export class AuthService {
     // console.log()
     // return user.profile;
     const user = await this.userModel.findById(id, { profile: 1, _id: 0 }); // Fetch only the 'profile' field
-    return user ? user.profile : null; // Ensure proper handling if the user is not found
+    console.log(user.profile)
+    return user.profile // Ensure proper handling if the user is not found
   }
   //========profile update==============
   async profile() {

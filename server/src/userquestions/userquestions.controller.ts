@@ -86,7 +86,6 @@ async deleteQuestion(@Param("id") id) {
   @UseGuards(AuthGuard())//
   @Get('get-all-comments')
   async findMyFriendsAllQuestionComments(@Query('id') id, @Query('page') page : number,) {
-    console.log(id)
     return await this.userquestionsService.findMyFriendsAllQuestionComments(id,page);
   }//
 

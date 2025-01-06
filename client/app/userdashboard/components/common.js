@@ -22,7 +22,6 @@ export const profileApi =async (token,id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     return data
   } catch (error) {
     console.log(error);

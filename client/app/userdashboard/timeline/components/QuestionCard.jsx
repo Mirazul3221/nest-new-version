@@ -20,7 +20,6 @@ import { profileApi } from "../../components/common";
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
   const { store } = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState();
-  const [myProfile, setMyProfile] = useState("");
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
   const [profileContainer, setProfileContainer] = useState(false);
@@ -33,14 +32,6 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     return formattedDate;
   };
 
-  const fetChProfile = async () => {
-    const res = await profileApi(store.token, myQuestion.userId);
-    setMyProfile(res);
-  };
-
-  useEffect(() => {
-    fetChProfile();
-  }, []);
   const checkAns = useCallback((e, ans, question) => {
     /////////////////////////////////////////////////////////////////////////////////////////
     // const mainTerget = questionsData[index].rightAns;

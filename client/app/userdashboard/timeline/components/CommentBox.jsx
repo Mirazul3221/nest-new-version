@@ -25,6 +25,7 @@ import { HiOutlineFaceFrown } from "react-icons/hi2";
 import { imojis } from "../../components/imoji";
 import { BiCross } from "react-icons/bi";
 import { formatRelativeTime } from "./common";
+import CommentProfile from "./CommentProfile";
 const CommentBox = ({ question }) => {
   const { store } = useContext(storeContext);
   const { socket } = useSocket();
@@ -133,7 +134,11 @@ const CommentBox = ({ question }) => {
       setOpen(true);
     }, 100);
   }
-console.log(question)
+  if (openCommentsBox) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
   /////////////////////////////////////////////////////////////////////////////////
   return (
     <div className="relative">
@@ -239,7 +244,7 @@ console.log(question)
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
-                      <img className="w-6" src={c?.profile} alt={c?.name} />
+                       <CommentProfile id={c.userId} name={c.name}/>
                     </div>
                     <div className="w-fit max-w-11/12">
                       <div className="px-3 py-1 rounded-[20px] bg-gray-100">
