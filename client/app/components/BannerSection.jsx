@@ -17,7 +17,7 @@ const BannerSection = () => {
         </div> */}
         <div>
         <div className="hidden md:block">
-           <Search py={4} px={6} r={'full'}/>
+           <Search py={4} px={6}/>
         </div>
         <div className="text-white">
           <h2 className="md:text-[70px] md:block hidden font-semibold text-center">
