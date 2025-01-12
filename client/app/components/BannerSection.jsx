@@ -1,6 +1,7 @@
 import React from "react";
 import laptop from "@/public/laptop-view.png";
 import Image from "next/image";
+import Search from "./Search";
 const BannerSection = () => {
   return (
     <div className="md:px-20 px-4 mt-20 md:mt-0 h-[80vh] relative">
@@ -14,6 +15,10 @@ const BannerSection = () => {
         {/* <div className="md:w-1/2 laptop-anim hidden md:block">
           <Image className="md:pt-20" src={laptop} alt="laptop-view" />
         </div> */}
+        <div>
+        <div className="hidden md:block">
+           <Search py={4} px={6} r={'full'}/>
+        </div>
         <div className="text-white">
           <h2 className="md:text-[70px] md:block hidden font-semibold text-center">
             {"Let's start A New Way to Learn"}
@@ -25,6 +30,7 @@ const BannerSection = () => {
             This is the best platform to help you enhance your skills, expand
             your knowledge and prepare for BCS and other exam.
           </h2>
+        </div>
         </div>
         <Image className="md:hidden mt-10" src={laptop} alt="laptop-view" />
       </div>

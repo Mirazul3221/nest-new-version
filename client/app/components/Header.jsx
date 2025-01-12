@@ -4,9 +4,11 @@ import { FaBars } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import Link from "next/link";
 import Search from "./Search";
+import { usePathname, useRouter } from "next/navigation";
 const Header = ({}) => {
   const [switcher, setSwitcher] = useState(false);
   const [switcher1, setSwitcher1] = useState(false);
+  const route = usePathname()
  //=============set scroll for header================
  const [header,setHeader] = useState(false)
  const scrollHeader = ()=>{
@@ -40,7 +42,9 @@ const Header = ({}) => {
         <div className="hidden sm:3/12 w-7/12 md:flex gap-5 items-center">
           <Logo w={100} />
           <div className="w-1/2">
-          <Search/>
+           {
+            route !== '/' && <Search/>
+           }
           </div>
         </div>
         <div className="md:hidden block">
