@@ -8,11 +8,11 @@ import { AuthGuard } from '@nestjs/passport';
 export class MessangerController {
   constructor(private readonly messangerService: MessangerService) {}
 
-  @Post('create')
+  @Post('message-create')
   @UseGuards(AuthGuard())
   async create(@Body() createMessangerDto:CreateMessangerDto,@Req() req:any) {
     const me = req.user; 
-    return await this.messangerService.create(createMessangerDto,me);
+    return await this.messangerService.createTextMessage(createMessangerDto,me);
   }
   @Get('my-friends-by-both-message-and-profile')
   @UseGuards(AuthGuard())

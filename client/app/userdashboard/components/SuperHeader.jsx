@@ -215,7 +215,7 @@ const SuperHeader = () => {
                     setOpenMessage(!openMessage);
                     setOpenNotif(false);
                   }}
-                  className={`text-lg header-box font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+                  className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
                 >
                   {/* <div className={`absolute  -top-1 -right-1`}>
                     {unseenNotification?.length > 0 && (
@@ -236,7 +236,7 @@ const SuperHeader = () => {
                     setOpenMessage(false)
                     seenAndDeleteNotif();
                   }}
-                  className={`text-lg header-box font-normal border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+                  className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
                 >
                   <div className={`absolute -top-1 -right-1`}>
                     {unseenNotification?.length > 0 && (

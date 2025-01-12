@@ -14,20 +14,20 @@ const MessageBox = ({}) => {
   const { store } = useStore();
     const {socket, myActiveFriends} = useSocket();
   const [messangerFriends, setMessangerFriends] = useState(null);
-  // const fetchAllFriendsByMessage = async () => {
-  //   try {
-  //     const { data } = await axios.get(
-  //       `${baseurl}/messanger/my-friends-by-message`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${store.token}`,
-  //         },
-  //       }
-  //     );
+  const fetchAllFriendsByMessage = async () => {
+    try {
+      const { data } = await axios.get(
+        `${baseurl}/messanger/my-friends-by-message`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
 
-  //     setMessangerFriends(data);
-  //   } catch (error) {}
-  // };
+      setMessangerFriends(data);
+    } catch (error) {}
+  };
 
   const sortedMessages = messangerFriends?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)

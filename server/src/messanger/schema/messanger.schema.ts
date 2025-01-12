@@ -14,6 +14,19 @@ class EmojiObject {
   @Prop({ required: true })
   emoji: string;
 }
+class VariantMessage {
+  content: string;
+
+  media: string;
+  
+  voice: string;
+}
+
+// interface VariantMessage {
+//   content:string,
+//   media:string,
+//   voice:string
+// }
 @Schema({
     timestamps: true,
   })
@@ -24,7 +37,7 @@ export class Messanger extends Document {
    @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Reader',requiredPaths:true})
    receiverId:mongoose.Schema.Types.ObjectId
   @Prop({required:true})
-  message:string
+  message:VariantMessage
   @Prop({ type: [EmojiObject], _id: false })
   emoji:EmojiObject[]
   @Prop({type:[]})

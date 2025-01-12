@@ -18,8 +18,8 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyC
         setIsSend(true)
         setSendCurrentMsg(true)
         const { data } = await axios.post(
-          `${baseurl}/messanger/create`,
-          { receiverId:msg.receiverId, message: msg.content ? msg.content : "Love", reply: [replyText,toReplyerId]},
+          `${baseurl}/messanger/message-create`,
+          { receiverId:msg.receiverId, message: msg.message.content ? msg.message.content : "Love", reply: [replyText,toReplyerId]},
           {
             headers: {
               Authorization: `Bearer ${store.token}`,
@@ -33,7 +33,7 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyC
         dispatch({type:'send-message',payload:reformData})
         setIsSend(false)
         setSendCurrentMsg(false)
-        allMsg = allMsg.filter(m => m !== msg)
+        allMsg = allMsg.filter(m => m.content !== msg)
         element.current.remove()
        } catch (error) {
         console.log(error)
@@ -45,7 +45,7 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyC
   return (
     <div ref={element} className="flex justify-end">
    <div className="">
-   <h2 className='px-6 py-2 bg-violet-400 text-gray-600 rounded-full'>{msg.content}</h2>
+   <h2 className='px-6 py-2 bg-violet-400 text-gray-600 rounded-full'>{msg.message.content}</h2>
     {
       isSend && <p>Sending...</p>
     }

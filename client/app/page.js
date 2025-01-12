@@ -70,6 +70,7 @@ export default function Home() {
             <BannerSection />
             <Section_01 />
             <Section_02 />
+            <p>test's</p>
             {/* <GridSection/> */}
             {/* <div className="bg-[#1c1a24]">
               <Projects />

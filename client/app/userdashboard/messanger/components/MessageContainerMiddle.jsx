@@ -72,7 +72,7 @@ const Middle = ({ id, userDetails }) => {
     if (message !== "") {
       setShallowMessage((prev) => [
         ...prev,
-        { content: message, receiverId: userDetails._id },
+        { message: {content:message,media:'',voice:''}, receiverId: userDetails._id },
       ]);
     }
     setMessage("");
@@ -247,6 +247,26 @@ const Middle = ({ id, userDetails }) => {
       replyingTo.innerText = `Replying to ${userDetails?.name}`;
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////
+  const [hiddenTarget,setHiddenTarget] = useState(false)
+
+  useEffect(() => {
+     window.addEventListener('click',(e)=>{
+      if (e.target.classList.contains('hiddenTarget')) {
+        setHiddenTarget(true)  
+      }else{
+        setHiddenTarget(false)  
+      }
+     }) 
+  }, []);
+  const handle_media_file = (e)=>{
+    const file = e.target.files[0];
+    if(file){
+      const url = URL.createObjectURL(file);
+      console.log(url)
+    }
+  }
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -703,7 +723,13 @@ const Middle = ({ id, userDetails }) => {
             </div>
           </div>
           <div className="p-4 flex justify-between items-end gap-2">
+            
+            {
+              !hiddenTarget && <label className="mb-2" htmlFor="send_image">Image</label>
+            }
+            <input onChange={handle_media_file} className="hidden" id="send_image" type="file" />
             <textarea
+            className="hiddenTarget"
               id="message_text"
               ref={messangerRef}
               value={message}

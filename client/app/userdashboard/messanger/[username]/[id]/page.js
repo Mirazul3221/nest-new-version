@@ -26,6 +26,8 @@ const Page = () => {
   useEffect(() => {
     fetchUser(id);
   }, [id]);
+
+  console.log(userDetails)
   return (
     <ProtectRoute>
         <div className=" w-screen h-screen fixed top-0 left-0">
@@ -54,19 +56,8 @@ const Page = () => {
           </div>
         </div>
         <div className="write w-3/12 bg-white">
-          <div className="overflow-y-auto h-20">
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
-            gsdrrrrrrrrrrr dtttttttttttttt jttttttttttttt jtttttttttttttttttttt
+          <div className="overflow-y-auto h-20 text-center">
+            Coming Soon
           </div>
         </div>
       </div>
