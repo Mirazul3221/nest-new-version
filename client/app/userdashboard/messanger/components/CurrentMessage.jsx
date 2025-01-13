@@ -5,7 +5,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useMessage } from '../../global/messageProvider'
 import { useSocket } from '../../global/SocketProvider'
-
+//
 const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyContent,replyMsgStatus,toReplyerId,setToReplyerId}) => {
     const { store } = useContext(storeContext);
     const {socket} = useSocket()

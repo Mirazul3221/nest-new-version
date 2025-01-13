@@ -86,7 +86,7 @@ useEffect(() => {
                           {friend.senderId === store.userInfo.id ? "You :" : ""}
                         </span>
                        {
-                        typing.message && typing.senderId === friend.userId ? "Typing..." : friend.lastMessage.length > 20 ? friend.lastMessage.slice(0,20) + '......' : friend.lastMessage
+                        typing.message && typing.senderId === friend.userId ? "Typing..." : friend.lastMessage.length > 20 ? friend.lastMessage.content.slice(0,20) + '......' : friend.lastMessage.content
                        }
                       </h4>
                   </div>

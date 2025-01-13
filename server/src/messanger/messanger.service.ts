@@ -16,14 +16,14 @@ export class MessangerService {
   ){}
 
   async createTextMessage(createMessangerDto:CreateMessangerDto,id) {
-    // const created =  await this.MessangerModel.create({
-    //   senderId:id,
-    //   receiverId:createMessangerDto.receiverId,
-    //   message:{content:createMessangerDto.message,media:'',voice:''},
-    //   reply:createMessangerDto.reply,
-    //   seenMessage:false
-    //  })
-    //  return created
+    const created =  await this.MessangerModel.create({
+      senderId:id,
+      receiverId:createMessangerDto.receiverId,
+      message:{content:createMessangerDto.message,media:'',voice:''},
+      reply:createMessangerDto.reply,
+      seenMessage:false
+     })
+     return created
   }
 
   async getCombinedLastMessageAndUserProfiles (myId){

@@ -333,7 +333,7 @@ const Messanger = ({
                             ref={bottomRef}
                             className="px-4 py-1 overflow-hidden"
                           >
-                            {HTMLReactParser(m.message)}
+                            {HTMLReactParser(m.message.content)}
                           </p>
                         </div>
                         <p className="text-[9px] ml-6">

@@ -57,7 +57,7 @@ const MyCurrentMessage = ({
 
       setLoader(true);
       const { data } = await axios.post(
-        `${baseurl}/messanger/create`,
+        `${baseurl}/messanger/message-create`,
         { receiverId, message: msg.message ? msg.message : "Love" },
         {
           headers: {

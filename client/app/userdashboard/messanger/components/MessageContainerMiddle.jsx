@@ -240,7 +240,7 @@ const Middle = ({ id, userDetails }) => {
     setShowReply(true);
     const replyingTo = document.getElementById("replying_to");
     const replyingText = document.getElementById("replying_content");
-    replyingText.innerText = msg.message;
+    replyingText.innerText = msg.message.content;
     if (msg.senderId == store.userInfo.id) {
       replyingTo.innerText = "Replying to yourself";
     } else {
@@ -431,7 +431,7 @@ const Middle = ({ id, userDetails }) => {
                             }
                             `}
                           >
-                            {msg?.message}
+                            {msg?.message.content}
                           </h2>
                           {msg?.emoji?.length > 0 && (
                             <div
@@ -530,7 +530,7 @@ const Middle = ({ id, userDetails }) => {
                                                           "rounded-bl-[30px]" : ''
                                                         }`}
                           >
-                            {msg?.message}
+                            {msg?.message.content}
                           </h2>
                           {msg?.emoji?.length > 0 && (
                             <div

@@ -14,20 +14,20 @@ const MessageBox = ({}) => {
   const { store } = useStore();
     const {socket, myActiveFriends} = useSocket();
   const [messangerFriends, setMessangerFriends] = useState(null);
-  const fetchAllFriendsByMessage = async () => {
-    try {
-      const { data } = await axios.get(
-        `${baseurl}/messanger/my-friends-by-message`,
-        {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        }
-      );
+  // const fetchAllFriendsByMessage = async () => {
+  //   try {
+  //     const { data } = await axios.get(
+  //       `${baseurl}/messanger/my-friends-by-message`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${store.token}`,
+  //         },
+  //       }
+  //     );
 
-      setMessangerFriends(data);
-    } catch (error) {}
-  };
+  //     setMessangerFriends(data);
+  //   } catch (error) {}
+  // };
 
   const sortedMessages = messangerFriends?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
@@ -79,7 +79,7 @@ const MessageBox = ({}) => {
                       <h4 className="text-sm text-slate-500">
                         <span className="font-semibold text-slate-700">
                           {friend.senderId === store.userInfo.id ? "You :" : ""}
-                          { friend.lastMessage.length > 20 ? friend.lastMessage.slice(0,20) + '......' : friend.lastMessage}
+                          { friend.lastMessage.length > 20 ? friend.lastMessage.content.slice(0,20) + '......' : friend.lastMessage.content}
                         </span>
                       </h4>
                   </div>
