@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { MessangerService } from './messanger.service';
-import { CreateMessangerDto } from './dto/create-messanger.dto';
+import { CreateImageMessangerDto, CreateMessangerDto } from './dto/create-messanger.dto';
 import { UpdateMessangerDto } from './dto/update-messanger.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { FileSystemStoredFile, FormDataRequest } from 'nestjs-form-data';
 
 @Controller('messanger')
 export class MessangerController {
@@ -10,10 +11,21 @@ export class MessangerController {
 
   @Post('message-create')
   @UseGuards(AuthGuard())
-  async create(@Body() createMessangerDto:CreateMessangerDto,@Req() req:any) {
-    const me = req.user; 
+  async createTextMessage(@Body() createMessangerDto:CreateMessangerDto,@Req() req:any) {
+    const me = req.user._id; 
     return await this.messangerService.createTextMessage(createMessangerDto,me);
   }
+//
+
+  @Post('image-create')
+  @UseGuards(AuthGuard())
+  @FormDataRequest({storage:FileSystemStoredFile})//
+  async createImageMessage(@Body() createMessage:CreateImageMessangerDto, @Req() req:any) {
+    const me = req.user._id; 
+    return await this.messangerService.createImageMessage(createMessage,me);
+  }
+
+
   @Get('my-friends-by-both-message-and-profile')
   @UseGuards(AuthGuard())
   async getCombinedLastMessageAndUserProfiles (@Req() req:any){

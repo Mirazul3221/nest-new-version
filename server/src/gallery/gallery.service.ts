@@ -18,7 +18,7 @@ export class GalleryService {
   //=======================================================
   async create(createGalleryDto: CreateGalleryDto,user) {
     const {images} =await createGalleryDto;
-    // console.log(images[0].path)
+    console.log(images)
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
       api_key: this.ConfigService.get('Api_key'),
@@ -41,7 +41,6 @@ export class GalleryService {
       // }
       const allImages = []
       for (let i = 0; i < images.length; i++) {
-       console.log(images[i].path)
        const {url} = await cloudinary.uploader.upload(images[i].path,{folder:"mcq_images"})  
        allImages.push({assistId:user._id,url})
       }

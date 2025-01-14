@@ -72,7 +72,10 @@ const Middle = ({ id, userDetails }) => {
     if (message !== "") {
       setShallowMessage((prev) => [
         ...prev,
-        { message: {content:message,media:'',voice:''}, receiverId: userDetails._id },
+        {
+          message: { content: message, media: "", voice: "" },
+          receiverId: userDetails?._id,
+        },
       ]);
     }
     setMessage("");
@@ -133,7 +136,9 @@ const Middle = ({ id, userDetails }) => {
     socket &&
       socket.on("message-from", (data) => {
         dispatch({ type: "receive-message", payload: data });
-        scrollToBottom();
+        setTimeout(() => {
+          scrollToBottom();
+        }, 1000);
       });
     return () => {
       socket && socket.off("message-from");
@@ -249,24 +254,64 @@ const Middle = ({ id, userDetails }) => {
   };
 
   ////////////////////////////////////////////////////////////////////////
-  const [hiddenTarget,setHiddenTarget] = useState(false)
+  const [hiddenTarget, setHiddenTarget] = useState(false);
 
   useEffect(() => {
-     window.addEventListener('click',(e)=>{
-      if (e.target.classList.contains('hiddenTarget')) {
-        setHiddenTarget(true)  
-      }else{
-        setHiddenTarget(false)  
+    window.addEventListener("click", (e) => {
+      if (e.target.classList.contains("hiddenTarget")) {
+        setHiddenTarget(true);
+      } else {
+        setHiddenTarget(false);
       }
-     }) 
+    });
   }, []);
-  const handle_media_file = (e)=>{
-    const file = e.target.files[0];
-    if(file){
-      const url = URL.createObjectURL(file);
-      console.log(url)
+
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [imgUri, setImgUri] = useState(null);
+  const handle_media_file = async (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    setImgUri(URL.createObjectURL(e.target.files[0]));
+    setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    if (file) {
+      const media = new FormData(); // Create a FormData object
+      media.append("receiverId", userDetails._id); // Add receiverId
+      media.append("image", file); // Append the file
+      media.append(
+        "reply",
+        JSON.stringify([replyContent.innerText, toReplyerId])
+      ); // Add reply as a string if it's an array or object
+
+      try {
+        setLoadingImage(true);
+        const { data } = await axios.post(
+          `${baseurl}/messanger/image-create`,
+          media, // Pass FormData as the body
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+              "Content-Type": "multipart/form-data", // Ensure Content-Type is set correctly
+            },
+          }
+        );
+
+        socket && socket.emit('message-to',data)
+        dispatch({type:'send-message',payload:data})
+        scrollToBottom();
+        setLoadingImage(false);
+      } catch (error) {
+        setLoadingImage(false);
+        console.error(
+          "Error uploading file:",
+          error.response?.data || error.message
+        );
+      }
+    } else {
+      console.log("No file selected.");
     }
-  }
+  };
+
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -398,41 +443,59 @@ const Middle = ({ id, userDetails }) => {
                               You reply to {userDetails.name}
                             </h2>
                           )}
-                          {(msg?.reply?.length > 0 && msg?.reply[0] !== null)  && (
+                          {msg?.reply?.length > 0 && msg?.reply[0] !== null && (
                             <h2 className="w-fit text-gray-400 py-2 px-4 ml-auto rounded-l-[30px] rounded-tr-[30px] bg-gray-100 text-[12px]">
                               {msg?.reply[0]}
                             </h2>
                           )}
-                          <h2
-                            ref={scrollRef}
-                            className={`${
-                              i === messageBlog.length - 1 &&
-                              messageBlog.length > 1
-                                ? "msg_anim "
-                                : ""
-                            } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
-                              messageBlog.length === 1
-                                ? "rounded-[30px]"
-                                : "rounded-l-[30px]"
-                            } ${
-                              messageBlog.indexOf(msg) === 0 &&
-                              messageBlog.length > 1
-                                ? "rounded-tr-[30px]"
-                                : messageBlog.indexOf(msg) ===
-                                    messageBlog.length - 1 &&
-                                  messageBlog.length > 1
-                                ? "rounded-br-[30px] duration-500"
-                                : ""
-                            }
-                            ${
-                              ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
-                                msg?.emoji?.length > 0) ?
-                              "rounded-br-[30px]" : ''
-                            }
-                            `}
-                          >
-                            {msg?.message.content}
-                          </h2>
+                          {msg?.message?.content !== "" && (
+                            <h2
+                              ref={scrollRef}
+                              className={`${
+                                i === messageBlog.length - 1 &&
+                                messageBlog.length > 1
+                                  ? "msg_anim "
+                                  : ""
+                              } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                                messageBlog.length === 1
+                                  ? "rounded-[30px]"
+                                  : "rounded-l-[30px]"
+                              } ${
+                                messageBlog.indexOf(msg) === 0 &&
+                                messageBlog.length > 1
+                                  ? "rounded-tr-[30px]"
+                                  : messageBlog.indexOf(msg) ===
+                                      messageBlog.length - 1 &&
+                                    messageBlog.length > 1
+                                  ? "rounded-br-[30px] duration-500"
+                                  : ""
+                              }
+                                                        ${
+                                                          (msg?.reply?.length >
+                                                            0 &&
+                                                            msg?.reply[0] !==
+                                                              null) ||
+                                                          msg?.emoji?.length > 0
+                                                            ? "rounded-br-[30px]"
+                                                            : ""
+                                                        }
+                                                        `}
+                            >
+                              {msg?.message.content}
+                            </h2>
+                          )}
+
+                          {msg?.message.media !== "" && (
+                            <div className="mb-2">
+                                                          <img
+                              className="rounded-2xl"
+                              src={msg?.message.media}
+                              alt="message_image"
+                            />
+                            <p ref={scrollRef}></p>
+                            </div>
+                          )}
+
                           {msg?.emoji?.length > 0 && (
                             <div
                               onClick={(e) => handleEmojiSenderIdentity(e)}
@@ -503,35 +566,50 @@ const Middle = ({ id, userDetails }) => {
                               {userDetails.name} reply to himself/herself
                             </h2>
                           )}
-                          {(msg?.reply?.length > 0 && msg?.reply[0] !== null) && (
+                          {msg?.reply?.length > 0 && msg?.reply[0] !== null && (
                             <h2 className="w-fit text-gray-400 py-2 px-4 rounded-r-[30px] rounded-tl-[30px] bg-gray-100 text-[12px]">
                               {msg?.reply[0]}
                             </h2>
                           )}
-                          <h2
-                            className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
-                              messageBlog.length === 1
-                                ? "rounded-[30px]"
-                                : "rounded-r-[30px]"
-                            } ${
-                              messageBlog.indexOf(msg) === 0 &&
-                              messageBlog.length > 1
-                                ? "rounded-tl-[30px]"
-                                : messageBlog.indexOf(msg) ===
-                                    messageBlog.length - 1 &&
-                                  messageBlog.length > 1
-                                ? "rounded-bl-[30px]"
-                                : ""
+                            {
+                              msg?.message?.content &&                           <h2
+                              className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                                messageBlog.length === 1
+                                  ? "rounded-[30px]"
+                                  : "rounded-r-[30px]"
+                              } ${
+                                messageBlog.indexOf(msg) === 0 &&
+                                messageBlog.length > 1
+                                  ? "rounded-tl-[30px]"
+                                  : messageBlog.indexOf(msg) ===
+                                      messageBlog.length - 1 &&
+                                    messageBlog.length > 1
+                                  ? "rounded-bl-[30px]"
+                                  : ""
+                              }
+                                                          ${
+                                                            (msg?.reply?.length >
+                                                              0 &&
+                                                              msg?.reply[0] !==
+                                                                null) ||
+                                                            msg?.emoji?.length > 0
+                                                              ? "rounded-bl-[30px]"
+                                                              : ""
+                                                          }`}
+                            >
+                              {msg?.message.content}
+                            </h2>
                             }
-                                                        ${
-                                                          ((msg?.reply?.length > 0 && msg?.reply[0] !== null) ||
-                                                            msg?.emoji?.length >
-                                                              0) ?
-                                                          "rounded-bl-[30px]" : ''
-                                                        }`}
-                          >
-                            {msg?.message.content}
-                          </h2>
+                            
+                          {msg?.message.media !== "" && (
+                            <div className="mb-2">
+                                                          <img
+                              className="rounded-2xl"
+                              src={msg?.message.media}
+                              alt="message_image"
+                            />
+                            </div>
+                          )}
                           {msg?.emoji?.length > 0 && (
                             <div
                               onClick={(e) => handleEmojiSenderIdentity(e)}
@@ -691,8 +769,22 @@ const Middle = ({ id, userDetails }) => {
               })}
             </div>
           )}
+
+          {loadingImage && (
+            <div>
+              <div className="w-full flex justify-end">
+               <div className="w-[60%] relative">
+                <div className="w-full h-full absolute bg-black/30 top-0 left-0 flex justify-center items-center">Loading...</div>
+                  <img className="max-w-full max-h-[350px]" src={imgUri} alt="loading" />
+               </div>
+              </div>
+              <div ref={scrollRef} className="scroll_point">
+              </div>
+            </div>
+          )}
         </div>
 
+        000
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
         <div className={"bottom"}>
           <div
@@ -723,13 +815,19 @@ const Middle = ({ id, userDetails }) => {
             </div>
           </div>
           <div className="p-4 flex justify-between items-end gap-2">
-            
-            {
-              !hiddenTarget && <label className="mb-2" htmlFor="send_image">Image</label>
-            }
-            <input onChange={handle_media_file} className="hidden" id="send_image" type="file" />
+            {!hiddenTarget && (
+              <label className="mb-2" htmlFor="send_image">
+                Image
+              </label>
+            )}
+            <input
+              onChange={handle_media_file}
+              className="hidden"
+              id="send_image"
+              type="file"
+            />
             <textarea
-            className="hiddenTarget"
+              className="hiddenTarget"
               id="message_text"
               ref={messangerRef}
               value={message}

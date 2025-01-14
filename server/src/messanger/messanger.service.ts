@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMessangerDto } from './dto/create-messanger.dto';
+import { CreateImageMessangerDto, CreateMessangerDto } from './dto/create-messanger.dto';
 import { UpdateMessangerDto } from './dto/update-messanger.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Messanger, messangerModel } from './schema/messanger.schema';
 import mongoose, { Types } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
+import {v2 as cloudinary} from 'cloudinary'
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MessangerService {
@@ -12,7 +14,8 @@ export class MessangerService {
   constructor(
     @InjectModel(messangerModel)
     private MessangerModel : mongoose.Model<Messanger>,
-    private readonly authService : AuthService
+    private readonly authService : AuthService,
+    private readonly ConfigService: ConfigService
   ){}
 
   async createTextMessage(createMessangerDto:CreateMessangerDto,id) {
@@ -26,6 +29,26 @@ export class MessangerService {
      return created
   }
 
+
+  async createImageMessage(createMessage:CreateImageMessangerDto,id) {
+    const {receiverId,image,reply} = createMessage
+    const replyAsArray = JSON.parse(reply)
+
+    cloudinary.config({
+      cloud_name: this.ConfigService.get('cloud_name'),
+      api_key: this.ConfigService.get('Api_key'),
+      api_secret: this.ConfigService.get('Api_secret')
+    })
+    const data = await cloudinary.uploader.upload(image.path)
+    const created =  await this.MessangerModel.create({
+      senderId:id,
+      receiverId:receiverId,
+      message:{content:'',media:data.url,voice:''},
+      reply:replyAsArray,
+      seenMessage:false
+     })
+     return created
+  }
   async getCombinedLastMessageAndUserProfiles (myId){
     const allMessage = await this.MessangerModel.find({
       $or : [

@@ -87,14 +87,15 @@ const Bangla = () => {
       //error.response.data.message
     }
   };
-  //=================Handle multiple images===============
+  //=================Handle multiple images================
   const handleMultipleImage =async (e)=>{
     const media = new FormData()
    const images = e.target.files
    for (let i = 0; i < images.length; i++) {
     media.append('images',images[i])
-    console.log(images[i])
    }
+
+   console.log(media)
    try {
     setImageLoader(true)
     const { data } = await axios.post(`${baseurl}/gallery/add`, media, {
