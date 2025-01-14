@@ -28,9 +28,8 @@ const CurrentMessage = ({allMsg, msg,setSendCurrentMsg,replyMsgContent,setReplyC
         );
         setReplyContent('')
         setToReplyerId(null)
-        const reformData = {_id:data._id, senderId : data.senderId._id,receiverId:data.receiverId,message:data.message,reply:data.reply,seenMessage:data.seenMessage,createdAt:data.createdAt}
-        socket && socket.emit('message-to',reformData)
-        dispatch({type:'send-message',payload:reformData})
+        socket && socket.emit('message-to',data)
+        dispatch({type:'send-message',payload:data})
         setIsSend(false)
         setSendCurrentMsg(false)
         allMsg = allMsg.filter(m => m.content !== msg)
