@@ -94,8 +94,7 @@ const Bangla = () => {
    for (let i = 0; i < images.length; i++) {
     media.append('images',images[i])
    }
-
-   console.log(media)
+   
    try {
     setImageLoader(true)
     const { data } = await axios.post(`${baseurl}/gallery/add`, media, {

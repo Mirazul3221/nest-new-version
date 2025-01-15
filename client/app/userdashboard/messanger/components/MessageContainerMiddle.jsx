@@ -369,7 +369,7 @@ const Middle = ({ id, userDetails }) => {
             return (
               <div key={i} className="mt-10">
                 {messageBlog.map((msg, i) => {
-                  return msg?.senderId === store.userInfo.id ? (
+                  return msg ? msg?.senderId === store.userInfo.id ? (
                     <div key={i}>
                       {messageBlog.indexOf(msg) === 0 && (
                         <p className="text-center text-sm text-gray-400 mt-4">
@@ -716,7 +716,9 @@ const Middle = ({ id, userDetails }) => {
                         </div>
                       )}
                     </div>
-                  );
+                  ): <div className="loading flex justify-center">
+                    <img src={'/loading-buffer.gif'} alt="loading"/>
+                  </div>
                 })}
               </div>
             );
@@ -783,8 +785,6 @@ const Middle = ({ id, userDetails }) => {
             </div>
           )}
         </div>
-
-        000
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
         <div className={"bottom"}>
           <div
