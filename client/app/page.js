@@ -25,9 +25,11 @@ import SvgBg from "./components/SvgBg";
 import SvgBgM from "./components/SvgBgM";
 import GridSection from "./components/GridSection";
 import dynamic from "next/dynamic";
+import { isWebGLAvailable } from "./userdashboard/components/common";
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
   const ThreeDScene = dynamic(() => import('./userdashboard/messanger/components/ReactThree'), { ssr: false });
+  const webGLAvailable = isWebGLAvailable()
   const [isClient, setIsClient] = useState(false);
   const [orderAdd, setOrderAdd] = useState(false);
   useEffect(() => {
@@ -71,7 +73,9 @@ export default function Home() {
             <BannerSection />
             <Section_01 />
             <Section_02 />
-            <ThreeDScene/>
+            {/* {
+              webGLAvailable ?   <ThreeDScene/> : 'No support threeD'
+            } */}
             {/* <GridSection/> */}
             {/* <div className="bg-[#1c1a24]">
               <Projects />

@@ -38,3 +38,12 @@ export const profileApi =async (token,id) => {
 //         localStorage.setItem('notifications', JSON.stringify(data))
 //     } catch (error) {}
 //   };
+
+ export const isWebGLAvailable = function () {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+  } catch (e) {
+    return false;
+  }
+}
