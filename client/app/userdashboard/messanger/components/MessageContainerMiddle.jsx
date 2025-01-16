@@ -20,6 +20,7 @@ import moment from "moment";
 import { RxCross2 } from "react-icons/rx";
 import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
+import VoiceRecorder from "./VoiceMessage";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -138,7 +139,7 @@ const Middle = ({ id, userDetails }) => {
         dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
-        }, 1000);
+        }, 100);
       });
     return () => {
       socket && socket.off("message-from");
@@ -855,6 +856,7 @@ const Middle = ({ id, userDetails }) => {
           </div>
         </div>
       </div>
+      <VoiceRecorder/>
     </div>
   );
 };
