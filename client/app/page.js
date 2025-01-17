@@ -16,20 +16,12 @@ import Image from "next/image";
 import manymobile from "@/public/banner/multiplemobile.png";
 import { Banner } from "./adsterra/Banner";
 import Script from "next/script";
-import Test from "./Test";
-import CopyToClipboard from "react-copy-to-clipboard";
 import Footer from "./components/Footer";
-import MobileBanner from "./adsterra/MobileBanner320";
 import Section_02 from "./components/Section_02";
-import SvgBg from "./components/SvgBg";
-import SvgBgM from "./components/SvgBgM";
-import GridSection from "./components/GridSection";
-import dynamic from "next/dynamic";
-import { isWebGLAvailable } from "./userdashboard/components/common";
+
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
-  const ThreeDScene = dynamic(() => import('./userdashboard/messanger/components/ReactThree'), { ssr: false });
-  const webGLAvailable = isWebGLAvailable()
+
   const [isClient, setIsClient] = useState(false);
   const [orderAdd, setOrderAdd] = useState(false);
   useEffect(() => {
@@ -73,9 +65,6 @@ export default function Home() {
             <BannerSection />
             <Section_01 />
             <Section_02 />
-            {/* {
-              webGLAvailable ?   <ThreeDScene/> : 'No support threeD'
-            } */}
             {/* <GridSection/> */}
             {/* <div className="bg-[#1c1a24]">
               <Projects />
@@ -208,6 +197,7 @@ const Card = () => {
 
 // <CustomTimer />
 // <Roboticx />
+////========================================================////
 ////========================================================////
 ////========================================================////
 ////========================================================////
