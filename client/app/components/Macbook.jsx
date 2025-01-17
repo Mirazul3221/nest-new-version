@@ -1,7 +1,7 @@
 import { useGLTF } from '@react-three/drei'
 
 export function MacBook(props) {
-  const { nodes, materials } = useGLTF('/macbook.glb')
+  const { nodes, materials } = useGLTF('/macbook.gltf')
   return (
     <group {...props} dispose={null}>
       <group position={[0.121, 0.007, 0]}>
@@ -13,4 +13,4 @@ export function MacBook(props) {
   )
 }
 
-useGLTF.preload('/macbook.glb')
+useGLTF.preload('/macbook.gltf')

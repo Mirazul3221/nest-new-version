@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import React, { Suspense } from "react";
-import { MacBook } from "./Macbook";
 import { OrbitControls, PerspectiveCamera, Stage } from "@react-three/drei";
+import { MacBook } from "./Macbook";
 
 const MackBookContainer = () => {
   return (
