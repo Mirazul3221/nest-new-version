@@ -1,15 +1,18 @@
+'use client'
+
 import { useState, useRef } from "react";
 
-export default function VoiceRecorder() {
+export default function VoiceRecorder({startRecord,setStartRecord}) {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
   const mediaRecorderRef = useRef(null);
+  const streamRef = useRef(null);
   const audioChunksRef = useRef([]);
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
+    streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true }); 
+    const mediaRecorder = new MediaRecorder( streamRef.current);
 
     audioChunksRef.current = [];
     mediaRecorderRef.current = mediaRecorder;
@@ -32,6 +35,9 @@ export default function VoiceRecorder() {
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null
+
     }
     setRecording(false);
   };
@@ -47,12 +53,21 @@ export default function VoiceRecorder() {
       });
     }
   };
-
+   startRecord && startRecording()
+   const stopRecord = () => {
+    console.log(streamRef.current)
+     streamRef.current.getTracks().forEach((track) => track.stop());
+     streamRef.current = null
+     console.log(streamRef.current)
+   }
   return (
     <div>
-        <button onClick={stopRecording}>Stop Recording</button> <br />
+      <div onClick={stopRecord}>Button</div>
+         {
+          startRecord && <div className="">
+                    <button onClick={()=>{stopRecording,setStartRecord(false)}}>Stop Recording</button> <br />
       {!recording ? (
-        <button onClick={startRecording}>Start Recording</button>
+        <button>Start Recording</button>
       ) : (
         <button onClick={stopRecording}>Stop Recording</button>
       )}
@@ -65,6 +80,8 @@ export default function VoiceRecorder() {
           </audio>
         </div>
       )}
+          </div>
+         }
     </div>
   );
 }

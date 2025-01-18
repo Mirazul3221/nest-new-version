@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Stream Control</title>
 </head>
 <body>
-    <div class="flex">
-        <!-- Left Sticky Div -->
-        <div class="sticky -top-10 h-20 bg-gray-200 w-1/4 p-4">
-          Left Sidebar
-        </div>
-      
-        <!-- Main Content Div -->
-        <div class="flex-1 bg-gray-100 p-4">
-          <div class="h-[200vh]">
-            Main content goes here. Scroll to see the sticky sidebars in action.
-          </div>
-        </div>
-      
-        <!-- Right Sticky Div -->
-        <div class="sticky top-0 h-screen bg-gray-200 w-1/4 p-4">
-          Right Sidebar
-        </div>
-      </div>
-      
+  <button id="startButton">Start Media Stream</button>
+  <button id="stopButton">Stop Media Stream</button>
+
+  <script>
+    // Assume you have a reference to the media stream
+let mediaStream;
+
+// Function to start the media stream (e.g., get access to the microphone)
+async function startMediaStream() {
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    console.log("Media stream started:", mediaStream);
+  } catch (error) {
+    console.error("Error accessing media devices:", error);
+  }
+}
+
+// Function to stop the media stream
+function stopMediaStream() {
+  if (mediaStream) {
+    // Stop all tracks in the media stream
+    mediaStream.getTracks().forEach((track) => track.stop());
+    console.log("Media stream stopped.");
+    mediaStream = null;
+  }
+}
+
+// Example usage: Attach these functions to buttons
+document.getElementById("startButton").addEventListener("click", startMediaStream);
+document.getElementById("stopButton").addEventListener("click", stopMediaStream);
+
+  </script>
 </body>
 </html>
