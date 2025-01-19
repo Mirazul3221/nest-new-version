@@ -74,7 +74,7 @@ useEffect(() => {
                   <div>
                       <div className="flex gap-4 items-center justify-between">
                       <h2 className="text-lg font-semibold text-slate-700">
-                      {friend.userName}
+                      {friend.userName.split(' ')[0]}
                     </h2>
 
                     <p className="text-[12px] text-slate-500">

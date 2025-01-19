@@ -1,5 +1,6 @@
 'use client'
 import React, { useRef, useState } from 'react'
+import { useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { VscSend } from "react-icons/vsc";
 
@@ -33,12 +34,11 @@ const VoiceRecorder = ({startRecord,setStartRecord}) => {
             setAudioBlob(audioBlob);
             const audioUrl = URL.createObjectURL(audioBlob); // Generate a URL for the Blob
             setAudioUrl(audioUrl); // Set the audio URL for playback
-             console.log(audioBlob)
-             if(mediaStream.current){
-                mediaStream.current.getTracks().forEach((track) => track.stop());
-                console.log("Media stream stopped.",mediaStream.current);
-                mediaStream.current = null;
-             }
+            if(mediaStream.current){
+              mediaStream.current.getTracks().forEach((track) => track.stop());
+              console.log("Media stream stopped.",mediaStream.current);
+              mediaStream.current = null;
+           }
           };
       
           mediaRecorder.start();
@@ -74,18 +74,54 @@ const VoiceRecorder = ({startRecord,setStartRecord}) => {
         }
       };
        startRecord && startRecording()
+
+
+
+
+       const voiceCountRef = useRef()
+       let [second,minute] = [0,0]
+       let timer = null;
+       const counterVoice = ()=> {
+          second++ 
+          if (second == 60) {
+            second = 0
+            minute++
+            if (minute == 60) {
+                minute=0
+            }
+          }
+          let s = second < 10 ? '0' + second : second
+          let m = minute < 10 ? '0' + minute : minute
+          if (voiceCountRef.current) {
+            voiceCountRef.current.innerText =  `${m}:${s}`
+          } 
+       }
+  
+       const startCounting = ()=> {
+        if (timer !== null) {
+           clearInterval(timer)
+        }
+        timer = setInterval(counterVoice,1000)
+       }
+       const stopCounting = ()=> {
+        clearInterval(timer)
+       }
+       startRecord && startCounting()
+       !startRecord && stopCounting()
   return (
     <div className='p-4 flex justify-between items-center gap-2'>
         <div onClick={()=>{setStartRecord(false),stopMediaStream()}} className="p-2 cursor-pointer bg-gray-200 rounded-full"><FaTimes /></div> 
         <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
-            <div className="w-6 h-6 bg-white rounded-full flex justify-center items-center">
+            <div onClick={stopCounting} className="w-6 h-6 bg-white rounded-full flex justify-center items-center">
                 <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
             </div>
-            <div className=" bg-white rounded-full px-4 py-[3px]">
-                12/17
+            <div ref={voiceCountRef} className=" bg-white rounded-full px-4 py-[3px]">
+            00:00  
             </div>
         </div>
-        <div className='cursor-pointer'><VscSend /></div> 
+        <div onClick={()=>{
+          stopRecording(),setStartRecord(false)
+        }} className='cursor-pointer'><VscSend /></div> 
     </div>
   )
 }

@@ -119,16 +119,18 @@ const Middle = ({ id, userDetails }) => {
   }, [socket]);
 
   useEffect(() => {
-    if (
-      (typing?.message?.length % 10 === 0 && typing?.message?.length > 0) ||
-      typing?.message?.length === 1
-    ) {
-      new Audio("/notification-soun/oneplus_allay.mp3").play();
-      setTypingLoading(true);
-
-      setTimeout(() => {
-        setTypingLoading(false);
-      }, 8000);
+    if (id == typing.senderId) {
+      if (
+        (typing?.message?.length % 10 === 0 && typing?.message?.length > 0) ||
+        typing?.message?.length === 1
+      ) {
+        new Audio("/notification-soun/oneplus_allay.mp3").play();
+        setTypingLoading(true);
+  
+        setTimeout(() => {
+          setTypingLoading(false);
+        }, 8000);
+      }
     }
   }, [typing]);
 
