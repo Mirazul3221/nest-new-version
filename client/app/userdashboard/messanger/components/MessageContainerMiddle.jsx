@@ -315,7 +315,7 @@ const Middle = ({ id, userDetails }) => {
     }
   };
 
-  const [startRecord, setStartRecord] = useState(false);
+  const [isStartRecord, setIsStartRecord] = useState(false);
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -836,10 +836,10 @@ const Middle = ({ id, userDetails }) => {
             </div>
           </div>
 
-          {!startRecord && (
+          {!isStartRecord && (
             <div className="p-4 flex justify-between items-end gap-2">
               {!hiddenTarget && (
-                <div onClick={() => setStartRecord(true)}>
+                <div onClick={() => setIsStartRecord(true)}>
                   <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
                     <img
                       className="w-5 cursor-pointer"
@@ -894,10 +894,10 @@ const Middle = ({ id, userDetails }) => {
               </div>
             </div>
           )}
-          {startRecord && (
+          {isStartRecord && (
             <VoiceRecorder
-              startRecord={startRecord}
-              setStartRecord={setStartRecord}
+              isStartRecord={isStartRecord}
+              setIsStartRecord={setIsStartRecord}
             />
           )}
         </div>

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { VscSend } from "react-icons/vsc";
 
-const VoiceRecorder = ({startRecord,setStartRecord}) => {
+const VoiceRecorder = ({isStartRecord,setIsStartRecord}) => {
     const [recording, setRecording] = useState(false);
     const [audioBlob, setAudioBlob] = useState(null);
     const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
@@ -73,7 +73,7 @@ const VoiceRecorder = ({startRecord,setStartRecord}) => {
           });
         }
       };
-       startRecord && startRecording()
+       isStartRecord && startRecording()
 
 
 
@@ -106,11 +106,11 @@ const VoiceRecorder = ({startRecord,setStartRecord}) => {
        const stopCounting = ()=> {
         clearInterval(timer)
        }
-       startRecord && startCounting()
-       !startRecord && stopCounting()
+       isStartRecord && startCounting()
+       !isStartRecord && stopCounting()
   return (
     <div className='p-4 flex justify-between items-center gap-2'>
-        <div onClick={()=>{setStartRecord(false),stopMediaStream()}} className="p-2 cursor-pointer bg-gray-200 rounded-full"><FaTimes /></div> 
+        <div onClick={()=>{setIsStartRecord(false),stopMediaStream()}} className="p-2 cursor-pointer bg-gray-200 rounded-full"><FaTimes /></div> 
         <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
             <div onClick={stopCounting} className="w-6 h-6 bg-white rounded-full flex justify-center items-center">
                 <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
@@ -120,7 +120,7 @@ const VoiceRecorder = ({startRecord,setStartRecord}) => {
             </div>
         </div>
         <div onClick={()=>{
-          stopRecording(),setStartRecord(false)
+          stopRecording(),setIsStartRecord(false)
         }} className='cursor-pointer'><VscSend /></div> 
     </div>
   )
