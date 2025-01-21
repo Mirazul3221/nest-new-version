@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default :'BCS preparation online platform',
+    default :'BCS preparation online',
     // template:'$s - BCS preparation online platform',
   },
    keywords : 'online bcs preparation, online job preparation, job prostuti, bcs prostuti, bcs help',
