@@ -8,7 +8,7 @@ import Script from "next/script";
 import React, { useState } from "react";
 import { useEffect } from "react";
 
-const page = () => {
+const Page = () => {
   const [scrollVal, setScrollVal] = useState(false);
 
   const renderAdd = (e) => {
@@ -47,9 +47,9 @@ const page = () => {
               <h2>36th BCS</h2>
               <h2>35th BCS</h2>
             </div>
-            {
+            {/* {
                 scrollVal > 10 &&  <VerticleBanner />
-            }
+            } */}
            
           </div>
           <div className="right md:w-9/12">
@@ -208,4 +208,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
