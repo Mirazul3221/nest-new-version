@@ -24,6 +24,9 @@ const Page = () => {
   console.log(scrollVal)
   return (
     <>
+          <Head>
+        <meta name="keywords" content="BCS preparation, বিসিএস প্রস্তুতি, Bangladesh Civil Service, চাকরি প্রস্তুতি, প্রতিযোগিতামূলক পরীক্ষা" />
+      </Head>
       <Head>
         <title>Home Page</title>
         <meta
