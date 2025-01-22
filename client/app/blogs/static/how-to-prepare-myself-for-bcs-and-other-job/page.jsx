@@ -4,9 +4,11 @@ import VerticleBanner from "@/app/adsterra/VerticleBanner";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 import Head from "next/head";
+import Image from "next/image";
 import Script from "next/script";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import bcs_banner from  '@/public/bcs-prostuti.jpg'
 
 const Page = () => {
   const [scrollVal, setScrollVal] = useState(false);
@@ -67,6 +69,7 @@ const Page = () => {
                 বিসিএস প্রস্তুতিতে সফল হতে চাইলে কিছু নির্দিষ্ট কৌশল ও নিয়ম
                 মেনে চলা জরুরি।
               </p>
+              <Image className="w-full" src={bcs_banner}/>
               <div className="content ml-2 mt-4">
                 <h3 className="font-semibold text-gray-800 mt-2">
                   ১. লক্ষ্য স্থির করুন এবং পরিকল্পনা তৈরি করুন
