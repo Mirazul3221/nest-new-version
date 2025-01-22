@@ -9,12 +9,28 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default :'BCS preparation online',
-    // template:'$s - BCS preparation online platform',
+    default: 'BCS Preparation Online',
+    template: '%s - BCS Preparation Online Platform',
   },
-  keywords:['bcs preparation','online bcs preparation','job prostuti','bcs prostuti','bcs help'],
-  description: "  This is the best platform to help you enhance your skills, expand your knowledge and prepare for BCS and other exam",
+  description:
+    'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  openGraph: {
+    title: 'BCS Preparation Online',
+    description:
+      'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BCS Preparation Online',
+    description:
+      'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  },
+  other: {
+    keywords:
+      'bcs preparation, online bcs preparation, job prostuti, bcs prostuti, bcs help',
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
