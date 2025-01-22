@@ -99,7 +99,7 @@ const Header = ({}) => {
         </div>
 
         {/* ============================================================ */}
-        <ul className={`md:flex ${header? 'text-gray-700' : 'text-white'} items-center hidden`}>
+        <ul className={`md:flex ${route !== '/' ? 'text-gray-700' : 'text-white'} ${header? 'text-gray-700' : ''} items-center hidden`}>
         <div>
         <li className="text-lg font-normal px-4 py-[4px] w-fit cursor-pointer duration-500 rounded-md">
             About Us
@@ -116,7 +116,7 @@ const Header = ({}) => {
             Blogs
           </li> */}
           <div>
-          <li className={`text-lg font-normal px-4 py-[4px]  ${header? 'text-gray-700' : 'text-white'} w-fit cursor-pointer duration-500 rounded-md`}>
+          <li className={`text-lg font-normal px-4 py-[4px]  ${header? 'text-gray-700' : ''} w-fit cursor-pointer duration-500 rounded-md`}>
             BCS corner
           </li>
           </div>
@@ -128,7 +128,7 @@ const Header = ({}) => {
           </li> */}
           
           <div>
-            <li className={`text-lg font-normal px-4 py-[4px]  ${header? 'text-gray-700' : 'text-white'} w-fit cursor-pointer duration-500 rounded-md`}>
+            <li className={`text-lg font-normal px-4 py-[4px]  ${header? 'text-gray-700' : ''} w-fit cursor-pointer duration-500 rounded-md`}>
               Contact Info
             </li>
           </div>

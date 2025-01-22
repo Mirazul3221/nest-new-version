@@ -63,7 +63,7 @@ const Page = () => {
         fetchChunkData();
       }
     };
-
+//
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll); // Cleanup
   }, [fetchChunkData, isLoading]);

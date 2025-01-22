@@ -9,6 +9,7 @@ import Script from "next/script";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import bcs_banner from  '@/public/bcs-prostuti.jpg'
+import LeftBar from "../components/LeftBar";
 
 const Page = () => {
   const [scrollVal, setScrollVal] = useState(false);
@@ -26,41 +27,24 @@ const Page = () => {
   console.log(scrollVal)
   return (
     <>
-          <Head>
-        <meta name="keywords" content="BCS preparation, বিসিএস প্রস্তুতি, Bangladesh Civil Service, চাকরি প্রস্তুতি, প্রতিযোগিতামূলক পরীক্ষা" />
-      </Head>
-      <Head>
-        <title>Home Page</title>
-        <meta
-          name="description"
-          content="Welcome to the home page of our Next.js app!"
-        />
-        <meta name="keywords" content="Next.js, SEO, Home Page" />
-        <meta name="author" content="Your Name" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="bg-gray-200">
+      <div>
         <Header />
         <div className="py-1 bg-slate-300"></div>
-        <div className="flex justify-between">
+        <div className="flex justify-between bg-gray-100">
           <div className="left hidden md:block w-3/12">
             <h2 className="font-semibold bg-violet-500 py-2 text-center text-white md:t-2xl">
               সূচিপত্র
             </h2>
-            <div className="text-white md:pl-20">
-              <h2>37th BCS</h2>
-              <h2>36th BCS</h2>
-              <h2>35th BCS</h2>
-            </div>
+            <LeftBar/>
             {/* {
                 scrollVal > 10 &&  <VerticleBanner />
             } */}
            
           </div>
           <div className="right md:w-9/12">
-            <h2 className="font-semibold bg-violet-500 py-2 text-center text-white md:t-2xl">
+            <h1 className="font-semibold bg-violet-500 py-2 text-center text-white md:t-2xl">
               বিসিএস প্রস্তুতির সঠিক পথনির্দেশ
-            </h2>
+            </h1>
             <div className="md:pr-20 text-gray-700 mt-4">
               <p>
                 বিসিএস পরীক্ষা বাংলাদেশের সবচেয়ে প্রতিযোগিতামূলক পরীক্ষাগুলোর
