@@ -69,7 +69,7 @@ const Page = () => {
                 বিসিএস প্রস্তুতিতে সফল হতে চাইলে কিছু নির্দিষ্ট কৌশল ও নিয়ম
                 মেনে চলা জরুরি।
               </p>
-              <Image className="w-full" src={bcs_banner}/>
+              <Image className="w-full rounded-sm mt-4" src={bcs_banner}/>
               <div className="content ml-2 mt-4">
                 <h3 className="font-semibold text-gray-800 mt-2">
                   ১. লক্ষ্য স্থির করুন এবং পরিকল্পনা তৈরি করুন
@@ -192,7 +192,7 @@ const Page = () => {
 
               <div className="content mt-4">
                 <h3 className="font-semibold text-gray-800 mt-2">উপসংহার</h3>
-                <p className="mt-2">
+                <p className="mt-2 mb-10">
                   বিসিএস পরীক্ষায় সফল হওয়ার জন্য ধৈর্য, অধ্যবসায় এবং সঠিক
                   পরিকল্পনা অপরিহার্য। প্রতিদিনের ছোট ছোট প্রচেষ্টাই বড় সাফল্য
                   বয়ে আনে। একাগ্রতা এবং আত্মবিশ্বাস বজায় রেখে এগিয়ে যান।
