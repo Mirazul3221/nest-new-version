@@ -32,7 +32,7 @@ const Page = () => {
     console.log(scrollVal)
   return (
     <>
-      <div>
+      <div className="px-4 md:px-0">
         <Header />
         <div className="py-1 bg-slate-300"></div>
         <div className="flex justify-between bg-gray-200">
