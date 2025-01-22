@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import bcs_banner from  '@/public/bcs-prostuti.jpg'
 import LeftBar from "../components/LeftBar";
+import Link from "next/link";
+import { viewurl } from "@/app/config";
 
 const Page = () => {
   const [scrollVal, setScrollVal] = useState(false);
@@ -61,9 +63,7 @@ const Page = () => {
                 <p className="my-2">বিসিএস পরীক্ষা মূলত তিনটি ধাপে বিভক্ত:</p>
                 <ul className="text-sm list-disc pl-6 space-y-2">
                   <li>
-                    <span className="font-semibold text-gray-800">
-                      প্রিলিমিনারি পরীক্ষা:{" "}
-                    </span>{" "}
+                      <Link className="font-semibold text-violet-500 underline" href={`${viewurl}/blogs/static/bcs-preliminary-exam`}>  প্রিলিমিনারি পরীক্ষা:</Link>
                     বেসিক জ্ঞান যাচাই করার জন্য।
                   </li>
                   <li>
