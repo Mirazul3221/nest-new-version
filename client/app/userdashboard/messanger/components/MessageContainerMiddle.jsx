@@ -837,17 +837,13 @@ const Middle = ({ id, userDetails }) => {
           </div>
 
           <div className="flex items-center justify-center">
-            <div onClick={() => setIsStartRecord(true)}>
-              <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-                <img
-                  className="w-5 cursor-pointer"
-                  src="/microphone.png"
-                  alt="message"
-                />
-              </div>
-            </div>
+
+          <VoiceRecorder
+              isStartRecord={isStartRecord}
+              setIsStartRecord={setIsStartRecord}
+            />
             {!isStartRecord && (
-              <div className="p-4 flex w-full justify-between items-end gap-2">
+              <div className="pr-4 py-4 flex w-full justify-between items-end gap-2">
                 {!hiddenTarget && (
                   <div>
                     <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
@@ -894,12 +890,6 @@ const Middle = ({ id, userDetails }) => {
               </div>
             )}
           </div>
-          {isStartRecord && (
-            <VoiceRecorder
-              isStartRecord={isStartRecord}
-              setIsStartRecord={setIsStartRecord}
-            />
-          )}
         </div>
       </div>
     </div>
