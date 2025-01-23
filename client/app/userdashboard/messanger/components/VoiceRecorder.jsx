@@ -74,45 +74,14 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
         body: formData,
       });
     }
-  };
-  isStartRecord && startRecording();
-
-  const voiceCountRef = useRef();
-  let [second, minute] = [0, 0];
-  let timer = null;
-  const counterVoice = () => {
-    second++;
-    if (second == 60) {
-      second = 0;
-      minute++;
-      if (minute == 60) {
-        minute = 0;
-      }
-    }
-    let s = second < 10 ? "0" + second : second;
-    let m = minute < 10 ? "0" + minute : minute;
-    if (voiceCountRef.current) {
-      voiceCountRef.current.innerText = `${m}:${s}`;
-    }
-  };
-
-  const startCounting = () => {
-    if (timer !== null) {
-      clearInterval(timer);
-    }
-    timer = setInterval(counterVoice, 1000);
-  };
-  const stopCounting = () => {
-    clearInterval(timer);
-  };
-  isStartRecord && startCounting();
-  !isStartRecord && stopCounting();
+  }; 
   return (
     <>
       {!isStartRecord && (
         <div
           onClick={() => {
             setIsStartRecord(true);
+            startRecording();
           }}
           className="pl-4 pr-2"
         >
@@ -131,7 +100,7 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
           <div className="p-4 flex justify-between items-center gap-2">
             <div
               onClick={() => {
-                setIsStartRecord(false), stopMediaStream();
+                setIsStartRecord(false), stopRecording();
               }}
               className="p-2 cursor-pointer bg-gray-200 rounded-full"
             >
@@ -139,13 +108,11 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
             </div>
             <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
               <div
-                onClick={stopCounting}
-                className="w-6 h-6 bg-white rounded-full flex justify-center items-center"
+                onClick={stopRecording} className="w-6 h-6 bg-white rounded-full flex justify-center items-center"
               >
                 <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
               </div>
               <div
-                ref={voiceCountRef}
                 className=" bg-white rounded-full px-4 py-[3px]"
               >
                 00:00
