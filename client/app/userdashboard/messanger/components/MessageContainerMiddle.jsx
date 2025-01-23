@@ -126,7 +126,7 @@ const Middle = ({ id, userDetails }) => {
       ) {
         new Audio("/notification-soun/oneplus_allay.mp3").play();
         setTypingLoading(true);
-  
+
         setTimeout(() => {
           setTypingLoading(false);
         }, 8000);
@@ -355,8 +355,8 @@ const Middle = ({ id, userDetails }) => {
           />
         </div>
       </div>
-      <div className=" overflow-y-scroll  hidden_scroll h-[71vh]">
-        <div className="w-full overflow-y-auto hidden_scroll h-[60vh] py-6 px-4 bg-white">
+      <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[74vh]">
+        <div className="w-full overflow-y-auto hidden_scroll h-[64vh] py-6 px-4 bg-white">
           <div className="flex justify-center">
             <div>
               <img
@@ -836,64 +836,64 @@ const Middle = ({ id, userDetails }) => {
             </div>
           </div>
 
-          {!isStartRecord && (
-            <div className="p-4 flex justify-between items-end gap-2">
-              {!hiddenTarget && (
-                <div onClick={() => setIsStartRecord(true)}>
-                  <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-                    <img
-                      className="w-5 cursor-pointer"
-                      src="/microphone.png"
-                      alt="message"
-                    />
-                  </div>
-                </div>
-              )}
-              {!hiddenTarget && (
-                <div>
-                  <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-                    <img
-                      className="w-5 cursor-pointer"
-                      src="/image-icon.png"
-                      alt="message"
-                    />
-                  </div>
-                </div>
-              )}
-              <input
-                onChange={handle_media_file}
-                className="hidden"
-                id="send_image"
-                type="file"
-              />
-              <textarea
-                className="hiddenTarget"
-                id="message_text"
-                ref={messangerRef}
-                value={message}
-                onChange={(e) => handleMessage(e)}
-                rows={1}
-                style={{
-                  width: "100%",
-                  resize: "none",
-                  overflow: "hidden",
-                  padding: "6px 14px",
-                  boxSizing: "border-box",
-                  outline: "none",
-                  border: "none",
-                  borderRadius: "20px",
-                  background: "#ededed",
-                }}
-              />
-
-              <div
-                onClick={handleSendMessage}
-                className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
-              >
-                <RiSendPlaneLine size={20} />
+          <div className="flex items-center justify-center">
+            <div onClick={() => setIsStartRecord(true)}>
+              <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
+                <img
+                  className="w-5 cursor-pointer"
+                  src="/microphone.png"
+                  alt="message"
+                />
               </div>
             </div>
-          )}
+            {!isStartRecord && (
+              <div className="p-4 flex w-full justify-between items-end gap-2">
+                {!hiddenTarget && (
+                  <div>
+                    <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
+                      <img
+                        className="w-5 cursor-pointer"
+                        src="/image-icon.png"
+                        alt="message"
+                      />
+                    </div>
+                  </div>
+                )}
+                <input
+                  onChange={handle_media_file}
+                  className="hidden"
+                  id="send_image"
+                  type="file"
+                />
+                <textarea
+                  className="hiddenTarget"
+                  id="message_text"
+                  ref={messangerRef}
+                  value={message}
+                  onChange={(e) => {handleMessage(e),scrollToBottom()}}
+                  rows={1}
+                  style={{
+                    width: "100%",
+                    resize: "none",
+                    overflow: "hidden",
+                    padding: "6px 14px",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    border: "none",
+                    borderRadius: "20px",
+                    background: "#ededed",
+                  }}
+                />
+
+                <div
+                  onClick={handleSendMessage}
+                  className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
+                >
+                  <RiSendPlaneLine size={20} />
+                </div>
+              </div>
+            )}
+          </div>
           {isStartRecord && (
             <VoiceRecorder
               isStartRecord={isStartRecord}
