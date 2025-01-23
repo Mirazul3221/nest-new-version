@@ -25,6 +25,18 @@ export default async function sitemap() {
         priority: 0.8,
       },
       {
+        url: `${viewurl}/blogs/static/how-to-prepare-myself-for-bcs-and-other-job`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.8,
+      },
+      {
+        url: `${viewurl}/blogs/static/bcs-preliminary-exam`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.8,
+      },
+      {
         url: `${viewurl}/subject/bangla`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
