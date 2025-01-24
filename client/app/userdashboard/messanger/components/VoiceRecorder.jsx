@@ -130,7 +130,7 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
               <FaTimes />
             </div>
             {!playRecord && (
-              <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
+              <div className="flex justify-between items-center px-4 py-1 bg-gray-200 w-full rounded-full">
                 <div
                   onClick={() => {
                     stopRecording();
@@ -141,9 +141,9 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
                 >
                   <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
                 </div>
-                <div className=" bg-white rounded-full px-4 py-[3px]">
+                <div className=" bg-white rounded-full px-2 py-[3px]">
                   <h1>
-                    {minute < 10 ? "0" + minute : minute}:
+                    {minute}:
                     {second < 10 ? "0" + second : second}
                   </h1>
                 </div>
