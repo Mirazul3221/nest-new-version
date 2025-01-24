@@ -3,16 +3,20 @@ import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { VscSend } from "react-icons/vsc";
+import AudioPlayer from "./AudioPlayer";
 
-const VoiceRecorder = ({ isStartRecord, setIsStartRecord,hiddenTarget }) => {
+const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
   const [time, setTime] = useState(0); // To keep track of the timer
+  const [currentTime, setCurrentTime] = useState(null);
+  const [playRecord, setPlayRecord] = useState(false);
+
   const mediaStream = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
-  const intervalRef = useRef(null)
+  const intervalRef = useRef(null);
 
   const startRecording = async () => {
     try {
@@ -31,7 +35,7 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord,hiddenTarget }) => {
         audioChunksRef.current.push(event.data);
       };
       //////////////////////////////////////////////////////////////
-      intervalRef.current =  setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
       mediaRecorder.onstop = () => {
@@ -57,10 +61,10 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord,hiddenTarget }) => {
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-       setTime(0)
-     }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        setTime(0);
+      }
     }
   };
 
@@ -83,58 +87,70 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord,hiddenTarget }) => {
         body: formData,
       });
     }
-  }; 
+  };
 
-  console.log(audioBlob)
-  const second = time%60
-const minute = Math.floor(time/60)
+  console.log(audioBlob);
+  const second = time % 60;
+  const minute = Math.floor(time / 60);
+  console.log(currentTime);
   return (
     <>
-    {
-      !hiddenTarget && <div>
-              {!isStartRecord && (
-        <div
-          onClick={() => {
-            setIsStartRecord(true);
-            startRecording();
-          }}
-          className="pl-4 pr-2"
-        >
-          <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-            <img
-              className="w-5 cursor-pointer"
-              src="/microphone.png"
-              alt="message"
-            />
-          </div>
+      {!hiddenTarget && (
+        <div>
+          {!isStartRecord && (
+            <div
+              onClick={() => {
+                setIsStartRecord(true);
+                startRecording();
+              }}
+              className="pl-4 pr-2"
+            >
+              <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
+                <img
+                  className="w-5 cursor-pointer"
+                  src="/microphone.png"
+                  alt="message"
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
-      </div>
-    }
-       {
-        isStartRecord && 
+      {isStartRecord && (
         <div className="w-full">
           <div className="p-4 flex justify-between items-center gap-2">
             <div
               onClick={() => {
                 setIsStartRecord(false), stopRecording();
+                setPlayRecord(false);
+                setCurrentTime(null);
               }}
               className="p-2 cursor-pointer bg-gray-200 rounded-full"
             >
               <FaTimes />
             </div>
-            <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
-              <div
-                onClick={stopRecording} className="w-6 h-6 bg-white rounded-full flex justify-center items-center"
-              >
-                <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
+            {!playRecord && (
+              <div className="flex justify-between items-center px-6 py-1 bg-gray-200 w-full rounded-full">
+                <div
+                  onClick={() => {
+                    stopRecording();
+                    setCurrentTime(time);
+                    setPlayRecord(true);
+                  }}
+                  className="w-6 h-6 bg-white rounded-full flex justify-center items-center"
+                >
+                  <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
+                </div>
+                <div className=" bg-white rounded-full px-4 py-[3px]">
+                  <h1>
+                    {minute < 10 ? "0" + minute : minute}:
+                    {second < 10 ? "0" + second : second}
+                  </h1>
+                </div>
               </div>
-              <div
-                className=" bg-white rounded-full px-4 py-[3px]"
-              >
-                <h1>{minute < 10 ? '0' + minute : minute }:{second < 10 ? '0' + second :second}</h1>
-              </div>
-            </div>
+            )}
+
+            {playRecord &&  <AudioPlayer audioSrc={audioUrl} duration={currentTime} />}
             <div
               onClick={() => {
                 stopRecording(), setIsStartRecord(false);
@@ -145,7 +161,7 @@ const minute = Math.floor(time/60)
             </div>
           </div>
         </div>
-       }
+      )}
     </>
   );
 };
