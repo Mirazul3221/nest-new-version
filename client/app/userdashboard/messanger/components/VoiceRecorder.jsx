@@ -137,9 +137,9 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
                     setCurrentTime(time);
                     setPlayRecord(true);
                   }}
-                  className="w-6 h-6 bg-white rounded-full flex justify-center items-center"
+                  className="w-6 h-6 bg-black rounded-full flex justify-center items-center"
                 >
-                  <div className="w-3 h-3 bg-slate-400 cursor-pointer"></div>
+                  <div className="w-3 h-3 bg-white cursor-pointer"></div>
                 </div>
                 <div className=" bg-white rounded-full px-2 py-[3px]">
                   <h1>
