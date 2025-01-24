@@ -844,7 +844,7 @@ const Middle = ({ id, userDetails }) => {
               hiddenTarget={hiddenTarget}
             />
             {!isStartRecord && (
-              <div className={`pr-4 ${hiddenTarget && 'pl-4'} py-4 flex w-full justify-between items-end gap-2`}>
+              <div className={`pr-4 ${hiddenTarget ? 'pl-4' : ''} py-4 flex w-full justify-between items-end gap-2`}>
                 {!hiddenTarget && (
                   <div>
                     <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">

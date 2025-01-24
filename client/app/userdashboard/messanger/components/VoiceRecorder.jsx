@@ -151,3 +151,4 @@ const minute = Math.floor(time/60)
 };
 
 export default VoiceRecorder;
+//
