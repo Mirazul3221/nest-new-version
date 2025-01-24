@@ -27,7 +27,6 @@ const Page = () => {
     fetchUser(id);
   }, [id]);
 
-  console.log(userDetails)
   return (
     <ProtectRoute>
         <div className=" w-screen h-screen fixed top-0 left-0">

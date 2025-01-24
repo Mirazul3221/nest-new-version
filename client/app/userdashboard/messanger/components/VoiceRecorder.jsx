@@ -4,13 +4,15 @@ import { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { VscSend } from "react-icons/vsc";
 
-const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
+const VoiceRecorder = ({ isStartRecord, setIsStartRecord,hiddenTarget }) => {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
+  const [time, setTime] = useState(0); // To keep track of the timer
   const mediaStream = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const intervalRef = useRef(null)
 
   const startRecording = async () => {
     try {
@@ -29,6 +31,9 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
         audioChunksRef.current.push(event.data);
       };
       //////////////////////////////////////////////////////////////
+      intervalRef.current =  setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/wav",
@@ -52,6 +57,10 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
   const stopRecording = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+     if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+       setTime(0)
+     }
     }
   };
 
@@ -75,9 +84,15 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
       });
     }
   }; 
+
+  console.log(audioBlob)
+  const second = time%60
+const minute = Math.floor(time/60)
   return (
     <>
-      {!isStartRecord && (
+    {
+      !hiddenTarget && <div>
+              {!isStartRecord && (
         <div
           onClick={() => {
             setIsStartRecord(true);
@@ -94,6 +109,8 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
           </div>
         </div>
       )}
+      </div>
+    }
        {
         isStartRecord && 
         <div className="w-full">
@@ -115,7 +132,7 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord }) => {
               <div
                 className=" bg-white rounded-full px-4 py-[3px]"
               >
-                00:00
+                <h1>{minute < 10 ? '0' + minute : minute }:{second < 10 ? '0' + second :second}</h1>
               </div>
             </div>
             <div
