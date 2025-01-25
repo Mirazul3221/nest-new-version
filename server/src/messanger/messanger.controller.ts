@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { MessangerService } from './messanger.service';
-import { CreateImageMessangerDto, CreateMessangerDto } from './dto/create-messanger.dto';
+import { CreateImageMessangerDto, CreateMessangerDto, CreateVoiceMessageDto } from './dto/create-messanger.dto';
 import { UpdateMessangerDto } from './dto/update-messanger.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileSystemStoredFile, FormDataRequest } from 'nestjs-form-data';
@@ -23,6 +23,13 @@ export class MessangerController {
   async createImageMessage(@Body() createMessage:CreateImageMessangerDto, @Req() req:any) {
     const me = req.user._id; 
     return await this.messangerService.createImageMessage(createMessage,me);
+  }
+  @Post('voice-create')
+  @UseGuards(AuthGuard())
+  @FormDataRequest({storage:FileSystemStoredFile})//
+  async createVoiceMessage(@Body() createMessage:CreateVoiceMessageDto, @Req() req:any) {
+    const me = req.user._id; 
+    return await this.messangerService.createVoiceMessage(createMessage,me);
   }
 
 

@@ -842,11 +842,16 @@ const Middle = ({ id, userDetails }) => {
               isStartRecord={isStartRecord}
               setIsStartRecord={setIsStartRecord}
               hiddenTarget={hiddenTarget}
+              receiverId = {userDetails?._id}
+              replyContent = {replyContent}
+              toReplyerId = {toReplyerId}
             />
             {!isStartRecord && (
               <div className={`pr-4 ${hiddenTarget ? 'pl-4' : ''} py-4 flex w-full justify-between items-end gap-2`}>
                 {!hiddenTarget && (
-                  <div>
+                 <label htmlFor="send_image">
+
+                 
                     <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
                       <img
                         className="w-5 cursor-pointer"
@@ -854,7 +859,7 @@ const Middle = ({ id, userDetails }) => {
                         alt="message"
                       />
                     </div>
-                  </div>
+                    </label>
                 )}
                 <input
                   onChange={handle_media_file}

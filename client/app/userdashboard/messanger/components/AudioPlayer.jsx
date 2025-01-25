@@ -33,6 +33,7 @@ export default function CustomVoicePlayer({ audioSrc, duration }) {
       setCurrentTime(current);
       if(progressBar.current){
         progressBar.current.style.width = progressPercentage + '%';
+        console.log(progressPercentage);
       }
 
       if (!audio.paused && !audio.ended) {

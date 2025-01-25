@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateImageMessangerDto, CreateMessangerDto } from './dto/create-messanger.dto';
+import { CreateImageMessangerDto, CreateMessangerDto, CreateVoiceMessageDto } from './dto/create-messanger.dto';
 import { UpdateMessangerDto } from './dto/update-messanger.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Messanger, messangerModel } from './schema/messanger.schema';
@@ -33,7 +33,6 @@ export class MessangerService {
   async createImageMessage(createMessage:CreateImageMessangerDto,id) {
     const {receiverId,image,reply} = createMessage
     const replyAsArray = JSON.parse(reply)
-
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
       api_key: this.ConfigService.get('Api_key'),
@@ -43,12 +42,41 @@ export class MessangerService {
     const created =  await this.MessangerModel.create({
       senderId:id,
       receiverId:receiverId,
-      message:{content:'',media:data.url,voice:''},
+      message:{content:'',media:data.secure_url,voice:''},
       reply:replyAsArray,
       seenMessage:false
      })
      return created
   }
+  async createVoiceMessage(createMessage:CreateVoiceMessageDto,id) {
+  const {receiverId,voice,reply} = createMessage;
+  const replyAsArray = JSON.parse(reply)
+    cloudinary.config({
+      cloud_name: this.ConfigService.get('cloud_name'),
+      api_key: this.ConfigService.get('Api_key'),
+      api_secret: this.ConfigService.get('Api_secret')
+    })
+    const data = await cloudinary.uploader.upload(voice.path, {
+      folder: 'voice_message', // Specify the folder in Cloudinary
+      resource_type: 'auto', // Automatically detect the file type (audio in this case)
+    });
+    
+    const created = await this.MessangerModel.create({
+      senderId: id,
+      receiverId: receiverId,
+      message: {
+        content: '',
+        media: '', // Use the secure_url from Cloudinary for HTTPS
+        voice: data.secure_url,
+      },
+      reply: replyAsArray,
+      seenMessage: false,
+    });
+    
+     return created
+  }
+
+
   async getCombinedLastMessageAndUserProfiles (myId){
     const allMessage = await this.MessangerModel.find({
       $or : [

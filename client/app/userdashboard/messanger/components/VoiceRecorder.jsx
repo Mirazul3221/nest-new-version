@@ -1,12 +1,14 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { VscSend } from "react-icons/vsc";
 import AudioPlayer from "./AudioPlayer";
+import axios from "axios";
+import { useStore } from "@/app/global/DataProvider";
+import { baseurl } from "@/app/config";
 
-const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
-  const [recording, setRecording] = useState(false);
+const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverId,replyContent,toReplyerId}) => {
+   const { store } = useStore();
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
   const [time, setTime] = useState(0); // To keep track of the timer
@@ -68,31 +70,45 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
     }
   };
 
-  const stopMediaStream = () => {
-    if (mediaStream.current) {
-      mediaStream.current.getTracks().forEach((track) => track.stop());
-      console.log("Media stream stopped.", mediaStream.current);
-      mediaStream.current = null;
-    }
-  };
-
   /////////////////////////////////////////////////////////////////////////////
   const uploadAudio = async () => {
     if (audioBlob) {
       const formData = new FormData();
-      formData.append("file", audioBlob);
+      formData.append("receiverId", receiverId); // Add receiverId
+      formData.append("voice", audioBlob);
+      formData.append(
+        "reply",
+        JSON.stringify([replyContent.innerText, toReplyerId])
+      ); // Add reply as a string if it's an array or object
 
-      await fetch("/api/upload-audio", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const { data } = await axios.post(
+          `${baseurl}/messanger/voice-create`,
+          formData, // Pass FormData as the body
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+              "Content-Type": "multipart/form-data", // Ensure Content-Type is set correctly
+            },
+          }
+        );
+
+        // socket && socket.emit("message-to", data);
+        // dispatch({ type: "send-message", payload: data });
+
+        console.log(data)
+      } catch (error) {
+        console.error(
+          "Error uploading file:",
+          error.response?.data || error.message
+        );
+      }
     }
   };
 
-  console.log(audioBlob);
+
   const second = time % 60;
   const minute = Math.floor(time / 60);
-  console.log(currentTime);
   return (
     <>
       {!hiddenTarget && (
@@ -121,7 +137,8 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
           <div className="p-4 flex justify-between items-center gap-2">
             <div
               onClick={() => {
-                setIsStartRecord(false), stopRecording();
+                setIsStartRecord(false);
+                stopRecording();
                 setPlayRecord(false);
                 setCurrentTime(null);
               }}
@@ -153,7 +170,7 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget }) => {
             {playRecord &&  <AudioPlayer audioSrc={audioUrl} duration={currentTime} />}
             <div
               onClick={() => {
-                stopRecording(), setIsStartRecord(false);
+                stopRecording(); setIsStartRecord(false); setPlayRecord(false);uploadAudio()
               }}
               className="cursor-pointer"
             >
