@@ -8,6 +8,7 @@ import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import { useSocket } from "../../global/SocketProvider";
 import { useMessage } from "../../global/messageProvider";
+import Image from "next/image";
 
 const VoiceRecorder = ({
   isStartRecord,
@@ -19,8 +20,8 @@ const VoiceRecorder = ({
   scrollToBottom,
 }) => {
   const { store } = useStore();
-    const { dispatch } = useMessage();
-      const { socket } = useSocket();
+  const { dispatch } = useMessage();
+  const { socket } = useSocket();
   const [loading, setLoading] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
@@ -92,7 +93,7 @@ const VoiceRecorder = ({
     }
   };
 
-  const uploadAudio = async () => {
+  const currentAudioSend = async () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       setTime(0);
@@ -139,9 +140,45 @@ const VoiceRecorder = ({
     }
   };
 
+  const savedAudioSend =async () => {
+     const formData = new FormData();
+      formData.append("receiverId", receiverId); // Add receiverId
+      formData.append("voice", audioBlob);
+      formData.append(
+        "reply",
+        JSON.stringify([replyContent.innerText, toReplyerId])
+      );
+
+      try {
+        setLoading(true);
+        const { data } = await axios.post(
+          `${baseurl}/messanger/voice-create`,
+          formData, // Pass FormData as the body
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+              "Content-Type": "multipart/form-data", // Ensure Content-Type is set correctly
+            },
+          }
+        );
+        setTimeout(() => {
+          scrollToBottom();
+        }, 500);
+        setIsStartRecord(false);
+        socket && socket.emit("message-to", data);
+        dispatch({ type: "send-message", payload: data });
+      } catch (error) {
+        console.error(
+          "Error uploading file:",
+          error.response?.data || error.message
+        );
+      } finally {
+        setLoading(false);
+      }
+  }
+
   const second = time % 60;
   const minute = Math.floor(time / 60);
-
   return (
     <>
       {!hiddenTarget && (
@@ -199,12 +236,23 @@ const VoiceRecorder = ({
               </div>
             )}
 
-            {playRecord && <AudioPlayer audioSrc={audioUrl} duration={currentTime} />}
+            {playRecord && (
+              <AudioPlayer audioSrc={audioUrl} duration={currentTime} />
+            )}
             {loading ? (
-              "Loading..."
+              <Image width={30} height={30} src={'/loading-buffer.gif'} alt="Loading-voice-message" />
             ) : (
-              <div onClick={uploadAudio} className="cursor-pointer">
-                Send
+              <div>
+                {!playRecord && (
+                  <div onClick={currentAudioSend} className="cursor-pointer">
+                    <VscSend />
+                  </div>
+                )}
+                {playRecord && (
+                  <div onClick={savedAudioSend} className="cursor-pointer">
+                    <VscSend />
+                  </div>
+                )}
               </div>
             )}
           </div>
