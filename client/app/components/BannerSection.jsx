@@ -36,9 +36,9 @@ const BannerSection = () => {
         </div>
         </div>
         {/* <Image className="md:hidden mt-10" src={laptop} alt="laptop-view" /> */}
-        {
+        {/* {
               webGLAvailable ?     <div className="md:w-1/2 h-full -mt-20 md:mt-0"><MackBookContainer/></div> : 'No support threeD'
-            }
+            } */}
       </div>
     </div>
   );

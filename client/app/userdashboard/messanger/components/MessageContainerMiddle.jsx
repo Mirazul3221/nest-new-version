@@ -21,6 +21,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
+import MessagePlayer from "./MessagePlayer";
 const Middle = ({ id, userDetails }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -301,7 +302,9 @@ const Middle = ({ id, userDetails }) => {
 
         socket && socket.emit("message-to", data);
         dispatch({ type: "send-message", payload: data });
-        scrollToBottom();
+        setTimeout(() => {
+          scrollToBottom();
+        }, 1000);
         setLoadingImage(false);
       } catch (error) {
         setLoadingImage(false);
@@ -503,6 +506,15 @@ const Middle = ({ id, userDetails }) => {
                                 <p ref={scrollRef}></p>
                               </div>
                             )}
+                            {msg?.message.voice !== "" && (
+                              <div className="mb-2">
+                                <MessagePlayer
+                                  url={msg?.message.voice}
+                                  userType="me"
+                                />
+                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
 
                             {msg?.emoji?.length > 0 && (
                               <div
@@ -618,6 +630,16 @@ const Middle = ({ id, userDetails }) => {
                                   src={msg?.message.media}
                                   alt="message_image"
                                 />
+                              </div>
+                            )}
+
+                            {msg?.message.voice !== "" && (
+                              <div className="mb-2">
+                                <MessagePlayer
+                                  url={msg?.message.voice}
+                                  userType="he"
+                                />
+                                <p ref={scrollRef}></p>
                               </div>
                             )}
                             {msg?.emoji?.length > 0 && (
@@ -837,21 +859,23 @@ const Middle = ({ id, userDetails }) => {
           </div>
 
           <div className="flex items-center justify-center">
-
-          <VoiceRecorder
+            <VoiceRecorder
               isStartRecord={isStartRecord}
               setIsStartRecord={setIsStartRecord}
               hiddenTarget={hiddenTarget}
-              receiverId = {userDetails?._id}
-              replyContent = {replyContent}
-              toReplyerId = {toReplyerId}
+              receiverId={userDetails?._id}
+              replyContent={replyContent}
+              toReplyerId={toReplyerId}
+              scrollToBottom={scrollToBottom}
             />
             {!isStartRecord && (
-              <div className={`pr-4 ${hiddenTarget ? 'pl-4' : ''} py-4 flex w-full justify-between items-end gap-2`}>
+              <div
+                className={`pr-4 ${
+                  hiddenTarget ? "pl-4" : ""
+                } py-4 flex w-full justify-between items-end gap-2`}
+              >
                 {!hiddenTarget && (
-                 <label htmlFor="send_image">
-
-                 
+                  <label htmlFor="send_image">
                     <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
                       <img
                         className="w-5 cursor-pointer"
@@ -859,7 +883,7 @@ const Middle = ({ id, userDetails }) => {
                         alt="message"
                       />
                     </div>
-                    </label>
+                  </label>
                 )}
                 <input
                   onChange={handle_media_file}
@@ -872,7 +896,9 @@ const Middle = ({ id, userDetails }) => {
                   id="message_text"
                   ref={messangerRef}
                   value={message}
-                  onChange={(e) => {handleMessage(e),scrollToBottom()}}
+                  onChange={(e) => {
+                    handleMessage(e), scrollToBottom();
+                  }}
                   rows={1}
                   style={{
                     width: "100%",

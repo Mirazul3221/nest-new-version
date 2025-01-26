@@ -6,9 +6,22 @@ import AudioPlayer from "./AudioPlayer";
 import axios from "axios";
 import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
+import { useSocket } from "../../global/SocketProvider";
+import { useMessage } from "../../global/messageProvider";
 
-const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverId,replyContent,toReplyerId}) => {
-   const { store } = useStore();
+const VoiceRecorder = ({
+  isStartRecord,
+  setIsStartRecord,
+  hiddenTarget,
+  receiverId,
+  replyContent,
+  toReplyerId,
+  scrollToBottom,
+}) => {
+  const { store } = useStore();
+    const { dispatch } = useMessage();
+      const { socket } = useSocket();
+  const [loading, setLoading] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null); // To store the audio URL for playback
   const [time, setTime] = useState(0); // To keep track of the timer
@@ -25,44 +38,53 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverI
       mediaStream.current = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      console.log("Media stream started:", mediaStream.current);
-
-      ////////////////////////////////////////////////////////////////
       const mediaRecorder = new MediaRecorder(mediaStream.current);
 
       audioChunksRef.current = [];
       mediaRecorderRef.current = mediaRecorder;
-      ///////////////////////////////////////////////////////////////
+
       mediaRecorder.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
       };
-      //////////////////////////////////////////////////////////////
+
       intervalRef.current = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/wav",
-        });
-        setAudioBlob(audioBlob);
-        const audioUrl = URL.createObjectURL(audioBlob); // Generate a URL for the Blob
-        setAudioUrl(audioUrl); // Set the audio URL for playback
-        if (mediaStream.current) {
-          mediaStream.current.getTracks().forEach((track) => track.stop());
-          console.log("Media stream stopped.", mediaStream.current);
-          mediaStream.current = null;
-        }
-      };
 
       mediaRecorder.start();
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   };
-  ////////////////////////////////////////////////////////////////////////////////
-  const stopRecording = () => {
+
+  const stopRecordingAndPrepareBlob = () =>
+    new Promise((resolve) => {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/wav",
+          });
+          setAudioBlob(audioBlob);
+          const audioUrl = URL.createObjectURL(audioBlob); // Generate a URL for playback
+          setAudioUrl(audioUrl);
+
+          if (mediaStream.current) {
+            mediaStream.current.getTracks().forEach((track) => track.stop());
+            mediaStream.current = null;
+          }
+
+          resolve(audioBlob);
+        };
+
+        mediaRecorderRef.current.stop();
+      } else {
+        resolve(null);
+      }
+    });
+
+  const stopRecording = async () => {
     if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
+      await stopRecordingAndPrepareBlob();
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         setTime(0);
@@ -70,18 +92,23 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverI
     }
   };
 
-  /////////////////////////////////////////////////////////////////////////////
   const uploadAudio = async () => {
-    if (audioBlob) {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      setTime(0);
+    }
+    const blob = await stopRecordingAndPrepareBlob(); // Ensure blob is prepared
+    if (blob) {
       const formData = new FormData();
       formData.append("receiverId", receiverId); // Add receiverId
-      formData.append("voice", audioBlob);
+      formData.append("voice", blob);
       formData.append(
         "reply",
         JSON.stringify([replyContent.innerText, toReplyerId])
-      ); // Add reply as a string if it's an array or object
+      );
 
       try {
+        setLoading(true);
         const { data } = await axios.post(
           `${baseurl}/messanger/voice-create`,
           formData, // Pass FormData as the body
@@ -92,23 +119,29 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverI
             },
           }
         );
-
-        // socket && socket.emit("message-to", data);
-        // dispatch({ type: "send-message", payload: data });
-
-        console.log(data)
+        setTimeout(() => {
+          scrollToBottom();
+        }, 500);
+        setIsStartRecord(false);
+        socket && socket.emit("message-to", data);
+        dispatch({ type: "send-message", payload: data });
       } catch (error) {
         console.error(
           "Error uploading file:",
           error.response?.data || error.message
         );
+      } finally {
+        setLoading(false);
       }
+    } else {
+      console.error("No audio blob available to upload.");
+      setLoading(false);
     }
   };
 
-
   const second = time % 60;
   const minute = Math.floor(time / 60);
+
   return (
     <>
       {!hiddenTarget && (
@@ -158,24 +191,22 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverI
                 >
                   <div className="w-3 h-3 bg-white cursor-pointer"></div>
                 </div>
-                <div className=" bg-white rounded-full px-2 py-[3px]">
+                <div className="bg-white rounded-full px-2 py-[3px]">
                   <h1>
-                    {minute}:
-                    {second < 10 ? "0" + second : second}
+                    {minute}:{second < 10 ? "0" + second : second}
                   </h1>
                 </div>
               </div>
             )}
 
-            {playRecord &&  <AudioPlayer audioSrc={audioUrl} duration={currentTime} />}
-            <div
-              onClick={() => {
-                stopRecording(); setIsStartRecord(false); setPlayRecord(false);uploadAudio()
-              }}
-              className="cursor-pointer"
-            >
-              <VscSend />
-            </div>
+            {playRecord && <AudioPlayer audioSrc={audioUrl} duration={currentTime} />}
+            {loading ? (
+              "Loading..."
+            ) : (
+              <div onClick={uploadAudio} className="cursor-pointer">
+                Send
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -184,4 +215,3 @@ const VoiceRecorder = ({ isStartRecord, setIsStartRecord, hiddenTarget,receiverI
 };
 
 export default VoiceRecorder;
-//

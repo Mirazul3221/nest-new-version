@@ -38,7 +38,10 @@ export class MessangerService {
       api_key: this.ConfigService.get('Api_key'),
       api_secret: this.ConfigService.get('Api_secret')
     })
-    const data = await cloudinary.uploader.upload(image.path)
+    const data = await cloudinary.uploader.upload(image.path,{
+      folder: 'image_message', // Specify the folder in Cloudinary
+      resource_type: 'auto', // Automatically detect the file type (audio in this case)
+    })
     const created =  await this.MessangerModel.create({
       senderId:id,
       receiverId:receiverId,
