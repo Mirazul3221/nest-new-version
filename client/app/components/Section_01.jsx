@@ -19,7 +19,7 @@ const Section_01 = () => {
             হবে। এছাড়া আপনার কছে যে প্রশ্নটি উত্তম মনে হবে সেটি সংরক্ষণ করে
             রাখার ব্যবস্থা থাকবে যেন আপনি পরবর্তীতে পড়তে পারেন
           </p>
-          <script
+          {/* <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7318908521952513"
             crossorigin="anonymous"
@@ -32,7 +32,7 @@ const Section_01 = () => {
             data-ad-client="ca-pub-7318908521952513"
             data-ad-slot="3041018388"
           ></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> */}
         </div>
         <div className="right md:w-1/3">
           <Image className="md:h-2/3" src={mobile} alt="bcs_banner" />
