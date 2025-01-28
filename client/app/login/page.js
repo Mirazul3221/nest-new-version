@@ -12,7 +12,7 @@ const page = () => {
       <div className="hidden w-1/2 md:block">
        <img className="" src="login.jpg" alt="login"/>
       </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <InputForm />
         </div>
       </div>

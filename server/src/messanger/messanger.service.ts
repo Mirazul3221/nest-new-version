@@ -87,14 +87,6 @@ export class MessangerService {
         {receiverId:myId}
       ]
     });
-   
-    // const uniqueIds = new Set <string>();
-    // allMessage.forEach((question)=>{
-    //   uniqueIds.add(question.senderId.toString());
-    //   uniqueIds.add(question.receiverId.toString());
-    // })
-    //  const getAll = Array.from(uniqueIds);
-    // const getAllIds = getAll.map(id => new Types.ObjectId(id))
     const myObjectId = new Types.ObjectId(myId)
     
     const result = await this.MessangerModel.aggregate([
@@ -161,9 +153,7 @@ export class MessangerService {
         }
       }
     ])
-
-    console.log(result)
-     return await result;
+     return result;
   }
 
   async findAllFriendsByMessages (myId){
@@ -203,14 +193,36 @@ if (!checkDuplicate) {
    await targetMessage.save()
   }//
 
- async findMyFriendAllMessage(user,id) {
+ async findMyFriendAllMessage(user,id,page) {
   const allMessage = await this.MessangerModel.find({
     $or : [
       {senderId:user._id,receiverId:id},
       {senderId:id,receiverId:user._id}
     ]
-  })
+  }).sort({createdAt:-1})
     return await allMessage;
+  }
+
+
+  async findMessagesWithPagination(
+    userId: string,
+    friendId: string,
+    page: number = 1,
+    limit: number = 10
+  ) {
+    const skip = (page - 1) * limit;
+  
+    const messages = await this.MessangerModel.find({
+      $or: [
+        { senderId: userId, receiverId: friendId },
+        { senderId: friendId, receiverId: userId },
+      ],
+    })
+      .sort({ createdAt: -1 }) // Fetch latest messages first
+      .skip(skip)
+      .limit(limit);
+    console.log(page)
+    return messages.reverse();
   }
 
   findOne(id: number) {

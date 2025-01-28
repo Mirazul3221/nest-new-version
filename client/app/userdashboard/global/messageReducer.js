@@ -29,6 +29,13 @@ if (action.type === 'fetch-message') {
       return [...state]
   }
 
+  if (action.type === 'fetch-scroll-message') {
+    return state = [...action.payload,...state]
+    }
+  if (action.type === 'empty-message') {
+    console.log('empty message')
+    return state = []
+    }
 ///
 return state
     

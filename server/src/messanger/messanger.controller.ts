@@ -54,11 +54,12 @@ export class MessangerController {
   return await this.messangerService.updateEmojiInMessanger(message)
  }
 
+ 
 
-  @Get('get/:id')
+  @Get('get/:id/:page')
   @UseGuards(AuthGuard())
-async  findMyFriendAllMessage(@Req() body:any,@Param('id') id:string) {
-    return this.messangerService.findMyFriendAllMessage(body.user,id);
+async  findMyFriendAllMessage(@Req() body:any,@Param('id') id:string, @Param('page') page:number) {
+    return this.messangerService.findMessagesWithPagination(body.user._id,id,page);
   }
 
   @Get(':id')

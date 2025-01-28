@@ -45,7 +45,7 @@ const Middle = ({ id, userDetails }) => {
         dispatch({ type: "fetch-message", payload: data });
       } catch (error) {}
     }
-    fetchMessage();
+    // fetchMessage();
   }, [id]);
   const groupMessages = groupMessagesBysender(messages);
 
@@ -319,6 +319,83 @@ const Middle = ({ id, userDetails }) => {
   };
 
   const [isStartRecord, setIsStartRecord] = useState(false);
+
+  ////////////////////Here the logic for calling message from api when scroll in a container////////////////////////////////
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef(null);
+  // Fetch messages from the API
+  //////////////////render message first time////////////////////////////
+  useEffect(() => {
+    fetchMessages(page, "static");
+  }, [id]);
+
+  const fetchMessages = async (page, status) => {
+    if (loading) return;
+    setLoading(true);
+    if (status === "static") {
+      dispatch({ type: "empty-message" });
+    }
+    try {
+      if (status === "static") {
+        const { data } = await axios.get(
+          `${baseurl}/messanger/get/${id}/${1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+
+        if (data?.length) {
+          setPage(2);
+          setHasMore(true);
+          dispatch({ type: "fetch-message", payload: data });
+          setTimeout(() => {
+            scrollToBottom();
+          }, 200);
+        } else {
+          setHasMore(false); // No more messages to fetch
+        }
+      } else {
+        const { data } = await axios.get(
+          `${baseurl}/messanger/get/${id}/${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+
+        if (data?.length) {
+          dispatch({ type: "fetch-scroll-message", payload: data });
+          setPage((prev) => prev + 1);
+          const container = containerRef.current;
+
+          const previousHeight = container.scrollHeight;
+          // Restore scroll position
+          setTimeout(() => {
+            container.scrollTop = container.scrollHeight - previousHeight;
+          }, 200);
+        } else {
+          setHasMore(false); // No more messages to fetch
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle scroll event to detect when user scrolls to the top
+  const handleScroll = (e) => {
+    if (e.target.scrollTop === 0 && hasMore && !loading) {
+      fetchMessages(page, "dynamic");
+    }
+  };
+
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
@@ -359,7 +436,11 @@ const Middle = ({ id, userDetails }) => {
         </div>
       </div>
       <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[74vh]">
-        <div className="w-full overflow-y-auto hidden_scroll h-[64vh] py-6 px-4 bg-white">
+        <div
+          onScroll={handleScroll}
+          ref={containerRef}
+          className="w-full overflow-y-auto relative hidden_scroll h-[64vh] py-6 px-4 bg-white"
+        >
           <div className="flex justify-center">
             <div>
               <img
@@ -372,6 +453,11 @@ const Middle = ({ id, userDetails }) => {
               </h4>
             </div>
           </div>
+          {loading && (
+            <div className="loading flex justify-center">
+              <img src={"/loading-buffer.gif"} alt="loading" />
+            </div>
+          )}
           {groupMessages?.map((messageBlog, i) => {
             return (
               <div key={i} className="mt-10">
