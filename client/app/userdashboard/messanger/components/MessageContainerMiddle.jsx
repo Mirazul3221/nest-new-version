@@ -839,9 +839,7 @@ const Middle = ({ id, userDetails }) => {
                       </div>
                     )
                   ) : (
-                    <div className="loading flex justify-center">
-                .
-                    </div>
+                   ''
                   );
                 })}
               </div>
