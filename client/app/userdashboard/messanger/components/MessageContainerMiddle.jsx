@@ -840,7 +840,7 @@ const Middle = ({ id, userDetails }) => {
                     )
                   ) : (
                     <div className="loading flex justify-center">
-                      <img src={"/loading-buffer.gif"} alt="loading" />
+                .
                     </div>
                   );
                 })}
