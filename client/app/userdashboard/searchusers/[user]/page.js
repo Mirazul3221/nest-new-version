@@ -302,7 +302,6 @@ const Page = () => {
                             </span>
                           </h3>
                         </div>
-//
                         {(myUserId == userDetails._id) === false &&
                           hasInList === false && (
                             <div>
