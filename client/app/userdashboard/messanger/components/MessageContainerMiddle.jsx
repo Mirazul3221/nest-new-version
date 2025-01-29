@@ -325,6 +325,7 @@ const Middle = ({ id, userDetails }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
+  const [previousScroll,setPreviousScroll] = useState(0)
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
@@ -372,12 +373,8 @@ const Middle = ({ id, userDetails }) => {
           dispatch({ type: "fetch-scroll-message", payload: data });
           setPage((prev) => prev + 1);
           const container = containerRef.current;
-
           const previousHeight = container.scrollHeight;
-          // Restore scroll position
-          setTimeout(() => {
-            container.scrollTop = container.scrollHeight - previousHeight;
-          }, 200);
+          setPreviousScroll(previousHeight)
         } else {
           setHasMore(false); // No more messages to fetch
         }
@@ -395,7 +392,14 @@ const Middle = ({ id, userDetails }) => {
       fetchMessages(page, "dynamic");
     }
   };
-
+useEffect(() => {
+   if(!loading && hasMore){
+const container = containerRef.current;
+container.scrollTop = container.scrollHeight - previousScroll;
+console.log(previousScroll)
+console.log( container.scrollHeight)
+   }
+}, [loading]);
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
