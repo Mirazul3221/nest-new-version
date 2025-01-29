@@ -53,7 +53,7 @@ useEffect(() => {
   };
 }, [socket]);
   return (
-    <div className="w-full cursor-pointer">
+    <div className="w-full bg-white cursor-pointer">
       {sortedMessages &&
         sortedMessages.map((friend, i) => {
           return (

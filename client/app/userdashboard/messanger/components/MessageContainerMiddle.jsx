@@ -396,20 +396,18 @@ useEffect(() => {
    if(!loading && hasMore){
 const container = containerRef.current;
 container.scrollTop = container.scrollHeight - previousScroll;
-console.log(previousScroll)
-console.log( container.scrollHeight)
    }
 }, [loading]);
   return (
     <div>
-      <div className="top-bar px-4 rounded-t-2xl py-2 bg-violet-500 flex justify-between items-center">
+      <div className="top-bar px-4 rounded-t-2xl py-2 bg-gray-300 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <img
             className="rounded-full w-8"
             src={userDetails?.profile}
             alt={userDetails?.name}
           />
-          <div className="text-white">
+          <div className="text-black">
             <h2 className="text-[18px]">{userDetails?.name}</h2>
             {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
@@ -424,6 +422,7 @@ console.log( container.scrollHeight)
               title: userDetails?.title,
               type: "Audio",
               size: 30,
+              color : '#8840f5'
             }}
           />
           <EntryPoint
@@ -435,6 +434,7 @@ console.log( container.scrollHeight)
               title: userDetails?.title,
               type: "Video",
               size: 30,
+              color:'#8840f5'
             }}
           />
         </div>
@@ -443,7 +443,7 @@ console.log( container.scrollHeight)
         <div
           onScroll={handleScroll}
           ref={containerRef}
-          className="w-full overflow-y-auto relative hidden_scroll h-[64vh] py-6 px-4 bg-white"
+          className="w-full overflow-y-auto relative h-[64vh] py-6 px-2 bg-white"
         >
           <div className="flex justify-center">
             <div>
@@ -477,13 +477,13 @@ console.log( container.scrollHeight)
                         <div className="flex relative justify-end items-center gap-3 group">
                           <div className="hidden relative group-hover:block text-gray-700">
                             <div className="flex gap-4 items-center">
-                              <BsThreeDotsVertical size={20} />
+                              <BsThreeDotsVertical size={18} />
                               <label
                                 className="cursor-pointer"
                                 onClick={() => handleReply(msg)}
                                 htmlFor="message_text"
                               >
-                                <IoArrowRedoOutline size={20} />
+                                <IoArrowRedoOutline size={18} />
                               </label>
 
                               <div className="group relative">
@@ -521,7 +521,7 @@ console.log( container.scrollHeight)
                               </div>
                             </div>
                             <div className="flex justify-end">
-                              <h4 className="text-[12px] bg-gray-50 px-2 rounded-full w-fit border block">
+                              <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
                                 {moment(msg?.createdAt).format(
                                   "MM/DD/YY, HH:mm"
                                 )}
@@ -816,12 +816,12 @@ console.log( container.scrollHeight)
                                 onClick={() => handleReply(msg)}
                                 htmlFor="message_text"
                               >
-                                <BsReply size={20} />
+                                <BsReply size={18} />
                               </label>
                               <BsThreeDotsVertical size={18} />
                             </div>
                             <div className="flex justify-end">
-                              <h4 className="text-[12px] bg-gray-50 px-2 rounded-full w-fit border block">
+                              <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
                                 {moment(msg?.createdAt).format(
                                   "MM/DD/YY, HH:mm"
                                 )}

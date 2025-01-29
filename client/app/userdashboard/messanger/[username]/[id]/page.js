@@ -11,6 +11,7 @@ import { useContext } from "react";
 import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import ProtectRoute from "@/app/global/ProtectRoute";
+import MessangerContainerRight from "../../components/MessangerContainerRight";
 const Page = () => {
   const { store } = useContext(storeContext);
   const [userDetails, setUserDetails] = useState(null);
@@ -55,9 +56,7 @@ const Page = () => {
           </div>
         </div>
         <div className="write w-3/12 bg-white">
-          <div className="overflow-y-auto h-20 text-center">
-            Coming Soon
-          </div>
+        <MessangerContainerRight id={id}/>
         </div>
       </div>
     </div>
