@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSocket } from '../../global/SocketProvider';
 import { useStore } from '@/app/global/DataProvider';
-import { viewurl } from '@/app/config';
+import { baseurl, viewurl } from '@/app/config';
 import { formatetime } from '../../components/messanger/components/time';
+import axios from 'axios';
+import { fetchAllFriendsByMessage } from './fetchdata';
 
-const MessageBar = ({setId,setUserDetails,friend}) => {
+const MessageBar = ({setId,setUserDetails,friend,setMessangerFriends}) => {
     const {socket, myActiveFriends} = useSocket();   
       const { store } = useStore();
 //////////////////////////////typing effect///////////////////////////////////
@@ -42,12 +44,21 @@ const handleUrl = () => {
   const [hasSeen,setHasSeen] = useState(false);
 
   const updateUnseenMessage =async () => {
-    console.log('comming soon')
+    try {
+        await axios.get(`${baseurl}/messanger/update-message-seen-status?senderId=${friend.userId}`, {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
   }
   return (
     <div onClick={()=> {
         handleUrl()
         setHasSeen(true)
+        updateUnseenMessage()
       }}>
           <div className="px-6 flex gap-4 relative items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
             <div className="relative">

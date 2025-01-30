@@ -23,7 +23,7 @@ const MessageBox = ({setId,setUserDetails}) => {
       {sortedMessages &&
         sortedMessages.map((friend, i) => {
           return (
-             <MessageBar setId={setId} setUserDetails={setUserDetails} key={i} friend={friend}/>
+             <MessageBar setId={setId} setUserDetails={setUserDetails} key={i} friend={friend} setMessangerFriends={setMessangerFriends}/>
           );
         })}
     </div>

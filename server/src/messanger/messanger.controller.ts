@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { MessangerService } from './messanger.service';
 import { CreateImageMessangerDto, CreateMessangerDto, CreateVoiceMessageDto } from './dto/create-messanger.dto';
 import { UpdateMessangerDto } from './dto/update-messanger.dto';
@@ -32,6 +32,13 @@ export class MessangerController {
     return await this.messangerService.createVoiceMessage(createMessage,me);
   }
 
+
+  @Get('update-message-seen-status')
+  @UseGuards(AuthGuard())
+  async updateMessageSeenStatus(@Req() req:any, @Query() user:any){
+    const myId = req.user.id;  
+   return await this.messangerService.updateMessageSeenStatus(user.senderId,myId)
+  }
 
   @Get('my-friends-by-both-message-and-profile')
   @UseGuards(AuthGuard())

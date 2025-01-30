@@ -139,7 +139,7 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        dispatch({ type: "receive-message", payload: data });
+       id == data.senderId && dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
         }, 100);
@@ -147,7 +147,7 @@ const Middle = ({ id, userDetails }) => {
     return () => {
       socket && socket.off("message-from");
     };
-  }, [socket]);
+  }, [socket,id]);
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
       e.target.parentElement.children[2].classList.add("-left-[150px]");

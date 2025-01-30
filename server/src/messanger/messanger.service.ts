@@ -79,6 +79,17 @@ export class MessangerService {
      return created
   }
 
+  async updateMessageSeenStatus(friendId, myId) {
+    await this.MessangerModel.updateMany(
+        {
+            senderId: friendId,
+            receiverId: myId,
+            seenMessage: false
+        },
+        { $set: { seenMessage: true } }
+    );
+}
+
 
   async getCombinedLastMessageAndUserProfiles (myId){
     const allMessage = await this.MessangerModel.find({
@@ -165,7 +176,6 @@ export class MessangerService {
         }
       }
     ]);
-    
     return result;
     
   }
