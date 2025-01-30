@@ -13,6 +13,10 @@ import loader from '@/public/loading-buffer.gif'
 const MessageBox = ({sortedMessages}) => {
     const {myActiveFriends} = useSocket();
     const {store} = useStore()
+      const handleUrl = (friend) => {
+      window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)
+   // 
+  }
   return (
     <div className="md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-20 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
       <div className="flex px-4 md:block justify-between items-center">
