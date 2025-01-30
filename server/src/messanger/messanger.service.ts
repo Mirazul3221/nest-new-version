@@ -91,69 +91,83 @@ export class MessangerService {
     
     const result = await this.MessangerModel.aggregate([
       {
-        $match :{
-          $or : [
-            {
-              senderId
-              : myObjectId},
-              {
-                receiverId
-                : myObjectId}
+        $match: {
+          $or: [
+            { senderId: myObjectId },
+            { receiverId: myObjectId }
           ]
         }
       },
       {
-        $project : {
-          otherUserId : {
-           $cond : {
-            if : {$eq : ['$senderId', myObjectId]},
-            then : '$receiverId',
-            else : '$senderId'
-           }
+        $project: {
+          otherUserId: {
+            $cond: {
+              if: { $eq: ['$senderId', myObjectId] },
+              then: '$receiverId',
+              else: '$senderId'
+            }
           },
-          senderId:'$senderId',
-          receiverId : '$receiverId',
-          message:'$message',
-          messageTime : '$createdAt'
+          senderId: 1,
+          receiverId: 1,
+          message: 1,
+          messageTime: '$createdAt',
+          seenMessage: 1
         }
       },
       {
-        $sort : {
-          messageTime : -1
+        $sort: {
+          messageTime: -1
         }
       },
       {
-        $group : {
-          _id : '$otherUserId',
-          senderId : {$first : '$senderId'},
-          lastMessage : {$first : '$message'},
-          lastMessageTime : {$first : '$messageTime'}
-        }
-      },
-      {
-          $lookup : {
-            from : 'readers',
-            localField : '_id',
-            foreignField : '_id',
-            as : 'userProfile',
+        $group: {
+          _id: '$otherUserId',
+          senderId: { $first: '$senderId' },
+          lastMessage: { $first: '$message' },
+          lastMessageTime: { $first: '$messageTime' },
+          unseenMessageCount: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ['$seenMessage', false] },  // Unseen messages
+                    { $ne: ['$senderId', myObjectId] } // Sent by the friend
+                  ]
+                },
+                1,
+                0
+              ]
+            }
           }
+        }
       },
       {
-        $unwind : '$userProfile'
+        $lookup: {
+          from: 'readers',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'userProfile'
+        }
       },
       {
-        $project : {
-          _id : 0,
-          userId : '$_id',
-          userName : '$userProfile.name',
-          UserProfile : '$userProfile.profile',
-          senderId : 1,
-          lastMessage : 1,
-          lastMessageTime : 1
+        $unwind: '$userProfile'
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: '$_id',
+          userName: '$userProfile.name',
+          userProfile: '$userProfile.profile',
+          senderId: 1,
+          lastMessage: 1,
+          lastMessageTime: 1,
+          unseenMessageCount: 1
         }
       }
-    ])
-     return result;
+    ]);
+    
+    return result;
+    
   }
 
   async findAllFriendsByMessages (myId){

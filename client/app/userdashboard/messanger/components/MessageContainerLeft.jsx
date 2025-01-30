@@ -60,11 +60,11 @@ useEffect(() => {
             <div onClick={()=> {
               handleUrl(friend)
             }} key={i}>
-                <div className="px-6 flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
+                <div className="px-6 flex gap-4 relative items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
                   <div className="relative">
                     <img
                       className="w-12 rounded-full"
-                      src={friend.UserProfile}
+                      src={friend.userProfile}
                       alt={friend.userName}
                     />
                     {
@@ -76,7 +76,6 @@ useEffect(() => {
                       <h2 className="text-lg font-semibold text-slate-700">
                       {friend.userName.split(' ')[0]}
                     </h2>
-
                     <p className="text-[12px] text-slate-500">
                         {formatetime(friend.lastMessageTime)}
                       </p>
@@ -90,6 +89,7 @@ useEffect(() => {
                        }
                       </h4>
                   </div>
+                  <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
                 </div>
             </div>
           );

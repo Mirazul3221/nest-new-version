@@ -10,43 +10,14 @@ import { formatetime } from "./components/time";
 import Image from "next/image";
 import loader from '@/public/loading-buffer.gif'
 
-const MessageBox = ({}) => {
-  const { store } = useStore();
-    const {socket, myActiveFriends} = useSocket();
-  const [messangerFriends, setMessangerFriends] = useState(null);
-  // const fetchAllFriendsByMessage = async () => {
-  //   try {
-  //     const { data } = await axios.get(
-  //       `${baseurl}/messanger/my-friends-by-message`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${store.token}`,
-  //         },
-  //       }
-  //     );
-
-  //     setMessangerFriends(data);
-  //   } catch (error) {}
-  // };
-
-  const sortedMessages = messangerFriends?.sort(
-    (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
-  );
-  const handleUrl = (friend) => {
-      window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)
-   // 
-  }
-
-  useEffect(() => {
-    async function loadmessage() {
-      const data = await fetchAllFriendsByMessage(store.token);
-      setMessangerFriends(data);
-    }
-    loadmessage();
-  }, []);
+const MessageBox = ({sortedMessages}) => {
+    const {myActiveFriends} = useSocket();
+    const {store} = useStore()
   return (
-    <div className="absolute pl-2 top-20 shadow-2xl py-4 right-20 bg-white md:w-3/12 md:h-[80vh] border rounded-2xl z-50">
-       <h2 className="text-2xl pl-4 mb-2">Chats</h2>
+    <div className="md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-20 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
+      <div className="flex px-4 md:block justify-between items-center">
+      <h2 className="text-2xl">Chats</h2> <span className="md:hidden">closs</span>
+      </div>
       {sortedMessages ? (
         <div className="w-full overflow-y-scroll md:h-[70vh]">
       {sortedMessages &&
@@ -55,11 +26,11 @@ const MessageBox = ({}) => {
             <div onClick={()=> {
               handleUrl(friend)
             }} key={i} className="cursor-pointer">
-                <div className="px-6 flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
+                <div className="px-6 relative flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
                   <div className="relative">
                     <img
                       className="w-12 rounded-full"
-                      src={friend.UserProfile}
+                      src={friend.userProfile}
                       alt={friend.userName}
                     />
                     {
@@ -83,6 +54,7 @@ const MessageBox = ({}) => {
                         </span>
                       </h4>
                   </div>
+                  <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
                 </div>
             </div>
           );

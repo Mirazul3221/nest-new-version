@@ -18,6 +18,7 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 import { useSocket } from "../global/SocketProvider";
 import NotificationContainer from "./notification-component/NotificationContainer";
 import MessageBox from "./messanger/MessageBox";
+import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 
 const SuperHeader = () => {
   const { store, dispatch } = useContext(storeContext);
@@ -83,6 +84,27 @@ const SuperHeader = () => {
   };
   /////////////////////////////Here is the logic for new message come/////////////////////////////////
     const [openMessage,setOpenMessage] = useState(false)
+    const [messangerFriends, setMessangerFriends] = useState(null);
+    const handleUrl = (friend) => {
+        window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)
+     // 
+    }
+  
+    useEffect(() => {
+      async function loadmessage() {
+        const data = await fetchAllFriendsByMessage(store.token);
+        setMessangerFriends(data);
+      }
+      loadmessage();
+    }, []);
+  
+    const sortedMessages = messangerFriends?.sort(
+      (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+    );
+  
+    const unreadMessage = sortedMessages?.reduce((acc,qb)=>{
+      return acc + qb?.unseenMessageCount ;
+     },0)  
   /////////////////////////////Here is the logic for new notification come//////////////////////////////
   const [openNotif, setOpenNotif] = useState(false);
   useEffect(() => {
@@ -217,17 +239,17 @@ const SuperHeader = () => {
                   }}
                   className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
                 >
-                  {/* <div className={`absolute  -top-1 -right-1`}>
-                    {unseenNotification?.length > 0 && (
+                  <div className={`absolute top-1 right-[0px]`}>
+                    {unreadMessage > 0 && (
                       <div
-                        className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
+                        className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
                       >
-                        <p className="text-white text-[10px]">
-                          {unseenNotification.length}
+                        <p className="text-white header-box text-[10px]">
+                          {unreadMessage > 9 ? 9 + '+' : unreadMessage }
                         </p>
                       </div>
                     )}
-                  </div> */}
+                  </div>
                   <HiOutlineEnvelope className="header-box" size={26} />
                 </li>
                 <li
@@ -238,12 +260,12 @@ const SuperHeader = () => {
                   }}
                   className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
                 >
-                  <div className={`absolute -top-1 -right-1`}>
+                  <div className={`absolute top-1 right-[3px]`}>
                     {unseenNotification?.length > 0 && (
                       <div
-                        className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
+                        className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
                       >
-                        <p className="text-white text-[10px]">
+                        <p className="text-white header-box text-[10px]">
                           {unseenNotification.length}
                         </p>
                       </div>
@@ -254,7 +276,7 @@ const SuperHeader = () => {
                 {/* ==================Open and close message==================== */}
 
                 {openMessage && (
-                   <MessageBox/>
+                   <MessageBox sortedMessages={sortedMessages}/>
                 )}
                 {/* ==================Open and close notification==================== */}
 
@@ -268,16 +290,40 @@ const SuperHeader = () => {
               </ul>
             </div>
           </div>
+          {/* ///////////////////////////////////////////////////////////////////message box for mobile from here///////////////////////////////////////////// */}
+          <div
+                  onClick={() => {
+                    setOpenMessage(!openMessage);
+                    setOpenNotif(false);
+                  }}
+            className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
+          >
+            <div className={`absolute top-1 right-1`}>
+              {unseenNotification?.length == 0 && (
+                <div
+                  className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
+                >
+                  <p className="text-white text-[10px]">
+                    {unseenNotification.length}
+                  </p>
+                </div>
+              )}
+            </div>
+            <HiOutlineEnvelope className="header-box" size={26} />
+          </div>
+          {openMessage && (
+                   <MessageBox sortedMessages={sortedMessages}/>
+                )}
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
             onClick={() => {
               setOpenNotif(!openNotif);
               seenAndDeleteNotif();
             }}
-            className={`text-lg header-box font-normal md:hidden border relative text-gray-700 p-1 w-fit cursor-pointer duration-500 rounded-full`}
+            className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
           >
-            <div className={`absolute -top-1 -right-1`}>
-              {unseenNotification?.length > 0 && (
+            <div className={`absolute top-1 right-1`}>
+              {unseenNotification?.length == 0 && (
                 <div
                   className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
                 >

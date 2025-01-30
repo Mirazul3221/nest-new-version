@@ -71,7 +71,6 @@ export class AuthService {
     const loginInfo = await this.userModel
       .findOne({ email })
       .select('+password');
-     console.log(loginInfo)
     if (loginInfo) {
       const check_password = await bcrypt.compare(password, loginInfo.password);
       if (check_password) {
@@ -81,8 +80,6 @@ export class AuthService {
           profile: (await loginInfo).profile,
           role: (await loginInfo).role,
         });//
-
-        console.log(token)
         return { token, message: 'User login success' };
       } else {
         throw new UnauthorizedException('Invalied password !');
