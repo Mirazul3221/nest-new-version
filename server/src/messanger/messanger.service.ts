@@ -242,7 +242,7 @@ if (!checkDuplicate) {
     userId: string,
     friendId: string,
     page: number = 1,
-    limit: number = 10
+    limit: number = 20
   ) {
     const skip = (page - 1) * limit;
   
