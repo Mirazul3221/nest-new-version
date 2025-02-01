@@ -4,8 +4,14 @@ import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { GoHistory } from "react-icons/go";
@@ -19,21 +25,22 @@ import { useSocket } from "../global/SocketProvider";
 import NotificationContainer from "./notification-component/NotificationContainer";
 import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
+import { useMessage } from "../global/messageProvider";
 
 const SuperHeader = () => {
+  const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
   const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
     profile: store.userInfo.profile,
-    balance:0
+    balance: 0,
   });
 
-  console.log(me)
   useEffect(() => {
     async function fetchData() {
       try {
-        const myDetails =JSON.parse(localStorage.getItem('myDetails'))
+        const myDetails = JSON.parse(localStorage.getItem("myDetails"));
         setMe({
           id: myDetails._id,
           isOnline: myDetails.isOnline,
@@ -83,34 +90,62 @@ const SuperHeader = () => {
     }
   };
   /////////////////////////////Here is the logic for new message come/////////////////////////////////
-    const [openMessage,setOpenMessage] = useState(false)
-    const [messangerFriends, setMessangerFriends] = useState(null);
-    const handleUrl = (friend) => {
-        window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)
-     // 
-    }
-  
-    useEffect(() => {
-      async function loadmessage() {
-        const data = await fetchAllFriendsByMessage(store.token);
-        setMessangerFriends(data);
+  const [openMessage, setOpenMessage] = useState(false);
+  const messangerBoxRef = useRef(null);
+  const toggleMessageBox = () => setOpenMessage(!openMessage);
+
+  useEffect(() => {
+    console.log(messangerBoxRef.current);
+    function handleClickOutside(event) {
+      console.log(event.target);
+      console.log(messangerBoxRef.current.contains(event.target));
+      if (
+        messangerBoxRef.current &&
+        !messangerBoxRef.current.contains(event.target)
+      ) {
+        setOpenMessage(false);
       }
-      loadmessage();
-    }, []);
-  
-    const sortedMessages = messangerFriends?.sort(
-      (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+    }
+
+    if (openMessage) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openMessage]);
+
+  const [messangerFriends, setMessangerFriends] = useState(null);
+  const handleUrl = (friend) => {
+    window.open(
+      `${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`
     );
-  
-    const unreadMessage = sortedMessages?.reduce((acc,qb)=>{
-      return acc + qb?.unseenMessageCount ;
-     },0)  
+    //
+  };
+
+  useEffect(() => {
+    async function loadmessage() {
+      const data = await fetchAllFriendsByMessage(store.token);
+      setMessangerFriends(data);
+    }
+    loadmessage();
+  }, []);
+  const sortedMessages = messangerFriends?.sort(
+    (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+  );
+
+  const unreadMessage = sortedMessages?.reduce((acc, qb) => {
+    return acc + qb?.unseenMessageCount;
+  }, 0);
   /////////////////////////////Here is the logic for new notification come//////////////////////////////
   const [openNotif, setOpenNotif] = useState(false);
   useEffect(() => {
     socket &&
       socket.on("new-notification", (id) => {
-        console.log(id)
+        console.log(id);
         if (openNotif === true) {
           handleNotification();
           seenAndDeleteNotif();
@@ -126,7 +161,6 @@ const SuperHeader = () => {
     openNotif && handleNotification();
   }, [openNotif]);
 
-
   useEffect(() => {
     handleNotification();
   }, []);
@@ -135,7 +169,6 @@ const SuperHeader = () => {
   const unseenNotification = notificationList?.filter(
     (item) => item.seen === false
   );
-
 
   const sayThanks = async (id) => {
     try {
@@ -156,38 +189,76 @@ const SuperHeader = () => {
 
   const fullName = me.name?.split(" ");
   const firstname = fullName[0];
-  const handleHeaderBox = useCallback((e) => {
-
-    const targetBox = e.target.classList.contains('header-box')
-    if (!targetBox) {
-    setOpenNotif(false)
-    setOpenMessage(false)
+  //=============set scroll for header================
+  const [header, setHeader] = useState(false);
+  const scrollHeader = () => {
+    if (window.scrollY >= 40) {
+      setHeader(true);
+    } else {
+      setHeader(false);
     }
-  },[])
+  };
   useEffect(() => {
-    window.addEventListener("click",handleHeaderBox)
+    window.addEventListener("scroll", scrollHeader);
     return () => {
-      window.removeEventListener('click',handleHeaderBox)
+      window.removeEventListener("scroll", scrollHeader);
     };
   }, []);
 
- //=============set scroll for header================
- const [header,setHeader] = useState(false)
- const scrollHeader = ()=>{
-    if (window.scrollY >= 40) {
-      setHeader(true)
+  const [countUnreadMessage, setCountUnreadMessage] = useState(0);
+  async function countMessage() {
+    try {
+      const { data } = await axios.get(
+        `${baseurl}/messanger/count-all-unseen-message`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setCountUnreadMessage(data);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    countMessage();
+    socket &&
+      socket.on("message-from", () => {
+        countMessage();
+      });
+  }, []);
+
+  const [isOpenMessage, setIsOpenMessage] = useState(false);
+  const messageContainerRef = useRef(null);
+  const toggleMessage = () => setIsOpenMessage(!isOpenMessage);
+  useEffect(() => {
+    const handleMessage = (e) => {
+      if (
+        messageContainerRef.current &&
+        !messageContainerRef.current.contains(e.target)
+      ) {
+        setIsOpenMessage(false);
+      }
+    };
+
+    if (isOpenMessage) {
+      document.addEventListener("mousedown", handleMessage);
     } else {
-      setHeader(false)
+      document.removeEventListener("mousedown", handleMessage);
     }
- }
- useEffect(() => {
-  window.addEventListener("scroll",scrollHeader)
-  return () => {
-    window.removeEventListener("scroll",scrollHeader)
-  };
- }, []);
+    return () => {
+      document.removeEventListener("mousedown", handleMessage);
+    };
+  }, [isOpenMessage]);
+
   return (
-    <div className={`font-title ${header ? 'fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-10 py-2' : ''}`}>
+    <div
+      className={`font-title ${
+        header
+          ? "fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-10 py-2"
+          : ""
+      }`}
+    >
       <div className="flex justify-between items-center">
         <div className="md:w-20 w-16">
           <Link href="/">
@@ -216,7 +287,7 @@ const SuperHeader = () => {
                   className={`text-lg font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
                 >
                   <Link
-                    href={"/userdashboard/myfavourite"}
+                    href={"#"}
                     className="flex justify-between items-center gap-2"
                   >
                     <GoHistory /> History
@@ -232,30 +303,33 @@ const SuperHeader = () => {
                     <MdOutlineMenuBook /> BCS Corner
                   </Link>
                 </li>
-                <li
-                  onClick={() => {
-                    setOpenMessage(!openMessage);
-                    setOpenNotif(false);
-                  }}
-                  className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
-                >
-                  <div className={`absolute top-1 right-[0px]`}>
-                    {unreadMessage > 0 && (
-                      <div
-                        className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
-                      >
-                        <p className="text-white header-box text-[10px]">
-                          {unreadMessage > 9 ? 9 + '+' : unreadMessage }
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <HiOutlineEnvelope className="header-box" size={26} />
-                </li>
+                {!path.includes("userdashboard/messanger") && (
+                  <li
+                    onClick={() => {
+                      toggleMessage();
+                      setOpenNotif(false);
+                    }}
+                    className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
+                  >
+                    <div className={`absolute top-1 right-[0px]`}>
+                      {countUnreadMessage > 0 && (
+                        <div
+                          className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
+                        >
+                          <p className="text-white header-box text-[10px]">
+                            {countUnreadMessage > 9
+                              ? 9 + "+"
+                              : countUnreadMessage}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <HiOutlineEnvelope className="header-box" size={26} />
+                  </li>
+                )}
                 <li
                   onClick={() => {
                     setOpenNotif(!openNotif);
-                    setOpenMessage(false)
                     seenAndDeleteNotif();
                   }}
                   className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
@@ -273,15 +347,22 @@ const SuperHeader = () => {
                   </div>
                   <IoIosNotificationsOutline className="header-box" size={26} />
                 </li>
-                {/* ==================Open and close message==================== */}
-
-                {openMessage && (
-                   <MessageBox sortedMessages={sortedMessages}/>
+                {/* ==================Open and close message in desktop==================== */}
+                {isOpenMessage && (
+                  <MessageBox
+                    sortedMessages={sortedMessages}
+                    setCountUnreadMessage={setCountUnreadMessage}
+                    messageContainerRef={messageContainerRef}
+                    toggleMessage = {toggleMessage}
+                  />
                 )}
-                {/* ==================Open and close notification==================== */}
+                {/* ==================Open and close notification in desktop==================== */}
 
                 {openNotif && (
-                   <NotificationContainer notificationList={notificationList} sayThanks={sayThanks}/>
+                  <NotificationContainer
+                    notificationList={notificationList}
+                    sayThanks={sayThanks}
+                  />
                 )}
 
                 {/* <li className="text-lg font-normal px-4 py-[4px] hover:bg-slate-100 hover:border-gray-200 text-gray-700 w-fit cursor-pointer duration-500 rounded-md border-[1px] border-white">
@@ -291,29 +372,29 @@ const SuperHeader = () => {
             </div>
           </div>
           {/* ///////////////////////////////////////////////////////////////////message box for mobile from here///////////////////////////////////////////// */}
-          <div
-                  onClick={() => {
-                    setOpenMessage(!openMessage);
-                    setOpenNotif(false);
-                  }}
-            className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
-          >
-            <div className={`absolute top-1 right-1`}>
-              {unseenNotification?.length == 0 && (
-                <div
-                  className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
-                >
-                  <p className="text-white text-[10px]">
-                    {unseenNotification.length}
-                  </p>
-                </div>
-              )}
-            </div>
-            <HiOutlineEnvelope className="header-box" size={26} />
-          </div>
-          {openMessage && (
-                   <MessageBox sortedMessages={sortedMessages}/>
+          {!path.includes("userdashboard/messanger") && (
+            <div
+              onClick={() => {
+                setOpenMessage(!openMessage);
+                setOpenNotif(false);
+              }}
+              className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
+            >
+              <div className={`absolute top-1 right-1`}>
+                {unseenNotification?.length == 0 && (
+                  <div
+                    className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
+                  >
+                    <p className="text-white text-[10px]">
+                      {unseenNotification.length}
+                    </p>
+                  </div>
                 )}
+              </div>
+              <HiOutlineEnvelope className="header-box" size={26} />
+            </div>
+          )}
+          {openMessage && <MessageBox sortedMessages={sortedMessages} />}
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
             onClick={() => {
@@ -336,24 +417,28 @@ const SuperHeader = () => {
             <IoIosNotificationsOutline className="header-box" size={26} />
           </div>
           {openNotif && (
-                   <NotificationContainer notificationList={notificationList} sayThanks={sayThanks} setOpenNotif={setOpenNotif}/>
-                )}
+            <NotificationContainer
+              notificationList={notificationList}
+              sayThanks={sayThanks}
+              setOpenNotif={setOpenNotif}
+            />
+          )}
           {/* ////////////////////////////////////////////////////////////// */}
           <div className="group relative duration-100">
             {me.profile.length > 0 ? (
               <div className="relative">
                 <Profile profile={me.profile} myId={me.id} />
-                 <div className="absolute w-full">
-                 {me?.balance === 0 ? (
-                  <h2 className="text-center flex justify-center items-center gap-1">
-                    0.00 <span className="font-bold text-[12px]">৳</span>{" "}
-                  </h2>
-                ) : (
-                  <h2 className="text-center text-gray-700">
-                    {me?.balance?.toFixed(2) + " ৳"}
-                  </h2>
-                )}
-                 </div>
+                <div className="absolute w-full">
+                  {me?.balance === 0 ? (
+                    <h2 className="text-center flex justify-center items-center gap-1">
+                      0.00 <span className="font-bold text-[12px]">৳</span>{" "}
+                    </h2>
+                  ) : (
+                    <h2 className="text-center text-gray-700">
+                      {me?.balance?.toFixed(2) + " ৳"}
+                    </h2>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="w-16 h-16 animate-pulse border-4 bg-gray-100 rounded-full"></div>

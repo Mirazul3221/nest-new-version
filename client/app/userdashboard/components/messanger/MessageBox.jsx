@@ -10,15 +10,27 @@ import { formatetime } from "./components/time";
 import Image from "next/image";
 import loader from '@/public/loading-buffer.gif'
 
-const MessageBox = ({sortedMessages}) => {
+const MessageBox = ({sortedMessages,setCountUnreadMessage,messageContainerRef,toggleMessage}) => {
     const {myActiveFriends} = useSocket();
     const {store} = useStore()
       const handleUrl = (friend) => {
       window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)
    // 
   }
+
+  const updateUnseenMessage =async (id) => {
+    try {
+        await axios.get(`${baseurl}/messanger/update-message-seen-status?senderId=${id}`, {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+  }
   return (
-    <div className="md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-20 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
+    <div ref={messageContainerRef} className="choda md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-20 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
       <div className="flex px-4 md:block justify-between items-center">
       <h2 className="text-2xl">Chats</h2> <span className="md:hidden">closs</span>
       </div>
@@ -28,7 +40,10 @@ const MessageBox = ({sortedMessages}) => {
         sortedMessages.map((friend, i) => {
           return (
             <div onClick={()=> {
-              handleUrl(friend)
+              updateUnseenMessage(friend?.userId)
+              setCountUnreadMessage(prev=> prev - friend.unseenMessageCount)
+              toggleMessage()
+               handleUrl(friend)
             }} key={i} className="cursor-pointer">
                 <div className="px-6 relative flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
                   <div className="relative">
@@ -58,7 +73,9 @@ const MessageBox = ({sortedMessages}) => {
                         </span>
                       </h4>
                   </div>
-                  <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
+                  {
+                    friend?.unseenMessageCount > 0 &&  <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
+                  }
                 </div>
             </div>
           );

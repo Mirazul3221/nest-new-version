@@ -17,6 +17,7 @@ import SuperHeader from "../../components/SuperHeader";
 import Link from "next/link";
 import Messanger from "../../components/messanger/Messanger";
 import { useSocket } from "../../global/SocketProvider";
+import FloatingMessageContainer from "../../components/messanger/MessageContainer";
 
 const Page = () => {
   const pram = useParams();
@@ -339,7 +340,7 @@ const Page = () => {
                             >
                               <h2>Unfriend</h2>
                             </div>
-                            <Messanger
+                            {/* <Messanger
                               id={userDetails._id}
                               name={userDetails.name}
                               profile={userDetails.profile}
@@ -348,11 +349,13 @@ const Page = () => {
                               desc={userDetails.description}
                               switcher={openMessangerBox}
                               setSwitcher={setOpenMessangerBox}
-                            />
+                            /> */}
+
+                            <FloatingMessageContainer id={userDetails?._id} userDetails={userDetails} />
                           </div>
                         )}
                       </div>
-                      {/* ----------------------------------------------Messanger Box System---------------------------------------------- */}
+                      {/* --------------------------------------------Messanger Box System-------------------------------------------- */}
                     </div>
                   ) : (
                     <div className="p-4 mt-20 space-y-2">

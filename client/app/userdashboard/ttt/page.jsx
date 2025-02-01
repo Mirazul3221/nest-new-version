@@ -1,78 +1,60 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import WaveSurfer from "wavesurfer.js";
-import {
-  BsFillStopFill,
-  BsFillPlayFill,
-} from "react-icons/bs";
+'use client'
+import { useState, useRef, useEffect } from "react";
+import InputForm from "@/app/components/Login";
 
-export default function Home({url,userType='me'}) {
-  const waveformRef = useRef(null);
-  const wavesurferRef = useRef(null); // Use ref to persist wavesurfer instance
-  const [playPause, setPlayPause] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+export default function Home() {
+  const [isOpen, setIsOpen] = useState(false);
+  const boxRef = useRef(null);
+
+  const toggleBox = () => setIsOpen(!isOpen);
 
   useEffect(() => {
-    wavesurferRef.current = WaveSurfer.create({
-      container: waveformRef.current,
-      waveColor: `${userType=='me' ? '#969696' : 'gray'}`,
-      progressColor: `${userType=='me' ? 'white' : 'black'}`,
-      url: "/rington.m4a",
-      dragToSeek: true,
-      hideScrollbar: true,
-      normalize: true,
-      barGap: 10,
-      height: 60,
-      barHeight: 30,
-      barRadius: 20,
-      barWidth: 5,
-    });
-  
-    const wavesurfer = wavesurferRef.current;
-  
-    wavesurfer.on("ready", () => {
-      setDuration(wavesurfer.getDuration());
-    });
-  
-    wavesurfer.on("audioprocess", () => {
-      setCurrentTime(wavesurfer.getCurrentTime());
-    });
-  
-    wavesurfer.on("finish", () => {
-      wavesurfer.stop(); // Reset the progress bar
-      setCurrentTime(0); // Reset the current time
-      setPlayPause(false); // Set play state to false
-    });
-  
-    return () => {
-      wavesurfer.destroy();
-    };
-  }, []);
-  
-
-  const handlePause = () => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.playPause();
-      setPlayPause(!playPause);
+    function handleClickOutside(event) {
+      if (boxRef.current && !boxRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
     }
-  };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className={`w-full max-w-lg p-4 ${userType=='me' ? 'bg-violet-500' : 'bg-gray-200'} rounded-lg shadow-lg`}>
-    <div className="relative flex gap-4">
-    <div className="flex justify-between items-center">
-      <button
-        className="text-white bg-[#969696] hover:bg-black p-2 rounded-full"
-        onClick={handlePause}
-      >
-        {playPause ? <BsFillStopFill /> : <BsFillPlayFill />}
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#f3f4f6" }}>
+      {/* Toggle Button */}
+      <button onClick={toggleBox} style={{ padding: "10px 20px", background: "blue", color: "white", borderRadius: "5px", cursor: "pointer" }}>
+        Toggle Box
       </button>
+
+      {/* Box Container */}
+      {isOpen && (
+        <div
+          ref={boxRef}
+          style={{
+            position: "absolute",
+            top: "40%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            padding: "20px",
+            background: "white",
+            borderRadius: "10px",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            width: "300px",
+            textAlign: "center"
+          }}
+        >
+          <h2>This is the Box</h2>
+          <p>Click outside to close.</p>
+           <InputForm/>
+        </div>
+      )}
     </div>
-      <div ref={waveformRef} className="w-full h-full" />
-      <div className={`w-20 ${userType == 'me' ? 'text-white' : 'text-gray-500'} flex mt-8`}>
-        {`${Math.floor(currentTime)}s / ${Math.floor(duration)}s`}
-      </div>
-    </div>
-  </div>
   );
 }

@@ -34,6 +34,8 @@ const Middle = ({ id, userDetails }) => {
   const { store } = useStore();
   const { socket } = useSocket();
   const [shallowMessage, setShallowMessage] = useState([]);
+
+  // fetchMessage();
   useEffect(() => {
     async function fetchMessage() {
       try {
