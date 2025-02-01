@@ -255,7 +255,6 @@ if (!checkDuplicate) {
       .sort({ createdAt: -1 }) // Fetch latest messages first
       .skip(skip)
       .limit(limit);
-    console.log(page)
     return messages.reverse();
   }
 
