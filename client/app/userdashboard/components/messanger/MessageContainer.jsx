@@ -151,7 +151,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
     return () => {
       socket && socket.off("message-from");
     };
-  }, [socket, id]);
+  }, [socket]);
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
       e.target.parentElement.children[2].classList.add("-left-[150px]");
@@ -333,8 +333,8 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
-    fetchMessages(page, "static");
-  }, [id]);
+    switcher && fetchMessages(page, "static");
+  }, [switcher]);
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
@@ -968,7 +968,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
             </div>
 
             <div className="flex items-center justify-center">
-              {/* <VoiceRecorder
+              <VoiceRecorder
                 isStartRecord={isStartRecord}
                 setIsStartRecord={setIsStartRecord}
                 hiddenTarget={hiddenTarget}
@@ -976,7 +976,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
                 replyContent={replyContent}
                 toReplyerId={toReplyerId}
                 scrollToBottom={scrollToBottom}
-              /> */}
+              />
               {!isStartRecord && (
                 <div
                   className={`pr-4 ${
