@@ -40,6 +40,14 @@ export class MessangerController {
    return await this.messangerService.updateMessageSeenStatus(user.senderId,myId)
   }
 
+
+  @Get('count-all-unseen-message')
+  @UseGuards(AuthGuard())
+  async unSeenMessageCount(@Req() req:any){
+    const myId = req.user.id;  
+    return await this.messangerService.unSeenMessageCount(myId)
+  }
+
   @Get('my-friends-by-both-message-and-profile')
   @UseGuards(AuthGuard())
   async getCombinedLastMessageAndUserProfiles (@Req() req:any){

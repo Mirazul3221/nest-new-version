@@ -91,6 +91,16 @@ export class MessangerService {
 }
 
 
+async unSeenMessageCount(myId){
+ const msg =  await this.MessangerModel.find({
+    receiverId: myId,
+    seenMessage: false
+})
+
+
+return msg.length
+}
+
   async getCombinedLastMessageAndUserProfiles (myId){
     const allMessage = await this.MessangerModel.find({
       $or : [
