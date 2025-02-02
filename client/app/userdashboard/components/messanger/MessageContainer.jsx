@@ -340,7 +340,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
-     ''
+    switcher && fetchMessages(page, "static");
   }, [switcher]);
 
   const fetchMessages = async (page, status) => {
@@ -401,7 +401,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Handle scroll event to detect when user scrolls to the top
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && hasMore && !loading) {
-     ''
+     // fetchMessages(page, "dynamic");
     }
   };
   useEffect(() => {
@@ -976,7 +976,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
             </div>
 
             <div className="flex items-center justify-center">
-              <VoiceRecorder
+              {/* <VoiceRecorder
                 isStartRecord={isStartRecord}
                 setIsStartRecord={setIsStartRecord}
                 hiddenTarget={hiddenTarget}
@@ -984,7 +984,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
                 replyContent={replyContent}
                 toReplyerId={toReplyerId}
                 scrollToBottom={scrollToBottom}
-              />
+              /> */}
               {!isStartRecord && (
                 <div
                   className={`pr-4 ${
