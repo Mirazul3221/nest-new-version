@@ -85,9 +85,11 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
     }
     setMessage("");
     scrollToBottom();
+    console.log('222')
   };
   useEffect(() => {
     scrollToBottom();
+    console.log('3333')
   }, [sendCurrentMsg]);
 
   if (shallowMessage.length > 0 && shallowMessage[0].receiverId !== id) {
@@ -95,11 +97,13 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   }
 
   useEffect(() => {
+   if (message !== '') {
     socket?.emit("typingMsg", {
       senderId: store.userInfo.id,
       receiverId: id,
       message,
     });
+   }
   }, [message, socket]);
   useEffect(() => {
     socket?.emit("typingalert", {
@@ -146,6 +150,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
           dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
+          console.log('555')
         }, 100);
       });
     return () => {
@@ -281,6 +286,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
     setImgUri(URL.createObjectURL(e.target.files[0]));
     setTimeout(() => {
       scrollToBottom();
+      console.log('666')
     }, 100);
     if (file) {
       const media = new FormData(); // Create a FormData object
@@ -308,6 +314,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
         dispatch({ type: "send-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
+          console.log('777')
         }, 1000);
         setLoadingImage(false);
       } catch (error) {
@@ -359,6 +366,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
           dispatch({ type: "fetch-message", payload: data });
           setTimeout(() => {
             scrollToBottom();
+            console.log('888')
           }, 200);
         } else {
           setHasMore(false); // No more messages to fetch

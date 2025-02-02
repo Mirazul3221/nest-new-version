@@ -351,8 +351,7 @@ const Page = () => {
                               setSwitcher={setOpenMessangerBox}
                             /> */}
 
-                            {/* <FloatingMessageContainer id={userDetails?._id} userDetails={userDetails} /> */}
-                            Message
+                            <FloatingMessageContainer id={userDetails?._id} userDetails={userDetails} />
                           </div>
                         )}
                       </div>
