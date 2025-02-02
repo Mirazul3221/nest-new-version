@@ -171,6 +171,8 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
       senderProfile: store.userInfo.profile,
       emoji: e.target.innerText,
     };
+
+    console.log(e.target.innerText)
     dispatch({ type: "concate-emoji", payload: emojiElements });
     try {
       await axios.post(

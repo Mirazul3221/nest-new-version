@@ -5,11 +5,11 @@ if (action.type === 'fetch-message') {
 }
 
   if (action.type === 'send-message') {
-    state.message = [...state,action.payload]
+    state.message = [...state.message,action.payload]
   return state
   }
   if (action.type === 'receive-message') {
-    state.message = [...state,action.payload]
+    state.message = [...state.message,action.payload]
   return state
   }
    
@@ -17,6 +17,7 @@ if (action.type === 'fetch-message') {
       // // const tergatMessage = state?.filter(m=>m._id == action.payload)
       const {messageId,senderId,senderName,senderProfile,emoji} = action.payload
          const index = state.message?.findIndex(m=>m._id == messageId)
+         console.log(index)
         if('emoji' in state.message[index]){
           const duplicateEmoCheck = state.message[index].emoji.filter(em=> em.senderId !== senderId);
           console.log(duplicateEmoCheck)
@@ -29,8 +30,9 @@ if (action.type === 'fetch-message') {
       // //   console.log(state)
       // //   return state
       // // }
-     state.message = [...state.message]
-      return  state
+      return {
+        message:[...state.message],user:[]
+      }
   }
 
   if (action.type === 'fetch-scroll-message') {
