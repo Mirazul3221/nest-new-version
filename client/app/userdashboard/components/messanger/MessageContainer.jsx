@@ -22,9 +22,8 @@ import { useSocket } from "../../global/SocketProvider";
 import { formatetime } from "./components/time";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
-const FloatingMessageContainer = ({ id, userDetails }) => {
+const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   const { messages, dispatch } = useMessage();
-  const [switcher, setSwitcher] = useState(false);
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -35,21 +34,6 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   const { store } = useStore();
   const { socket } = useSocket();
   const [shallowMessage, setShallowMessage] = useState([]);
-
-  // fetchMessage();
-  useEffect(() => {
-    async function fetchMessage() {
-      try {
-        const { data } = await axios.get(`${baseurl}/messanger/get/${id}`, {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        });
-        dispatch({ type: "fetch-message", payload: data });
-      } catch (error) {}
-    }
-    // fetchMessage();
-  }, [id]);
   const groupMessages = groupMessagesBysender(messages);
 
   const handleMessage = (event) => {
@@ -340,10 +324,8 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
-    if(switcher === true){
-      fetchMessages(page, "static");
-    }
-  }, [switcher]);
+    fetchMessages(page, "static");
+  }, []);
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
@@ -416,19 +398,6 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   }, [loading]);
   return (
     <div>
-      {!switcher && (
-        <button
-          className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white"
-          onClick={() => setSwitcher(true)}
-        >
-          <BiMessageRoundedDots /> Messaging
-        </button>
-      )}
-      <div
-        className={`${
-          switcher ? "scale-1" : "scale-0"
-        } fixed duration-200 -left-0 md:left-1/3 md:h-auto pb-4 bg-white origin-bottom-left bottom-0 md:bottom-10 w-screen md:w-4/12 z-50 md:ml-6 border rounded-md`}
-      >
         <div className="top-bar px-4 py-2 bg-gray-300 flex justify-between items-center">
           <div className="flex gap-3 items-center">
             <img
@@ -1044,7 +1013,6 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

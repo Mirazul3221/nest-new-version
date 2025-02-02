@@ -17,7 +17,7 @@ import SuperHeader from "../../components/SuperHeader";
 import Link from "next/link";
 import Messanger from "../../components/messanger/Messanger";
 import { useSocket } from "../../global/SocketProvider";
-import FloatingMessageContainer from "../../components/messanger/MessageContainer";
+import CallMessageContainer from "../../components/messanger/CallMessageContainer";
 
 const Page = () => {
   const pram = useParams();
@@ -351,7 +351,7 @@ const Page = () => {
                               setSwitcher={setOpenMessangerBox}
                             /> */}
 
-                            <FloatingMessageContainer id={userDetails?._id} userDetails={userDetails} />
+                            <CallMessageContainer id={userDetails?._id} userDetails={userDetails} />
                           </div>
                         )}
                       </div>
