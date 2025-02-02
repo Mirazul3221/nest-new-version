@@ -340,7 +340,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
-    if(switcher === 'true'){
+    if(switcher === true){
       fetchMessages(page, "static");
     }
   }, [switcher]);
@@ -403,7 +403,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Handle scroll event to detect when user scrolls to the top
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && hasMore && !loading) {
-     // fetchMessages(page, "dynamic");
+     fetchMessages(page, "dynamic");
     }
   };
   useEffect(() => {
