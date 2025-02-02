@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { BsFillStopFill, BsFillPlayFill } from "react-icons/bs";
 
-export default function MessagePlayer({ url, userType = "me" }) {
+export default function MiniMessagePlayer({ url, userType = "me" }) {
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null); // Persist wavesurfer instance
   const [playPause, setPlayPause] = useState(false);
@@ -66,7 +66,7 @@ export default function MessagePlayer({ url, userType = "me" }) {
 
   return (
     <div
-      className={`p-4 md:w-[27vw] ${
+      className={`p-4 w-[58vw] md:w-[18vw] ${
         userType === "me" ? "bg-violet-500" : "bg-gray-200"
       } rounded-2xl shadow-lg`}
     >

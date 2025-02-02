@@ -14,7 +14,6 @@ import moment from "moment";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import CurrentMessage from "../../messanger/components/CurrentMessage";
-import MessagePlayer from "../../messanger/components/MessagePlayer";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
 import { groupMessagesBysender } from "../../messanger/components/group-message";
 import { useStore } from "@/app/global/DataProvider";
@@ -22,6 +21,7 @@ import { useSocket } from "../../global/SocketProvider";
 import { formatetime } from "./components/time";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
+import MiniMessagePlayer from "../../messanger/components/MiniMessagePlayer";
 const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   const { messages, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -599,7 +599,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
                                   <Suspense fallback='Loading voice..'>
-                                  <MessagePlayer
+                                  <MiniMessagePlayer
                                     url={msg?.message.voice}
                                     userType="me"
                                   />
@@ -727,7 +727,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
                                   <Suspense fallback='Loading voice..'>
-                                  <MessagePlayer
+                                  <MiniMessagePlayer
                                     url={msg?.message.voice}
                                     userType="he"
                                   />
