@@ -598,10 +598,11 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
                               )}
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
-                                  <MessagePlayer
+                                  {/* <MessagePlayer
                                     url={msg?.message.voice}
                                     userType="me"
-                                  />
+                                  /> */}
+                                  voice
                                   <p ref={scrollRef}></p>
                                 </div>
                               )}
@@ -724,10 +725,11 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
 
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
-                                  <MessagePlayer
+                                  {/* <MessagePlayer
                                     url={msg?.message.voice}
                                     userType="he"
-                                  />
+                                  /> */}
+                                  voice
                                   <p ref={scrollRef}></p>
                                 </div>
                               )}
