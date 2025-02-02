@@ -1,7 +1,7 @@
 "use client";
 import { baseurl } from "@/app/config";
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { useEffect } from "react";
 import { useMessage } from "../../global/messageProvider";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
@@ -598,11 +598,12 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
                               )}
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
-                                  {/* <MessagePlayer
+                                  <Suspense fallback='Loading voice..'>
+                                  <MessagePlayer
                                     url={msg?.message.voice}
                                     userType="me"
-                                  /> */}
-                                  voice
+                                  />
+                                  </Suspense>
                                   <p ref={scrollRef}></p>
                                 </div>
                               )}
@@ -725,11 +726,12 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
 
                               {msg?.message.voice !== "" && (
                                 <div className="mb-2">
-                                  {/* <MessagePlayer
+                                  <Suspense fallback='Loading voice..'>
+                                  <MessagePlayer
                                     url={msg?.message.voice}
                                     userType="he"
-                                  /> */}
-                                  voice
+                                  />
+                                  </Suspense>
                                   <p ref={scrollRef}></p>
                                 </div>
                               )}
