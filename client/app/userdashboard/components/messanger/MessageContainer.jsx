@@ -906,7 +906,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
                   </div>
                 </div>
               )}
-            {shallowMessage.length > 0 &&
+            {/* {shallowMessage.length > 0 &&
               shallowMessage[0].receiverId === id && (
                 <div ref={scrollRef}>
                   {shallowMessage.map((msg, i) => {
@@ -925,7 +925,7 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
                     );
                   })}
                 </div>
-              )}
+              )} */}
 
             {loadingImage && (
               <div>
