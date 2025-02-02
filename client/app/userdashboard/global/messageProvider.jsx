@@ -4,9 +4,9 @@ import messageStore from './messageContext'
 import { messageReducer } from './messageReducer'
 
 const MessageProvider = ({children}) => {
-    const [messages,dispatch] = useReducer(messageReducer,[])
+    const [messanger,dispatch] = useReducer(messageReducer,{message:[],user:[]})
   return (
-     <messageStore.Provider value ={{messages,dispatch}}>
+     <messageStore.Provider value ={{messanger,dispatch}}>
          {children}
      </messageStore.Provider>
   )

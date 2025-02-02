@@ -23,7 +23,7 @@ import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
 const Middle = ({ id, userDetails }) => {
-  const { messages, dispatch } = useMessage();
+  const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -49,7 +49,7 @@ const Middle = ({ id, userDetails }) => {
     }
     // fetchMessage();
   }, [id]);
-  const groupMessages = groupMessagesBysender(messages);
+  const groupMessages = groupMessagesBysender(messanger.message);
 
   const handleMessage = (event) => {
     setMessage(event.target.value);

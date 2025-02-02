@@ -23,7 +23,7 @@ import { BiMessageRoundedDots } from "react-icons/bi";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
 import MiniMessagePlayer from "../../messanger/components/MiniMessagePlayer";
 const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
-  const { messages, dispatch } = useMessage();
+  const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -34,8 +34,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   const { store } = useStore();
   const { socket } = useSocket();
   const [shallowMessage, setShallowMessage] = useState([]);
-  const groupMessages = groupMessagesBysender(messages);
-
+  const groupMessages = groupMessagesBysender(messanger?.message);
   const handleMessage = (event) => {
     setMessage(event.target.value);
   };
@@ -298,7 +297,6 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
         dispatch({ type: "send-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
-          console.log('777')
         }, 1000);
         setLoadingImage(false);
       } catch (error) {

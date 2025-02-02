@@ -25,7 +25,6 @@ import { useSocket } from "../global/SocketProvider";
 import NotificationContainer from "./notification-component/NotificationContainer";
 import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
-import { useMessage } from "../global/messageProvider";
 
 const SuperHeader = () => {
   const path = usePathname();
