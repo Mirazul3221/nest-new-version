@@ -340,8 +340,8 @@ const FloatingMessageContainer = ({ id, userDetails }) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
-    switcher && fetchMessages(page, "static");
-  }, [switcher]);
+     fetchMessages(page, "static");
+  }, []);
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
