@@ -76,6 +76,22 @@ export class NotificationsGateway
         }
       })
       ////////////////////////////////////////////////////////////////////////////////////////
+      client.on('set-seen-validation',(data)=>{
+        if (this.socketUsers[data?.receiverId]?.length > 0) {
+          this.socketUsers[data?.receiverId]?.map(async (id) => {
+            await this.server.to(id).emit('get-seen-validation', data);
+          });
+        }
+      })
+      ////////////////////////////////////////////////////////////////////////////////////////
+      client.on('validation-status',(data)=>{
+        if (this.socketUsers[data?.sender]?.length > 0) {
+          this.socketUsers[data?.sender]?.map(async (id) => {
+            await this.server.to(id).emit('validation-status', data);
+          });
+        }
+      })
+      ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {

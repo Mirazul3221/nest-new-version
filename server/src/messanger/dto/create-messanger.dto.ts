@@ -9,6 +9,8 @@ export class CreateMessangerDto {
     message:any
     @IsNotEmpty()
     reply:any
+    seenMessage:boolean
+
 }//
 
 export class CreateImageMessangerDto {

@@ -69,6 +69,7 @@ const Middle = ({ id, userDetails }) => {
   };
 
   const handleSendMessage = () => {
+    socket && socket.emit('set-seen-validation',{senderId:store.userInfo.id, receiverId: userDetails?._id,message:message})
     if (showReply) {
       setShowReply(false);
       setReplyContent(document.getElementById("replying_content"));
@@ -148,6 +149,23 @@ const Middle = ({ id, userDetails }) => {
       });
     return () => {
       socket && socket.off("message-from");
+    };
+  }, [socket,id]);
+
+  /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
+  useEffect(() => {
+    socket && socket.on('get-seen-validation',(data)=>{
+      console.log(data)
+      if (data.senderId == id) {
+        console.log('yes')
+          socket && socket.emit('validation-status',{sender:data.senderId, status:true})
+      } else {
+      console.log('No')
+        socket && socket.emit('validation-status',{sender:data.senderId, status:false})
+      }
+    })
+    return () => {
+       socket && socket.off('get-seen-validation')
     };
   }, [socket,id]);
   const controllEmoji = (e, ctl, identifire) => {

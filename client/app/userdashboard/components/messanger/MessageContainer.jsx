@@ -951,7 +951,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
             </div>
 
             <div className="flex items-center justify-center">
-              {/* <VoiceRecorder
+              <VoiceRecorder
                 isStartRecord={isStartRecord}
                 setIsStartRecord={setIsStartRecord}
                 hiddenTarget={hiddenTarget}
@@ -959,7 +959,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
                 replyContent={replyContent}
                 toReplyerId={toReplyerId}
                 scrollToBottom={scrollToBottom}
-              /> */}
+              />
               {!isStartRecord && (
                 <div
                   className={`pr-4 ${
