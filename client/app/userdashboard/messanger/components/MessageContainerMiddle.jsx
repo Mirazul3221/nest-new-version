@@ -70,6 +70,7 @@ const Middle = ({ id, userDetails }) => {
   };
 
   const handleSendMessage = useCallback(() => {
+    setSeenMsg(false);
     messageRef.current = message;
     if (socket) {
       socket.emit("set-seen-validation", {
@@ -83,6 +84,8 @@ const Middle = ({ id, userDetails }) => {
       setShowReply(false);
       setReplyContent(document.getElementById("replying_content"));
     }
+
+    // setSeenMsg(false)
   }, [message, socket, store.userInfo.id, userDetails?._id]);
 
   useEffect(() => {
@@ -110,9 +113,8 @@ const Middle = ({ id, userDetails }) => {
     };
 
     const handleValidationStatus = (data) => {
-       if(data.status){
-
-       }
+      if (data.status) {
+      }
       const currentMessage = messageRef.current; // Capture before state changes
 
       if (currentMessage !== "") {
@@ -134,21 +136,24 @@ const Middle = ({ id, userDetails }) => {
 
     socket.on("not-active", handleNotActive);
     socket.on("validation-status", handleValidationStatus);
-    console.log(id)
+    console.log(id);
     return () => {
       socket.off("not-active", handleNotActive);
       socket.off("validation-status", handleValidationStatus);
     };
-  }, [socket,userDetails?._id]);
+  }, [socket, userDetails?._id]);
 
   useEffect(() => {
     scrollToBottom();
   }, [sendCurrentMsg]);
 
-  if (currentMessages.current.length > 0 && currentMessages.current[0].receiverId !== id) {
-    console.log(currentMessages.current.length)
-    console.log(currentMessages.current[0].receiverId)
-    currentMessages.current = []
+  if (
+    currentMessages.current.length > 0 &&
+    currentMessages.current[0].receiverId !== id
+  ) {
+    console.log(currentMessages.current.length);
+    console.log(currentMessages.current[0].receiverId);
+    currentMessages.current = [];
   }
 
   useEffect(() => {
@@ -173,6 +178,7 @@ const Middle = ({ id, userDetails }) => {
       socket.on("getTypingMsg", (data) => {
         scrollToBottom();
         setTyping(data);
+        setSeenMsg(false);
       });
     return () => {
       socket && socket.off("getTypingMsg");
@@ -199,17 +205,32 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
+        setSeenMsg(false);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
-        }, 100);
+        }, 1000);
       });
     return () => {
       socket && socket.off("message-from");
     };
   }, [socket, id]);
-
+  //////////////////////////////Here is the logic for getting alert and update message status//////////////////////////////
+  const [seenMsg, setSeenMsg] = useState(false);
+  useEffect(() => {
+    socket &&
+      socket.on("check-message-unseen-status", (data) => {
+        console.log(data);
+        if (id == data.receiverId && store.userInfo.id == data.senderId) {
+          setSeenMsg(true);
+        }
+      });
+    return () => {
+      socket && socket.off("check-message-unseen-status");
+    };
+  }, [socket, id]);
+  console.log(seenMsg);
   /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
   useEffect(() => {
     socket &&
@@ -485,6 +506,8 @@ const Middle = ({ id, userDetails }) => {
       container.scrollTop = container.scrollHeight - previousScroll;
     }
   }, [loading]);
+
+  const lastMessage = messanger.message[messanger.message.length - 1];
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-gray-300 flex justify-between items-center">
@@ -920,7 +943,6 @@ const Middle = ({ id, userDetails }) => {
                           messageBlog.length - 1 && (
                           <div className="profile w-10 ">
                             <img
-                              ref={scrollRef}
                               className="w-full bg-white p-[2px] z-40 rounded-full"
                               src={userDetails?.profile}
                               alt={userDetails?.name}
@@ -965,24 +987,54 @@ const Middle = ({ id, userDetails }) => {
                 </div>
               </div>
             )}
-          {currentMessages.current && currentMessages.current.length > 0 && currentMessages.current[0].receiverId === id && (
-            <div ref={scrollRef}>
-              {currentMessages.current.map((msg, i) => {
-                return (
-                  <CurrentMessage
-                    key={i}
-                    allMsg={currentMessages.current}
-                    msg={msg}
-                    setSendCurrentMsg={setSendCurrentMsg}
-                    replyMsgContent={replyContent}
-                    setReplyContent={setReplyContent}
-                    replyMsgStatus={showReply}
-                    toReplyerId={toReplyerId}
-                    setToReplyerId={setToReplyerId}
-                  />
-                );
-              })}
+          {currentMessages.current &&
+            currentMessages.current.length > 0 &&
+            currentMessages.current[0].receiverId === id && (
+              <div ref={scrollRef}>
+                {currentMessages.current.map((msg, i) => {
+                  return (
+                    <CurrentMessage
+                      key={i}
+                      allMsg={currentMessages.current}
+                      msg={msg}
+                      setSendCurrentMsg={setSendCurrentMsg}
+                      replyMsgContent={replyContent}
+                      setReplyContent={setReplyContent}
+                      replyMsgStatus={showReply}
+                      toReplyerId={toReplyerId}
+                      setToReplyerId={setToReplyerId}
+                    />
+                  );
+                })}
+              </div>
+            )}
+
+          {!seenMsg && (
+            <div>
+              {lastMessage?.senderId == store.userInfo.id &&
+                lastMessage?.seenMessage == true && (
+                  <div className="duration-500 flex justify-end">
+                    <div className=""></div>
+                    {typing.message == "" && (
+                      <img
+                        className="rounded-full duration-500 w-8"
+                        src={userDetails?.profile}
+                        alt="message_image"
+                      />
+                    )}
+                  </div>
+                )}
             </div>
+          )}
+          {seenMsg && (
+                <div className="duration-500 flex justify-end">
+                <div className=""></div>
+                <img
+                    className="rounded-full duration-500 w-8"
+                    src={userDetails?.profile}
+                    alt="message_image"
+                  />
+              </div>
           )}
 
           {loadingImage && (

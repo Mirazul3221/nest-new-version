@@ -99,6 +99,15 @@ export class NotificationsGateway
         }
       })
       ////////////////////////////////////////////////////////////////////////////////////////
+      client.on('check-message-unseen-status',(data)=>{
+        console.log(data)
+        if (this.socketUsers[data?.senderId]?.length > 0) {
+          this.socketUsers[data?.senderId]?.map(async (id) => {
+            await this.server.to(id).emit('check-message-unseen-status', data);
+          });
+        }
+      })
+      ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {

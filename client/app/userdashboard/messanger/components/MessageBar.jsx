@@ -54,11 +54,16 @@ const handleUrl = () => {
         console.log(error);
       }
   }
+
+  const checkMessageStatus =async ()=>{
+    socket && await socket.emit('check-message-unseen-status',{senderId:friend.userId,receiverId:store.userInfo.id,message:'status check'})
+  }
   return (
     <div onClick={()=> {
+      checkMessageStatus()
+      setHasSeen(true)
+      updateUnseenMessage()
         handleUrl()
-        setHasSeen(true)
-        updateUnseenMessage()
       }}>
           <div className="px-6 flex gap-4 relative items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
             <div className="relative">
@@ -90,7 +95,7 @@ const handleUrl = () => {
                 </h4>
             </div>
            {
-            !hasSeen &&  <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
+            !hasSeen && friend?.unseenMessageCount>0 && <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
            }
           </div>
       </div>
