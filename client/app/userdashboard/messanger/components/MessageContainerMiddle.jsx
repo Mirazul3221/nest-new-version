@@ -1,7 +1,7 @@
 "use client";
 import { baseurl } from "@/app/config";
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
 import { groupMessagesBysender } from "./group-message";
 import { useMessage } from "../../global/messageProvider";
@@ -31,9 +31,10 @@ const Middle = ({ id, userDetails }) => {
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
+  const messageRef = useRef(message); // Store `message` in a ref
   const { store } = useStore();
   const { socket } = useSocket();
-  const [shallowMessage, setShallowMessage] = useState([]);
+  const currentMessages = useRef([]);
 
   // fetchMessage();
   useEffect(() => {
@@ -68,30 +69,86 @@ const Middle = ({ id, userDetails }) => {
     }
   };
 
-  const handleSendMessage = () => {
-    socket && socket.emit('set-seen-validation',{senderId:store.userInfo.id, receiverId: userDetails?._id,message:message})
+  const handleSendMessage = useCallback(() => {
+    messageRef.current = message;
+    if (socket) {
+      socket.emit("set-seen-validation", {
+        senderId: store.userInfo.id,
+        receiverId: userDetails?._id,
+        message,
+      });
+    }
+
     if (showReply) {
       setShowReply(false);
       setReplyContent(document.getElementById("replying_content"));
     }
-    if (message !== "") {
-      setShallowMessage((prev) => [
-        ...prev,
-        {
-          message: { content: message, media: "", voice: "" },
-          receiverId: userDetails?._id,
-        },
-      ]);
-    }
-    setMessage("");
-    scrollToBottom();
-  };
+  }, [message, socket, store.userInfo.id, userDetails?._id]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNotActive = (data) => {
+      console.log("handleNotActive");
+      const currentMessage = messageRef.current; // Capture before state changes
+
+      if (currentMessage !== "") {
+        currentMessages.current = [
+          ...currentMessages.current,
+          {
+            message: { content: currentMessage, media: "", voice: "" },
+            receiverId: userDetails?._id,
+            seenStatus: false,
+          },
+        ];
+
+        console.log(currentMessages.current);
+      }
+
+      setTimeout(() => setMessage(""), 200); // Delay resetting to prevent issues
+      scrollToBottom();
+    };
+
+    const handleValidationStatus = (data) => {
+       if(data.status){
+
+       }
+      const currentMessage = messageRef.current; // Capture before state changes
+
+      if (currentMessage !== "") {
+        currentMessages.current = [
+          ...currentMessages.current,
+          {
+            message: { content: currentMessage, media: "", voice: "" },
+            receiverId: userDetails?._id,
+            seenStatus: data.status,
+          },
+        ];
+
+        console.log(currentMessages.current);
+      }
+
+      setTimeout(() => setMessage(""), 200); // Delay resetting
+      scrollToBottom();
+    };
+
+    socket.on("not-active", handleNotActive);
+    socket.on("validation-status", handleValidationStatus);
+    console.log(id)
+    return () => {
+      socket.off("not-active", handleNotActive);
+      socket.off("validation-status", handleValidationStatus);
+    };
+  }, [socket,userDetails?._id]);
+
   useEffect(() => {
     scrollToBottom();
   }, [sendCurrentMsg]);
 
-  if (shallowMessage.length > 0 && shallowMessage[0].receiverId !== id) {
-    setShallowMessage([]);
+  if (currentMessages.current.length > 0 && currentMessages.current[0].receiverId !== id) {
+    console.log(currentMessages.current.length)
+    console.log(currentMessages.current[0].receiverId)
+    currentMessages.current = []
   }
 
   useEffect(() => {
@@ -142,7 +199,8 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-       id == data.senderId && dispatch({ type: "receive-message", payload: data });
+        id == data.senderId &&
+          dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
         }, 100);
@@ -150,24 +208,33 @@ const Middle = ({ id, userDetails }) => {
     return () => {
       socket && socket.off("message-from");
     };
-  }, [socket,id]);
+  }, [socket, id]);
 
   /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
   useEffect(() => {
-    socket && socket.on('get-seen-validation',(data)=>{
-      console.log(data)
-      if (data.senderId == id) {
-        console.log('yes')
-          socket && socket.emit('validation-status',{sender:data.senderId, status:true})
-      } else {
-      console.log('No')
-        socket && socket.emit('validation-status',{sender:data.senderId, status:false})
-      }
-    })
+    socket &&
+      socket.on("get-seen-validation", (data) => {
+        console.log(data);
+        if (data.senderId == id) {
+          console.log("yes");
+          socket &&
+            socket.emit("validation-status", {
+              sender: data.senderId,
+              status: true,
+            });
+        } else {
+          console.log("No");
+          socket &&
+            socket.emit("validation-status", {
+              sender: data.senderId,
+              status: false,
+            });
+        }
+      });
     return () => {
-       socket && socket.off('get-seen-validation')
+      socket && socket.off("get-seen-validation");
     };
-  }, [socket,id]);
+  }, [socket, id]);
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
       e.target.parentElement.children[2].classList.add("-left-[150px]");
@@ -345,7 +412,7 @@ const Middle = ({ id, userDetails }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
-  const [previousScroll,setPreviousScroll] = useState(0)
+  const [previousScroll, setPreviousScroll] = useState(0);
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
   useEffect(() => {
@@ -394,7 +461,7 @@ const Middle = ({ id, userDetails }) => {
           setPage((prev) => prev + 1);
           const container = containerRef.current;
           const previousHeight = container.scrollHeight;
-          setPreviousScroll(previousHeight)
+          setPreviousScroll(previousHeight);
         } else {
           setHasMore(false); // No more messages to fetch
         }
@@ -412,12 +479,12 @@ const Middle = ({ id, userDetails }) => {
       fetchMessages(page, "dynamic");
     }
   };
-useEffect(() => {
-   if(!loading && hasMore){
-const container = containerRef.current;
-container.scrollTop = container.scrollHeight - previousScroll;
-   }
-}, [loading]);
+  useEffect(() => {
+    if (!loading && hasMore) {
+      const container = containerRef.current;
+      container.scrollTop = container.scrollHeight - previousScroll;
+    }
+  }, [loading]);
   return (
     <div>
       <div className="top-bar px-4 rounded-t-2xl py-2 bg-gray-300 flex justify-between items-center">
@@ -442,7 +509,7 @@ container.scrollTop = container.scrollHeight - previousScroll;
               title: userDetails?.title,
               type: "Audio",
               size: 30,
-              color : '#8840f5'
+              color: "#8840f5",
             }}
           />
           <EntryPoint
@@ -454,7 +521,7 @@ container.scrollTop = container.scrollHeight - previousScroll;
               title: userDetails?.title,
               type: "Video",
               size: 30,
-              color:'#8840f5'
+              color: "#8840f5",
             }}
           />
         </div>
@@ -863,7 +930,7 @@ container.scrollTop = container.scrollHeight - previousScroll;
                       </div>
                     )
                   ) : (
-                   ''
+                    ""
                   );
                 })}
               </div>
@@ -898,13 +965,13 @@ container.scrollTop = container.scrollHeight - previousScroll;
                 </div>
               </div>
             )}
-          {shallowMessage.length > 0 && shallowMessage[0].receiverId === id && (
+          {currentMessages.current && currentMessages.current.length > 0 && currentMessages.current[0].receiverId === id && (
             <div ref={scrollRef}>
-              {shallowMessage.map((msg, i) => {
+              {currentMessages.current.map((msg, i) => {
                 return (
                   <CurrentMessage
                     key={i}
-                    allMsg={shallowMessage}
+                    allMsg={currentMessages.current}
                     msg={msg}
                     setSendCurrentMsg={setSendCurrentMsg}
                     replyMsgContent={replyContent}

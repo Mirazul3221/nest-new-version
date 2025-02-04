@@ -19,7 +19,6 @@ export class MessangerService {
   ){}
 
   async createTextMessage(createMessangerDto:CreateMessangerDto,id) {
-    console.log(createMessangerDto.seenMessage)
     const created =  await this.MessangerModel.create({
       senderId:id,
       receiverId:createMessangerDto.receiverId,

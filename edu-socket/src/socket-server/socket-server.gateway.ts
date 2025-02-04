@@ -81,7 +81,14 @@ export class NotificationsGateway
           this.socketUsers[data?.receiverId]?.map(async (id) => {
             await this.server.to(id).emit('get-seen-validation', data);
           });
+        } else {
+          if (this.socketUsers[data?.senderId]?.length > 0) {
+            this.socketUsers[data?.senderId]?.map(async (id) => {
+              await this.server.to(id).emit('not-active', 'user is not online');
+            }); 
+          }
         }
+    
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('validation-status',(data)=>{
