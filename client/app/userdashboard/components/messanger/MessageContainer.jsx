@@ -1,28 +1,28 @@
 "use client";
 import { baseurl } from "@/app/config";
 import axios from "axios";
-import React, { Suspense, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
 import { useMessage } from "../../global/messageProvider";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import { RiSendPlaneLine } from "react-icons/ri";
+import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
+import { formatetime } from "../../components/messanger/components/time";
+import "./css/message-animation.css";
+import { useSocket } from "../../global/SocketProvider";
 import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
 import Image from "next/image";
 import { BsReply, BsThreeDotsVertical } from "react-icons/bs";
 import { GrEmoji } from "react-icons/gr";
 import moment from "moment";
 import { RxCross1, RxCross2 } from "react-icons/rx";
-import { IoArrowRedoOutline } from "react-icons/io5";
-import CurrentMessage from "../../messanger/components/CurrentMessage";
-import EntryPoint from "./video-audio-callcenter/EntryPoint";
-import { groupMessagesBysender } from "../../messanger/components/group-message";
 import { useStore } from "@/app/global/DataProvider";
-import { useSocket } from "../../global/SocketProvider";
-import { formatetime } from "./components/time";
-import { BiMessageRoundedDots } from "react-icons/bi";
+import { IoArrowRedoOutline } from "react-icons/io5";
+import { groupMessagesBysender } from "../../messanger/components/group-message";
+import CurrentMessage from "../../messanger/components/CurrentMessage";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
-import MiniMessagePlayer from "../../messanger/components/MiniMessagePlayer";
-const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
+import MessagePlayer from "../../messanger/components/MessagePlayer";
+const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
@@ -31,10 +31,25 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
+  const messageRef = useRef(message); // Store `message` in a ref
   const { store } = useStore();
   const { socket } = useSocket();
-  const [shallowMessage, setShallowMessage] = useState([]);
-  const groupMessages = groupMessagesBysender(messanger?.message);
+  const currentMessages = useRef([]);
+  const groupMessages = groupMessagesBysender(messanger.message);
+  const [seenMessage,setSeenMessage] = useState(false);
+  const check_my_friend_window = async () => {
+    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,stats:false})
+  }
+
+  useEffect(() => {
+    socket && socket.on('check-my-friend-window',(data)=>{
+      setSeenMessage(data.status)
+    })
+    return () => {
+       socket && socket.off('check-my-friend-window')
+    };
+  }, [socket]);
+
   const handleMessage = (event) => {
     setMessage(event.target.value);
   };
@@ -52,41 +67,49 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(() => {
+    setSeenMsg(false);
+    messageRef.current = message;
+
+    currentMessages.current = [
+      ...currentMessages.current,
+      {
+        message: { content: message, media: "", voice: "" },
+        receiverId: userDetails?._id,
+        seenStatus: seenMessage,
+      },
+    ];
+
+    setTimeout(() => setMessage(""), 200); // Delay resetting to prevent issues
+    scrollToBottom();
+
     if (showReply) {
       setShowReply(false);
       setReplyContent(document.getElementById("replying_content"));
     }
-    if (message !== "") {
-      setShallowMessage((prev) => [
-        ...prev,
-        {
-          message: { content: message, media: "", voice: "" },
-          receiverId: userDetails?._id,
-        },
-      ]);
-    }
-    setMessage("");
-    scrollToBottom();
-    console.log('222')
-  };
+
+    // setSeenMsg(false)
+  }, [message, socket, store.userInfo.id, userDetails?._id,seenMessage]);
+
   useEffect(() => {
     scrollToBottom();
-    console.log('3333')
   }, [sendCurrentMsg]);
 
-  if (shallowMessage.length > 0 && shallowMessage[0].receiverId !== id) {
-    setShallowMessage([]);
+  if (
+    currentMessages.current.length > 0 &&
+    currentMessages.current[0].receiverId !== id
+  ) {
+    console.log(currentMessages.current.length);
+    console.log(currentMessages.current[0].receiverId);
+    currentMessages.current = [];
   }
 
   useEffect(() => {
-   if (message !== '') {
     socket?.emit("typingMsg", {
       senderId: store.userInfo.id,
       receiverId: id,
       message,
     });
-   }
   }, [message, socket]);
   useEffect(() => {
     socket?.emit("typingalert", {
@@ -103,6 +126,7 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
       socket.on("getTypingMsg", (data) => {
         scrollToBottom();
         setTyping(data);
+        setSeenMsg(false);
       });
     return () => {
       socket && socket.off("getTypingMsg");
@@ -129,17 +153,57 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
+        setSeenMsg(false);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
           scrollToBottom();
-          console.log('555')
-        }, 100);
+        }, 1000);
       });
     return () => {
       socket && socket.off("message-from");
     };
   }, [socket]);
+  //////////////////////////////Here is the logic for getting alert and update message status//////////////////////////////
+  const [seenMsg, setSeenMsg] = useState(false);
+  useEffect(() => {
+    socket &&
+      socket.on("check-message-unseen-status", (data) => {
+        console.log(data);
+        if (id == data.receiverId && store.userInfo.id == data.senderId) {
+          setSeenMsg(true);
+        }
+      });
+    return () => {
+      socket && socket.off("check-message-unseen-status");
+    };
+  }, [socket]);
+  /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
+  useEffect(() => {
+    socket &&
+      socket.on("get-seen-validation", (data) => {
+        console.log(data);
+        if (data.senderId == id) {
+          console.log("yes");
+          socket &&
+            socket.emit("validation-status", {
+              sender: data.senderId,
+              status: true,
+            });
+        } else {
+          console.log("No");
+          socket &&
+            socket.emit("validation-status", {
+              sender: data.senderId,
+              status: false,
+            });
+        }
+      });
+    return () => {
+      socket && socket.off("get-seen-validation");
+    };
+  }, [socket]);
+
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
       e.target.parentElement.children[2].classList.add("-left-[150px]");
@@ -171,8 +235,6 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
       senderProfile: store.userInfo.profile,
       emoji: e.target.innerText,
     };
-
-    console.log(e.target.innerText)
     dispatch({ type: "concate-emoji", payload: emojiElements });
     try {
       await axios.post(
@@ -271,7 +333,6 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
     setImgUri(URL.createObjectURL(e.target.files[0]));
     setTimeout(() => {
       scrollToBottom();
-      console.log('666')
     }, 100);
     if (file) {
       const media = new FormData(); // Create a FormData object
@@ -350,7 +411,6 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
           dispatch({ type: "fetch-message", payload: data });
           setTimeout(() => {
             scrollToBottom();
-            console.log('888')
           }, 200);
         } else {
           setHasMore(false); // No more messages to fetch
@@ -385,638 +445,665 @@ const FloatingMessageContainer = ({ id, userDetails,setSwitcher }) => {
   // Handle scroll event to detect when user scrolls to the top
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && hasMore && !loading) {
-     fetchMessages(page, "dynamic");
+      fetchMessages(page, "dynamic");
     }
   };
   useEffect(() => {
     if (!loading && hasMore) {
       const container = containerRef.current;
-      if (containerRef.current !== null) {
-        container.scrollTop = container.scrollHeight - previousScroll;
-      }
+      container.scrollTop = container.scrollHeight - previousScroll;
     }
   }, [loading]);
+
+  const lastMessage = messanger.message[messanger.message.length - 1];
   return (
     <div>
-        <div className="top-bar px-4 py-2 bg-gray-300 flex justify-between items-center">
-          <div className="flex gap-3 items-center">
-            <img
-              className="rounded-full w-8"
-              src={userDetails?.profile}
-              alt={userDetails?.name}
-            />
-            <div className="text-black">
-              <h2 className="text-[18px]">{userDetails?.name}</h2>
-              {/* <p className="text-[10px]">{userDetails?.status}</p> */}
-            </div>
-          </div>
-          <div className="flex justify-center gap-6 text-white">
-            <EntryPoint
-              user={{
-                myId: store.userInfo.id,
-                fdId: userDetails?._id,
-                name: userDetails?.name,
-                profile: userDetails?.profile,
-                title: userDetails?.title,
-                type: "Audio",
-                size: 30,
-                color: "#8840f5",
-              }}
-            />
-            <EntryPoint
-              user={{
-                myId: store.userInfo.id,
-                fdId: userDetails?._id,
-                name: userDetails?.name,
-                profile: userDetails?.profile,
-                title: userDetails?.title,
-                type: "Video",
-                size: 30,
-                color: "#8840f5",
-              }}
-            />
-
-            <div onClick={() => setSwitcher(false)} className="cursor-pointer"><RxCross1 color="#8840f5" size='30' /></div>
+      <div className="top-bar px-4 rounded-t-sm py-2 bg-gray-300 flex justify-between items-center">
+        <div className="flex gap-3 items-center">
+          <img
+            className="rounded-full w-8"
+            src={userDetails?.profile}
+            alt={userDetails?.name}
+          />
+          <div className="text-black">
+            <h2 className="text-[18px]">{userDetails?.name}</h2>
+            {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
         </div>
-        <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[87vh] md:h-[74vh]">
-          <div
-            onScroll={handleScroll}
-            ref={containerRef}
-            className="w-full overflow-y-auto relative h-[72vh] md:h-[65vh] py-6 px-2 bg-white"
-          >
-            <div className="flex justify-center">
-              <div>
-                <img
-                  className="rounded-full w-28 mx-auto"
-                  src={userDetails?.profile}
-                  alt={userDetails?.name}
-                />
-                <h4 className="text-center text-gray-700 text-2xl font-semibold">
-                  {userDetails?.name}
-                </h4>
-              </div>
+        <div className="flex justify-center gap-6 text-white">
+          <EntryPoint
+            user={{
+              myId: store.userInfo.id,
+              fdId: userDetails?._id,
+              name: userDetails?.name,
+              profile: userDetails?.profile,
+              title: userDetails?.title,
+              type: "Audio",
+              size: 30,
+              color: "#8840f5",
+            }}
+          />
+          <EntryPoint
+            user={{
+              myId: store.userInfo.id,
+              fdId: userDetails?._id,
+              name: userDetails?.name,
+              profile: userDetails?.profile,
+              title: userDetails?.title,
+              type: "Video",
+              size: 30,
+              color: "#8840f5",
+            }}
+          />
+
+          <div onClick={() =>{check_my_friend_window(); setSwitcher(false)}} className="cursor-pointer">
+            <RxCross1 color="#8840f5" size="30" />
+          </div>
+        </div>
+      </div>
+      <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[74vh]">
+        <div
+          onScroll={handleScroll}
+          ref={containerRef}
+          className="w-full overflow-y-auto relative h-[64vh] py-6 px-2 bg-white"
+        >
+          <div className="flex justify-center">
+            <div>
+              <img
+                className="rounded-full w-28 mx-auto"
+                src={userDetails?.profile}
+                alt={userDetails?.name}
+              />
+              <h4 className="text-center text-gray-700 text-2xl font-semibold">
+                {userDetails?.name}
+              </h4>
             </div>
-            {loading && (
-              <div className="loading flex justify-center">
-                <img src={"/loading-buffer.gif"} alt="loading" />
-              </div>
-            )}
-            {groupMessages?.map((messageBlog, i) => {
-              return (
-                <div key={i} className="mt-10">
-                  {messageBlog.map((msg, i) => {
-                    return msg ? (
-                      msg?.senderId === store.userInfo.id ? (
-                        <div key={i}>
-                          {messageBlog.indexOf(msg) === 0 && (
-                            <p className="text-center text-sm text-gray-400 mt-4">
-                              {formatetime(msg?.createdAt)}
-                            </p>
-                          )}
-                          <div className="flex relative justify-end items-center gap-3 group">
-                            <div className="hidden relative group-hover:block text-gray-700">
-                              <div className="flex gap-4 items-center">
-                                <BsThreeDotsVertical size={18} />
-                                <label
-                                  className="cursor-pointer"
-                                  onClick={() => handleReply(msg)}
-                                  htmlFor="message_text"
-                                >
-                                  <IoArrowRedoOutline size={18} />
-                                </label>
+          </div>
+          {loading && (
+            <div className="loading flex justify-center">
+              <img src={"/loading-buffer.gif"} alt="loading" />
+            </div>
+          )}
+          {groupMessages?.map((messageBlog, i) => {
+            return (
+              <div key={i} className="mt-10">
+                {messageBlog.map((msg, i) => {
+                  return msg ? (
+                    msg?.senderId === store.userInfo.id ? (
+                      <div key={i}>
+                        {messageBlog.indexOf(msg) === 0 && (
+                          <p className="text-center text-sm text-gray-400 mt-4">
+                            {formatetime(msg?.createdAt)}
+                          </p>
+                        )}
+                        <div className="flex relative justify-end items-center gap-3 group">
+                          <div className="hidden relative group-hover:block text-gray-700">
+                            <div className="flex gap-4 items-center">
+                              <BsThreeDotsVertical size={18} />
+                              <label
+                                className="cursor-pointer"
+                                onClick={() => handleReply(msg)}
+                                htmlFor="message_text"
+                              >
+                                <IoArrowRedoOutline size={18} />
+                              </label>
 
-                                <div className="group relative">
-                                  <span
-                                    onClick={(e) => {
-                                      controllEmoji(e, "add", "me");
-                                    }}
-                                    className="GrEmoji cursor-pointer"
-                                  >
-                                    ☹
-                                  </span>
-                                  <img
-                                    onClick={(e) => {
-                                      controllEmoji(e, "remove");
-                                    }}
-                                    className="w-6 RxCross2 cursor-pointer hidden"
-                                    src="/crossed.png"
-                                    alt="cross"
-                                  />
-                                  <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
-                                    {emojies.map((em, i) => {
-                                      return (
-                                        <span
-                                          onClick={(e) => {
-                                            sendEmoji(e, msg, "me");
-                                          }}
-                                          key={i}
-                                          className="px-1 cursor-pointer"
-                                        >
-                                          {em}
-                                        </span>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex justify-end">
-                                <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
-                                  {moment(msg?.createdAt).format(
-                                    "MM/DD/YY, HH:mm"
-                                  )}
-                                </h4>
-                              </div>
-                            </div>
-                            <div className="max-w-[60%] w-fit">
-                              {msg?.reply[1] === store.userInfo.id && (
-                                <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
-                                  {" "}
-                                  <IoArrowRedoOutline size={10} />
-                                  You reply to yourself
-                                </h2>
-                              )}
-                              {msg?.reply[1] === id && (
-                                <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
-                                  {" "}
-                                  <IoArrowRedoOutline size={10} />
-                                  You reply to {userDetails?.name}
-                                </h2>
-                              )}
-                              {msg?.reply?.length > 0 &&
-                                msg?.reply[0] !== null && (
-                                  <h2 className="w-fit text-gray-400 py-2 px-4 ml-auto rounded-l-[30px] rounded-tr-[30px] bg-gray-100 text-[12px]">
-                                    {msg?.reply[0]}
-                                  </h2>
-                                )}
-                              {msg?.message?.content !== "" && (
-                                <h2
-                                  ref={scrollRef}
-                                  className={`${
-                                    i === messageBlog.length - 1 &&
-                                    messageBlog.length > 1
-                                      ? "msg_anim "
-                                      : ""
-                                  } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
-                                    messageBlog.length === 1
-                                      ? "rounded-[30px]"
-                                      : "rounded-l-[30px]"
-                                  } ${
-                                    messageBlog.indexOf(msg) === 0 &&
-                                    messageBlog.length > 1
-                                      ? "rounded-tr-[30px]"
-                                      : messageBlog.indexOf(msg) ===
-                                          messageBlog.length - 1 &&
-                                        messageBlog.length > 1
-                                      ? "rounded-br-[30px] duration-500"
-                                      : ""
-                                  }
-                                                      ${
-                                                        (msg?.reply?.length >
-                                                          0 &&
-                                                          msg?.reply[0] !==
-                                                            null) ||
-                                                        msg?.emoji?.length > 0
-                                                          ? "rounded-br-[30px]"
-                                                          : ""
-                                                      }
-                                                      `}
+                              <div className="group relative">
+                                <span
+                                  onClick={(e) => {
+                                    controllEmoji(e, "add", "me");
+                                  }}
+                                  className="GrEmoji cursor-pointer"
                                 >
-                                  {msg?.message.content}
-                                </h2>
-                              )}
-
-                              {msg?.message.media !== "" && (
-                                <div className="mb-2">
-                                  <img
-                                    className="rounded-2xl"
-                                    src={msg?.message.media}
-                                    alt="message_image"
-                                  />
-                                  <p ref={scrollRef}></p>
-                                </div>
-                              )}
-                              {msg?.message.voice !== "" && (
-                                <div className="mb-2">
-                                  <Suspense fallback='Loading voice..'>
-                                  <MiniMessagePlayer
-                                    url={msg?.message.voice}
-                                    userType="me"
-                                  />
-                                  </Suspense>
-                                  <p ref={scrollRef}></p>
-                                </div>
-                              )}
-
-                              {msg?.emoji?.length > 0 && (
-                                <div
-                                  onClick={(e) => handleEmojiSenderIdentity(e)}
-                                  className={`flex ${
-                                    msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
-                                  } relative cursor-pointer group items-center -translate-x-[10px] ml-5 -mt-3 bg-white rounded-full border gap-1 w-fit`}
-                                >
-                                  {msg?.emoji?.map((emj, i) => {
+                                  ☹
+                                </span>
+                                <img
+                                  onClick={(e) => {
+                                    controllEmoji(e, "remove");
+                                  }}
+                                  className="w-6 RxCross2 cursor-pointer hidden"
+                                  src="/crossed.png"
+                                  alt="cross"
+                                />
+                                <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                  {emojies.map((em, i) => {
                                     return (
-                                      <span key={i} className="text-[10px]">
-                                        {emj.emoji}
+                                      <span
+                                        onClick={(e) => {
+                                          sendEmoji(e, msg, "me");
+                                        }}
+                                        key={i}
+                                        className="px-1 cursor-pointer"
+                                      >
+                                        {em}
                                       </span>
                                     );
                                   })}
-                                  {msg?.emoji?.length > 1 && (
-                                    <span className="text-gray-500 text-sm">
-                                      {msg?.emoji?.length}
-                                    </span>
-                                  )}
-
-                                  <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[140%] -left-[120px] bg-white z-50 w-[100px] p-2 border">
-                                    {msg?.emoji?.map((em, i) => {
-                                      return (
-                                        <div
-                                          key={i}
-                                          className="flex items-center gap-2"
-                                        >
-                                          <img
-                                            className="w-5 h-5"
-                                            src={em.senderProfile}
-                                            alt="em.senderName"
-                                          />
-                                          <div className="text-sm">
-                                            {em.senderName.split(" ")[0]}
-                                          </div>
-                                          <span className="text-[10px]">
-                                            {em.emoji}
-                                          </span>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
                                 </div>
-                              )}
+                              </div>
+                            </div>
+                            <div className="flex justify-end">
+                              <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
+                                {moment(msg?.createdAt).format(
+                                  "MM/DD/YY, HH:mm"
+                                )}
+                              </h4>
                             </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div key={i}>
-                          {messageBlog.indexOf(msg) === 0 && (
-                            <p className="text-center text-sm text-gray-400 mt-4">
-                              {formatetime(msg?.createdAt)}
-                            </p>
-                          )}
-                          <div className="flex justify-start items-center gap-3 group">
-                            <div className="max-w-[60%] w-fit">
-                              {msg?.reply[1] === store.userInfo.id && (
-                                <h2 className="px-4 text-[10px] flex items-center gap-2">
-                                  {" "}
-                                  <BsReply size={10} /> {userDetails?.name}{" "}
-                                  reply to you
+                          <div className="max-w-[60%] w-fit">
+                            {msg?.reply[1] === store.userInfo.id && (
+                              <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
+                                {" "}
+                                <IoArrowRedoOutline size={10} />
+                                You reply to yourself
+                              </h2>
+                            )}
+                            {msg?.reply[1] === id && (
+                              <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
+                                {" "}
+                                <IoArrowRedoOutline size={10} />
+                                You reply to {userDetails?.name}
+                              </h2>
+                            )}
+                            {msg?.reply?.length > 0 &&
+                              msg?.reply[0] !== null && (
+                                <h2 className="w-fit text-gray-400 py-2 px-4 ml-auto rounded-l-[30px] rounded-tr-[30px] bg-gray-100 text-[12px]">
+                                  {msg?.reply[0]}
                                 </h2>
                               )}
-                              {msg?.reply[1] === id && (
-                                <h2 className="px-4 text-[10px] flex items-center gap-2">
-                                  {" "}
-                                  <BsReply size={10} />
-                                  {userDetails?.name} reply to himself/herself
-                                </h2>
-                              )}
-                              {msg?.reply?.length > 0 &&
-                                msg?.reply[0] !== null && (
-                                  <h2 className="w-fit text-gray-400 py-2 px-4 rounded-r-[30px] rounded-tl-[30px] bg-gray-100 text-[12px]">
-                                    {msg?.reply[0]}
-                                  </h2>
-                                )}
-                              {msg?.message?.content && (
-                                <h2
-                                  className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
-                                    messageBlog.length === 1
-                                      ? "rounded-[30px]"
-                                      : "rounded-r-[30px]"
-                                  } ${
-                                    messageBlog.indexOf(msg) === 0 &&
-                                    messageBlog.length > 1
-                                      ? "rounded-tl-[30px]"
-                                      : messageBlog.indexOf(msg) ===
-                                          messageBlog.length - 1 &&
-                                        messageBlog.length > 1
-                                      ? "rounded-bl-[30px]"
-                                      : ""
-                                  }
+                            {msg?.message?.content !== "" && (
+                              <h2
+                                ref={scrollRef}
+                                className={`${
+                                  i === messageBlog.length - 1 &&
+                                  messageBlog.length > 1
+                                    ? "msg_anim "
+                                    : ""
+                                } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                                  messageBlog.length === 1
+                                    ? "rounded-[30px]"
+                                    : "rounded-l-[30px]"
+                                } ${
+                                  messageBlog.indexOf(msg) === 0 &&
+                                  messageBlog.length > 1
+                                    ? "rounded-tr-[30px]"
+                                    : messageBlog.indexOf(msg) ===
+                                        messageBlog.length - 1 &&
+                                      messageBlog.length > 1
+                                    ? "rounded-br-[30px] duration-500"
+                                    : ""
+                                }
                                                         ${
                                                           (msg?.reply?.length >
                                                             0 &&
                                                             msg?.reply[0] !==
                                                               null) ||
                                                           msg?.emoji?.length > 0
-                                                            ? "rounded-bl-[30px]"
+                                                            ? "rounded-br-[30px]"
                                                             : ""
-                                                        }`}
-                                >
-                                  {msg?.message.content}
+                                                        }
+                                                        `}
+                              >
+                                {msg?.message.content}
+                              </h2>
+                            )}
+
+                            {msg?.message.media !== "" && (
+                              <div className="mb-2">
+                                <img
+                                  className="rounded-2xl"
+                                  src={msg?.message.media}
+                                  alt="message_image"
+                                />
+                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
+                            {msg?.message.voice !== "" && (
+                              <div className="mb-2">
+                                <MessagePlayer
+                                  url={msg?.message.voice}
+                                  userType="me"
+                                />
+                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
+
+                            {msg?.emoji?.length > 0 && (
+                              <div
+                                onClick={(e) => handleEmojiSenderIdentity(e)}
+                                className={`flex ${
+                                  msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                                } relative cursor-pointer group items-center -translate-x-[10px] ml-5 -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                              >
+                                {msg?.emoji?.map((emj, i) => {
+                                  return (
+                                    <span key={i} className="text-[10px]">
+                                      {emj.emoji}
+                                    </span>
+                                  );
+                                })}
+                                {msg?.emoji?.length > 1 && (
+                                  <span className="text-gray-500 text-sm">
+                                    {msg?.emoji?.length}
+                                  </span>
+                                )}
+
+                                <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[140%] -left-[120px] bg-white z-50 w-[100px] p-2 border">
+                                  {msg?.emoji?.map((em, i) => {
+                                    return (
+                                      <div
+                                        key={i}
+                                        className="flex items-center gap-2"
+                                      >
+                                        <img
+                                          className="w-5 h-5"
+                                          src={em.senderProfile}
+                                          alt="em.senderName"
+                                        />
+                                        <div className="text-sm">
+                                          {em.senderName.split(" ")[0]}
+                                        </div>
+                                        <span className="text-[10px]">
+                                          {em.emoji}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={i}>
+                        {messageBlog.indexOf(msg) === 0 && (
+                          <p className="text-center text-sm text-gray-400 mt-4">
+                            {formatetime(msg?.createdAt)}
+                          </p>
+                        )}
+                        <div className="flex justify-start items-center gap-3 group">
+                          <div className="max-w-[60%] w-fit">
+                            {msg?.reply[1] === store.userInfo.id && (
+                              <h2 className="px-4 text-[10px] flex items-center gap-2">
+                                {" "}
+                                <BsReply size={10} /> {userDetails?.name} reply
+                                to you
+                              </h2>
+                            )}
+                            {msg?.reply[1] === id && (
+                              <h2 className="px-4 text-[10px] flex items-center gap-2">
+                                {" "}
+                                <BsReply size={10} />
+                                {userDetails?.name} reply to himself/herself
+                              </h2>
+                            )}
+                            {msg?.reply?.length > 0 &&
+                              msg?.reply[0] !== null && (
+                                <h2 className="w-fit text-gray-400 py-2 px-4 rounded-r-[30px] rounded-tl-[30px] bg-gray-100 text-[12px]">
+                                  {msg?.reply[0]}
                                 </h2>
                               )}
+                            {msg?.message?.content && (
+                              <h2
+                                className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                                  messageBlog.length === 1
+                                    ? "rounded-[30px]"
+                                    : "rounded-r-[30px]"
+                                } ${
+                                  messageBlog.indexOf(msg) === 0 &&
+                                  messageBlog.length > 1
+                                    ? "rounded-tl-[30px]"
+                                    : messageBlog.indexOf(msg) ===
+                                        messageBlog.length - 1 &&
+                                      messageBlog.length > 1
+                                    ? "rounded-bl-[30px]"
+                                    : ""
+                                }
+                                                          ${
+                                                            (msg?.reply
+                                                              ?.length > 0 &&
+                                                              msg?.reply[0] !==
+                                                                null) ||
+                                                            msg?.emoji?.length >
+                                                              0
+                                                              ? "rounded-bl-[30px]"
+                                                              : ""
+                                                          }`}
+                              >
+                                {msg?.message.content}
+                              </h2>
+                            )}
 
-                              {msg?.message.media !== "" && (
-                                <div className="mb-2">
-                                  <img
-                                    className="rounded-2xl"
-                                    src={msg?.message.media}
-                                    alt="message_image"
-                                  />
-                                </div>
-                              )}
+                            {msg?.message.media !== "" && (
+                              <div className="mb-2">
+                                <img
+                                  className="rounded-2xl"
+                                  src={msg?.message.media}
+                                  alt="message_image"
+                                />
+                              </div>
+                            )}
 
-                              {msg?.message.voice !== "" && (
-                                <div className="mb-2">
-                                  <Suspense fallback='Loading voice..'>
-                                  <MiniMessagePlayer
-                                    url={msg?.message.voice}
-                                    userType="he"
-                                  />
-                                  </Suspense>
-                                  <p ref={scrollRef}></p>
-                                </div>
-                              )}
-                              {msg?.emoji?.length > 0 && (
-                                <div
-                                  onClick={(e) => handleEmojiSenderIdentity(e)}
-                                  className={`flex ${
-                                    msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
-                                  } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
-                                >
-                                  {msg?.emoji?.map((emj, i) => {
+                            {msg?.message.voice !== "" && (
+                              <div className="mb-2">
+                                <MessagePlayer
+                                  url={msg?.message.voice}
+                                  userType="he"
+                                />
+                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
+                            {msg?.emoji?.length > 0 && (
+                              <div
+                                onClick={(e) => handleEmojiSenderIdentity(e)}
+                                className={`flex ${
+                                  msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                                } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                              >
+                                {msg?.emoji?.map((emj, i) => {
+                                  return (
+                                    <span key={i} className="text-[10px]">
+                                      {emj.emoji}
+                                    </span>
+                                  );
+                                })}
+                                {msg?.emoji?.length > 1 && (
+                                  <span className="text-gray-500 text-sm">
+                                    {msg?.emoji?.length}
+                                  </span>
+                                )}
+                                <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[100%] -right-[120px] bg-white z-50 w-[100px] p-2 border">
+                                  {msg?.emoji?.map((em, i) => {
                                     return (
-                                      <span key={i} className="text-[10px]">
-                                        {emj.emoji}
+                                      <div
+                                        key={i}
+                                        className="flex items-center gap-2"
+                                      >
+                                        <img
+                                          className="w-5 h-5"
+                                          src={em.senderProfile}
+                                          alt="em.senderName"
+                                        />
+                                        <div className="text-sm">
+                                          {em.senderName.split(" ")[0]}
+                                        </div>
+                                        <span className="text-[10px]">
+                                          {em.emoji}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="hidden group-hover:block text-gray-700">
+                            <div className="flex gap-4 -z-10 items-center">
+                              <div className="relative z-10">
+                                <span
+                                  className="GrEmoji cursor-pointer"
+                                  onClick={(e) => {
+                                    controllEmoji(e, "add", "friend");
+                                  }}
+                                >
+                                  ☹
+                                </span>
+                                <img
+                                  onClick={(e) => {
+                                    controllEmoji(e, "remove");
+                                  }}
+                                  className="w-6 RxCross2 cursor-pointer hidden"
+                                  src="/crossed.png"
+                                  alt="cross"
+                                />
+                                <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                  {emojies.map((em, i) => {
+                                    return (
+                                      <span
+                                        onClick={(e) => {
+                                          sendEmoji(e, msg, "friend");
+                                        }}
+                                        key={i}
+                                        className="px-1 cursor-pointer"
+                                      >
+                                        {em}
                                       </span>
                                     );
                                   })}
-                                  {msg?.emoji?.length > 1 && (
-                                    <span className="text-gray-500 text-sm">
-                                      {msg?.emoji?.length}
-                                    </span>
-                                  )}
-                                  <div className="absolute space-y-2 rounded-lg rounded-tr-none shadow-lg hidden -top-[100%] -right-[120px] bg-white z-50 w-[100px] p-2 border">
-                                    {msg?.emoji?.map((em, i) => {
-                                      return (
-                                        <div
-                                          key={i}
-                                          className="flex items-center gap-2"
-                                        >
-                                          <img
-                                            className="w-5 h-5"
-                                            src={em.senderProfile}
-                                            alt="em.senderName"
-                                          />
-                                          <div className="text-sm">
-                                            {em.senderName.split(" ")[0]}
-                                          </div>
-                                          <span className="text-[10px]">
-                                            {em.emoji}
-                                          </span>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
                                 </div>
-                              )}
+                              </div>
+                              <label
+                                className="cursor-pointer"
+                                onClick={() => handleReply(msg)}
+                                htmlFor="message_text"
+                              >
+                                <BsReply size={18} />
+                              </label>
+                              <BsThreeDotsVertical size={18} />
                             </div>
-                            <div className="hidden group-hover:block text-gray-700">
-                              <div className="flex gap-4 -z-10 items-center">
-                                <div className="relative z-10">
-                                  <span
-                                    className="GrEmoji cursor-pointer"
-                                    onClick={(e) => {
-                                      controllEmoji(e, "add", "friend");
-                                    }}
-                                  >
-                                    ☹
-                                  </span>
-                                  <img
-                                    onClick={(e) => {
-                                      controllEmoji(e, "remove");
-                                    }}
-                                    className="w-6 RxCross2 cursor-pointer hidden"
-                                    src="/crossed.png"
-                                    alt="cross"
-                                  />
-                                  <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
-                                    {emojies.map((em, i) => {
-                                      return (
-                                        <span
-                                          onClick={(e) => {
-                                            sendEmoji(e, msg, "friend");
-                                          }}
-                                          key={i}
-                                          className="px-1 cursor-pointer"
-                                        >
-                                          {em}
-                                        </span>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                                <label
-                                  className="cursor-pointer"
-                                  onClick={() => handleReply(msg)}
-                                  htmlFor="message_text"
-                                >
-                                  <BsReply size={18} />
-                                </label>
-                                <BsThreeDotsVertical size={18} />
-                              </div>
-                              <div className="flex justify-end">
-                                <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
-                                  {moment(msg?.createdAt).format(
-                                    "MM/DD/YY, HH:mm"
-                                  )}
-                                </h4>
-                              </div>
+                            <div className="flex justify-end">
+                              <h4 className="text-[10px] bg-gray-50 px-2 rounded-full w-fit border block">
+                                {moment(msg?.createdAt).format(
+                                  "MM/DD/YY, HH:mm"
+                                )}
+                              </h4>
                             </div>
                           </div>
-                          {messageBlog.indexOf(msg) ===
-                            messageBlog.length - 1 && (
-                            <div className="profile w-10 ">
-                              <img
-                                ref={scrollRef}
-                                className="w-full bg-white p-[2px] z-40 rounded-full"
-                                src={userDetails?.profile}
-                                alt={userDetails?.name}
-                              />
-                            </div>
-                          )}
                         </div>
-                      )
-                    ) : (
-                      ""
-                    );
-                  })}
-                </div>
-              );
-            })}
-            {typing &&
-              typing.senderId === id &&
-              typing.receiverId === store.userInfo.id &&
-              typing.message !== "" && (
-                <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
-                  <div className="image-box absolute bottom-5">
-                    <img
-                      className="w-8 h-8 rounded-full border border-violet-700"
-                      src={userDetails?.profile}
-                      alt={userDetails?.name}
+                        {messageBlog.indexOf(msg) ===
+                          messageBlog.length - 1 && (
+                          <div className="profile w-10 ">
+                            <img
+                              className="w-full bg-white p-[2px] z-40 rounded-full"
+                              src={userDetails?.profile}
+                              alt={userDetails?.name}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )
+                  ) : (
+                    ""
+                  );
+                })}
+              </div>
+            );
+          })}
+          {typing &&
+            typing.senderId === id &&
+            typing.receiverId === store.userInfo.id &&
+            typing.message !== "" && (
+              <div className="friend-message py-2 relative mb-6 flex items-end mt-4">
+                <div className="image-box absolute bottom-5">
+                  <img
+                    className="w-8 h-8 rounded-full border border-violet-700"
+                    src={userDetails?.profile}
+                    alt={userDetails?.name}
+                  />
+                  {typingloading && (
+                    <Image
+                      className="w-10 absolute right-0 -bottom-5"
+                      src={messageloader}
+                      alt="loader"
                     />
-                    {typingloading && (
-                      <Image
-                        className="w-10 absolute right-0 -bottom-5"
-                        src={messageloader}
-                        alt="loader"
+                  )}
+                </div>
+                <div
+                  style={{ borderRadius: "20px 20px 20px 0px" }}
+                  className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
+                >
+                  <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
+                    {typing.message}
+                  </p>
+                </div>
+              </div>
+            )}
+          {currentMessages.current &&
+            currentMessages.current.length > 0 &&
+            currentMessages.current[0].receiverId === id && (
+              <div ref={scrollRef}>
+                {currentMessages.current.map((msg, i) => {
+                  return (
+                    <CurrentMessage
+                      key={i}
+                      allMsg={currentMessages.current}
+                      msg={msg}
+                      setSendCurrentMsg={setSendCurrentMsg}
+                      replyMsgContent={replyContent}
+                      setReplyContent={setReplyContent}
+                      replyMsgStatus={showReply}
+                      toReplyerId={toReplyerId}
+                      setToReplyerId={setToReplyerId}
+                    />
+                  );
+                })}
+              </div>
+            )}
+
+          {!seenMsg && (
+            <div>
+              {lastMessage?.senderId == store.userInfo.id &&
+                lastMessage?.seenMessage == true && (
+                  <div className="duration-500 flex justify-end">
+                    <div className=""></div>
+                    {typing.message == "" && (
+                      <img
+                        className="rounded-full duration-500 w-8"
+                        src={userDetails?.profile}
+                        alt="message_image"
                       />
                     )}
                   </div>
-                  <div
-                    style={{ borderRadius: "20px 20px 20px 0px" }}
-                    className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
-                  >
-                    <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
-                      {typing.message}
-                    </p>
-                  </div>
-                </div>
-              )}
-            {shallowMessage.length > 0 &&
-              shallowMessage[0].receiverId === id && (
-                <div ref={scrollRef}>
-                  {shallowMessage.map((msg, i) => {
-                    return (
-                      <CurrentMessage
-                        key={i}
-                        allMsg={shallowMessage}
-                        msg={msg}
-                        setSendCurrentMsg={setSendCurrentMsg}
-                        replyMsgContent={replyContent}
-                        setReplyContent={setReplyContent}
-                        replyMsgStatus={showReply}
-                        toReplyerId={toReplyerId}
-                        setToReplyerId={setToReplyerId}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+                )}
+            </div>
+          )}
+          {seenMsg && (
+            <div className="duration-500 flex justify-end">
+              <div className=""></div>
+              <img
+                className="rounded-full duration-500 w-8"
+                src={userDetails?.profile}
+                alt="message_image"
+              />
+            </div>
+          )}
 
-            {loadingImage && (
-              <div>
-                <div className="w-full flex justify-end">
-                  <div className="w-[60%] relative">
-                    <div className="w-full h-full absolute bg-black/30 top-0 left-0 flex justify-center items-center">
-                      Loading...
-                    </div>
-                    <img
-                      className="max-w-full max-h-[350px]"
-                      src={imgUri}
-                      alt="loading"
-                    />
+          {loadingImage && (
+            <div>
+              <div className="w-full flex justify-end">
+                <div className="w-[60%] relative">
+                  <div className="w-full h-full absolute bg-black/30 top-0 left-0 flex justify-center items-center">
+                    Loading...
                   </div>
+                  <img
+                    className="max-w-full max-h-[350px]"
+                    src={imgUri}
+                    alt="loading"
+                  />
                 </div>
-                <div ref={scrollRef} className="scroll_point"></div>
+              </div>
+              <div ref={scrollRef} className="scroll_point"></div>
+            </div>
+          )}
+        </div>
+        {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
+        <div className={"bottom"}>
+          <div
+            className={`${
+              showReply ? "flex" : "hidden"
+            } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
+          >
+            <div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <IoArrowRedoOutline size={18} />
+                  <h4 id="replying_to"></h4>
+                </div>
+
+                <p id="replying_content"></p>
+              </div>
+            </div>
+            <div>
+              <img
+                onClick={(e) => {
+                  setShowReply(false);
+                  setReplyContent("");
+                }}
+                className="w-6 RxCross2 cursor-pointer"
+                src="/crossed.png"
+                alt="cross"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <VoiceRecorder
+              isStartRecord={isStartRecord}
+              setIsStartRecord={setIsStartRecord}
+              hiddenTarget={hiddenTarget}
+              receiverId={userDetails?._id}
+              replyContent={replyContent}
+              toReplyerId={toReplyerId}
+              scrollToBottom={scrollToBottom}
+            />
+            {!isStartRecord && (
+              <div
+                className={`pr-4 ${
+                  hiddenTarget ? "pl-4" : ""
+                } py-4 flex w-full justify-between items-end gap-2`}
+              >
+                {!hiddenTarget && (
+                  <label htmlFor="send_image">
+                    <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
+                      <img
+                        className="w-5 cursor-pointer"
+                        src="/image-icon.png"
+                        alt="message"
+                      />
+                    </div>
+                  </label>
+                )}
+                <input
+                  onChange={handle_media_file}
+                  className="hidden"
+                  id="send_image"
+                  type="file"
+                />
+                <textarea
+                  className="hiddenTarget"
+                  id="message_text"
+                  ref={messangerRef}
+                  value={message}
+                  onChange={(e) => {
+                    handleMessage(e), scrollToBottom();
+                  }}
+                  rows={1}
+                  style={{
+                    width: "100%",
+                    resize: "none",
+                    overflow: "hidden",
+                    padding: "6px 14px",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    border: "none",
+                    borderRadius: "20px",
+                    background: "#ededed",
+                  }}
+                />
+
+                <div
+                  onClick={handleSendMessage}
+                  className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
+                >
+                  <RiSendPlaneLine size={20} />
+                </div>
               </div>
             )}
           </div>
-          {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
-          <div className={"bottom"}>
-            <div
-              className={`${
-                showReply ? "flex" : "hidden"
-              } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
-            >
-              <div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <IoArrowRedoOutline size={18} />
-                    <h4 id="replying_to"></h4>
-                  </div>
-
-                  <p id="replying_content"></p>
-                </div>
-              </div>
-              <div>
-                <img
-                  onClick={(e) => {
-                    setShowReply(false);
-                    setReplyContent("");
-                  }}
-                  className="w-6 RxCross2 cursor-pointer"
-                  src="/crossed.png"
-                  alt="cross"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center">
-              <VoiceRecorder
-                isStartRecord={isStartRecord}
-                setIsStartRecord={setIsStartRecord}
-                hiddenTarget={hiddenTarget}
-                receiverId={userDetails?._id}
-                replyContent={replyContent}
-                toReplyerId={toReplyerId}
-                scrollToBottom={scrollToBottom}
-              />
-              {!isStartRecord && (
-                <div
-                  className={`pr-4 ${
-                    hiddenTarget ? "pl-4" : ""
-                  } py-4 flex w-full justify-between items-end gap-2`}
-                >
-                  {!hiddenTarget && (
-                    <label htmlFor="send_image">
-                      <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-                        <img
-                          className="w-5 cursor-pointer"
-                          src="/image-icon.png"
-                          alt="message"
-                        />
-                      </div>
-                    </label>
-                  )}
-                  <input
-                    onChange={handle_media_file}
-                    className="hidden"
-                    id="send_image"
-                    type="file"
-                  />
-                  <textarea
-                    className="hiddenTarget"
-                    id="message_text"
-                    ref={messangerRef}
-                    value={message}
-                    onChange={(e) => {
-                      handleMessage(e), scrollToBottom();
-                    }}
-                    rows={1}
-                    style={{
-                      width: "100%",
-                      resize: "none",
-                      overflow: "hidden",
-                      padding: "6px 14px",
-                      boxSizing: "border-box",
-                      outline: "none",
-                      border: "none",
-                      borderRadius: "20px",
-                      background: "#ededed",
-                    }}
-                  />
-
-                  <div
-                    onClick={handleSendMessage}
-                    className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
-                  >
-                    <RiSendPlaneLine size={20} />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
+    </div>
   );
 };
 

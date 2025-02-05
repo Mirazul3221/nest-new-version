@@ -2,15 +2,23 @@
 import React, { useState } from "react";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import FloatingMessageContainer from "./MessageContainer";
+import { useSocket } from "../../global/SocketProvider";
+import { useStore } from "@/app/global/DataProvider";
 
 const CallMessageContainer = ({ id, userDetails }) => {
+  const {socket} = useSocket()
+  const {store} = useStore()
   const [switcher, setSwitcher] = useState(false);
+  const check_my_friend_window =async () => {
+    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,stats:true})
+  }
   return (
     <div>
       {!switcher && (
         <button
           className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white"
-          onClick={() => setSwitcher(true)}
+          onClick={() => {setSwitcher(true); check_my_friend_window()}}
+          
         >
           <BiMessageRoundedDots /> Messaging
         </button>
@@ -30,3 +38,4 @@ const CallMessageContainer = ({ id, userDetails }) => {
 };
 
 export default CallMessageContainer;
+////

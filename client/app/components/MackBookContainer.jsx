@@ -16,7 +16,7 @@ const MackBookContainer = () => {
           <PerspectiveCamera position={[-1,0,1.8]} zoom={0.7} makeDefault/>
       </Canvas>
            </div>
-           <div className="md:hidden w-full h-full">
+           <div className="md:hidden w-full h-50vh">
            <Canvas>
             <Stage environment={'night'} intensity={0.5}>
             <MacBook />

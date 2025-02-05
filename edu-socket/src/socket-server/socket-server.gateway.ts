@@ -91,6 +91,15 @@ export class NotificationsGateway
     
       })
       ////////////////////////////////////////////////////////////////////////////////////////
+      client.on('check-my-friend-window',(data)=>{
+        console.log(data)
+        if (this.socketUsers[data?.to]?.length > 0) {
+          this.socketUsers[data?.to]?.map(async (id) => {
+            await this.server.to(id).emit('check-my-friend-window', data);
+          });
+        }
+      })
+      ////////////////////////////////////////////////////////////////////////////////////////
       client.on('validation-status',(data)=>{
         if (this.socketUsers[data?.sender]?.length > 0) {
           this.socketUsers[data?.sender]?.map(async (id) => {
