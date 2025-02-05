@@ -37,18 +37,31 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const currentMessages = useRef([]);
   const groupMessages = groupMessagesBysender(messanger.message);
   const [seenMessage,setSeenMessage] = useState(false);
+  const [checkMyWindow,setCheckMyWindow] = useState(false)
   const check_my_friend_window = async () => {
-    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,stats:false})
+    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:false})
   }
 
   useEffect(() => {
     socket && socket.on('check-my-friend-window',(data)=>{
+      console.log(data)
+     
+      if (data.status == true) {
+        setCheckMyWindow(true)
+      } else if (data.status == false){
+        setCheckMyWindow(false)
+      }
+      if(!checkMyWindow){
+        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
+      }
       setSeenMessage(data.status)
     })
     return () => {
        socket && socket.off('check-my-friend-window')
     };
-  }, [socket]);
+  }, [socket,checkMyWindow]);
+
+console.log(seenMessage);
 
   const handleMessage = (event) => {
     setMessage(event.target.value);
@@ -70,7 +83,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const handleSendMessage = useCallback(() => {
     setSeenMsg(false);
     messageRef.current = message;
-
+  console.log(seenMessage)
     currentMessages.current = [
       ...currentMessages.current,
       {

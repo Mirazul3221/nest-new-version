@@ -10,7 +10,7 @@ const CallMessageContainer = ({ id, userDetails }) => {
   const {store} = useStore()
   const [switcher, setSwitcher] = useState(false);
   const check_my_friend_window =async () => {
-    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,stats:true})
+    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
   }
   return (
     <div>
