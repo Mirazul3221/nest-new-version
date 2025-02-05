@@ -16,13 +16,13 @@ const MackBookContainer = () => {
           <PerspectiveCamera position={[-1,0,1.8]} zoom={0.7} makeDefault/>
       </Canvas>
            </div>
-           <div className="md:hidden w-full h-50vh">
+           <div className="md:hidden w-full h-[40vh] mt-20">
            <Canvas>
             <Stage environment={'night'} intensity={0.5}>
             <MacBook />
             </Stage>
-          <OrbitControls  enableRotate={false} enableZoom={false} autoRotate autoRotateSpeed={-1}/>
-          <PerspectiveCamera position={[-.5,0,1.8]} zoom={0.7} makeDefault/>
+          <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={-1}/>
+          <PerspectiveCamera position={[-.5,0,1.8]} zoom={.8} makeDefault/>
       </Canvas>
            </div>
       </Suspense>
