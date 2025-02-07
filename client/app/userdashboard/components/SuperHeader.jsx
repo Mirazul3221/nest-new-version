@@ -228,23 +228,22 @@ const SuperHeader = () => {
   }, []);
 
     /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
-  // useEffect(() => {
-  //   socket &&
-  //     socket.on("get-seen-validation", (data) => {
-  //       console.log(data);
-  //       // if (data.senderId == id) {
-  //       //   console.log("yes");
-  //       //   socket &&
-  //       //     socket.emit("validation-status", {
-  //       //       sender: data.senderId,
-  //       //       status: true,
-  //       //     });
-  //       // }
-  //     });
-  //   return () => {
-  //     socket && socket.off("get-seen-validation");
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    socket &&
+      socket.on("get-seen-validation", (data) => {
+        console.log("yes");
+        if (!path.includes("userdashboard/messanger")) {
+          socket &&
+            socket.emit("validation-status", {
+              sender: data.senderId,
+              status: false,
+            });
+        }
+      });
+    return () => {
+      socket && socket.off("get-seen-validation");
+    };
+  }, [socket]);
 
   const [isOpenMessage, setIsOpenMessage] = useState(false);
   const messageContainerRef = useRef(null);

@@ -106,10 +106,17 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('set-seen-validation',(data)=>{
+        const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          this.socketUsers[data?.receiverId]?.map(async (id) => {
-            await this.server.to(id).emit('get-seen-validation', data);
-          });
+          if (userIdsArray.length > 0) {
+            userIdsArray.map(async (id) => {
+              await this.server.to(id).emit('get-seen-validation', data);
+            });
+          }
+          if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
+             this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('get-seen-validation', data);
+          }
         } else {
           if (this.socketUsers[data?.senderId]?.length > 0) {
             this.socketUsers[data?.senderId]?.map(async (id) => {
@@ -147,10 +154,11 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
-        const userIdsArray = [...this.userActivity[data.receiverId]];
+        const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          userIdsArray.map(async (id) => {
+          userIdsArray.length > 0 && userIdsArray.map(async (id) => {
             await this.server.to(id).emit('getTypingMsg', data);
+            console.log('gfdkgjdk hdfhjfgh ghdfhfd')
           });
         }
       });

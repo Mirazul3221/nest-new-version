@@ -134,7 +134,6 @@ const Middle = ({ id, userDetails }) => {
 
     socket.on("not-active", handleNotActive);
     socket.on("validation-status", handleValidationStatus);
-    console.log(id);
     return () => {
       socket.off("not-active", handleNotActive);
       socket.off("validation-status", handleValidationStatus);
@@ -233,9 +232,7 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("get-seen-validation", (data) => {
-        console.log(data);
         if (data.senderId == id) {
-          console.log("yes");
           socket &&
             socket.emit("validation-status", {
               sender: data.senderId,
