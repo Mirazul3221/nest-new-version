@@ -25,8 +25,10 @@ import { useSocket } from "../global/SocketProvider";
 import NotificationContainer from "./notification-component/NotificationContainer";
 import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
+import CurrentWindowChecker from "../global/CurrentWindowChecker";
 
 const SuperHeader = () => {
+  CurrentWindowChecker()
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
   const { socket } = useSocket();
@@ -91,8 +93,6 @@ const SuperHeader = () => {
   /////////////////////////////Here is the logic for new message come/////////////////////////////////
   const [openMessage, setOpenMessage] = useState(false);
   const messangerBoxRef = useRef(null);
-  const toggleMessageBox = () => setOpenMessage(!openMessage);
-
   useEffect(() => {
     console.log(messangerBoxRef.current);
     function handleClickOutside(event) {
@@ -226,6 +226,25 @@ const SuperHeader = () => {
         countMessage();
       });
   }, []);
+
+    /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
+  // useEffect(() => {
+  //   socket &&
+  //     socket.on("get-seen-validation", (data) => {
+  //       console.log(data);
+  //       // if (data.senderId == id) {
+  //       //   console.log("yes");
+  //       //   socket &&
+  //       //     socket.emit("validation-status", {
+  //       //       sender: data.senderId,
+  //       //       status: true,
+  //       //     });
+  //       // }
+  //     });
+  //   return () => {
+  //     socket && socket.off("get-seen-validation");
+  //   };
+  // }, [socket]);
 
   const [isOpenMessage, setIsOpenMessage] = useState(false);
   const messageContainerRef = useRef(null);

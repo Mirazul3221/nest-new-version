@@ -36,6 +36,9 @@ export class NotificationsGateway
   ///////////////////////////////////////////////Collect All Online Users Data///////////////////////////////////////
   private onlineUsers = [];
   private socketUsers = {};
+  private userActivity = {}; // Track the active status of users (active/inactive)
+  private userInActivity = {} //
+  
   connectedUsesrs = async (socketId, userId) => {
     const isExist = await this.onlineUsers.some((u) => u.userId === userId);
     if (!isExist) {
@@ -54,6 +57,32 @@ export class NotificationsGateway
     }
     this.socketUsers[userId].push(client.id);
     if (userId) {
+      ///////////////////////////////////////check user active window or not ////////////////////////////////
+          // Listen for the user position (active/inactive status)
+    client.on("userActivity", (data) => {
+      const { userId, status } = data;
+      
+      // Update user activity status based on the tab's visibility
+      if (status) {
+          // Mark the user as active
+          this.userActivity[userId] = this.userActivity[userId] || new Set();
+          this.userActivity[userId].add(client.id); // Add current socket id as active
+          if (this.userInActivity[userId]) {
+            this.userInActivity[userId].delete(client.id)
+          }
+      } else {
+        this.userInActivity[userId] = this.userInActivity[userId] || new Set();
+        this.userInActivity[userId].add(client.id); // Add current socket id as active
+          // Mark the user as inactive
+          if (this.userActivity[userId]) {
+              this.userActivity[userId].delete(client.id); // Remove current socket id
+          }
+      }
+
+      console.log("Updated user activity:", this.userActivity);//
+      console.log('first')//
+  });//
+
       ///////////////////////////////////////////////////////////////////////////////////////////////////////
       client.on('checkSenderOnlineStatus', async (data) => {
         let isOnline = Object.keys(this.socketUsers)?.some((u) => u === data);
@@ -92,14 +121,14 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('check-my-friend-window',(data)=>{
-        console.log(data)
+        const userIdsArray = [...this.userActivity[data.to]];
         if (this.socketUsers[data?.to]?.length > 0) {
-          this.socketUsers[data?.to]?.map(async (id) => {
+          userIdsArray?.map(async (id) => {
             await this.server.to(id).emit('check-my-friend-window', data);
           });
         }
       })
-      ////////////////////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////////////////
       client.on('validation-status',(data)=>{
         if (this.socketUsers[data?.sender]?.length > 0) {
           this.socketUsers[data?.sender]?.map(async (id) => {
@@ -118,8 +147,9 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
+        const userIdsArray = [...this.userActivity[data.receiverId]];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          this.socketUsers[data?.receiverId]?.map(async (id) => {
+          userIdsArray.map(async (id) => {
             await this.server.to(id).emit('getTypingMsg', data);
           });
         }
@@ -163,15 +193,21 @@ export class NotificationsGateway
 
       ////////////////////////////////////Logic for video and audio call system////////////////////////////////////////////
       await client.on('signal-call', (data) => {
+        const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          this.socketUsers[data?.receiverId]?.map(async (id) => {
+          userIdsArray.length > 0 && userIdsArray.map(async (id) => {
             await this.server.to(id).emit('signal-call', data);
-          }); ////
+          });//
+
+          if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
+           this.server.to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1]).emit('signal-call', data);
+          }
 
           this.socketUsers[data?.senderId]?.map(async (id) => {
             await this.server.to(id).emit('call-reached', this.socketUsers);
           });
-        }
+        } 
       });
       ///////////////////////////////////////////////////////////////////////////////////
       await client.on('end-call', (req) => {

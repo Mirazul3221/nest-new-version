@@ -113,8 +113,6 @@ const Middle = ({ id, userDetails }) => {
     };
 
     const handleValidationStatus = (data) => {
-      if (data.status) {
-      }
       const currentMessage = messageRef.current; // Capture before state changes
 
       if (currentMessage !== "") {
@@ -127,7 +125,7 @@ const Middle = ({ id, userDetails }) => {
           },
         ];
 
-        console.log(currentMessages.current);
+        console.log(data);
       }
 
       setTimeout(() => setMessage(""), 200); // Delay resetting

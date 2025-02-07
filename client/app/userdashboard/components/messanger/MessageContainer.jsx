@@ -61,8 +61,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     };
   }, [socket,checkMyWindow]);
 
-console.log(seenMessage);
-
   const handleMessage = (event) => {
     setMessage(event.target.value);
   };
@@ -189,31 +187,6 @@ console.log(seenMessage);
       });
     return () => {
       socket && socket.off("check-message-unseen-status");
-    };
-  }, [socket]);
-  /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
-  useEffect(() => {
-    socket &&
-      socket.on("get-seen-validation", (data) => {
-        console.log(data);
-        if (data.senderId == id) {
-          console.log("yes");
-          socket &&
-            socket.emit("validation-status", {
-              sender: data.senderId,
-              status: true,
-            });
-        } else {
-          console.log("No");
-          socket &&
-            socket.emit("validation-status", {
-              sender: data.senderId,
-              status: false,
-            });
-        }
-      });
-    return () => {
-      socket && socket.off("get-seen-validation");
     };
   }, [socket]);
 
