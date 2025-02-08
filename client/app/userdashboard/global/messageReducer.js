@@ -10,7 +10,6 @@ if (action.type === 'fetch-message') {
   }
   if (action.type === 'receive-message') {
     state.message = [...state.message,action.payload]
-    console.log(action.payload)
   return state
   }
    

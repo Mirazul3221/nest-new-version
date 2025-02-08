@@ -90,7 +90,6 @@ const Middle = ({ id, userDetails }) => {
 
   useEffect(() => {
     if (!socket) return;
-
     const handleNotActive = (data) => {
       console.log("handleNotActive");
       const currentMessage = messageRef.current; // Capture before state changes
@@ -168,19 +167,21 @@ const Middle = ({ id, userDetails }) => {
     });
   }, [message, socket]);
   ////////////////////////////////////////////////////////////////////////////////
+  const [isLoad,setIsLoad] = useState(false)
   const [typing, setTyping] = useState("");
   const [typingloading, setTypingLoading] = useState();
   useEffect(() => {
     socket &&
       socket.on("getTypingMsg", (data) => {
-        scrollToBottom();
+        setIsLoad(false)
+        scrollToBottom()
         setTyping(data);
         setSeenMsg(false);
       });
     return () => {
       socket && socket.off("getTypingMsg");
     };
-  }, [socket]);
+  }, [socket,typing]);
 
   useEffect(() => {
     if (id == typing.senderId) {
@@ -202,12 +203,15 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
+        console.log(data)
         setSeenMsg(false);
+        setIsLoad(true)
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
-        setTimeout(() => {
-          scrollToBottom();
-        }, 1000);
+          setTimeout(() => {
+            scrollToBottom();
+          }, 200);
+
       });
     return () => {
       socket && socket.off("message-from");
@@ -942,6 +946,7 @@ const Middle = ({ id, userDetails }) => {
                               src={userDetails?.profile}
                               alt={userDetails?.name}
                             />
+                             <p ref={scrollRef}></p>
                           </div>
                         )}
                       </div>

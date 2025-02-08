@@ -78,9 +78,6 @@ export class NotificationsGateway
               this.userActivity[userId].delete(client.id); // Remove current socket id
           }
       }
-
-      console.log("Updated user activity:", this.userActivity);//
-      console.log('first')//
   });//
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,11 +151,11 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
+        console.log(data)
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           userIdsArray.length > 0 && userIdsArray.map(async (id) => {
             await this.server.to(id).emit('getTypingMsg', data);
-            console.log('gfdkgjdk hdfhjfgh ghdfhfd')
           });
         }
       });
