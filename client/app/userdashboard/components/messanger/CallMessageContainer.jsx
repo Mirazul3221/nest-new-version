@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import FloatingMessageContainer from "./MessageContainer";
 import { useSocket } from "../../global/SocketProvider";
 import { useStore } from "@/app/global/DataProvider";
+import { baseurl } from "@/app/config";
+import axios from "axios";
 
 const CallMessageContainer = ({ id, userDetails }) => {
   const {socket} = useSocket()
@@ -12,12 +14,52 @@ const CallMessageContainer = ({ id, userDetails }) => {
   const check_my_friend_window =async () => {
     socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
   }
+
+    /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
+    useEffect(() => {
+      socket &&
+        socket.on("get-seen-validation", (data) => {
+          if (switcher) {
+            socket &&
+              socket.emit("validation-status", {
+                sender: data.senderId,
+                status: true,
+              });
+          } else {
+            console.log("No");
+            socket &&
+              socket.emit("validation-status", {
+                sender: data.senderId,
+                status: false,
+              });
+          }
+        });
+      return () => {
+        socket && socket.off("get-seen-validation");
+      };
+    }, [socket, switcher]);
+    const updateUnseenMessage =async () => {
+      try {
+          await axios.get(`${baseurl}/messanger/update-message-seen-status?senderId=${id}`, {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+    }
+
+    const checkMessageStatus =async ()=>{
+      updateUnseenMessage()
+      socket && await socket.emit('check-message-unseen-status',{senderId:id,receiverId:store.userInfo.id,message:'status check'})
+    }
   return (
     <div>
       {!switcher && (
         <button
           className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white"
-          onClick={() => {setSwitcher(true); check_my_friend_window()}}
+          onClick={() => {setSwitcher(true); check_my_friend_window(); checkMessageStatus()}}
           
         >
           <BiMessageRoundedDots /> Messaging

@@ -232,7 +232,8 @@ const SuperHeader = () => {
     socket &&
       socket.on("get-seen-validation", (data) => {
         console.log("yes");
-        if (!path.includes("userdashboard/messanger")) {
+        if (!path.includes("userdashboard/messanger") && !path.includes("userdashboard/searchusers")) {
+          console.log("go");
           socket &&
             socket.emit("validation-status", {
               sender: data.senderId,
@@ -267,6 +268,8 @@ const SuperHeader = () => {
       document.removeEventListener("mousedown", handleMessage);
     };
   }, [isOpenMessage]);
+
+  console.log(path.includes("userdashboard/searchusers"))
 
   return (
     <div

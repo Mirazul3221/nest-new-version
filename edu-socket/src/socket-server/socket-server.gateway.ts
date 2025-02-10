@@ -125,14 +125,15 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('check-my-friend-window',(data)=>{
-        const userIdsArray = [...this.userActivity[data.to]];
+        console.log(data)
+        const userIdsArray = [...(this.userActivity[data?.to] || [])];
         if (this.socketUsers[data?.to]?.length > 0) {
           userIdsArray?.map(async (id) => {
             await this.server.to(id).emit('check-my-friend-window', data);
           });
         }
       })
-      ///////////////////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////////////////////
       client.on('validation-status',(data)=>{
         if (this.socketUsers[data?.sender]?.length > 0) {
           this.socketUsers[data?.sender]?.map(async (id) => {
@@ -142,16 +143,15 @@ export class NotificationsGateway
       })
       ////////////////////////////////////////////////////////////////////////////////////////
       client.on('check-message-unseen-status',(data)=>{
-        console.log(data)
         if (this.socketUsers[data?.senderId]?.length > 0) {
           this.socketUsers[data?.senderId]?.map(async (id) => {
             await this.server.to(id).emit('check-message-unseen-status', data);
           });
         }
       })
-      ////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
-        console.log(data)
+        console.log(data)//
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           userIdsArray.length > 0 && userIdsArray.map(async (id) => {

@@ -41,11 +41,10 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const check_my_friend_window = async () => {
     socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:false})
   }
-
   useEffect(() => {
     socket && socket.on('check-my-friend-window',(data)=>{
       console.log(data)
-     
+      if(data.status == false) setSeenMsg(false);
       if (data.status == true) {
         setCheckMyWindow(true)
       } else if (data.status == false){
@@ -79,9 +78,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   };
 
   const handleSendMessage = useCallback(() => {
-    setSeenMsg(false);
     messageRef.current = message;
-  console.log(seenMessage)
     currentMessages.current = [
       ...currentMessages.current,
       {
@@ -131,6 +128,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   }, [message, socket]);
   ////////////////////////////////////////////////////////////////////////////////
   const [typing, setTyping] = useState("");
+  console.log(typing.message)
   const [typingloading, setTypingLoading] = useState();
   useEffect(() => {
     socket &&
@@ -442,6 +440,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   }, [loading]);
 
   const lastMessage = messanger.message[messanger.message.length - 1];
+  console.log(lastMessage)
+  console.log(seenMsg)
   return (
     <div>
       <div className="top-bar px-4 rounded-t-sm py-2 bg-gray-300 flex justify-between items-center">
@@ -946,14 +946,15 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                 })}
               </div>
             )}
-
+{
+  seenMsg ? "true" : "false"
+}
           {!seenMsg && (
             <div>
               {lastMessage?.senderId == store.userInfo.id &&
                 lastMessage?.seenMessage == true && (
                   <div className="duration-500 flex justify-end">
-                    <div className=""></div>
-                    {typing.message == "" && (
+                    {(typing?.message == "" || typing == "") && (
                       <img
                         className="rounded-full duration-500 w-8"
                         src={userDetails?.profile}

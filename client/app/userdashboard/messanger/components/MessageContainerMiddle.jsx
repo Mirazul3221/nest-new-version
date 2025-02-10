@@ -29,6 +29,9 @@ const Middle = ({ id, userDetails }) => {
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
+  const [isLoad,setIsLoad] = useState(false)
+  const [typing, setTyping] = useState("");
+  const [typingloading, setTypingLoading] = useState();
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
@@ -87,6 +90,16 @@ const Middle = ({ id, userDetails }) => {
 
     // setSeenMsg(false)
   }, [message, socket, store.userInfo.id, userDetails?._id]);
+
+    useEffect(() => {
+      console.log(id, typing.senderId)
+      if(id == typing.senderId){
+        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
+      }
+      if(id !== typing.senderId){
+        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:typing.senderId,status:false})
+      }
+    }, [socket,typing]);
 
   useEffect(() => {
     if (!socket) return;
@@ -167,9 +180,6 @@ const Middle = ({ id, userDetails }) => {
     });
   }, [message, socket]);
   ////////////////////////////////////////////////////////////////////////////////
-  const [isLoad,setIsLoad] = useState(false)
-  const [typing, setTyping] = useState("");
-  const [typingloading, setTypingLoading] = useState();
   useEffect(() => {
     socket &&
       socket.on("getTypingMsg", (data) => {
