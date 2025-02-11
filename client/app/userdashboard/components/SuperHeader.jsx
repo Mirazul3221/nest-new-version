@@ -26,17 +26,27 @@ import NotificationContainer from "./notification-component/NotificationContaine
 import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 import CurrentWindowChecker from "../global/CurrentWindowChecker";
+import { useMessage } from "../global/messageProvider";
 
 const SuperHeader = () => {
   CurrentWindowChecker()
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
+  const { messanger, dispatch:messangerUser } = useMessage();
   const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
     profile: store.userInfo.profile,
     balance: 0,
   });
+
+    useEffect(() => {
+      async function loadmessage() {
+        const data = await fetchAllFriendsByMessage(store.token);
+        messangerUser({type:'STORE_ALL_MESSANGER_USER',payload:data})
+      }
+      loadmessage();
+    }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -132,7 +142,7 @@ const SuperHeader = () => {
     }
     loadmessage();
   }, []);
-  const sortedMessages = messangerFriends?.sort(
+  const sortedMessages = messanger?.user?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
   );
 
@@ -414,7 +424,9 @@ const SuperHeader = () => {
               <HiOutlineEnvelope className="header-box" size={26} />
             </div>
           )}
+
           {openMessage && <MessageBox sortedMessages={sortedMessages} />}
+          
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
             onClick={() => {

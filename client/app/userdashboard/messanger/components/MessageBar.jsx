@@ -4,9 +4,10 @@ import { useStore } from '@/app/global/DataProvider';
 import { baseurl, viewurl } from '@/app/config';
 import { formatetime } from '../../components/messanger/components/time';
 import axios from 'axios';
-import { fetchAllFriendsByMessage } from './fetchdata';
+import { useMessage } from '../../global/messageProvider';
 
 const MessageBar = ({setId,setUserDetails,friend,setMessangerFriends}) => {
+    const {messanger,dispatch} = useMessage();
     const {socket, myActiveFriends} = useSocket();   
       const { store } = useStore();
 //////////////////////////////typing effect///////////////////////////////////
@@ -20,20 +21,7 @@ useEffect(() => {
     socket && socket.off("getTypingMsg");
   };
 }, [socket]);
-/////////////////////////////////re-render users//////////////////////////////////
-useEffect(() => {
-  socket &&
-    socket.on("message-from", () => {
-      async function loadmessage() {
-        const data = await fetchAllFriendsByMessage(store.token);
-        setMessangerFriends(data);
-      }
-      loadmessage();    
-    });
-  return () => {
-    socket && socket.off("message-from");
-  };
-}, [socket]);
+
 
 const handleUrl = () => {
     window.history.pushState(null, '', `${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`);
@@ -58,6 +46,8 @@ const handleUrl = () => {
   const checkMessageStatus =async ()=>{
     socket && await socket.emit('check-message-unseen-status',{senderId:friend.userId,receiverId:store.userInfo.id,message:'status check'})
   }
+
+  console.log(friend)
   return (
     <div onClick={()=> {
       checkMessageStatus()
@@ -65,15 +55,15 @@ const handleUrl = () => {
       updateUnseenMessage()
         handleUrl()
       }}>
-          <div className="px-6 flex gap-4 relative items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
+          <div className="px-6 cursor-pointer flex gap-4 relative items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
             <div className="relative">
               <img
                 className="w-12 rounded-full"
-                src={friend.userProfile}
-                alt={friend.userName}
+                src={friend?.userProfile}
+                alt={friend?.userName}
               />
               {
-                myActiveFriends?.includes(friend.userId) &&   <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
+                myActiveFriends?.includes(friend?.userId) &&   <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
               }
             </div>
             <div>

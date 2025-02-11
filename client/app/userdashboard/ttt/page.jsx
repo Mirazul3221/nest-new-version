@@ -1,11 +1,18 @@
 'use client'
 import { useState, useRef, useEffect } from "react";
 import InputForm from "@/app/components/Login";
+import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
+import { useStore } from "@/app/global/DataProvider";
+import { useMessage } from "../global/messageProvider";
+import { baseurl } from "@/app/config";
+import axios from "axios";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
+  const [l,setL] = useState(false);
   const boxRef = useRef(null);
-
+const {store} = useStore()
+const {dispatch,messanger} = useMessage()
   const toggleBox = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -26,10 +33,39 @@ export default function Home() {
     };
   }, [isOpen]);
 
+  
+  const loadmessage = async (token) => {
+    try {
+      const {data} = await axios.get(
+        `${baseurl}/messanger/get/${'6731d7f1a9b25d829ccbe9ee'}/${1}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setL(true)
+      
+      dispatch({type:'fetch-message',payload:data})
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    }
+  };
+  
+  
+    useEffect(() => {
+      setTimeout(() => {
+        loadmessage(store.token);
+      }, 500);
+
+    }, []);  // Add store.token as a dependency
+    
+    
+console.log(messanger.message)
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#f3f4f6" }}>
       {/* Toggle Button */}
-      <button onClick={toggleBox} style={{ padding: "10px 20px", background: "blue", color: "white", borderRadius: "5px", cursor: "pointer" }}>
+      <button onClick={()=> {toggleBox(),loadmessage()}} style={{ padding: "10px 20px", background: "blue", color: "white", borderRadius: "5px", cursor: "pointer" }}>
         Toggle Box
       </button>
 

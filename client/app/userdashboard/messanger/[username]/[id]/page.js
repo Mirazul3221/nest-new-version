@@ -12,6 +12,7 @@ import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import MessangerContainerRight from "../../components/MessangerContainerRight";
+import { useMessage } from "@/app/userdashboard/global/messageProvider";
 const Page = () => {
   const { store } = useContext(storeContext);
   const [userDetails, setUserDetails] = useState(null);
@@ -27,7 +28,7 @@ const Page = () => {
   useEffect(() => {
     fetchUser(id);
   }, [id]);
-
+  
   return (
     <ProtectRoute>
         <div className=" w-screen h-screen fixed top-0 left-0">

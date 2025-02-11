@@ -101,7 +101,16 @@ export class NotificationsGateway
           });
         }
       })
-      ////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////logi for send user profile when send message/////////////////////////////
+      client.on('lastMsgWithProfile',(data)=>{
+        console.log(data)
+        if (this.socketUsers[data?.receiver]?.length > 0) {
+          this.socketUsers[data?.receiver]?.map(async (id) => {
+            await this.server.to(id).emit('lastMsgWithProfile', data.sender);
+          });
+        }
+      })
+      ///////////////////////////////////////////////////////////////////////////////////////
       client.on('set-seen-validation',(data)=>{
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
         const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];

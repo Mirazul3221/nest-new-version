@@ -88,8 +88,36 @@ const Middle = ({ id, userDetails }) => {
       setReplyContent(document.getElementById("replying_content"));
     }
 
-    // setSeenMsg(false)
+    //////////////////Here is the logic to send user profile and last message with message/////////////////////////
+    const lastMsgWithProfileToLocal = {
+        userId:id,
+        userName:userDetails.name,
+        userProfile:userDetails.profile,
+        senderId:store.userInfo.id,
+        lastMessage:  { content: message, media: "", voice: "" },
+        lastMessageTime : new Date().toISOString(),
+    }
+
+    dispatch({type:'INSURT_MY_USER_PROFILE',payload:lastMsgWithProfileToLocal})
+    const lastMsgWithProfileToRemote = {
+        userId:store.userInfo.id,
+        userName:store.userInfo.name,
+        userProfile:store.userInfo.profile,
+        senderId:store.userInfo.id,
+        lastMessage:  { content: message, media: "", voice: "" },
+        lastMessageTime : new Date().toISOString(),
+    }
+    socket && socket.emit('lastMsgWithProfile',{sender:lastMsgWithProfileToRemote,receiver:id})
   }, [message, socket, store.userInfo.id, userDetails?._id]);
+
+  useEffect(() => {
+    socket && socket.on('lastMsgWithProfile',(data)=>{
+      dispatch({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id}})
+    })
+    return () => {
+       socket && socket.off('lastMsgWithProfile')
+    };
+  }, [socket,id]);
 
     useEffect(() => {
       console.log(id, typing.senderId)
@@ -213,7 +241,6 @@ const Middle = ({ id, userDetails }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        console.log(data)
         setSeenMsg(false);
         setIsLoad(true)
         id == data.senderId &&
@@ -241,7 +268,6 @@ const Middle = ({ id, userDetails }) => {
       socket && socket.off("check-message-unseen-status");
     };
   }, [socket, id]);
-  console.log(seenMsg);
   /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
   useEffect(() => {
     socket &&
@@ -445,9 +471,17 @@ const Middle = ({ id, userDetails }) => {
   const [previousScroll, setPreviousScroll] = useState(0);
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
+
+
+
   useEffect(() => {
     fetchMessages(page, "static");
   }, [id]);
+
+  
+  useEffect(() => {
+    console.log("Updated Messenger Data:", messanger); // ✅ Logs updated state
+  }, [messanger]); // ✅ Runs only when `messanger` changes
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
