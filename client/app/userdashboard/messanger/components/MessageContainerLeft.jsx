@@ -6,9 +6,11 @@ import MessageBar from "./MessageBar";
 import axios from "axios";
 import { baseurl } from "@/app/config";
 import { useMessage } from "../../global/messageProvider";
+import { useSocket } from "../../global/SocketProvider";
 
 const MessageBox = ({ setId, setUserDetails }) => {
   const { store } = useStore();
+     const {socket} = useSocket();   
   const [messangerFriends, setMessangerFriends] = useState(null);
   const [loading, setLoading] = useState(false);
   const { dispatch, messanger } = useMessage();
@@ -34,6 +36,15 @@ const MessageBox = ({ setId, setUserDetails }) => {
   };
 
   useEffect(() => {
+    socket && socket.on('lastMsgWithProfile',(data)=>{
+      dispatch({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id:'122'}})
+    })
+    return () => {
+       socket && socket.off('lastMsgWithProfile')
+    };
+  }, [socket]);
+
+  useEffect(() => {
     fetchAllFriendsByMessage(store.token)
   }, []);
   
@@ -41,6 +52,8 @@ const MessageBox = ({ setId, setUserDetails }) => {
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
   );
 
+
+  console.log(messanger.user)
   return (
     <div className="w-full bg-white">
       {loading ? (

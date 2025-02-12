@@ -22,7 +22,7 @@ import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
-const Middle = ({ id, userDetails }) => {
+const Middle = ({ id, userDetails, device='desktop'}) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
@@ -96,6 +96,7 @@ const Middle = ({ id, userDetails }) => {
         senderId:store.userInfo.id,
         lastMessage:  { content: message, media: "", voice: "" },
         lastMessageTime : new Date().toISOString(),
+        unseenMessageCount:0
     }
 
     dispatch({type:'INSURT_MY_USER_PROFILE',payload:lastMsgWithProfileToLocal})
@@ -109,15 +110,6 @@ const Middle = ({ id, userDetails }) => {
     }
     socket && socket.emit('lastMsgWithProfile',{sender:lastMsgWithProfileToRemote,receiver:id})
   }, [message, socket, store.userInfo.id, userDetails?._id]);
-
-  useEffect(() => {
-    socket && socket.on('lastMsgWithProfile',(data)=>{
-      dispatch({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id}})
-    })
-    return () => {
-       socket && socket.off('lastMsgWithProfile')
-    };
-  }, [socket,id]);
 
     useEffect(() => {
       console.log(id, typing.senderId)
@@ -553,7 +545,7 @@ const Middle = ({ id, userDetails }) => {
   const lastMessage = messanger.message[messanger.message.length - 1];
   return (
     <div>
-      <div className="top-bar px-4 rounded-t-2xl py-2 bg-gray-300 flex justify-between items-center">
+      <div className={`px-4 ${device == "mobile" ? "rounded-t-0" : "rounded-t-2xl"} py-2 bg-gray-300 flex justify-between items-center`}>
         <div className="flex gap-3 items-center">
           <img
             className="rounded-full w-8"
@@ -592,11 +584,11 @@ const Middle = ({ id, userDetails }) => {
           />
         </div>
       </div>
-      <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[74vh]">
+      <div className={`overflow-y-scroll flex flex-col justify-between hidden_scroll ${device === "mobile" ? "h-[85vh]" : "h-[74vh]"}`}>
         <div
           onScroll={handleScroll}
           ref={containerRef}
-          className="w-full overflow-y-auto relative h-[64vh] py-6 px-2 bg-white"
+          className={`w-full overflow-y-auto relative py-6 px-2 bg-white ${device === "mobile" ? "h-[75vh]" : "h-[64vh]"}`}
         >
           <div className="flex justify-center">
             <div>

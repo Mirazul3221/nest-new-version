@@ -42,12 +42,9 @@ const handleUrl = () => {
         console.log(error);
       }
   }
-
   const checkMessageStatus =async ()=>{
     socket && await socket.emit('check-message-unseen-status',{senderId:friend.userId,receiverId:store.userInfo.id,message:'status check'})
   }
-
-  console.log(friend)
   return (
     <div onClick={()=> {
       checkMessageStatus()
@@ -87,6 +84,10 @@ const handleUrl = () => {
            {
             !hasSeen && friend?.unseenMessageCount>0 && <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
            }
+
+           {/* {
+            <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">{friend?.unseenMessageCount}</div>
+           } */}
           </div>
       </div>
   )

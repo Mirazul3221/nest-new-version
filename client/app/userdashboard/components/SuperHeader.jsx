@@ -27,6 +27,7 @@ import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 import CurrentWindowChecker from "../global/CurrentWindowChecker";
 import { useMessage } from "../global/messageProvider";
+import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 
 const SuperHeader = () => {
   CurrentWindowChecker()
@@ -257,6 +258,7 @@ const SuperHeader = () => {
   }, [socket]);
 
   const [isOpenMessage, setIsOpenMessage] = useState(false);
+  const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
   const messageContainerRef = useRef(null);
   const toggleMessage = () => setIsOpenMessage(!isOpenMessage);
   useEffect(() => {
@@ -278,8 +280,6 @@ const SuperHeader = () => {
       document.removeEventListener("mousedown", handleMessage);
     };
   }, [isOpenMessage]);
-
-  console.log(path.includes("userdashboard/searchusers"))
 
   return (
     <div
@@ -405,7 +405,7 @@ const SuperHeader = () => {
           {!path.includes("userdashboard/messanger") && (
             <div
               onClick={() => {
-                setOpenMessage(!openMessage);
+                setIsOpenMobileMessage(!isOpenMobileMessage);
                 setOpenNotif(false);
               }}
               className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
@@ -425,7 +425,7 @@ const SuperHeader = () => {
             </div>
           )}
 
-          {openMessage && <MessageBox sortedMessages={sortedMessages} />}
+          {isOpenMobileMessage && <MessageContainerBoxMobile sortedMessages={sortedMessages} setIsOpenMobileMessage={setIsOpenMobileMessage}/>}
           
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div

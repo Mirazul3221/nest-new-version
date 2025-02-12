@@ -425,9 +425,10 @@ export class AuthService {
 
 
   //==========================================================================================================-
-  async userProfileAndName(id){
-     return await this.userModel.findById(id)
+  async userProfileAndName(id: string) {
+    return await this.userModel.findById(id).select('-password -totalCountQuestions -totalCountQuestionsId -balance -email');
   }
+  
   //===========================================================================================================
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
   //===========================================================================================================
