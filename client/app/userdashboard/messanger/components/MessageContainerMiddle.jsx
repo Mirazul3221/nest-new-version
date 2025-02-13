@@ -10,6 +10,7 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
 import CurrentMessage from "./CurrentMessage";
 import { formatetime } from "../../components/messanger/components/time";
+import { HiOutlineArrowLeftCircle } from "react-icons/hi2";
 import "./css/message-animation.css";
 import { useSocket } from "../../global/SocketProvider";
 import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
@@ -22,14 +23,14 @@ import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
-const Middle = ({ id, userDetails, device='desktop'}) => {
+const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
-  const [isLoad,setIsLoad] = useState(false)
+  const [isLoad, setIsLoad] = useState(false);
   const [typing, setTyping] = useState("");
   const [typingloading, setTypingLoading] = useState();
   const messangerRef = useRef(null);
@@ -90,36 +91,53 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
 
     //////////////////Here is the logic to send user profile and last message with message/////////////////////////
     const lastMsgWithProfileToLocal = {
-        userId:id,
-        userName:userDetails.name,
-        userProfile:userDetails.profile,
-        senderId:store.userInfo.id,
-        lastMessage:  { content: message, media: "", voice: "" },
-        lastMessageTime : new Date().toISOString(),
-        unseenMessageCount:0
-    }
+      userId: id,
+      userName: userDetails.name,
+      userProfile: userDetails.profile,
+      senderId: store.userInfo.id,
+      lastMessage: { content: message, media: "", voice: "" },
+      lastMessageTime: new Date().toISOString(),
+      unseenMessageCount: 0,
+    };
 
-    dispatch({type:'INSURT_MY_USER_PROFILE',payload:lastMsgWithProfileToLocal})
+    dispatch({
+      type: "INSURT_MY_USER_PROFILE",
+      payload: lastMsgWithProfileToLocal,
+    });
     const lastMsgWithProfileToRemote = {
-        userId:store.userInfo.id,
-        userName:store.userInfo.name,
-        userProfile:store.userInfo.profile,
-        senderId:store.userInfo.id,
-        lastMessage:  { content: message, media: "", voice: "" },
-        lastMessageTime : new Date().toISOString(),
-    }
-    socket && socket.emit('lastMsgWithProfile',{sender:lastMsgWithProfileToRemote,receiver:id})
+      userId: store.userInfo.id,
+      userName: store.userInfo.name,
+      userProfile: store.userInfo.profile,
+      senderId: store.userInfo.id,
+      lastMessage: { content: message, media: "", voice: "" },
+      lastMessageTime: new Date().toISOString(),
+    };
+    socket &&
+      socket.emit("lastMsgWithProfile", {
+        sender: lastMsgWithProfileToRemote,
+        receiver: id,
+      });
   }, [message, socket, store.userInfo.id, userDetails?._id]);
 
-    useEffect(() => {
-      console.log(id, typing.senderId)
-      if(id == typing.senderId){
-        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
-      }
-      if(id !== typing.senderId){
-        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:typing.senderId,status:false})
-      }
-    }, [socket,typing]);
+  useEffect(() => {
+    console.log(id, typing.senderId);
+    if (id == typing.senderId) {
+      socket &&
+        socket.emit("check-my-friend-window", {
+          from: store.userInfo.id,
+          to: id,
+          status: true,
+        });
+    }
+    if (id !== typing.senderId) {
+      socket &&
+        socket.emit("check-my-friend-window", {
+          from: store.userInfo.id,
+          to: typing.senderId,
+          status: false,
+        });
+    }
+  }, [socket, typing]);
 
   useEffect(() => {
     if (!socket) return;
@@ -203,15 +221,15 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
   useEffect(() => {
     socket &&
       socket.on("getTypingMsg", (data) => {
-        setIsLoad(false)
-        scrollToBottom()
+        setIsLoad(false);
+        scrollToBottom();
         setTyping(data);
         setSeenMsg(false);
       });
     return () => {
       socket && socket.off("getTypingMsg");
     };
-  }, [socket,typing]);
+  }, [socket, typing]);
 
   useEffect(() => {
     if (id == typing.senderId) {
@@ -234,13 +252,12 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
     socket &&
       socket.on("message-from", (data) => {
         setSeenMsg(false);
-        setIsLoad(true)
+        setIsLoad(true);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
-          setTimeout(() => {
-            scrollToBottom();
-          }, 200);
-
+        setTimeout(() => {
+          scrollToBottom();
+        }, 200);
       });
     return () => {
       socket && socket.off("message-from");
@@ -464,13 +481,10 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
   // Fetch messages from the API
   //////////////////render message first time////////////////////////////
 
-
-
   useEffect(() => {
     fetchMessages(page, "static");
   }, [id]);
 
-  
   useEffect(() => {
     console.log("Updated Messenger Data:", messanger); // ✅ Logs updated state
   }, [messanger]); // ✅ Runs only when `messanger` changes
@@ -545,7 +559,16 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
   const lastMessage = messanger.message[messanger.message.length - 1];
   return (
     <div>
-      <div className={`px-4 ${device == "mobile" ? "rounded-t-0" : "rounded-t-2xl"} py-2 bg-gray-300 flex justify-between items-center`}>
+      <div
+        className={`px-4 ${
+          device == "mobile" ? "rounded-t-0" : "rounded-t-2xl"
+        } py-2 bg-gray-300 flex justify-between items-center`}
+      >
+        {device == "mobile" && (
+          <div onClick={()=>setOpenWindow(false)} className="">
+            <HiOutlineArrowLeftCircle color="#8840f5" size={30} />
+          </div>
+        )}
         <div className="flex gap-3 items-center">
           <img
             className="rounded-full w-8"
@@ -584,11 +607,17 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
           />
         </div>
       </div>
-      <div className={`overflow-y-scroll flex flex-col justify-between hidden_scroll ${device === "mobile" ? "h-[85vh]" : "h-[74vh]"}`}>
+      <div
+        className={`overflow-y-scroll flex flex-col justify-between hidden_scroll ${
+          device === "mobile" ? "h-[85vh]" : "h-[74vh]"
+        }`}
+      >
         <div
           onScroll={handleScroll}
           ref={containerRef}
-          className={`w-full overflow-y-auto relative py-6 px-2 bg-white ${device === "mobile" ? "h-[75vh]" : "h-[64vh]"}`}
+          className={`w-full overflow-y-auto relative py-6 px-2 bg-white ${
+            device === "mobile" ? "h-[75vh]" : "h-[64vh]"
+          }`}
         >
           <div className="flex justify-center">
             <div>
@@ -982,7 +1011,7 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
                               src={userDetails?.profile}
                               alt={userDetails?.name}
                             />
-                             <p ref={scrollRef}></p>
+                            <p ref={scrollRef}></p>
                           </div>
                         )}
                       </div>
@@ -1063,14 +1092,14 @@ const Middle = ({ id, userDetails, device='desktop'}) => {
             </div>
           )}
           {seenMsg && (
-                <div className="duration-500 flex justify-end">
-                <div className=""></div>
-                <img
-                    className="rounded-full duration-500 w-8"
-                    src={userDetails?.profile}
-                    alt="message_image"
-                  />
-              </div>
+            <div className="duration-500 flex justify-end">
+              <div className=""></div>
+              <img
+                className="rounded-full duration-500 w-8"
+                src={userDetails?.profile}
+                alt="message_image"
+              />
+            </div>
           )}
 
           {loadingImage && (

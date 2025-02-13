@@ -21,7 +21,7 @@ const MessageContainerBoxMobile = ({
   const { myActiveFriends } = useSocket();
   const [openWindow, setOpenWindow] = useState(false);
   const [userId, setUserId] = useState(false);
-  const [userDetails, setUserDetails] = useState();
+  const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const { store } = useStore();
   const updateUnseenMessage = async (id) => {
@@ -53,12 +53,8 @@ const MessageContainerBoxMobile = ({
     fetchUser(userId);
   }, [userId]);
   return (
-    <div className="fixed overflow-hidden pl-2 w-screen left-0 top-0 shadow-2xl right-0 bg-white h-screen z-50">
-      <div
-        className={`${
-          openWindow ? "-translate-x-[103vw]" : "translate-x-0"
-        } duration-150 w-[200vw] flex h-full`}
-      >
+    <div className="fixed overflow-hidden w-screen left-0 top-0 shadow-2xl right-0 bg-white h-screen z-50">
+      {!openWindow && (
         <div className="w-[100vw] overflow-hidden">
           <div className="flex px-4 pr-6 md:block justify-between mt-4">
             <h2 className="text-2xl">Chats</h2>
@@ -66,16 +62,17 @@ const MessageContainerBoxMobile = ({
               onClick={() => setIsOpenMobileMessage(false)}
               className="md:hidden"
             >
-              < LiaTimesSolid/>
+              <LiaTimesSolid />
             </span>
           </div>
           {sortedMessages ? (
-            <div className="w-full overflow-y-scroll md:h-[70vh]">
+            <div className="w-full overflow-y-scroll">
               {sortedMessages &&
                 sortedMessages.map((friend, i) => {
                   return (
                     <div
                       onClick={() => {
+                        setUserDetails(null)
                         setUserId(friend.userId);
                         setOpenWindow(true);
                         // updateUnseenMessage(friend?.userId);
@@ -84,7 +81,7 @@ const MessageContainerBoxMobile = ({
                         // );
                       }}
                       key={i}
-                      className="cursor-pointer"
+                      className="cursor-pointer overflow-hidden"
                     >
                       <div className="px-6 relative flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
                         <div className="relative">
@@ -137,21 +134,26 @@ const MessageContainerBoxMobile = ({
             </div>
           )}
         </div>
-        <div className="w-[100vw] relative">
-          {userDetails && (
+      )}
+      {openWindow && (
+        <div className="w-[100vw] relative overflow-hidden">
+          {userDetails !== null && openWindow ? (
             <Middle
               id={userDetails?._id}
               userDetails={userDetails}
               device="mobile"
+              setOpenWindow={setOpenWindow}
             />
+          ) : (
+            "Loading..."
           )}
 
           <div className="px-6 mt-2 flex justify-between items-center">
             <div onClick={() => setIsOpenMobileMessage(false)} className="back">
-              < LiaTimesSolid/>
+              <LiaTimesSolid />
             </div>
             <div onClick={() => setOpenWindow(false)} className="back">
-             <GrRotateRight />
+              <GrRotateRight />
             </div>
           </div>
           {loading && (
@@ -160,7 +162,7 @@ const MessageContainerBoxMobile = ({
             </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   );
 };
