@@ -24,6 +24,7 @@ import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
 const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
+  console.log('two times')
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);

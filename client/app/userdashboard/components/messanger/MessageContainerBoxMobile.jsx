@@ -135,21 +135,16 @@ const MessageContainerBoxMobile = ({
           )}
         </div>
       )}
-      {openWindow && (
-        <div className="w-[100vw] relative overflow-hidden">
-          {userDetails !== null && openWindow ? (
+        <div className={`w-[100vw] ${openWindow ? "scale-1 w-full h-full" : 'scale-0 w-0 h-0'} relative overflow-hidden`}>
             <Middle
               id={userDetails?._id}
               userDetails={userDetails}
               device="mobile"
               setOpenWindow={setOpenWindow}
             />
-          ) : (
-            "Loading..."
-          )}
 
           <div className="px-6 mt-2 flex justify-between items-center">
-            <div onClick={() => setIsOpenMobileMessage(false)} className="back">
+            <div onClick={() => {setIsOpenMobileMessage(false), setOpenWindow(false)}} className="back">
               <LiaTimesSolid />
             </div>
             <div onClick={() => setOpenWindow(false)} className="back">
@@ -162,7 +157,6 @@ const MessageContainerBoxMobile = ({
             </div>
           )}
         </div>
-      )}
     </div>
   );
 };
