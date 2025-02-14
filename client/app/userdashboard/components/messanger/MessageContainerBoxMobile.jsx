@@ -51,7 +51,7 @@ const MessageContainerBoxMobile = ({
   };
   useEffect(() => {
     fetchUser(userId);
-  }, [userId]);
+  }, [userId,openWindow]);
   return (
     <div className="fixed overflow-hidden w-screen left-0 top-0 shadow-2xl right-0 bg-white h-screen z-50">
       {!openWindow && (
@@ -137,7 +137,7 @@ const MessageContainerBoxMobile = ({
       )}
         <div className={`w-[100vw] ${openWindow ? "scale-1 w-full h-full" : 'scale-0 w-0 h-0'} relative overflow-hidden`}>
             <Middle
-              id={userDetails?._id}
+              id={userId}
               userDetails={userDetails}
               device="mobile"
               setOpenWindow={setOpenWindow}
