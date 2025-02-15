@@ -452,7 +452,6 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
             },
           }
         );
-
         socket && socket.emit("message-to", data);
         dispatch({ type: "send-message", payload: data });
         setTimeout(() => {

@@ -6,6 +6,7 @@ import { useSocket } from "../userdashboard/global/SocketProvider";
 import CallReceiverRoom from "../userdashboard/components/messanger/video-audio-callcenter/CallReceiverRoom";
 import loading from '@/public/background-loading.gif'
 import Image from "next/image";
+import { requestNotificationPermission, showNotification } from "../userdashboard/global/UseBrowserNotification";
 export const MYONLINEFRIEND = []
 const ProtectRoute = ({children}) => {
   const [isMounted,setIsMounted] = useState(false)
@@ -14,7 +15,18 @@ const ProtectRoute = ({children}) => {
   const {socket} = useSocket()
   useEffect(() => {
     setIsMounted(true)
+    requestNotificationPermission()
   }, []);
+
+    useEffect(() => {
+      socket &&
+        socket.on("message-from", (data) => {
+          showNotification(data)
+        });
+      return () => {
+        socket && socket.off("message-from");
+      };
+    }, [socket]);//
 
   if(!isMounted) return <div className="flex justify-center fixed top-0 left-0 items-center w-screen h-screen"><Image src={loading} alt="Loading image" /></div>;
   const protectRouter = ()=>{
