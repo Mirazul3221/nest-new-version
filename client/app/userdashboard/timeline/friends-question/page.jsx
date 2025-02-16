@@ -140,8 +140,8 @@ const Page = () => {
           </div>
             <div className=" md:w-6/12">
              <div className="Add_a_question rounded-md border md:my-4 my-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
-                 <img className="md:w-16 w-10 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name}/>
-               <a className="text-gray-700 text-md md:text-2xl" href="/userdashboard/timeline/create-post">Share a question with your friends</a>
+                 <img className="w-16 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name}/>
+               <a className="text-gray-700 text-lg md:text-2xl" href="/userdashboard/timeline/create-post">Share a question with your friends</a>
               <p onClick={()=>setOpenSideMenu(true)} className=" md:hidden cursor-pointer"> <span>...</span></p>
              </div>
             {questions?.map((question, i) => {
