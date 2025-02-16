@@ -51,7 +51,7 @@ const InputForm = () => {
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
       setTimeout(() => {
-        router.push("/");
+        router.push("/userdashboard/timeline/friends-question");
       }, 1000);
     } catch (error) {
       console.log(error);

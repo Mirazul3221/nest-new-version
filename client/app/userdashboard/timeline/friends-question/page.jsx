@@ -16,6 +16,7 @@ import { BsCardText } from "react-icons/bs";
 import VerticleBanner from "@/app/adsterra/VerticleBanner";
 import MobileBanner from "@/app/adsterra/MobileBanner320";
 import { useRouter } from "next/navigation";
+import { RxCross2 } from "react-icons/rx";
 const Page = () => {
     const {dispatch,store} = useStore()
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -89,6 +90,7 @@ const Page = () => {
      dispatch({ type: "logout" });
      route.push("/login");
    };
+   const [openSideMenu,setOpenSideMenu] = useState(false)
   return (
     <div>
       <ProtectRoute>
@@ -115,7 +117,33 @@ const Page = () => {
               </div>
             </div>
           </div>
+
+          {/* ================================for mobile=================================================== */}
+          <div className={`w-1/2 duration-150 fixed z-50 ${openSideMenu ? "-translate-x-[0%]" : "-translate-x-[110%]"} md:hidden bg-white`}>
+                           <div onClick={()=>setOpenSideMenu(false)} className="ml-4 flex justify-end w-full">
+                              <RxCross2 size={22} />
+                            </div>
+            <div className=" text-gray-700">
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <BsCardText/> About
+              </a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <FiFileText/> Bcs Question
+              </a>
+              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <IoMdSettings/> Setting
+              </a>
+              <div onClick={logout} className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+                <LuLogOut/> Log out
+              </div>
+            </div>
+          </div>
             <div className=" md:w-6/12">
+             <div className="Add_a_question rounded-md border md:my-4 my-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
+                 <img className="md:w-16 w-10 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name}/>
+               <a className="text-gray-700 text-md md:text-2xl" href="/userdashboard/timeline/create-post">Share a question with your friends</a>
+              <p onClick={()=>setOpenSideMenu(true)} className=" md:hidden cursor-pointer"> <span>...</span></p>
+             </div>
             {questions?.map((question, i) => {
             return (
               <div key={i} className="mx-auto">

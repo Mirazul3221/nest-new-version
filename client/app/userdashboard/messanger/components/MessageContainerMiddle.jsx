@@ -23,12 +23,12 @@ import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
-const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
-  console.log('two times')
+const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
+  console.log("two times");
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
-    const [seenMessage,setSeenMessage] = useState(false);
-    const [checkMyWindow,setCheckMyWindow] = useState(false)
+  const [seenMessage, setSeenMessage] = useState(false);
+  const [checkMyWindow, setCheckMyWindow] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
@@ -87,7 +87,6 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
       },
     ];
 
-    
     setTimeout(() => setMessage(""), 200); // Delay resetting to prevent issues
     scrollToBottom();
     // if (socket) {
@@ -131,16 +130,11 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
         sender: lastMsgWithProfileToRemote,
         receiver: id,
       });
-  }, [message,seenMessage, socket, store.userInfo.id, userDetails?._id]);
-
+  }, [message, seenMessage, socket, store.userInfo.id, userDetails?._id]);
 
   useEffect(() => {
-    
-    return () => {
-      
-    };
+    return () => {};
   }, []);
-
 
   useEffect(() => {
     if (id == typing.senderId) {
@@ -161,26 +155,25 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
     }
   }, [socket, typing]);
 
-
-
-    useEffect(() => {
-      socket && socket.on('check-my-friend-window',(data)=>{
-        console.log(data)
-        if(data.status == false)
-        if (data.status == true) {
-          setCheckMyWindow(true)
-        } else if (data.status == false){
-          setCheckMyWindow(false)
-        }
+  useEffect(() => {
+    socket &&
+      socket.on("check-my-friend-window", (data) => {
+        console.log(data);
+        if (data.status == false)
+          if (data.status == true) {
+            setCheckMyWindow(true);
+          } else if (data.status == false) {
+            setCheckMyWindow(false);
+          }
         // if(!checkMyWindow){
         //   socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
         // }
-        setSeenMessage(data.status)
-      })
-      return () => {
-         socket && socket.off('check-my-friend-window')
-      };
-    }, [socket,checkMyWindow]);
+        setSeenMessage(data.status);
+      });
+    return () => {
+      socket && socket.off("check-my-friend-window");
+    };
+  }, [socket, checkMyWindow]);
 
   useEffect(() => {
     if (!socket) return;
@@ -197,7 +190,6 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
             seenStatus: false,
           },
         ];
-
       }
     };
 
@@ -603,7 +595,7 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
         } py-2 bg-gray-300 flex justify-between items-center`}
       >
         {device == "mobile" && (
-          <div onClick={()=>setOpenWindow(false)} className="">
+          <div onClick={() => setOpenWindow(false)} className="">
             <HiOutlineArrowLeftCircle color="#8840f5" size={30} />
           </div>
         )}
@@ -1117,13 +1109,14 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
               {lastMessage?.senderId == store.userInfo.id &&
                 lastMessage?.seenMessage == true && (
                   <div className="duration-500 flex justify-end">
-                    <div className=""></div>
-                    {typing.message == "" && (
-                      <img
-                        className="rounded-full duration-500 w-8"
-                        src={userDetails?.profile}
-                        alt="message_image"
-                      />
+                    {(typing.message == "" || typing == "") && (
+                      <div className="">
+                        <img
+                          className="rounded-full duration-500 w-5"
+                          src={userDetails?.profile}
+                          alt="message_image"
+                        />
+                      </div>
                     )}
                   </div>
                 )}
@@ -1133,7 +1126,7 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
             <div className="duration-500 flex justify-end">
               <div className=""></div>
               <img
-                className="rounded-full duration-500 w-8"
+                className="rounded-full duration-500 w-5"
                 src={userDetails?.profile}
                 alt="message_image"
               />

@@ -945,20 +945,19 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                 })}
               </div>
             )}
-{
-  seenMsg ? "true" : "false"
-}
-          {!seenMsg && (
+{!seenMsg && (
             <div>
               {lastMessage?.senderId == store.userInfo.id &&
                 lastMessage?.seenMessage == true && (
                   <div className="duration-500 flex justify-end">
-                    {(typing?.message == "" || typing == "") && (
-                      <img
-                        className="rounded-full duration-500 w-8"
-                        src={userDetails?.profile}
-                        alt="message_image"
-                      />
+                    {(typing.message == "" || typing == "") && (
+                      <div className="">
+                        <img
+                          className="rounded-full duration-500 w-5"
+                          src={userDetails?.profile}
+                          alt="message_image"
+                        />
+                      </div>
                     )}
                   </div>
                 )}
@@ -968,7 +967,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             <div className="duration-500 flex justify-end">
               <div className=""></div>
               <img
-                className="rounded-full duration-500 w-8"
+                className="rounded-full duration-500 w-5"
                 src={userDetails?.profile}
                 alt="message_image"
               />
