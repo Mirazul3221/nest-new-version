@@ -441,7 +441,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
 
   const lastMessage = messanger.message[messanger.message.length - 1];
   console.log(lastMessage)
-  console.log(seenMsg)
   return (
     <div>
       <div className="top-bar px-4 rounded-t-sm py-2 bg-gray-300 flex justify-between items-center">

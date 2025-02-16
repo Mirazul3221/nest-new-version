@@ -27,6 +27,8 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
   console.log('two times')
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
+    const [seenMessage,setSeenMessage] = useState(false);
+    const [checkMyWindow,setCheckMyWindow] = useState(false)
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
@@ -75,15 +77,26 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
   };
 
   const handleSendMessage = useCallback(() => {
-    setSeenMsg(false);
     messageRef.current = message;
-    if (socket) {
-      socket.emit("set-seen-validation", {
-        senderId: store.userInfo.id,
+    currentMessages.current = [
+      ...currentMessages.current,
+      {
+        message: { content: message, media: "", voice: "" },
         receiverId: userDetails?._id,
-        message,
-      });
-    }
+        seenStatus: seenMessage,
+      },
+    ];
+
+    
+    setTimeout(() => setMessage(""), 200); // Delay resetting to prevent issues
+    scrollToBottom();
+    // if (socket) {
+    //   socket.emit("set-seen-validation", {
+    //     senderId: store.userInfo.id,
+    //     receiverId: userDetails?._id,
+    //     message,
+    //   });
+    // }
 
     if (showReply) {
       setShowReply(false);
@@ -118,10 +131,18 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
         sender: lastMsgWithProfileToRemote,
         receiver: id,
       });
-  }, [message, socket, store.userInfo.id, userDetails?._id]);
+  }, [message,seenMessage, socket, store.userInfo.id, userDetails?._id]);
+
 
   useEffect(() => {
-    console.log(id, typing.senderId);
+    
+    return () => {
+      
+    };
+  }, []);
+
+
+  useEffect(() => {
     if (id == typing.senderId) {
       socket &&
         socket.emit("check-my-friend-window", {
@@ -140,6 +161,27 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
     }
   }, [socket, typing]);
 
+
+
+    useEffect(() => {
+      socket && socket.on('check-my-friend-window',(data)=>{
+        console.log(data)
+        if(data.status == false)
+        if (data.status == true) {
+          setCheckMyWindow(true)
+        } else if (data.status == false){
+          setCheckMyWindow(false)
+        }
+        // if(!checkMyWindow){
+        //   socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
+        // }
+        setSeenMessage(data.status)
+      })
+      return () => {
+         socket && socket.off('check-my-friend-window')
+      };
+    }, [socket,checkMyWindow]);
+
   useEffect(() => {
     if (!socket) return;
     const handleNotActive = (data) => {
@@ -156,11 +198,7 @@ const Middle = ({ id, userDetails, device = "desktop",setOpenWindow }) => {
           },
         ];
 
-        console.log(currentMessages.current);
       }
-
-      setTimeout(() => setMessage(""), 200); // Delay resetting to prevent issues
-      scrollToBottom();
     };
 
     const handleValidationStatus = (data) => {
