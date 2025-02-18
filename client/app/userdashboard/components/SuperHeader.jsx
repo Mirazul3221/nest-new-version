@@ -6,7 +6,6 @@ import axios from "axios";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, {
-  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -410,22 +409,24 @@ const SuperHeader = () => {
               }}
               className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
             >
-              <div className={`absolute top-1 right-1`}>
-                {unseenNotification?.length == 0 && (
-                  <div
-                    className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
-                  >
-                    <p className="text-white text-[10px]">
-                      {unseenNotification.length}
-                    </p>
-                  </div>
-                )}
-              </div>
+                    <div className={`absolute top-1 right-[0px]`}>
+                      {countUnreadMessage > 0 && (
+                        <div
+                          className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
+                        >
+                          <p className="text-white header-box text-[10px]">
+                            {countUnreadMessage > 9
+                              ? 9 + "+"
+                              : countUnreadMessage}
+                          </p>
+                        </div>
+                      )}
+                    </div>
               <HiOutlineEnvelope className="header-box" size={26} />
             </div>
           )}
 
-          {isOpenMobileMessage && <MessageContainerBoxMobile sortedMessages={sortedMessages} setIsOpenMobileMessage={setIsOpenMobileMessage}/>}
+          {isOpenMobileMessage && <MessageContainerBoxMobile sortedMessages={sortedMessages} setIsOpenMobileMessage={setIsOpenMobileMessage}  setCountUnreadMessage={setCountUnreadMessage}/>}
           
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
@@ -436,7 +437,7 @@ const SuperHeader = () => {
             className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
           >
             <div className={`absolute top-1 right-1`}>
-              {unseenNotification?.length == 0 && (
+              {unseenNotification?.length > 0 && (
                 <div
                   className={`bg-[#ff0000] w-[16px] h-[16px] rounded-full flex justify-center items-center`}
                 >

@@ -95,10 +95,18 @@ export class NotificationsGateway
       });
       //////////////////////////////////////////logi for new messanger/////////////////////////////
       client.on('message-to',(data)=>{
+        const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          this.socketUsers[data?.receiverId]?.map(async (id) => {
-            await this.server.to(id).emit('message-from', data);
-          });
+          
+          if (userIdsArray.length > 0) {
+            userIdsArray.map(async (id) => {
+              await this.server.to(id).emit('message-from', data);
+            });
+          }
+          if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
+             this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('message-from', data);
+          }
         }
       })
       //////////////////////////////////////////logi for send user profile when send message/////////////////////////////
@@ -132,14 +140,22 @@ export class NotificationsGateway
         }
     
       })
-      ////////////////////////////////////////////////////////////////////////////////////////
+
+      /////////////////////////////////////////////////////////////////////////////////////////////
       client.on('check-my-friend-window',(data)=>{
         console.log(data)
         const userIdsArray = [...(this.userActivity[data?.to] || [])];
+        const inactiveUserIdsArray = [...(this.userInActivity[data?.to] || [])];
         if (this.socketUsers[data?.to]?.length > 0) {
-          userIdsArray?.map(async (id) => {
-            await this.server.to(id).emit('check-my-friend-window', data);
-          });
+          if ( userIdsArray.length > 0) {
+            userIdsArray?.map(async (id) => {
+              await this.server.to(id).emit('check-my-friend-window', data);
+            });
+          }
+
+          if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
+            this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('check-my-friend-window', data);
+         }
         }
       })
       ///////////////////////////////////////////////////////////////////////////////////////////

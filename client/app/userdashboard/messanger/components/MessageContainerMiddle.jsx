@@ -23,6 +23,7 @@ import { useStore } from "@/app/global/DataProvider";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
+import { showNotification } from "../../global/UseBrowserNotification";
 const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
   console.log("two times");
   const { messanger, dispatch } = useMessage();
@@ -284,8 +285,11 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
       socket.on("message-from", (data) => {
         setSeenMsg(false);
         setIsLoad(true);
-        id == data.senderId &&
+        if (id == data.senderId) {
           dispatch({ type: "receive-message", payload: data });
+        } else {
+          showNotification(data)
+        }
         setTimeout(() => {
           scrollToBottom();
         }, 200);

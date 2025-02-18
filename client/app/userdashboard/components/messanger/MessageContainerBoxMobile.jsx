@@ -75,10 +75,10 @@ const MessageContainerBoxMobile = ({
                         setUserDetails(null)
                         setUserId(friend.userId);
                         setOpenWindow(true);
-                        // updateUnseenMessage(friend?.userId);
-                        // setCountUnreadMessage(
-                        //   (prev) => prev - friend.unseenMessageCount
-                        // );
+                        updateUnseenMessage(friend?.userId);
+                        setCountUnreadMessage(
+                          (prev) => prev - friend.unseenMessageCount
+                        );
                       }}
                       key={i}
                       className="cursor-pointer overflow-hidden"

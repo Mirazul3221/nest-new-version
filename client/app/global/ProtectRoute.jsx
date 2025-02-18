@@ -1,5 +1,5 @@
 "use client"
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import storeContext from "./createContex";
 import { useSocket } from "../userdashboard/global/SocketProvider";
@@ -12,6 +12,7 @@ const ProtectRoute = ({children}) => {
   const [isMounted,setIsMounted] = useState(false)
   const { store } = useContext(storeContext)
   const router = useRouter()
+  const path = usePathname();
   const {socket} = useSocket()
   useEffect(() => {
     setIsMounted(true)
@@ -19,6 +20,7 @@ const ProtectRoute = ({children}) => {
   }, []);
 
     useEffect(() => {
+      if (path.includes("userdashboard/messanger")) return
       socket &&
         socket.on("message-from", (data) => {
           showNotification(data)
