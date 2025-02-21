@@ -12,18 +12,22 @@ import loader from "@/public/loading-buffer.gif";
 import Middle from "../../messanger/components/MessageContainerMiddle";
 import { GrRotateRight } from "react-icons/gr";
 import { LiaTimesSolid } from "react-icons/lia";
+import MessageBar from "./MessageBar";
+import { useMessage } from "../../global/messageProvider";
 
 const MessageContainerBoxMobile = ({
   sortedMessages,
   setIsOpenMobileMessage,
   setCountUnreadMessage,
 }) => {
-  const { myActiveFriends } = useSocket();
+  const { myActiveFriends, socket } = useSocket();
   const [openWindow, setOpenWindow] = useState(false);
   const [userId, setUserId] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [hiddenNumber, setHiddenNumber] = useState(false);
   const { store } = useStore();
+    const { dispatch } = useMessage();
   const updateUnseenMessage = async (id) => {
     try {
       setLoading(true);
@@ -51,7 +55,13 @@ const MessageContainerBoxMobile = ({
   };
   useEffect(() => {
     fetchUser(userId);
-  }, [userId,openWindow]);
+  }, [userId, openWindow]);
+
+  const reRenderUserProfiles = async() => {
+    const data = await fetchAllFriendsByMessage(store.token);
+    dispatch({type:'STORE_ALL_MESSANGER_USER',payload:data})
+  }
+
   return (
     <div className="fixed overflow-hidden w-screen left-0 top-0 shadow-2xl right-0 bg-white h-screen z-50">
       {!openWindow && (
@@ -59,7 +69,9 @@ const MessageContainerBoxMobile = ({
           <div className="flex px-4 pr-6 md:block justify-between mt-4">
             <h2 className="text-2xl">Chats</h2>
             <span
-              onClick={() => setIsOpenMobileMessage(false)}
+              onClick={() => {
+                setIsOpenMobileMessage(false);
+              }}
               className="md:hidden"
             >
               <LiaTimesSolid />
@@ -72,58 +84,20 @@ const MessageContainerBoxMobile = ({
                   return (
                     <div
                       onClick={() => {
-                        setUserDetails(null)
+                        setUserDetails(null);
                         setUserId(friend.userId);
                         setOpenWindow(true);
                         updateUnseenMessage(friend?.userId);
                         setCountUnreadMessage(
                           (prev) => prev - friend.unseenMessageCount
                         );
+                        setHiddenNumber(true);
+                        reRenderUserProfiles()
                       }}
                       key={i}
                       className="cursor-pointer overflow-hidden"
                     >
-                      <div className="px-6 relative flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
-                        <div className="relative">
-                          <img
-                            className="w-12 rounded-full"
-                            src={friend.userProfile}
-                            alt={friend.userName}
-                          />
-                          {myActiveFriends?.includes(friend.userId) ? (
-                            <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
-                          ) : (
-                            <div className="w-3 h-3 border-2 border-white bg-gray-400 absolute rounded-full -right-[2px] bottom-1"></div>
-                          )}
-                        </div>
-                        <div>
-                          <div className="flex gap-4 items-center justify-between">
-                            <h2 className="text-lg font-semibold text-slate-700">
-                              {friend.userName.split(" ")[0]}
-                            </h2>
-
-                            <p className="text-[12px] text-slate-500">
-                              {formatetime(friend.lastMessageTime)}
-                            </p>
-                          </div>
-                          <h4 className="text-sm text-slate-500">
-                            <span className="font-semibold text-slate-700">
-                              {friend.senderId === store.userInfo.id
-                                ? "You :"
-                                : ""}
-                              {friend.lastMessage.length > 20
-                                ? friend.lastMessage.content.slice(0, 20) +
-                                  "......"
-                                : friend.lastMessage.content}
-                            </span>
-                          </h4>
-                        </div>
-                        {friend?.unseenMessageCount > 0 && (
-                          <div className="absolute top-[50%] -translate-y-[50%] right-5 bg-rose-100 text-gray-700 p-1 w-4 h-4 flex justify-center items-center rounded-full shadow-md text-[10px]">
-                            {friend?.unseenMessageCount}
-                          </div>
-                        )}
-                      </div>
+                      <MessageBar friend={friend} hiddenNumber={hiddenNumber} />
                     </div>
                   );
                 })}
@@ -135,28 +109,39 @@ const MessageContainerBoxMobile = ({
           )}
         </div>
       )}
-        <div className={`w-[100vw] ${openWindow ? "scale-1 w-full h-full" : 'scale-0 w-0 h-0'} relative overflow-hidden`}>
-            <Middle
-              id={userId}
-              userDetails={userDetails}
-              device="mobile"
-              setOpenWindow={setOpenWindow}
-            />
+      <div
+        className={`w-[100vw] ${
+          openWindow ? "scale-1 w-full h-full" : "scale-0 w-0 h-0"
+        } relative overflow-hidden`}
+      >
+        {openWindow && (
+          <Middle
+            id={userId}
+            userDetails={userDetails}
+            device="mobile"
+            setOpenWindow={setOpenWindow}
+          />
+        )}
 
-          <div className="px-6 mt-2 flex justify-between items-center">
-            <div onClick={() => {setIsOpenMobileMessage(false), setOpenWindow(false)}} className="back">
-              <LiaTimesSolid />
-            </div>
-            <div onClick={() => setOpenWindow(false)} className="back">
-              <GrRotateRight />
-            </div>
+        <div className="px-6 mt-2 flex justify-between items-center">
+          <div
+            onClick={() => {
+              setIsOpenMobileMessage(false), setOpenWindow(false);
+            }}
+            className="back"
+          >
+            <LiaTimesSolid />
           </div>
-          {loading && (
-            <div className="absolute flex justify-center items-center">
-              Loading...
-            </div>
-          )}
+          <div onClick={() => setOpenWindow(false)} className="back">
+            <GrRotateRight />
+          </div>
         </div>
+        {loading && (
+          <div className="absolute flex justify-center items-center">
+            Loading...
+          </div>
+        )}
+      </div>
     </div>
   );
 };

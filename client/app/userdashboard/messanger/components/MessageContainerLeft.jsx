@@ -35,14 +35,14 @@ const MessageBox = ({ setId, setUserDetails }) => {
     }
   };
 
-  useEffect(() => {
-    socket && socket.on('lastMsgWithProfile',(data)=>{
-      dispatch({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id:'122'}})
-    })
-    return () => {
-       socket && socket.off('lastMsgWithProfile')
-    };
-  }, [socket]);
+  // useEffect(() => {
+  //   socket && socket.on('lastMsgWithProfile',(data)=>{
+  //     dispatch({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id:'122'}})
+  //   })
+  //   return () => {
+  //      socket && socket.off('lastMsgWithProfile')
+  //   };
+  // }, [socket]);
 
   useEffect(() => {
     fetchAllFriendsByMessage(store.token)

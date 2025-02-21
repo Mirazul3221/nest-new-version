@@ -162,6 +162,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
+        console.log('aita call hoy')
         setSeenMsg(false);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });

@@ -29,6 +29,9 @@ import { useMessage } from "../global/messageProvider";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 
 const SuperHeader = () => {
+  const [isOpenMessage, setIsOpenMessage] = useState(false);
+  const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
+  const messageContainerRef = useRef(null);
   CurrentWindowChecker()
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
@@ -47,6 +50,15 @@ const SuperHeader = () => {
       }
       loadmessage();
     }, []);
+
+      useEffect(() => {
+        socket && socket.on('lastMsgWithProfile',(data)=>{
+          messangerUser({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id:'122'}})
+        })
+        return () => {
+           socket && socket.off('lastMsgWithProfile')
+        };
+      }, [socket]);
 
   useEffect(() => {
     async function fetchData() {
@@ -225,17 +237,26 @@ const SuperHeader = () => {
           },
         }
       );
+
+      console.log(data)
       setCountUnreadMessage(data);
     } catch (error) {}
   }
 
   useEffect(() => {
-    countMessage();
+    countMessage();//
+  }, []);
+
+
+  useEffect(() => {
+    if (isOpenMobileMessage) return
     socket &&
       socket.on("message-from", () => {
-        countMessage();
+        countMessage();//
+        console.log('Blooth from the best part of the')
       });
-  }, []);
+  }, [socket,isOpenMobileMessage]);
+
 
     /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
   useEffect(() => {
@@ -255,10 +276,6 @@ const SuperHeader = () => {
       socket && socket.off("get-seen-validation");
     };
   }, [socket]);
-
-  const [isOpenMessage, setIsOpenMessage] = useState(false);
-  const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
-  const messageContainerRef = useRef(null);
   const toggleMessage = () => setIsOpenMessage(!isOpenMessage);
   useEffect(() => {
     const handleMessage = (e) => {

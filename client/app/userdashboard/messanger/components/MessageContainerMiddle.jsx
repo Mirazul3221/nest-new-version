@@ -283,6 +283,7 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
+        console.log('tui ki call how?')
         setSeenMsg(false);
         setIsLoad(true);
         if (id == data.senderId) {
@@ -591,6 +592,16 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
   }, [loading]);
 
   const lastMessage = messanger.message[messanger.message.length - 1];
+
+
+  const closeWindowAlert = async () => {
+    socket &&
+    await socket.emit("check-my-friend-window", {
+      from: store.userInfo.id,
+      to: id,
+      status: false,
+    });
+   }
   return (
     <div>
       <div
@@ -599,7 +610,7 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
         } py-2 bg-gray-300 flex justify-between items-center`}
       >
         {device == "mobile" && (
-          <div onClick={() => setOpenWindow(false)} className="">
+          <div onClick={() => {setOpenWindow(false); closeWindowAlert()}} className="">
             <HiOutlineArrowLeftCircle color="#8840f5" size={30} />
           </div>
         )}

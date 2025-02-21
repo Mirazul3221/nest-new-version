@@ -79,6 +79,16 @@ const UserDashboard = () => {
 
   const {socket,myActiveFriends} = useSocket()
 
+  
+  useEffect(() => {
+
+    socket &&
+      socket.on("message-from", () => {
+
+        console.log('Blooth from useDashboard')
+      });
+  }, [socket]);
+
   //////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     async function getAllFriends() {
