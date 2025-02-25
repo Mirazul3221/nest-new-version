@@ -186,5 +186,35 @@ async collectQuestion(@Body() questions, @Req() req){
 return await this.authService.questionCollecton(questions,req)
 }
 
+
+//===================================================
+//==========Logic for block and unblock users========
+//===================================================
+@Post('user/block/:targetId')
+@UseGuards(AuthGuard())
+async blockUser (@Req() req :any, @Param('targetId') targetId : string){
+  const userId = req.user._id;
+ return await this.authService.blockUser(userId,targetId)
+}
+
+@Post('user/unblock/:targetId')
+@UseGuards(AuthGuard())
+async unBlockUser (@Req() req :any, @Param('targetId') targetId : string){
+  const userId = req.user._id;
+ return await this.authService.unBlockUser(userId,targetId)
+}
+@Post('user/isblock/:targetId')
+@UseGuards(AuthGuard())
+async isBlockUser (@Req() req :any, @Param('targetId') targetId : string){
+  const userId = req.user._id;
+ return await this.authService.isBlockUser(userId,targetId)
+}
+@Post('user/isblockedme/:targetId')
+@UseGuards(AuthGuard())
+async isBlockedMe (@Req() req :any, @Param('targetId') targetId : string){
+  const userId = req.user._id;
+ return await this.authService.isBlockedMe(userId,targetId)
+}
+
 }
 ///=====

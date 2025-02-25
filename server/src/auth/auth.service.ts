@@ -27,7 +27,9 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
-  async register_user(createAuthDto: CreateAuthDto): Promise<{token:string, msg: string }> {
+  async register_user(
+    createAuthDto: CreateAuthDto,
+  ): Promise<{ token: string; msg: string }> {
     const { name, email, password, role, status, balance } = createAuthDto;
     const userInfo = await this.userModel.findOne({ email });
     if (userInfo) {
@@ -37,7 +39,7 @@ export class AuthService {
         { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
         { sub: 'English', rightAns: 0, wrongAns: 0 },
       ];
-      const new_user =await this.userModel.create({
+      const new_user = await this.userModel.create({
         role: role,
         status: status,
         balance: balance,
@@ -50,15 +52,18 @@ export class AuthService {
           'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
         otp: '',
         totalCountQuestions: allSubject,
-        totalCountQuestionsId:[]
+        totalCountQuestionsId: [],
       });
       const token = await this.jwtService.sign({
         id: (await new_user)._id,
         name: (await new_user).name,
         profile: (await new_user).profile,
         role: (await new_user).role,
-      });//
-      return {token, msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform` };
+      }); //
+      return {
+        token,
+        msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
+      };
       //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
     }
   }
@@ -79,7 +84,7 @@ export class AuthService {
           name: (await loginInfo).name,
           profile: (await loginInfo).profile,
           role: (await loginInfo).role,
-        });//
+        }); //
         return { token, message: 'User login success' };
       } else {
         throw new UnauthorizedException('Invalied password !');
@@ -123,7 +128,7 @@ export class AuthService {
   // }
 
   //==================
-  async updateAuthinticUserProfile(user: any, profile:any) {
+  async updateAuthinticUserProfile(user: any, profile: any) {
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
       api_key: this.ConfigService.get('Api_key'),
@@ -155,7 +160,7 @@ export class AuthService {
     } catch (error) {
       console.log(error);
     }
-  }//
+  } //
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
@@ -315,8 +320,8 @@ export class AuthService {
     // console.log()
     // return user.profile;
     const user = await this.userModel.findById(id, { profile: 1, _id: 0 }); // Fetch only the 'profile' field
-    console.log(user.profile)
-    return user.profile // Ensure proper handling if the user is not found
+    console.log(user.profile);
+    return user.profile; // Ensure proper handling if the user is not found
   }
   //========profile update==============
   async profile() {
@@ -386,13 +391,13 @@ export class AuthService {
   }
   async questionCollecton(questions, req) {
     const { _id, totalCountQuestions } = req.user;
-    const { status, subject,id } = questions;
-   const targetUser = await this.userModel.findById(_id);
-   if (targetUser.totalCountQuestionsId.includes(id)) {
-    return null
-   } else {
-    targetUser?.totalCountQuestionsId.push(id)//
-    await targetUser.save()
+    const { status, subject, id } = questions;
+    const targetUser = await this.userModel.findById(_id);
+    if (targetUser.totalCountQuestionsId.includes(id)) {
+      return null;
+    } else {
+      targetUser?.totalCountQuestionsId.push(id); //
+      await targetUser.save();
       //=============UPDATE ENGLISH=================
       if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
         totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
@@ -406,7 +411,7 @@ export class AuthService {
           totalCountQuestions: totalCountQuestions,
         });
       }
-  //
+      //
       //=============UPDATE BANGLA===============
       if ((subject == 'Bangla' || subject == 'বাংলা') && status == 'right') {
         totalCountQuestions[0].rightAns = totalCountQuestions[0].rightAns + 1;
@@ -420,15 +425,51 @@ export class AuthService {
           totalCountQuestions: totalCountQuestions,
         });
       }
-   }
+    }
   }
 
+  //////////////////////////////////////////////////////Here is the logic to block and unblock users/////////////////////////////////////////////
+  async blockUser(authId: string, targetId: string) {
+    const isExist = await this.userModel.findById(authId);
+    if (!isExist) throw new NotFoundException('User not found');
+    if (!isExist.blockedUsers.includes(targetId)) {
+      isExist.blockedUsers.push(targetId);
+      await isExist.save();
+    }
+    return 'User blocked successfully';
+  }
+
+  async unBlockUser(authId: string, targetId: string) {
+    const isExist = await this.userModel.findById(authId);
+    if (!isExist) throw new NotFoundException('User not found');
+  
+    isExist.blockedUsers = isExist.blockedUsers.filter((id) => id.toString() !== targetId); // Ensure proper type comparison
+    await isExist.save();
+    
+    return 'User unblocked successfully';
+  }
+  
+
+  async isBlockUser(authId: string, targetId: string) {
+    const isExist = await this.userModel.findById(authId);
+    if (!isExist) throw new NotFoundException('User not found');
+    return isExist.blockedUsers.includes(targetId);
+  }
+  async isBlockedMe(authId: string, targetId: string) {
+    const isExist = await this.userModel.findById(targetId);
+    if (!isExist) throw new NotFoundException('User not found');
+    return isExist.blockedUsers.includes(authId);
+  }
 
   //==========================================================================================================-
   async userProfileAndName(id: string) {
-    return await this.userModel.findById(id).select('-password -totalCountQuestions -totalCountQuestionsId -balance -email');
+    return await this.userModel
+      .findById(id)
+      .select(
+        '-password -totalCountQuestions -totalCountQuestionsId -balance -email',
+      );
   }
-  
+
   //===========================================================================================================
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
   //===========================================================================================================

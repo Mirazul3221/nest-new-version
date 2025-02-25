@@ -12,10 +12,10 @@ import { GoogleStrategy } from './google.strategy';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
-  imports:[
+  imports: [
     NestjsFormDataModule,
     PassportModule.register({
-      defaultStrategy:"jwt"
+      defaultStrategy: 'jwt',
     }),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -41,7 +41,16 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService,jwtStrategy,FacebookStrategy,GoogleStrategy],
-  exports : [PassportModule,AuthService]
+  providers: [AuthService, jwtStrategy, FacebookStrategy, GoogleStrategy],
+  exports: [
+    PassportModule,
+    AuthService,
+    MongooseModule.forFeature([
+      {
+        name: user_model,
+        schema: user_schema,
+      },
+    ]),
+  ],
 })
 export class AuthModule {}

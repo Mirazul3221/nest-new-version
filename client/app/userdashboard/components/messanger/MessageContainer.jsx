@@ -12,7 +12,7 @@ import "./css/message-animation.css";
 import { useSocket } from "../../global/SocketProvider";
 import messageloader from "@/public/notification-soun/f35a1c_d8d5997a805a452ba9d3f5cbb48ce87cmv2-ezgif.com-crop.gif";
 import Image from "next/image";
-import { BsReply, BsThreeDotsVertical } from "react-icons/bs";
+import { BsReply, BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { GrEmoji } from "react-icons/gr";
 import moment from "moment";
 import { RxCross1, RxCross2 } from "react-icons/rx";
@@ -22,6 +22,7 @@ import { groupMessagesBysender } from "../../messanger/components/group-message"
 import CurrentMessage from "../../messanger/components/CurrentMessage";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
 import MessagePlayer from "../../messanger/components/MessagePlayer";
+import BlockButton from "./BlockButton";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -36,29 +37,40 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { socket } = useSocket();
   const currentMessages = useRef([]);
   const groupMessages = groupMessagesBysender(messanger.message);
-  const [seenMessage,setSeenMessage] = useState(false);
-  const [checkMyWindow,setCheckMyWindow] = useState(false)
+  const [seenMessage, setSeenMessage] = useState(false);
+  const [checkMyWindow, setCheckMyWindow] = useState(false);
   const check_my_friend_window = async () => {
-    socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:false})
-  }
+    socket &&
+      socket.emit("check-my-friend-window", {
+        from: store.userInfo.id,
+        to: id,
+        status: false,
+      });
+  };
   useEffect(() => {
-    socket && socket.on('check-my-friend-window',(data)=>{
-      console.log(data)
-      if(data.status == false) setSeenMsg(false);
-      if (data.status == true) {
-        setCheckMyWindow(true)
-      } else if (data.status == false){
-        setCheckMyWindow(false)
-      }
-      if(!checkMyWindow){
-        socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
-      }
-      setSeenMessage(data.status)
-    })
+    socket &&
+      socket.on("check-my-friend-window", (data) => {
+        console.log(data);
+        if (data.status == false) setSeenMsg(false);
+        if (data.status == true) {
+          setCheckMyWindow(true);
+        } else if (data.status == false) {
+          setCheckMyWindow(false);
+        }
+        if (!checkMyWindow) {
+          socket &&
+            socket.emit("check-my-friend-window", {
+              from: store.userInfo.id,
+              to: id,
+              status: true,
+            });
+        }
+        setSeenMessage(data.status);
+      });
     return () => {
-       socket && socket.off('check-my-friend-window')
+      socket && socket.off("check-my-friend-window");
     };
-  }, [socket,checkMyWindow]);
+  }, [socket, checkMyWindow]);
 
   const handleMessage = (event) => {
     setMessage(event.target.value);
@@ -97,7 +109,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     }
 
     // setSeenMsg(false)
-  }, [message, socket, store.userInfo.id, userDetails?._id,seenMessage]);
+  }, [message, socket, store.userInfo.id, userDetails?._id, seenMessage]);
 
   useEffect(() => {
     scrollToBottom();
@@ -128,7 +140,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   }, [message, socket]);
   ////////////////////////////////////////////////////////////////////////////////
   const [typing, setTyping] = useState("");
-  console.log(typing.message)
+  console.log(typing.message);
   const [typingloading, setTypingLoading] = useState();
   useEffect(() => {
     socket &&
@@ -162,7 +174,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        console.log('aita call hoy')
+        console.log("aita call hoy");
         setSeenMsg(false);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
@@ -441,10 +453,70 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   }, [loading]);
 
   const lastMessage = messanger.message[messanger.message.length - 1];
-  console.log(lastMessage)
+
+  //==========================Here is the logic to check I am blocked or not======================================
+  const [isBlockedByHim, setIsBlockedByHim] = useState(null);
+  const checkUserBlockStatus = async () => {
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/auth/user/isblockedme/${id}`,
+        "",
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setIsBlockedByHim(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    checkUserBlockStatus();
+  }, []);
+
+  //=============================================user is Blocked By me=========================================
+  const [isBlockedByMe, setIsBlockedByMe] = useState();
+  const [loadingBlc,setLoadingBlc] = useState(false)
+  const IsBlockedByMe = async () => {
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/auth/user/isblock/${id}`,
+        "",
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setIsBlockedByMe(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    IsBlockedByMe();
+  }, [id]);
+
+  const unBlockUser = async () => {
+    try {
+      setLoadingBlc(true)
+      await axios.post(`${baseurl}/auth/user/unblock/${id}`,"", {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
+      setIsBlockedByMe(false)
+      setLoadingBlc(false)
+    } catch (error) {
+      console.log(error);
+      setLoadingBlc(false)
+    }
+  };
   return (
     <div>
-      <div className="top-bar px-4 rounded-t-sm py-2 bg-gray-300 flex justify-between items-center">
+      <div className="top-bar px-4 rounded-t-sm py-2 relative bg-gray-300 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <img
             className="rounded-full w-8"
@@ -457,32 +529,57 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           </div>
         </div>
         <div className="flex justify-center gap-6 text-white">
-          <EntryPoint
-            user={{
-              myId: store.userInfo.id,
-              fdId: userDetails?._id,
-              name: userDetails?.name,
-              profile: userDetails?.profile,
-              title: userDetails?.title,
-              type: "Audio",
-              size: 30,
-              color: "#8840f5",
-            }}
-          />
-          <EntryPoint
-            user={{
-              myId: store.userInfo.id,
-              fdId: userDetails?._id,
-              name: userDetails?.name,
-              profile: userDetails?.profile,
-              title: userDetails?.title,
-              type: "Video",
-              size: 30,
-              color: "#8840f5",
-            }}
-          />
+          {!isBlockedByHim && !isBlockedByMe && (
+            <EntryPoint
+              user={{
+                myId: store.userInfo.id,
+                fdId: userDetails?._id,
+                name: userDetails?.name,
+                profile: userDetails?.profile,
+                title: userDetails?.title,
+                type: "Audio",
+                size: 30,
+                color: "#8840f5",
+              }}
+            />
+          )}
 
-          <div onClick={() =>{check_my_friend_window(); setSwitcher(false)}} className="cursor-pointer">
+          {!isBlockedByHim && !isBlockedByMe && (
+            <EntryPoint
+              user={{
+                myId: store.userInfo.id,
+                fdId: userDetails?._id,
+                name: userDetails?.name,
+                profile: userDetails?.profile,
+                title: userDetails?.title,
+                type: "Video",
+                size: 30,
+                color: "#8840f5",
+              }}
+            />
+          )}
+
+          <div className="cursor-pointer relative group">
+            <BsThreeDots color="#8840f5" size="30" />
+            <div className="hidden group-hover:inline-block w-40 text-center z-50 py-2 px-6 absolute top-8 border text-gray-600 bg-white left-0">
+              <div className="w-4 h-4 rotate-45 bg-white -mt-4 -z-10 -ml-4"></div>
+              {(isBlockedByMe == true || isBlockedByMe == false) && (
+                <BlockButton
+                  blockedUserId={id}
+                  name={userDetails.name}
+                  status={isBlockedByMe}
+                />
+              )}
+            </div>
+          </div>
+
+          <div
+            onClick={() => {
+              check_my_friend_window();
+              setSwitcher(false);
+            }}
+            className="cursor-pointer"
+          >
             <RxCross1 color="#8840f5" size="30" />
           </div>
         </div>
@@ -946,7 +1043,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                 })}
               </div>
             )}
-{!seenMsg && (
+          {!seenMsg && (
             <div>
               {lastMessage?.senderId == store.userInfo.id &&
                 lastMessage?.seenMessage == true && (
@@ -994,100 +1091,116 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           )}
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
-        <div className={"bottom"}>
-          <div
-            className={`${
-              showReply ? "flex" : "hidden"
-            } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
-          >
-            <div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <IoArrowRedoOutline size={18} />
-                  <h4 id="replying_to"></h4>
+        {isBlockedByHim ? (
+          <h2 className="text-center pb-4 text-red-300">
+            You are not eligible to send message to this user
+          </h2>
+        ) : (
+          <div>
+            {isBlockedByMe ? (
+              <h2 className="text-center pb-4 text-gray-700">
+                Only you can send message after {
+                  loadingBlc ? "Loading..." :  <span onClick={unBlockUser} className="underline duration-300 hover:text-green-300 cursor-pointer">unblocking</span>
+                } him
+              </h2>
+            ) : (
+              <div className={"bottom relative"}>
+                <div
+                  className={`${
+                    showReply ? "flex" : "hidden"
+                  } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
+                >
+                  <div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <IoArrowRedoOutline size={18} />
+                        <h4 id="replying_to"></h4>
+                      </div>
+
+                      <p id="replying_content"></p>
+                    </div>
+                  </div>
+                  <div>
+                    <img
+                      onClick={(e) => {
+                        setShowReply(false);
+                        setReplyContent("");
+                      }}
+                      className="w-6 RxCross2 cursor-pointer"
+                      src="/crossed.png"
+                      alt="cross"
+                    />
+                  </div>
                 </div>
 
-                <p id="replying_content"></p>
-              </div>
-            </div>
-            <div>
-              <img
-                onClick={(e) => {
-                  setShowReply(false);
-                  setReplyContent("");
-                }}
-                className="w-6 RxCross2 cursor-pointer"
-                src="/crossed.png"
-                alt="cross"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <VoiceRecorder
-              isStartRecord={isStartRecord}
-              setIsStartRecord={setIsStartRecord}
-              hiddenTarget={hiddenTarget}
-              receiverId={userDetails?._id}
-              replyContent={replyContent}
-              toReplyerId={toReplyerId}
-              scrollToBottom={scrollToBottom}
-            />
-            {!isStartRecord && (
-              <div
-                className={`pr-4 ${
-                  hiddenTarget ? "pl-4" : ""
-                } py-4 flex w-full justify-between items-end gap-2`}
-              >
-                {!hiddenTarget && (
-                  <label htmlFor="send_image">
-                    <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
-                      <img
-                        className="w-5 cursor-pointer"
-                        src="/image-icon.png"
-                        alt="message"
+                <div className="flex items-center justify-center">
+                  <VoiceRecorder
+                    isStartRecord={isStartRecord}
+                    setIsStartRecord={setIsStartRecord}
+                    hiddenTarget={hiddenTarget}
+                    receiverId={userDetails?._id}
+                    replyContent={replyContent}
+                    toReplyerId={toReplyerId}
+                    scrollToBottom={scrollToBottom}
+                  />
+                  {!isStartRecord && (
+                    <div
+                      className={`pr-4 ${
+                        hiddenTarget ? "pl-4" : ""
+                      } py-4 flex w-full justify-between items-end gap-2`}
+                    >
+                      {!hiddenTarget && (
+                        <label htmlFor="send_image">
+                          <div className="w-10 h-10 flex justify-center items-center rounded-full bg-gray-100">
+                            <img
+                              className="w-5 cursor-pointer"
+                              src="/image-icon.png"
+                              alt="message"
+                            />
+                          </div>
+                        </label>
+                      )}
+                      <input
+                        onChange={handle_media_file}
+                        className="hidden"
+                        id="send_image"
+                        type="file"
                       />
-                    </div>
-                  </label>
-                )}
-                <input
-                  onChange={handle_media_file}
-                  className="hidden"
-                  id="send_image"
-                  type="file"
-                />
-                <textarea
-                  className="hiddenTarget"
-                  id="message_text"
-                  ref={messangerRef}
-                  value={message}
-                  onChange={(e) => {
-                    handleMessage(e), scrollToBottom();
-                  }}
-                  rows={1}
-                  style={{
-                    width: "100%",
-                    resize: "none",
-                    overflow: "hidden",
-                    padding: "6px 14px",
-                    boxSizing: "border-box",
-                    outline: "none",
-                    border: "none",
-                    borderRadius: "20px",
-                    background: "#ededed",
-                  }}
-                />
+                      <textarea
+                        className="hiddenTarget"
+                        id="message_text"
+                        ref={messangerRef}
+                        value={message}
+                        onChange={(e) => {
+                          handleMessage(e), scrollToBottom();
+                        }}
+                        rows={1}
+                        style={{
+                          width: "100%",
+                          resize: "none",
+                          overflow: "hidden",
+                          padding: "6px 14px",
+                          boxSizing: "border-box",
+                          outline: "none",
+                          border: "none",
+                          borderRadius: "20px",
+                          background: "#ededed",
+                        }}
+                      />
 
-                <div
-                  onClick={handleSendMessage}
-                  className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
-                >
-                  <RiSendPlaneLine size={20} />
+                      <div
+                        onClick={handleSendMessage}
+                        className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
+                      >
+                        <RiSendPlaneLine size={20} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -41,14 +41,17 @@ const CurrentMessage = ({
         }
       );
 
-      setReplyContent("");
-      setToReplyerId(null);
-      console.log(data)
-      socket && socket.emit("message-to", {...data,name:store.userInfo.name, profile:store.userInfo.profile});
-      dispatch({ type: "send-message", payload: data });
-      setIsSend(false);
-      setSendCurrentMsg(false);
-      element.current?.remove();
+      if(data == 'User is blocked'){
+            alert('You cannot send message to this user!')
+      } else {
+        setReplyContent("");
+        setToReplyerId(null);
+        socket && socket.emit("message-to", {...data,name:store.userInfo.name, profile:store.userInfo.profile});
+        dispatch({ type: "send-message", payload: data });
+        setIsSend(false);
+        setSendCurrentMsg(false);
+        element.current?.remove();
+      }
     } catch (error) {
       console.log(error);
     }

@@ -283,13 +283,13 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        console.log('tui ki call how?')
+        console.log("tui ki call how?");
         setSeenMsg(false);
         setIsLoad(true);
         if (id == data.senderId) {
           dispatch({ type: "receive-message", payload: data });
         } else {
-          showNotification(data)
+          showNotification(data);
         }
         setTimeout(() => {
           scrollToBottom();
@@ -593,15 +593,37 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
 
   const lastMessage = messanger.message[messanger.message.length - 1];
 
-
   const closeWindowAlert = async () => {
     socket &&
-    await socket.emit("check-my-friend-window", {
-      from: store.userInfo.id,
-      to: id,
-      status: false,
-    });
-   }
+      (await socket.emit("check-my-friend-window", {
+        from: store.userInfo.id,
+        to: id,
+        status: false,
+      }));
+  };
+
+  //==========================Here is the logic to check user is blocked or not======================================
+  const [isBlocked, setIsBlocked] = useState(null);
+  const checkUserBlockStatus = async () => {
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/auth/user/isblockedme/${id}`,
+        "",
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setIsBlocked(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    checkUserBlockStatus();
+  }, [id]);
+
   return (
     <div>
       <div
@@ -610,7 +632,13 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
         } py-2 bg-gray-300 flex justify-between items-center`}
       >
         {device == "mobile" && (
-          <div onClick={() => {setOpenWindow(false); closeWindowAlert()}} className="">
+          <div
+            onClick={() => {
+              setOpenWindow(false);
+              closeWindowAlert();
+            }}
+            className=""
+          >
             <HiOutlineArrowLeftCircle color="#8840f5" size={30} />
           </div>
         )}
@@ -626,30 +654,34 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
           </div>
         </div>
         <div className="flex justify-center gap-6 text-white">
-          <EntryPoint
-            user={{
-              myId: store.userInfo.id,
-              fdId: userDetails?._id,
-              name: userDetails?.name,
-              profile: userDetails?.profile,
-              title: userDetails?.title,
-              type: "Audio",
-              size: 30,
-              color: "#8840f5",
-            }}
-          />
-          <EntryPoint
-            user={{
-              myId: store.userInfo.id,
-              fdId: userDetails?._id,
-              name: userDetails?.name,
-              profile: userDetails?.profile,
-              title: userDetails?.title,
-              type: "Video",
-              size: 30,
-              color: "#8840f5",
-            }}
-          />
+          {!isBlocked && (
+            <EntryPoint
+              user={{
+                myId: store.userInfo.id,
+                fdId: userDetails?._id,
+                name: userDetails?.name,
+                profile: userDetails?.profile,
+                title: userDetails?.title,
+                type: "Audio",
+                size: 30,
+                color: "#8840f5",
+              }}
+            />
+          )}
+          {!isBlocked && (
+            <EntryPoint
+              user={{
+                myId: store.userInfo.id,
+                fdId: userDetails?._id,
+                name: userDetails?.name,
+                profile: userDetails?.profile,
+                title: userDetails?.title,
+                type: "Video",
+                size: 30,
+                color: "#8840f5",
+              }}
+            />
+          )}
         </div>
       </div>
       <div
@@ -1167,7 +1199,11 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
           )}
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
-        <div className={"bottom"}>
+
+        {
+          isBlocked ?           <h2 className="text-center pb-4 text-red-300">
+          You are not eligible to send message to this user
+        </h2> :         <div className={"bottom"}>
           <div
             className={`${
               showReply ? "flex" : "hidden"
@@ -1261,6 +1297,7 @@ const Middle = ({ id, userDetails, device = "desktop", setOpenWindow }) => {
             )}
           </div>
         </div>
+        }
       </div>
     </div>
   );

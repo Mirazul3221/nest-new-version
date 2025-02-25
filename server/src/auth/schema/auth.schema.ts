@@ -44,6 +44,9 @@ export class Reader extends Document {
   @IsOptional()
   @Prop({ type: [{ type: String, required:false }] })
   totalCountQuestionsId:string[]
+  @IsOptional()
+  @Prop({ type: [String], default:[]})
+  blockedUsers:string[]
 
 }
 
