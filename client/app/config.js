@@ -1,4 +1,4 @@
-export let baseurl = 'https://htcmxlwe.vercel.app';
+export let baseurl = 'https://mirazul.vercel.app';
 // baseurl = 'http://localhost:5050'
 //==========MyPass = @43gnertnr%&Yjk%(&(
 //====================//====================
