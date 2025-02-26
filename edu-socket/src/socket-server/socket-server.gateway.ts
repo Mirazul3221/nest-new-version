@@ -208,6 +208,18 @@ export class NotificationsGateway
           });
         }
       });
+
+      
+      /////////////////////////Here is the logic for user block and unblock////////////////////////
+      client.on('user-block-and-unblock-status', async (data) => {
+        console.log("user-block-and-unblock-status",data)
+        if (this.socketUsers[data[0]]?.length > 0) {
+          this.socketUsers[data[0]]?.map(async (id) => {
+            await client.to(id).emit('user-block-and-unblock-status', data);
+          });
+        }
+      });
+
       /////////////////////////////Here is the logic for notification/////////////////////////////
       client.on('new-notification', async (data) => {
         if (this.socketUsers[data]?.length > 0) {

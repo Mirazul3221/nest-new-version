@@ -479,7 +479,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   //=============================================user is Blocked By me=========================================
   const [isBlockedByMe, setIsBlockedByMe] = useState();
   const [loadingBlc,setLoadingBlc] = useState(false)
-  const IsBlockedByMe = async () => {
+  const checkIsBlockedByMe = async () => {
     try {
       const { data } = await axios.post(
         `${baseurl}/auth/user/isblock/${id}`,
@@ -490,13 +490,14 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           },
         }
       );
-      setIsBlockedByMe(data);
+
+    setIsBlockedByMe(data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    IsBlockedByMe();
+    checkIsBlockedByMe();
   }, [id]);
 
   const unBlockUser = async () => {
@@ -514,6 +515,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       setLoadingBlc(false)
     }
   };
+
   return (
     <div>
       <div className="top-bar px-4 rounded-t-sm py-2 relative bg-gray-300 flex justify-between items-center">
@@ -561,13 +563,14 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
 
           <div className="cursor-pointer relative group">
             <BsThreeDots color="#8840f5" size="30" />
-            <div className="hidden group-hover:inline-block w-40 text-center z-50 py-2 px-6 absolute top-8 border text-gray-600 bg-white left-0">
-              <div className="w-4 h-4 rotate-45 bg-white -mt-4 -z-10 -ml-4"></div>
+            <div className="hidden group-hover:inline-block w-40 shadow-md rounded-md text-center z-50 py-2 px-6 absolute top-8 border text-gray-600 bg-white -left-32 md:left-0">
+              <div className="w-4 h-4 rotate-45 bg-white -mt-4 -z-10 md:-ml-4 ml-28"></div>
               {(isBlockedByMe == true || isBlockedByMe == false) && (
                 <BlockButton
                   blockedUserId={id}
                   name={userDetails.name}
                   status={isBlockedByMe}
+                  setIsBlockedByMe = {setIsBlockedByMe}
                 />
               )}
             </div>

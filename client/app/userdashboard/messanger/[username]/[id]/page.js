@@ -28,6 +28,14 @@ const Page = () => {
   useEffect(() => {
     fetchUser(id);
   }, [id]);
+  ///////////////////////////////////////////Here Is the logic for exchange data between two child component////////////////////////////////////
+    const [isBlockedByMe, setIsBlockedByMe] = useState();
+  const globleCheckIsBlockedByMe = (data)=> {
+    setIsBlockedByMe(data)
+  }
+
+
+  console.log(isBlockedByMe)
   
   return (
     <ProtectRoute>
@@ -53,11 +61,11 @@ const Page = () => {
         </div>
         <div className="border middle rounded-2xl middle w-6/12 h-[82vh]">
           <div className=" bg-white border-gray-300">
-            <Middle id={id} userDetails={userProfile} />
+            <Middle id={id} userDetails={userProfile} blockStatusByMe={{isBlockedByMe,setIsBlockedByMe,globleCheckIsBlockedByMe}} />
           </div>
         </div>
         <div className="write w-3/12 bg-white">
-        <MessangerContainerRight id={id}/>
+        <MessangerContainerRight id={id} globleCheckIsBlockedByMe={globleCheckIsBlockedByMe}/>
         </div>
       </div>
     </div>
