@@ -686,9 +686,9 @@ const Page = () => {
             />
             {callInv === "call-received" && (
               <h2
-                className={`font-semibold text-gray-700 w-fit mx-auto py-2 px-4 rounded-lg text-center ${
-                  callInv === "call-received" && "bg-white"
-                } text-3xl uppercase mt-4`}
+                className={`font-semibold w-fit mx-auto py-2 px-4 rounded-lg text-center ${
+                  callInv === "call-received" && "text-white"
+                } text-3xl uppercase`}
               >
                 {name}
               </h2>
