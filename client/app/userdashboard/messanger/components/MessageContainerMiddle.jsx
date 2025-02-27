@@ -630,19 +630,17 @@ const Middle = ({
   useEffect(() => {
     checkMyUserBlockStatus();
   }, [id]);
+
+
   useEffect(() => {
     socket && socket.on('user-block-and-unblock-status',(data)=>{
-      console.log(data)
-      console.log(id)
        if(data[1]==id){
         setIsBlockedByHim(data[2])
-        alert(data[1]==id)
-        alert(id)
-        alert(data[1])
        }
     })
-
-    console.log(id,'dhon')
+    return ()=>{
+      socket && socket.off('user-block-and-unblock-status')
+    }
   }, [socket,id]);
 
   //=============================================user is Blocked By me=========================================
@@ -683,6 +681,7 @@ const Middle = ({
           Authorization: `Bearer ${store.token}`,
         },
       });
+      socket && await socket.emit('user-block-and-unblock-status',[id, store.userInfo.id, false])
       setIsBlockedByMe(false);
       setLoadingBlc(false);
     } catch (error) {

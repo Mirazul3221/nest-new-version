@@ -472,6 +472,17 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       console.log(error);
     }
   };
+
+    useEffect(() => {
+      socket && socket.on('user-block-and-unblock-status',(data)=>{
+         if(data[1]==id){
+          setIsBlockedByHim(data[2])
+         }
+      })
+      return ()=>{
+        socket && socket.off('user-block-and-unblock-status')
+      }
+    }, [socket,id]);
   useEffect(() => {
     checkUserBlockStatus();
   }, []);
@@ -508,6 +519,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           Authorization: `Bearer ${store.token}`,
         },
       });
+      socket && await socket.emit('user-block-and-unblock-status',[id, store.userInfo.id, false])
       setIsBlockedByMe(false)
       setLoadingBlc(false)
     } catch (error) {
