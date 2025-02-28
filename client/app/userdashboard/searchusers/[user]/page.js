@@ -440,7 +440,7 @@ const Page = () => {
                       </h4>
                       <div className="flex gap-2 mt-2 justify-center items-center">
                       <AddAndDeleteFriendRequestButton
-                          id={userDetails?._id}
+                          id={item?._id}
                         />
                       <CallMessageContainer
                               id={item?._id}
