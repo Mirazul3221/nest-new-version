@@ -79,7 +79,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
   };
   return (
     <div>
-      <button onClick={addAndDeleteFriendRequest}>
+      <button onClick={addAndDeleteFriendRequest} className="bg-violet-700 cursor-pointer text-white rounded-md w-fit px-2 flex gap-[3px] items-center">
         {loading && "Loading..."}
 
         {!loading && (

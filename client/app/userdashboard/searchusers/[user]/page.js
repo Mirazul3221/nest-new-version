@@ -31,7 +31,7 @@ const Page = () => {
   const [openMessangerBox, setOpenMessangerBox] = useState(true);
   const [openMessangerBox1, setOpenMessangerBox1] = useState(false);
   const { store } = useContext(storeContext);
-  const {socket, myActiveFriends } = useSocket();
+  const { socket, myActiveFriends } = useSocket();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -304,59 +304,16 @@ const Page = () => {
                             </span>
                           </h3>
                         </div>
-                        {(myUserId == userDetails._id) === false &&
-                          hasInList === false && (
-                            <div>
-                              {loderReq ? (
-                                "Loading..."
-                              ) : (
-                                <div>
-                                  <div
-                                    onClick={() => {
-                                      friendRequestApi(userDetails?._id);
-                                    }}
-                                    className="bg-violet-700 cursor-pointer text-white rounded-md w-fit px-2 mt-1 flex gap-[3px] items-center"
-                                  >
-                                    <IoPersonAdd size={16} />
-                                    Add Friend
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
                       </div>
-                      <div className="mt-2">
-                        {hasInList == true && (
-                          <div className="flex items-center gap-2">
-                            <div
-                              onClick={() => {
-                                const isDelete = confirm(
-                                  `Dou you want to unfriend ${userDetails.name}`
-                                );
-                                isDelete
-                                  ? cancleFriendRequest(userDetails._id)
-                                  : null;
-                              }}
-                              className="px-4 cursor-pointer rounded-md bg-gray-200"
-                            >
-                              <h2>Unfriend</h2>
-                            </div>
-                            {/* <Messanger
-                              id={userDetails._id}
-                              name={userDetails.name}
-                              profile={userDetails.profile}
-                              title={userDetails.title}
-                              status={userDetails.status}
-                              desc={userDetails.description}
-                              switcher={openMessangerBox}
-                              setSwitcher={setOpenMessangerBox}
-                            /> */}
-
-                            <CallMessageContainer id={userDetails?._id} userDetails={userDetails} />
-                          </div>
-                        )}
+                      <div className="flex items-center gap-2">
+                        <AddAndDeleteFriendRequestButton
+                          id={userDetails?._id}
+                        />
+                        <CallMessageContainer
+                          id={userDetails?._id}
+                          userDetails={userDetails}
+                        />
                       </div>
-                      <AddAndDeleteFriendRequestButton id={userDetails?._id} />
                       {/* --------------------------------------------Messanger Box System-------------------------------------------- */}
                     </div>
                   ) : (
@@ -481,7 +438,7 @@ const Page = () => {
                         {acceptedFriendsId &&
                         acceptedFriendsId.some((id) => id === item?._id) ? (
                           <div>
-                            <Messanger
+                            {/* <Messanger
                               id={item._id}
                               name={item.name}
                               profile={item.profile}
@@ -490,6 +447,10 @@ const Page = () => {
                               desc={item.description}
                               switcher={openMessangerBox1}
                               setSwitcher={setOpenMessangerBox1}
+                            /> */}
+                            <CallMessageContainer
+                              id={item?._id}
+                              userDetails={item}
                             />
                           </div>
                         ) : (
