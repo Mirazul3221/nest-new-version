@@ -427,50 +427,25 @@ const Page = () => {
                           src={item.profile}
                         />
                       </div>
-                      <h2 className="text-center text-2xl font-semibold text-gray-700 mt-2">
-                        {item.name}
-                      </h2>
+                      <Link
+                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                        >
+                          <h2  className="text-center text-2xl font-semibold text-gray-700 mt-2">
+                          {item.name}
+                          </h2>
+                        </Link>
                       <h4 className="text-center text-gray-700 mt-2">
                         Reader Type :{" "}
                         <span className="text-violet-700">{item.status}</span>
                       </h4>
                       <div className="flex gap-2 mt-2 justify-center items-center">
-                        {acceptedFriendsId &&
-                        acceptedFriendsId.some((id) => id === item?._id) ? (
-                          <div>
-                            {/* <Messanger
-                              id={item._id}
-                              name={item.name}
-                              profile={item.profile}
-                              title={item.title}
-                              status={item.status}
-                              desc={item.description}
-                              switcher={openMessangerBox1}
-                              setSwitcher={setOpenMessangerBox1}
-                            /> */}
-                            <CallMessageContainer
+                      <AddAndDeleteFriendRequestButton
+                          id={userDetails?._id}
+                        />
+                      <CallMessageContainer
                               id={item?._id}
                               userDetails={item}
                             />
-                          </div>
-                        ) : (
-                          <div
-                            onClick={() => {
-                              friendRequestApi(item?._id);
-                            }}
-                            className="cursor-pointer text-gray-800 bg-slate-200 py-1 rounded-md w-fit px-2 flex gap-[3px] items-center"
-                          >
-                            <IoPersonAdd size={16} />
-                            Add Friend
-                          </div>
-                        )}
-                        <Link
-                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                        >
-                          <h2 className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-white text-sm">
-                            View Details
-                          </h2>
-                        </Link>
                       </div>
                     </div>
                   </div>
