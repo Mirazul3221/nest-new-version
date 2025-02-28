@@ -17,17 +17,17 @@ export class FriendRequestService {
     const hasFriend = await this.friendRequestModel.findOne(
       {
         requester: requesterId,
-        recipient: createFriendRequestDto.recipient,
+        recipient: createFriendRequestDto.id,
       }
     )
     if (!hasFriend) {
       const friendRequest =await new this.friendRequestModel({
         requester: requesterId,
-        recipient: createFriendRequestDto.recipient,
+        recipient: createFriendRequestDto.id,
       });
       friendRequest.save();
     } else {
-      throw new ConflictException("Friend request already send")
+      return "Not found"
     }
     // console.log(requesterId)
     // console.log('brek')
@@ -50,7 +50,7 @@ export class FriendRequestService {
     //   friendRequest.save();
     // }
   }
-
+//
  async cancel(requesterId: string, recipientId: any) {
      await this.friendRequestModel.deleteOne({
       requester: new mongoose.mongo.ObjectId( requesterId),
@@ -61,6 +61,22 @@ export class FriendRequestService {
       requester: new mongoose.mongo.ObjectId( recipientId),
       recipient: new mongoose.mongo.ObjectId( requesterId),
     }).exec();
+  }
+ async checkStatus(requesterId: string, recipientId: any) {
+  const friendRequest = await this.friendRequestModel.findOne({
+    $or: [
+      { requester: new mongoose.mongo.ObjectId(requesterId), recipient: new mongoose.mongo.ObjectId(recipientId) },
+      { requester: new mongoose.mongo.ObjectId(recipientId), recipient: new mongoose.mongo.ObjectId(requesterId) }
+    ]
+  }).select('status'); // Select only the 'status' field for efficiency
+  console.log(friendRequest)
+  console.log(requesterId,recipientId)
+  if (!friendRequest) {
+    return "empty"; // No document found
+  }
+  
+  return friendRequest.status; // Return "pending" or "accepted"
+  
   }
 
   async respond(recipientId: string, requestId: string, respondFriendRequestDto: RespondFriendRequestDto): Promise<FriendRequest> {

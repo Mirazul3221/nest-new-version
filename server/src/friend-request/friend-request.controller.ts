@@ -7,9 +7,10 @@ import { AuthGuard } from '@nestjs/passport';
 export class FriendRequestController {
   constructor(private readonly friendRequestService: FriendRequestService) {}
 
-  @Post()
+  @Post('add')
   @UseGuards(AuthGuard())//
   create(@Req() req, @Body() createFriendRequestDto: CreateFriendRequestDto) {
+    console.log(createFriendRequestDto)
     const requesterId = req.user._id; // Assume you have some way of getting the logged-in user's ID
     return this.friendRequestService.create(requesterId, createFriendRequestDto);
   }
@@ -18,7 +19,15 @@ export class FriendRequestController {
   @UseGuards(AuthGuard())
   async cancel(@Req() req, @Body() body: any) {
     const requesterId = await req.user._id; // Assume you have some way of getting the logged-in user's ID
-    return await this.friendRequestService.cancel(requesterId, body.ID);
+    return await this.friendRequestService.cancel(requesterId, body.id);
+  }
+
+  @Post('status')
+  @UseGuards(AuthGuard())
+  async checkStatus(@Req() req, @Body() body: any) {
+    console.log(body)
+    const requesterId = await req.user._id; // Assume you have some way of getting the logged-in user's ID
+    return await this.friendRequestService.checkStatus(requesterId, body.id);
   }
 
   

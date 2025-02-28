@@ -18,6 +18,7 @@ import Link from "next/link";
 import Messanger from "../../components/messanger/Messanger";
 import { useSocket } from "../../global/SocketProvider";
 import CallMessageContainer from "../../components/messanger/CallMessageContainer";
+import AddAndDeleteFriendRequestButton from "../../components/messanger/components/AddAndDeleteFriendRequestButton";
 
 const Page = () => {
   const pram = useParams();
@@ -133,7 +134,7 @@ const Page = () => {
       //   setLoader(true);
       setLoaderReq(true);
       const { data } = await axios.post(
-        `${baseurl}/friend-request`,
+        `${baseurl}/friend-request/add`,
         { recipient },
         {
           headers: {
@@ -355,6 +356,7 @@ const Page = () => {
                           </div>
                         )}
                       </div>
+                      <AddAndDeleteFriendRequestButton id={userDetails?._id} />
                       {/* --------------------------------------------Messanger Box System-------------------------------------------- */}
                     </div>
                   ) : (
