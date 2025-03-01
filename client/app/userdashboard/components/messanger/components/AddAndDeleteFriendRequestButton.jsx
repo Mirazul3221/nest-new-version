@@ -4,6 +4,8 @@ import { useSocket } from "@/app/userdashboard/global/SocketProvider";
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { BsPersonUp } from "react-icons/bs";
+import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
 
 const AddAndDeleteFriendRequestButton = ({ id }) => {
   const { store } = useStore();
@@ -79,16 +81,16 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
   };
   return (
     <div>
-      <button onClick={addAndDeleteFriendRequest} className="bg-violet-700 cursor-pointer text-white rounded-md w-fit px-2 flex gap-[3px] items-center">
+      <button onClick={addAndDeleteFriendRequest} className={`${(requestStatus == "accepted") ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"} cursor-pointer rounded-md w-fit px-4 flex gap-[3px] items-center`}>
         {loading && "Loading..."}
-
+         
         {!loading && (
           <>
             {requestStatus == "pending"
-              ? "Cancel Request"
+              ? <span className="flex gap-1 items-center"><BsPersonUp />  Cancel Request</span>
               : requestStatus == "accepted"
-              ? "Unfriend"
-              : "Add Friend"}
+              ? <span className="flex gap-1 items-center"><IoPersonRemoveOutline />  Unfriend</span>
+              : <span className="flex gap-1 items-center"><IoPersonAddOutline /> Add Friend</span>}
           </>
         )}
       </button>

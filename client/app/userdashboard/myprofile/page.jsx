@@ -28,6 +28,8 @@ import { useSocket } from "../global/SocketProvider";
 import SuperHeader from "../components/SuperHeader";
 import { RiUserReceived2Line } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
+import AddAndDeleteFriendRequestButton from "../components/messanger/components/AddAndDeleteFriendRequestButton";
+import CallMessageContainer from "../components/messanger/CallMessageContainer";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -266,18 +268,6 @@ const Page = () => {
       });
     } catch (error) {}
   };
-  const cancleFriendRequest = async (id) => {
-    await axios.post(
-      `${baseurl}/friend-request/cancel`,
-      { ID: id },
-      {
-        headers: {
-          Authorization: `Bearer ${store?.token}`,
-        },
-      }
-    );
-  };
-
   const inviteYourFriend = async (id) => {
     try {
       const { data } = await axios.post(
@@ -294,23 +284,27 @@ const Page = () => {
       console.log(error);
     }
   };
-  const { socket, myActiveFriends } = useSocket()
+  const { socket, myActiveFriends } = useSocket();
 
-  const [randNum,setRandNum] = useState()
+  const [randNum, setRandNum] = useState();
   useEffect(() => {
-    setRandNum(Math.floor(Math.random() * 15) + 1)
+    setRandNum(Math.floor(Math.random() * 15) + 1);
   }, []);
- console.log(randNum)
+  console.log(randNum);
   return (
     <ProtectRoute>
-              <div className="md:px-10 px-4 md:py-5 py-2">
-              <SuperHeader />
-              </div>
-        <div className="w-full">
-            <img className="rounded-t-5xl" src={`/cover-photo/background-${randNum}.jpg`}  alt="" />
-        </div>
-          <div className="md:w-10/12 md:-translate-y-20 md:border md:rounded-t-2xl mx-auto bg-white shadow-md px-5 pb-5">
-          <div className="md:-translate-y-[7%] -translate-y-[4%]">
+      <div className="md:px-10 px-4 md:py-5 py-2">
+        <SuperHeader />
+      </div>
+      <div className="w-full">
+        <img
+          className="rounded-t-5xl"
+          src={`/cover-photo/background-${randNum}.jpg`}
+          alt=""
+        />
+      </div>
+      <div className="md:w-10/12 md:-translate-y-20 md:border md:rounded-t-2xl mx-auto bg-white shadow-md px-5 pb-5">
+        <div className="md:-translate-y-[7%] -translate-y-[4%]">
           <div>
             <div className="---profile---">
               <div className="md:w-[200px] w-[120px] md:mx-auto relative">
@@ -332,10 +326,10 @@ const Page = () => {
                           </div>
                         ) : (
                           <img
-                          className="w-[120px] md:w-[200px] h-[120px] md:h-[200px] border-4 border-white rounded-full"
-                          src={userDetails.profile}
-                          alt={userDetails.name}
-                        />
+                            className="w-[120px] md:w-[200px] h-[120px] md:h-[200px] border-4 border-white rounded-full"
+                            src={userDetails.profile}
+                            alt={userDetails.name}
+                          />
                         )}
                         <h4 className="absolute bottom-0 right-0 md:right-8 p-2 bg-violet-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex justify-center items-center border-2 md:border-4 border-white text-center text-sm translate-x-[10%] md:translate-x-[30%] text-white translate-y-[20%]">
                           {/* <Image className="rounded-full" src={levelUp} alt="level" /> */}
@@ -446,24 +440,24 @@ const Page = () => {
                         name="text"
                         id=""
                       ></textarea>
-                       <div className="md:flex justify-end pr-4">
-                       <div className="flex justify-between items-center md:w-2/12 gap-4 mt-2">
-                        <div
-                          onClick={() => setControlDesc(false)}
-                          className="updateTitle w-1/2 cursor-pointer py-1 px-6 text-center bg-gray-200 rounded-md"
-                        >
-                          Cancel
-                        </div>
-                        <div
-                          onClick={() => {
-                            updateUserDescription(), setControlDesc(false);
-                          }}
-                          className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
-                        >
-                          Update
+                      <div className="md:flex justify-end pr-4">
+                        <div className="flex justify-between items-center md:w-2/12 gap-4 mt-2">
+                          <div
+                            onClick={() => setControlDesc(false)}
+                            className="updateTitle w-1/2 cursor-pointer py-1 px-6 text-center bg-gray-200 rounded-md"
+                          >
+                            Cancel
+                          </div>
+                          <div
+                            onClick={() => {
+                              updateUserDescription(), setControlDesc(false);
+                            }}
+                            className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                          >
+                            Update
+                          </div>
                         </div>
                       </div>
-                       </div>
                     </>
                   ) : (
                     <>
@@ -665,37 +659,37 @@ const Page = () => {
                     key={i}
                     className="mt-4 bg-gray-100 p-4 rounded-lg border"
                   >
-                    <div className="relative rounded-full w-fit mx-auto">
-                      {myActiveFriends &&
-                      myActiveFriends?.some((O) => O === item._id) ? (
-                        <div className="w-5 h-5 border-2 border-white bg-green-500 absolute rounded-full right-10 bottom-1"></div>
-                      ) : (
-                        <div className="w-5 h-5 border-2 border-white bg-gray-400 absolute rounded-full right-10 bottom-1"></div>
-                      )}
-                      <img
-                        className="w-48 mx-auto border-2 md:border-4 rounded-full"
-                        src={item.profile}
-                      />
-                    </div>
-                    <h2 className="text-center text-2xl font-semibold text-gray-700 mt-2">
-                      {item.name}
-                    </h2>
-                    <div className="flex gap-2 mt-2 justify-center items-center">
-                      <h2
-                        onClick={() => {
-                          cancleFriendRequest(item._id);
-                        }}
-                        className="py-1 text-gray-500 cursor-pointer px-2 bg-white rounded-md text-sm"
-                      >
-                        Unfriend
-                      </h2>
-                      <a
-                        href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                      >
-                        <h2 className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-white text-sm">
-                          View Details
+
+                    <div className="flex justify-between items-center">
+                    <div className="flex gap-2 items-center">
+                      <div className="relative rounded-full w-fit">
+                        {myActiveFriends &&
+                        myActiveFriends?.some((O) => O === item._id) ? (
+                          <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                        ) : (
+                          <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                        )}
+                        <img
+                          className="w-20 border-2 rounded-full"
+                          src={item.profile}
+                        />
+                      </div>
+                      <div>
+                        <a
+                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                        >
+                          <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
+                            {item.name}
+                          </h2>
+                        </a>
+                        <h2 className="text-gray-700">
+                          Status : {item.status}
                         </h2>
-                      </a>
+                      </div>
+                    </div>
+                    {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
+                    <div>
+                      <AddAndDeleteFriendRequestButton id={item._id} />
                       {myActiveFriends &&
                         myActiveFriends?.some((O) => O === item._id) && (
                           <h2
@@ -708,6 +702,8 @@ const Page = () => {
                           </h2>
                         )}
                     </div>
+                    </div>
+ 
                   </div>
                 ))}
             </div>
@@ -765,92 +761,88 @@ const Page = () => {
             </div>
           </div>
         </div>
-          </div>
-                        {/* //======================================MODEL====================================// */}
-                        <div
-                className={`w-screen h-screen top-0 left-0 overflow-hidden bg-black/30 backdrop-blur-sm duration-100 ${
-                  openMOdel ? "scale-1" : "scale-0"
-                } fixed top-0 left-0 z-50 flex justify-center items-center`}
+      </div>
+      {/* //======================================MODEL====================================// */}
+      <div
+        className={`w-screen h-screen top-0 left-0 overflow-hidden bg-black/30 backdrop-blur-sm duration-100 ${
+          openMOdel ? "scale-1" : "scale-0"
+        } fixed top-0 left-0 z-50 flex justify-center items-center`}
+      >
+        <div className="max-h-[90vh] h-auto w-screen flex justify-center">
+          <div
+            style={{ width: resize + 90 }}
+            className="hidden_scroll bg-white overflow-auto shadow-lg p-10"
+          >
+            <div className=" rounded-full w-full flex justify-center items-center">
+              <div className="border-2 rounded-full">
+                <AvatarWrapper
+                  width={200}
+                  height={200}
+                  imageWidth={resize}
+                  onCrop={onCrop}
+                  onClose={onClose}
+                  borderStyle={{ borderRadius: 10 }}
+                  cropRadius={60}
+                  minCropRadius={60}
+                  labelStyle={{
+                    marginLeft: 27,
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    cursor: "pointer",
+                    color: "gray",
+                  }}
+                  label="Select a image"
+                  src={src}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center gap-4 mt-4">
+              <div
+                onClick={() => setOpenModel(false)}
+                className="updateTitle w-1/2 cursor-pointer py-1 px-6 bg-gray-200 text-center rounded-md"
               >
-                <div className="max-h-[90vh] h-auto w-screen flex justify-center">
-                  <div
-                    style={{ width: resize + 90 }}
-                    className="hidden_scroll bg-white overflow-auto shadow-lg p-10"
-                  >
-                    <div className=" rounded-full w-full flex justify-center items-center">
-                      <div className="border-2 rounded-full">
-                        <AvatarWrapper
-                          width={200}
-                          height={200}
-                          imageWidth={resize}
-                          onCrop={onCrop}
-                          onClose={onClose}
-                          borderStyle={{ borderRadius: 10 }}
-                          cropRadius={60}
-                          minCropRadius={60}
-                          labelStyle={{
-                            marginLeft: 27,
-                            fontWeight: "bold",
-                            fontSize: 20,
-                            cursor: "pointer",
-                            color: "gray",
-                          }}
-                          label="Select a image"
-                          src={src}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center gap-4 mt-4">
-                      <div
-                        onClick={() => setOpenModel(false)}
-                        className="updateTitle w-1/2 cursor-pointer py-1 px-6 bg-gray-200 text-center rounded-md"
-                      >
-                        Cancel
-                      </div>
-                      <div
-                        onClick={() => {
-                          if (fileLength > 30 && fileLength < 200) {
-                            updateProfile();
-                          }
-                        }}
-                        className={`updateTitle w-1/2 py-1 px-6 ${
-                          loader
-                            ? "bg-white text-gray-700 hover:bg-slate-100"
-                            : "bg-violet-700 text-white cursor-pointer"
-                        } hover:bg-violet-600 duration-200 text-center rounded-md`}
-                      >
-                        <div className="flex justify-center items-center gap-2">
-                          <p>Update</p>{" "}
-                          {loader ? (
-                            <Image
-                              className="w-5"
-                              src={loaderImage}
-                              alt="loader"
-                            />
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`mt-4 ${
-                        fileLength > 30 && fileLength < 200
-                          ? "text-green-800"
-                          : fileLength == 3
-                          ? "text-gray-600"
-                          : "text-rose-600"
-                      }`}
-                    >
-                      <h2>File size must be between 30.00kb to 200.00kb</h2>
-                      {fileLength > 10 && (
-                        <h3>
-                          You resize your profile that contains {fileLength}
-                          .00kb
-                        </h3>
-                      )}
-                    </div>
-                  </div>
+                Cancel
+              </div>
+              <div
+                onClick={() => {
+                  if (fileLength > 30 && fileLength < 200) {
+                    updateProfile();
+                  }
+                }}
+                className={`updateTitle w-1/2 py-1 px-6 ${
+                  loader
+                    ? "bg-white text-gray-700 hover:bg-slate-100"
+                    : "bg-violet-700 text-white cursor-pointer"
+                } hover:bg-violet-600 duration-200 text-center rounded-md`}
+              >
+                <div className="flex justify-center items-center gap-2">
+                  <p>Update</p>{" "}
+                  {loader ? (
+                    <Image className="w-5" src={loaderImage} alt="loader" />
+                  ) : null}
                 </div>
               </div>
+            </div>
+            <div
+              className={`mt-4 ${
+                fileLength > 30 && fileLength < 200
+                  ? "text-green-800"
+                  : fileLength == 3
+                  ? "text-gray-600"
+                  : "text-rose-600"
+              }`}
+            >
+              <h2>File size must be between 30.00kb to 200.00kb</h2>
+              {fileLength > 10 && (
+                <h3>
+                  You resize your profile that contains {fileLength}
+                  .00kb
+                </h3>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="hidden md:block">
         <Footer />
       </div>
