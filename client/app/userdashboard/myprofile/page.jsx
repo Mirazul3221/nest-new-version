@@ -657,7 +657,7 @@ const Page = () => {
                 getAllAcceptedFriend?.map((item, i) => (
                   <div
                     key={i}
-                    className="mt-4 bg-gray-100 p-4 rounded-lg border"
+                    className="bg-gray-100 p-4 rounded-lg border"
                   >
 
                     <div className="flex justify-between items-center">
@@ -707,6 +707,7 @@ const Page = () => {
                   </div>
                 ))}
             </div>
+            <button className="text-gray-700 bg-gray-100 hover:bg-gray-200 text-center duration-100 rounded-md mt-2">See all your friends</button>
           </div>
         </div>
         <div className="mb-24">
