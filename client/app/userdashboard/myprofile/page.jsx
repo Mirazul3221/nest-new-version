@@ -707,7 +707,7 @@ const Page = () => {
                   </div>
                 ))}
             </div>
-            <button className="text-gray-700 bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">See all your friends</button>
+            <button className="text-gray-700 py-2 border bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">See all your friends</button>
           </div>
         </div>
         <div className="mb-24">
