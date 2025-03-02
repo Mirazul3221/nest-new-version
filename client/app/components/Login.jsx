@@ -10,18 +10,35 @@ import { IoEyeOutline } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "./Logo";
+import { useEffect } from "react";
 const InputForm = () => {
   //get userinfo from global data====================
   const [loader, setLoader] = useState(false);
   const { dispatch } = useContext(storeContext);
   const router = useRouter();
   const [alert, setAlert] = useState("");
+  const [location, setLocation] = useState({ lat: null, lon: null } | null);
   const [submitValue, setSubmitValue] = useState({
     email: "",
     password: "",
   });
-
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLocation({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+          }
+        );
+    }
+  }, []);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -29,6 +46,7 @@ const InputForm = () => {
 
   const targetElement = (e) => {
     setSubmitValue({
+      ...location,
       ...submitValue,
       [e.target.name]: e.target.value,
     });
@@ -59,6 +77,8 @@ const InputForm = () => {
       setLoader(false);
     }
   };
+
+  console.log(location)
   return (
     <div>
       <div className="p-8 md:w-[400px] md:h-[74vh]">

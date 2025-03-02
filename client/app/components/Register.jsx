@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { baseurl } from "../config";
@@ -15,6 +15,7 @@ const InputForm = () => {
   const {dispatch} = useStore()
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
+   const [location, setLocation] = useState({ lat: null, lon: null } | null);
   const [submitValue, setSubmitValue] = useState({
     role : "user",
     status:"New",
@@ -23,9 +24,24 @@ const InputForm = () => {
     email: "",
     password: "",
   });
-
+  useEffect(() => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLocation({
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+          }
+        );
+    }
+  }, []);
   const targetElement = (e) => {
     setSubmitValue({
+      ...location,
       ...submitValue,
       [e.target.name]: e.target.value,
     });
