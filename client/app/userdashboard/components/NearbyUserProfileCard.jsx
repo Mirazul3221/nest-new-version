@@ -54,7 +54,7 @@ const NearbyUserProfileCard = () => {
   return (
 <div
   ref={scrollRef}
-  className="flex gap-4 overflow-x-auto w-[85vw] mx-auto md:w-full items-center hidden_scroll scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+  className="flex gap-4 overflow-x-auto w-[90vw] mx-auto md:w-full items-center hidden_scroll scrollbar-hide cursor-grab active:cursor-grabbing select-none"
   onMouseDown={handleMouseDown}
   onMouseLeave={handleMouseLeave}
   onMouseUp={handleMouseUp}
