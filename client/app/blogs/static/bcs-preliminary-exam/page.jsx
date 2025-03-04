@@ -3,7 +3,6 @@ import { Banner } from "@/app/adsterra/Banner";
 import VerticleBanner from "@/app/adsterra/VerticleBanner";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
-import Head from "next/head";
 import Image from "next/image";
 import Script from "next/script";
 import React, { useState } from "react";

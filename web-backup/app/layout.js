@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import DataProvider from "./global/DataProvider";
-import Head from "next/head";
 import SocketProvider from "./userdashboard/global/SocketProvider";
 import MessageProvider from "./userdashboard/global/messageProvider";
 

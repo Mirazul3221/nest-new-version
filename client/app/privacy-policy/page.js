@@ -1,12 +1,10 @@
-import Head from 'next/head';
-
+export const metadata = {
+  title: 'Privacy Policy',
+  description: 'Our privacy policy explains how we handle your data.',
+};
 const PrivacyPolicy = () => {
   return (
     <>
-      <Head>
-        <title>Privacy Policy</title>
-        <meta name="description" content="Our privacy policy explains how we handle your data." />
-      </Head>
       <main style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
         <h1>Privacy Policy</h1>
         <p>
