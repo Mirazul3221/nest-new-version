@@ -9,7 +9,6 @@ import Logo from "@/app/components/Logo";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
-import { LuUser2 } from "react-icons/lu";
 import { IoHomeOutline } from "react-icons/io5";
 import { AiOutlineHeart } from "react-icons/ai";
 import { GrFormEdit } from "react-icons/gr";
@@ -30,6 +29,7 @@ import { RiUserReceived2Line } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import AddAndDeleteFriendRequestButton from "../components/messanger/components/AddAndDeleteFriendRequestButton";
 import CallMessageContainer from "../components/messanger/CallMessageContainer";
+import { CiUser } from "react-icons/ci";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -416,7 +416,7 @@ const Page = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 w-full mt-4 text-gray-700">
-                  <LuUser2 />
+                <CiUser />
                   <h3>
                     {" "}
                     Member since{" "}

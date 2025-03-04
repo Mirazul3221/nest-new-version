@@ -176,7 +176,7 @@ const Page = () => {
           </div>
           
           <div className=" md:w-6/12">
-           <div className="overflow-x-auto"><NearbyUserProfileCard/></div>
+           <div className=""><NearbyUserProfileCard/></div>
             <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
               <img
                 className="w-16 rounded-full"

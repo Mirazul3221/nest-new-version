@@ -1,50 +1,85 @@
-import { baseurl } from '@/app/config';
-import { useStore } from '@/app/global/DataProvider';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import AddAndDeleteFriendRequestButton from './messanger/components/AddAndDeleteFriendRequestButton';
+import { baseurl } from "@/app/config";
+import { useStore } from "@/app/global/DataProvider";
+import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
+import AddAndDeleteFriendRequestButton from "./messanger/components/AddAndDeleteFriendRequestButton";
+import './cssfiles/scrolling_bar.css'
 
 const NearbyUserProfileCard = () => {
-    const {store} = useStore()
-    const [loading,setLoading] = useState(false)
-    const [nearby,setNearby] = useState(null)
-    useEffect(() => {
-        const nearbyUsers = async () => {
-          setLoading(true)
-          try {
-            const { data } = await axios.get(`${baseurl}/auth/user/nearby`, {
-              headers: {
-                Authorization: `Bearer ${store.token}`,
-              },
-            });
-            setLoading(false)
-            console.log(data)
-            setNearby(data)
-          } catch (error) {
-            console.log(error);
+  const { store } = useStore();
+  const [loading, setLoading] = useState(false);
+  const [nearby, setNearby] = useState(null);
+  const scrollRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-          }
-        };
-        nearbyUsers();
-      }, []);
+  useEffect(() => {
+    const nearbyUsers = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(`${baseurl}/auth/user/nearby`, {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        });
+        setLoading(false);
+        console.log(data);
+        setNearby(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    nearbyUsers();
+  }, []);
+
+  // 🖱 Handle Drag Scrolling
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeave = () => setIsDragging(false);
+  const handleMouseUp = () => setIsDragging(false);
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Adjust scroll speed
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   return (
-    <div className='flex gap-4 items-center'>{
-      nearby?.map(u=>{
-        return (
-          <div className="flex gap-6 items-center border rounded-xl bg-white py-1 px-3">
-              <div className="profile flex gap-2 items-center">
-                <img className='w-12 rounded-full' src={u?.profile} alt={u?.name} />
-                <div className="details">
-                  <h3 >{u?.name}</h3>
-                  <h3 className='text-sm'>{u?.status}</h3>
-                </div>
-              </div>
-              <AddAndDeleteFriendRequestButton id={u?._id}/>
-          </div>
-        )
-      })
-    }</div>
-  )
-}
+<div
+  ref={scrollRef}
+  className="flex gap-4 overflow-x-auto w-[85vw] mx-auto md:w-full items-center hidden_scroll scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+  onMouseDown={handleMouseDown}
+  onMouseLeave={handleMouseLeave}
+  onMouseUp={handleMouseUp}
+  onMouseMove={handleMouseMove}
+>
 
-export default NearbyUserProfileCard
+      <div className="flex gap-4 min-w-max"> {/* Ensure children do not wrap */}
+        {nearby?.map((u) => (
+          <div
+            key={u?._id}
+            className="flex gap-6 items-center border rounded-xl bg-white py-1 px-3 shrink-0"
+          >
+            <div className="profile flex gap-2 items-center">
+              <img className="w-12 rounded-full" src={u?.profile} alt={u?.name} />
+              <div className="details">
+                <h3>{u?.name}</h3>
+                <h3 className="text-sm">{u?.status}</h3>
+              </div>
+            </div>
+            <AddAndDeleteFriendRequestButton id={u?._id} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default NearbyUserProfileCard;
