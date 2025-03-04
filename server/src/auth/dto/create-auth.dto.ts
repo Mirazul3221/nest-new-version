@@ -17,6 +17,8 @@ export class CreateAuthDto {
     @ValidateIf((o) => o.password !== undefined && o.password !== null && o.password !== '')
     @MinLength(6)
     readonly password?: string;
+    @IsOptional()
+    location: {lat:number,lon:number}
     @IsString()
     @IsOptional()
     title?:string

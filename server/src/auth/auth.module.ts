@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -10,6 +10,7 @@ import { jwtStrategy } from './jwt.stratigy';
 import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { NestjsFormDataModule } from 'nestjs-form-data';
+import { FriendRequestModule } from 'src/friend-request/friend-request.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
         schema: user_schema,
       },
     ]),
+    forwardRef(() => FriendRequestModule), // Fix circular dependency
   ],
   controllers: [AuthController],
   providers: [AuthService, jwtStrategy, FacebookStrategy, GoogleStrategy],

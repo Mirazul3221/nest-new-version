@@ -49,7 +49,7 @@ const FriendRequest = ({item}) => {
        try {
         await axios.post(
             `${baseurl}/friend-request/cancel`,
-            { ID: item.message[0].requesterId },
+            { id: item.message[0].requesterId },
             {
               headers: {
                 Authorization: `Bearer ${store?.token}`,

@@ -27,6 +27,14 @@ export class AuthController {
   // console.log(req)
     return await this.authService.loginInfo(userDto);
   }
+
+  @Get('user/nearby')
+  @UseGuards(AuthGuard())
+  async findNearbyUsers(@Req() req:any) {
+    const id = req.user._id
+    return await this.authService.findNearbyUsers(id)
+  }
+
   @Post("getmyprofile")
   async requestedData(@Body() userEmail){
     // console.log(userEmail.email)

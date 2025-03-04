@@ -17,7 +17,7 @@ const InputForm = () => {
   const { dispatch } = useContext(storeContext);
   const router = useRouter();
   const [alert, setAlert] = useState("");
-  const [location, setLocation] = useState({ lat: null, lon: null } | null);
+  const [location, setLocation] = useState({ lon: null, lat: null });
   const [submitValue, setSubmitValue] = useState({
     email: "",
     password: "",
@@ -45,8 +45,9 @@ const InputForm = () => {
   };
 
   const targetElement = (e) => {
+    console.log(location)
     setSubmitValue({
-      ...location,
+       location,
       ...submitValue,
       [e.target.name]: e.target.value,
     });
@@ -79,6 +80,7 @@ const InputForm = () => {
   };
 
   console.log(location)
+  console.log(submitValue)
   return (
     <div>
       <div className="p-8 md:w-[400px] md:h-[74vh]">

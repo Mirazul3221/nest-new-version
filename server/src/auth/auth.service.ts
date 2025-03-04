@@ -17,6 +17,8 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { use } from 'passport';
+import { FriendRequest, FriendRequestDocument } from 'src/friend-request/schemas/friend-request.schema';
+import { userInfo } from 'os';
 const nodemailer = require('nodemailer');
 
 @Injectable()
@@ -24,13 +26,14 @@ export class AuthService {
   constructor(
     @InjectModel(user_model)
     private userModel: mongoose.Model<Reader>,
+     @InjectModel(FriendRequest.name) private friendRequestModel: mongoose.Model<FriendRequestDocument>,
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
   async register_user(
     createAuthDto: CreateAuthDto,
   ): Promise<{ token: string; msg: string }> {
-    const { name, email, password, role, status, balance } = createAuthDto;
+    const { name, email, password,location, role, status, balance } = createAuthDto;
     const userInfo = await this.userModel.findOne({ email });
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
@@ -46,6 +49,10 @@ export class AuthService {
         name: name,
         email: email,
         password: await bcrypt.hash(password, 9),
+        location:{
+          type:'Point',
+          coordinates:[location.lon,location.lat]
+        },
         title: 'Untitled User',
         description: '',
         profile:
@@ -68,31 +75,103 @@ export class AuthService {
     }
   }
 
-  //===============Login API===============//
   async loginInfo(
     userDto: CreateUserDto,
   ): Promise<{ token: string; message: string }> {
-    const { email, password } = userDto;
+    const { email, password, location } = userDto;
+    const { lat, lon } = location || {};  // Destructure location if it exists
+  
     const loginInfo = await this.userModel
       .findOne({ email })
       .select('+password');
-    if (loginInfo) {
-      const check_password = await bcrypt.compare(password, loginInfo.password);
-      if (check_password) {
-        const token = await this.jwtService.sign({
-          id: (await loginInfo)._id,
-          name: (await loginInfo).name,
-          profile: (await loginInfo).profile,
-          role: (await loginInfo).role,
-        }); //
-        return { token, message: 'User login success' };
-      } else {
-        throw new UnauthorizedException('Invalied password !');
-      }
-    } else {
-      throw new NotFoundException('User not found !');
+  
+    if (!loginInfo) {
+      throw new NotFoundException('User not found!');
     }
+  
+    const check_password = await bcrypt.compare(password, loginInfo.password);
+    if (!check_password) {
+      throw new UnauthorizedException('Invalid password!');
+    }
+  
+    // If geolocation (lat, lon) is provided, update the user's location
+    if (lat && lon) {
+      loginInfo.location = {
+        type: 'Point',
+        coordinates: [lon, lat], // MongoDB expects [longitude, latitude]
+      };
+      await loginInfo.save(); // Save the updated location
+    }
+  
+    // Create JWT token
+    const token = await this.jwtService.sign({
+      id: loginInfo._id,
+      name: loginInfo.name,
+      profile: loginInfo.profile,
+      role: loginInfo.role,
+    });
+  
+    return { token, message: 'User login success' };
   }
+  
+
+  //===================================
+
+  async findNearbyUsers(id) {
+   // Step 1: Get all accepted and pending friend requests
+const friendRequests = await this.friendRequestModel
+.find({
+  $or: [{ requester: id }, { recipient: id}],
+  status: { $in: ["accepted", "pending"] }, // ✅ Get only accepted and pending requests
+})
+.select("requester recipient")
+.lean();
+
+// Step 2: Extract the user IDs from friend requests
+const excludedUserIds = friendRequests.flatMap((req) => [
+  req.requester.toString(),
+  req.recipient.toString(),
+]);
+
+// Remove the logged-in user ID (since we don't need to exclude themselves)
+const filteredExcludedUserIds = excludedUserIds.filter(
+  (uid) => uid !== id.toString()
+);
+
+    const currentUser = await this.userModel.findById(id);
+    
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+  
+    const coordinates = currentUser?.location?.coordinates;
+    
+    if (!coordinates || coordinates.length !== 2) {
+      throw new Error("Invalid location data");
+    }
+  
+    // Step 3: Fetch nearby users but exclude the ones in `filteredExcludedUserIds`
+const nearbyUsers = await this.userModel
+.find({
+  _id: { $nin: filteredExcludedUserIds, $ne: id }, // ✅ Exclude friends and current user
+  location: {
+    $near: {
+      $geometry: {
+        type: "Point",
+        coordinates,
+      },
+      $maxDistance: 914000, // 50 km
+    },
+  },
+})
+.select(
+  "-balance -email -createdAt -updatedAt -role -otp -totalCountQuestionsId -location -totalCountQuestions -blockedUsers -description"
+)
+.limit(50)
+.exec();
+    return nearbyUsers;
+  }
+  
 
   //====================================
   findSingleUser(id: string) {
@@ -320,7 +399,6 @@ export class AuthService {
     // console.log()
     // return user.profile;
     const user = await this.userModel.findById(id, { profile: 1, _id: 0 }); // Fetch only the 'profile' field
-    console.log(user.profile);
     return user.profile; // Ensure proper handling if the user is not found
   }
   //========profile update==============

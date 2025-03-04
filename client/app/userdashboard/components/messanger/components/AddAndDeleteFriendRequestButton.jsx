@@ -87,10 +87,10 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
         {!loading && (
           <>
             {requestStatus == "pending"
-              ? <span className="flex gap-1 items-center"><BsPersonUp />  Cancel Request</span>
+              ? <span className="flex gap-1 items-center"><BsPersonUp />  Connecting</span>
               : requestStatus == "accepted"
-              ? <span className="flex gap-1 items-center"><IoPersonRemoveOutline />  Unfriend</span>
-              : <span className="flex gap-1 items-center"><IoPersonAddOutline /> Add Friend</span>}
+              ? <span className="flex gap-1 items-center"><IoPersonRemoveOutline />  Disconnect</span>
+              : <span className="flex gap-1 items-center"><IoPersonAddOutline /> Connect</span>}
           </>
         )}
       </button>

@@ -15,7 +15,7 @@ const InputForm = () => {
   const {dispatch} = useStore()
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
-   const [location, setLocation] = useState({ lat: null, lon: null } | null);
+   const [location, setLocation] = useState({ lat:-39.145175, lon: -128.232097});
   const [submitValue, setSubmitValue] = useState({
     role : "user",
     status:"New",
@@ -24,6 +24,8 @@ const InputForm = () => {
     email: "",
     password: "",
   });
+
+
   useEffect(() => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -39,16 +41,16 @@ const InputForm = () => {
         );
     }
   }, []);
+
   const targetElement = (e) => {
     setSubmitValue({
-      ...location,
       ...submitValue,
       [e.target.name]: e.target.value,
+      location,
     });
   };
   const handlesubmit = async (e) => {
     e.preventDefault();
-    console.log(submitValue);
     try {
       let uri = `${baseurl}/auth/user/register`;
       setLoader(true)

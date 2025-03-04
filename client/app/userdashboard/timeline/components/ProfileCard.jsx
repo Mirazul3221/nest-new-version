@@ -144,10 +144,10 @@ const ProfileCard = ({ id }) => {
             <img className="w-[100px]" src={user?.profile} alt={user?.name} />
             <div className="">
               <h2 className="text-2xl font-semibold">
-                {user?.name.split(" ")[0]}
+                {user?.name?.split(" ")[0]}
               </h2>
               <h2 className="">{user?.title}</h2>
-              <h2 className="">{user?.description.slice(0, 60)}...</h2>
+              <h2 className="">{user?.description?.slice(0, 60)}...</h2>
             </div>
           </div>
           <div className="mt-3 flex justify-center gap-3 items-center">

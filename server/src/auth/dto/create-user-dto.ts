@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -7,5 +7,9 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(6)
     readonly password: string;
+
+    @IsOptional()
+    location: { lon: number; lat: number }; // Use 'number' instead of 'Number'
+    
     
 }

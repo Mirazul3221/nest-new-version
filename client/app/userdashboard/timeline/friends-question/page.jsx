@@ -2,7 +2,7 @@
 import { baseurl } from "@/app/config";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import axios from "axios";
-import loder from '@/public/loading-buffer.gif'
+import loder from "@/public/loading-buffer.gif";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
@@ -17,13 +17,14 @@ import VerticleBanner from "@/app/adsterra/VerticleBanner";
 import MobileBanner from "@/app/adsterra/MobileBanner320";
 import { useRouter } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
+import NearbyUserProfileCard from "../../components/NearbyUserProfileCard";
 const Page = () => {
-    const {dispatch,store} = useStore()
+  const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
-//
+  //
   const fetchChunkData = useCallback(async () => {
     if (isLoading || !hasMore) return; // Avoid duplicate requests
     setIsLoading(true);
@@ -36,61 +37,57 @@ const Page = () => {
           },
         }
       );
-    console.log(data)
+      console.log(data);
       if (data.length === 0) {
         setHasMore(false); // No more comments to fetch
       } else {
-        setQuestions(prev=> [...prev,...data])
+        setQuestions((prev) => [...prev, ...data]);
         setPage((prev) => prev + 1); // Increment page
       }
-
-
     } catch (error) {
-      console.error('Failed to fetch comments:', error);
+      console.error("Failed to fetch comments:", error);
     } finally {
       setIsLoading(false);
     }
-  },[page, isLoading, hasMore])
-
-
+  }, [page, isLoading, hasMore]);
 
   // Infinite Scroll Event Listener//
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 500 &&
         !isLoading
       ) {
         fetchChunkData();
       }
     };
-//
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll); // Cleanup
+    //
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); // Cleanup
   }, [fetchChunkData, isLoading]);
 
-
-    // Initial Fetch
-    useEffect(() => {
-      fetchChunkData();
-    }, []); // Only once on component mount
+  // Initial Fetch
+  useEffect(() => {
+    fetchChunkData();
+  }, []); // Only once on component mount
 
   const questionsAfterDelete = (question) => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
   };
 
-  const [myDetails,setMyDetails] = useState()
-   useEffect(() => {
-    setMyDetails(JSON.parse(localStorage.getItem('myDetails')))
-   }, []);
+  const [myDetails, setMyDetails] = useState();
+  useEffect(() => {
+    setMyDetails(JSON.parse(localStorage.getItem("myDetails")));
+  }, []);
 
-   const route = useRouter();
-   const logout = () => {
-     dispatch({ type: "logout" });
-     route.push("/login");
-   };
-   const [openSideMenu,setOpenSideMenu] = useState(false)
+  const route = useRouter();
+  const logout = () => {
+    dispatch({ type: "logout" });
+    route.push("/login");
+  };
+  const [openSideMenu, setOpenSideMenu] = useState(false);
   return (
     <div>
       <ProtectRoute>
@@ -100,73 +97,136 @@ const Page = () => {
         <div className="md:px-6 flex md:pt-4 gap-4 bg-gray-50">
           <div className="w-3/12 h-[60vh] sticky hidden md:block top-24">
             <div className=" text-gray-700">
-              <a className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center" href="https://bcs-prep.vercel.app/userdashboard/myprofile">
-              <img className="w-10" src={myDetails?.profile} alt={store.userInfo.name}/>
-              <h2 className="font-bold">{store.userInfo.name}</h2></a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <BsCardText/> About
+              <a
+                className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center"
+                href="https://bcs-prep.vercel.app/userdashboard/myprofile"
+              >
+                <img
+                  className="w-10"
+                  src={myDetails?.profile}
+                  alt={store.userInfo.name}
+                />
+                <h2 className="font-bold">{store.userInfo.name}</h2>
               </a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <FiFileText/> Bcs Question
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <BsCardText /> About
               </a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <IoMdSettings/> Setting
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <FiFileText /> Bcs Question
               </a>
-              <div onClick={logout} className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <LuLogOut/> Log out
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <IoMdSettings /> Setting
+              </a>
+              <div
+                onClick={logout}
+                className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <LuLogOut /> Log out
               </div>
             </div>
           </div>
 
           {/* ================================for mobile=================================================== */}
-          <div className={`w-1/2 duration-150 fixed z-50 ${openSideMenu ? "-translate-x-[0%]" : "-translate-x-[110%]"} md:hidden bg-white`}>
-                           <div onClick={()=>setOpenSideMenu(false)} className="ml-4 flex justify-end w-full">
-                              <RxCross2 size={22} />
-                            </div>
+          <div
+            className={`w-1/2 duration-150 fixed z-50 ${
+              openSideMenu ? "-translate-x-[0%]" : "-translate-x-[110%]"
+            } md:hidden bg-white`}
+          >
+            <div
+              onClick={() => setOpenSideMenu(false)}
+              className="ml-4 flex justify-end w-full"
+            >
+              <RxCross2 size={22} />
+            </div>
             <div className=" text-gray-700">
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <BsCardText/> About
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <BsCardText /> About
               </a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <FiFileText/> Bcs Question
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <FiFileText /> Bcs Question
               </a>
-              <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <IoMdSettings/> Setting
+              <a
+                href="#"
+                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <IoMdSettings /> Setting
               </a>
-              <div onClick={logout} className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
-                <LuLogOut/> Log out
+              <div
+                onClick={logout}
+                className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+              >
+                <LuLogOut /> Log out
               </div>
             </div>
           </div>
-            <div className=" md:w-6/12">
-             <div className="Add_a_question rounded-md border md:my-4 my-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
-                 <img className="w-16 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name}/>
-               <a className="text-gray-700 text-lg md:text-2xl" href="/userdashboard/timeline/create-post">Share a question with your friends</a>
-              <p onClick={()=>setOpenSideMenu(true)} className=" md:hidden cursor-pointer"> <span>...</span></p>
-             </div>
-            {questions?.map((question, i) => {
-            return (
-              <div key={i} className="mx-auto">
-                <QuestionCard
-                  questionsAfterDelete={questionsAfterDelete}
-                  myQuestion={question}
-                />
-              </div>
-            );
-          })}
-          {isLoading && <div className="flex bg-white justify-center"><div className="flex items-center gap-2"><Image src={loder}/> <h2 className="text-center text-gray-500">Loading...</h2></div></div>}
+          
+          <div className=" md:w-6/12">
+           <div className="overflow-x-auto"><NearbyUserProfileCard/></div>
+            <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
+              <img
+                className="w-16 rounded-full"
+                src={store.userInfo.profile}
+                alt={store.userInfo.name}
+              />
+              <a
+                className="text-gray-700 text-lg md:text-2xl"
+                href="/userdashboard/timeline/create-post"
+              >
+                Share a question with your friends
+              </a>
+              <p
+                onClick={() => setOpenSideMenu(true)}
+                className=" md:hidden cursor-pointer"
+              >
+                {" "}
+                <span>...</span>
+              </p>
             </div>
-            <div className="w-3/12 hidden md:block">
+            {questions?.map((question, i) => {
+              return (
+                <div key={i} className="mx-auto">
+                  <QuestionCard
+                    questionsAfterDelete={questionsAfterDelete}
+                    myQuestion={question}
+                  />
+                </div>
+              );
+            })}
+            {isLoading && (
+              <div className="flex bg-white justify-center">
+                <div className="flex items-center gap-2">
+                  <Image src={loder} />{" "}
+                  <h2 className="text-center text-gray-500">Loading...</h2>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="w-3/12 hidden md:block">
             <div className="">
-               <VerticleBanner/>
+              <VerticleBanner />
             </div>
             {/* <div className="">
                <MobileBanner/>
             </div> */}
-            </div>
+          </div>
         </div>
 
-        <Footer/>
+        <Footer />
       </ProtectRoute>
     </div>
   );
