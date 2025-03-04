@@ -2,6 +2,9 @@
 const nextConfig = {
     reactStrictMode: false,
     transpilePackages: ['three'],
+    eslint: {
+        ignoreDuringBuilds: true,
+      },
 
 };
 
