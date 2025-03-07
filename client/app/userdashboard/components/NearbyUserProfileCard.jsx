@@ -1,9 +1,10 @@
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import AddAndDeleteFriendRequestButton from "./messanger/components/AddAndDeleteFriendRequestButton";
-import './cssfiles/scrolling_bar.css'
+import "./cssfiles/scrolling_bar.css";
+import Link from "next/link";
 
 const NearbyUserProfileCard = () => {
   const { store } = useStore();
@@ -52,25 +53,36 @@ const NearbyUserProfileCard = () => {
   };
 
   return (
-<div
-  ref={scrollRef}
-  className="flex gap-4 overflow-x-auto w-[90vw] mx-auto md:w-full items-center hidden_scroll scrollbar-hide cursor-grab active:cursor-grabbing select-none"
-  onMouseDown={handleMouseDown}
-  onMouseLeave={handleMouseLeave}
-  onMouseUp={handleMouseUp}
-  onMouseMove={handleMouseMove}
->
-
-      <div className="flex gap-4 min-w-max"> {/* Ensure children do not wrap */}
+    <div
+      ref={scrollRef}
+      className="flex gap-4 overflow-x-auto w-[90vw] mx-auto md:w-full items-center hidden_scroll scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+    >
+      <div className="flex gap-2 min-w-max">
+        {" "}
+        {/* Ensure children do not wrap */}
         {nearby?.map((u) => (
           <div
             key={u?._id}
-            className="flex gap-6 items-center border rounded-xl bg-white py-1 px-3 shrink-0"
+            className="flex gap-10 items-center border rounded-xl bg-white py-1 px-3 shrink-0"
           >
             <div className="profile flex gap-2 items-center">
-              <img className="w-12 rounded-full" src={u?.profile} alt={u?.name} />
+            <Link href={`${viewurl}/userdashboard/searchusers/${u?._id}`}>
+            <img
+                className="w-12 rounded-full"
+                src={u?.profile}
+                alt={u?.name}
+              />
+                </Link>
               <div className="details">
-                <h3>{u?.name}</h3>
+                <Link href={`${viewurl}/userdashboard/searchusers/${u?._id}`}>
+                  <h2 className="font-semibold text-gray-700 mt-2">
+                    {u?.name}
+                  </h2>
+                </Link>
                 <h3 className="text-sm">{u?.status}</h3>
               </div>
             </div>

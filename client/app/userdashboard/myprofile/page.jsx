@@ -415,11 +415,10 @@ const Page = () => {
                     <p className="text-green-500 text-[12px]">Active</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 w-full mt-4 text-gray-700">
+                <div className="flex items-center gap-1 w-full mt-4 text-gray-700">
                 <CiUser />
                   <h3>
-                    {" "}
-                    Member since{" "}
+                    Member since
                     <span className="font-semibold">
                       {moment(userDetails.createdAt).format("MMM YYYY")}
                     </span>

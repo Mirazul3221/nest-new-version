@@ -19,6 +19,7 @@ import Messanger from "../../components/messanger/Messanger";
 import { useSocket } from "../../global/SocketProvider";
 import CallMessageContainer from "../../components/messanger/CallMessageContainer";
 import AddAndDeleteFriendRequestButton from "../../components/messanger/components/AddAndDeleteFriendRequestButton";
+import { CiUser } from "react-icons/ci";
 
 const Page = () => {
   const pram = useParams();
@@ -295,8 +296,8 @@ const Page = () => {
                         </div>
                       )}
                       <div className="md:flex items-center gap-4">
-                        <div className="flex items-center gap-2 mt-2 text-gray-700">
-                          <LuUser2 />
+                        <div className="flex items-center gap-1 mt-2 text-gray-700">
+                            <CiUser />
                           <h3>
                             Member since{" "}
                             <span className="font-semibold">
@@ -314,7 +315,7 @@ const Page = () => {
                           userDetails={userDetails}
                         />
                       </div>
-                      {/* --------------------------------------------Messanger Box System-------------------------------------------- */}
+                      {/* ---------------------------------------------Messanger Box System-------------------------------------------- */}
                     </div>
                   ) : (
                     <div className="p-4 mt-20 space-y-2">
@@ -408,49 +409,58 @@ const Page = () => {
           {someOfMyFriendDetails &&
             someOfMyFriendDetails
               .filter((user) => user._id !== store.userInfo.id)
-              .map((item, i) => {
-                return (
-                  <div key={i} className="bg-gray-50">
-                    <div
-                      key={i}
-                      className="mt-4 bg-gray-100 p-4 rounded-lg border"
-                    >
-                      <div className="relative rounded-full bg-black w-fit mx-auto">
-                        {myActiveFriends &&
-                        myActiveFriends?.some((O) => O === item._id) ? (
-                          <div className="w-5 h-5 border-2 border-white bg-green-500 absolute rounded-full right-10 bottom-1"></div>
-                        ) : (
-                          <div className="w-5 h-5 border-2 border-white bg-gray-400 absolute rounded-full right-10 bottom-1"></div>
-                        )}
-                        <img
-                          className="w-48 mx-auto border-2 md:border-4 rounded-full"
-                          src={item.profile}
-                        />
-                      </div>
-                      <Link
-                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                        >
-                          <h2  className="text-center text-2xl font-semibold text-gray-700 mt-2">
-                          {item.name}
-                          </h2>
-                        </Link>
-                      <h4 className="text-center text-gray-700 mt-2">
-                        Reader Type :{" "}
-                        <span className="text-violet-700">{item.status}</span>
-                      </h4>
-                      <div className="flex gap-2 mt-2 justify-center items-center">
-                      <AddAndDeleteFriendRequestButton
-                          id={item?._id}
-                        />
-                      <CallMessageContainer
-                              id={item?._id}
-                              userDetails={item}
-                            />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              .map((item, i) => (
+                                  <div
+                                    key={i}
+                                    className="bg-gray-100 p-4 rounded-lg border"
+                                  >
+                
+                                    <div className="flex justify-between items-center">
+                                    <div className="flex gap-2 items-center">
+                                      <div className="relative rounded-full w-fit">
+                                        {myActiveFriends &&
+                                        myActiveFriends?.some((O) => O === item._id) ? (
+                                          <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                                        ) : (
+                                          <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                                        )}
+                                        <img
+                                          className="w-20 border-2 rounded-full"
+                                          src={item.profile}
+                                        />
+                                      </div>
+                                      <div>
+                                        <a
+                                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                                        >
+                                          <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
+                                            {item.name}
+                                          </h2>
+                                        </a>
+                                        <h2 className="text-gray-700">
+                                          Status : {item.status}
+                                        </h2>
+                                      </div>
+                                    </div>
+                                    {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
+                                    <div>
+                                      <AddAndDeleteFriendRequestButton id={item._id} />
+                                      {myActiveFriends &&
+                                        myActiveFriends?.some((O) => O === item._id) && (
+                                          <h2
+                                            onClick={() => {
+                                              inviteYourFriend(item._id);
+                                            }}
+                                            className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                                          >
+                                            Invite
+                                          </h2>
+                                        )}
+                                    </div>
+                                    </div>
+                 
+                                  </div>
+              ))}
 
           <div className="bg-gray-100 mt-4 flex justify-center items-center font-bold text-gray-500">
             View All your Friends
