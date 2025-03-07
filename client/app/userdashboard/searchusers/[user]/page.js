@@ -297,7 +297,7 @@ const Page = () => {
                       )}
                       <div className="md:flex items-center gap-4">
                         <div className="flex items-center gap-1 mt-2 text-gray-700">
-                            <CiUser />
+                          <CiUser />
                           <h3>
                             Member since{" "}
                             <span className="font-semibold">
@@ -405,62 +405,55 @@ const Page = () => {
             </div>
           </div>
         </div>
-        <div className="grid md:grid-cols-4 gap-5 px-10 pb-5">
+        <div className="grid md:grid-cols-3 gap-2 px-4 pb-5">
           {someOfMyFriendDetails &&
             someOfMyFriendDetails
               .filter((user) => user._id !== store.userInfo.id)
-              .map((item, i) => (
-                                  <div
-                                    key={i}
-                                    className="bg-gray-100 p-4 rounded-lg border"
-                                  >
-                
-                                    <div className="flex justify-between items-center">
-                                    <div className="flex gap-2 items-center">
-                                      <div className="relative rounded-full w-fit">
-                                        {myActiveFriends &&
-                                        myActiveFriends?.some((O) => O === item._id) ? (
-                                          <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
-                                        ) : (
-                                          <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
-                                        )}
-                                        <img
-                                          className="w-20 border-2 rounded-full"
-                                          src={item.profile}
-                                        />
-                                      </div>
-                                      <div>
-                                        <a
-                                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                                        >
-                                          <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
-                                            {item.name}
-                                          </h2>
-                                        </a>
-                                        <h2 className="text-gray-700">
-                                          Status : {item.status}
-                                        </h2>
-                                      </div>
-                                    </div>
-                                    {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
-                                    <div>
-                                      <AddAndDeleteFriendRequestButton id={item._id} />
-                                      {myActiveFriends &&
-                                        myActiveFriends?.some((O) => O === item._id) && (
-                                          <h2
-                                            onClick={() => {
-                                              inviteYourFriend(item._id);
-                                            }}
-                                            className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
-                                          >
-                                            Invite
-                                          </h2>
-                                        )}
-                                    </div>
-                                    </div>
-                 
-                                  </div>
-              ))}
+              .map((item, i) => {
+                return (
+                  <div key={i} className="bg-gray-50">
+                    <div
+                      key={i}
+                      className="mt-4 bg-gray-100 p-2 flex gap-4 justify-between items-center rounded-lg border"
+                    >
+                    <div className="flex items-center gap-2">
+                    <div className="relative rounded-full w-fit mx-auto">
+                        {myActiveFriends &&
+                        myActiveFriends?.some((O) => O === item._id) ? (
+                          <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                        ) : (
+                          <div className="w-3 h-3 border-2 border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                        )}
+                        <img
+                          className="w-20 mx-auto border md:border-4 rounded-full"
+                          src={item.profile}
+                        />
+                      </div>
+                      <div>
+                        <Link
+                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                        >
+                          <h2 className="text-md font-semibold text-gray-700 mt-2">
+                            {item.name}
+                          </h2>
+                        </Link>
+                        <h4 className=" text-gray-700 mt-2">
+                          Reader Type :{" "}
+                          <span className="text-violet-700">{item.status}</span>
+                        </h4>
+                      </div>
+                    </div>
+                      <div className="mt-2 space-y-3">
+                        <AddAndDeleteFriendRequestButton id={item?._id} />
+                        <CallMessageContainer
+                          id={item?._id}
+                          userDetails={item}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
 
           <div className="bg-gray-100 mt-4 flex justify-center items-center font-bold text-gray-500">
             View All your Friends
