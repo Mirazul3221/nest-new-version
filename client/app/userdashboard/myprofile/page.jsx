@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import storeContext from "@/app/global/createContex";
@@ -30,6 +36,7 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import AddAndDeleteFriendRequestButton from "../components/messanger/components/AddAndDeleteFriendRequestButton";
 import CallMessageContainer from "../components/messanger/CallMessageContainer";
 import { CiUser } from "react-icons/ci";
+import QuestionCard from "../timeline/components/QuestionCard";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -40,6 +47,8 @@ const Page = () => {
   const [updateDesc, setUpdateDesc] = useState(userDetails?.description);
   const [facebookLink, setFacebookLink] = useState(userDetails?.fblink);
   const [link, setLink] = useState(false);
+  const [record, setRecord] = useState("History");
+  const [subject, setSubject] = useState("বাংলা");
   const [openMOdel, setOpenModel] = useState(false);
   // const isBrowser = typeof window !== undefined;
   const [percentage, setPercentage] = useState(0);
@@ -290,7 +299,91 @@ const Page = () => {
   useEffect(() => {
     setRandNum(Math.floor(Math.random() * 15) + 1);
   }, []);
-  console.log(randNum);
+
+  ///////////////////////////////////////////////////////
+
+  const [questions, setQuestions] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const isFetchingRef = useRef(false); // Track ongoing fetch request
+
+  const fetchChunkData = async () => {
+    if (isFetchingRef.current || isLoading) return; // Prevent duplicate requests
+    setIsLoading(true);
+    isFetchingRef.current = true; // Mark as fetching
+    try {
+      const { data } = await axios.get(
+        `${baseurl}/auth/get-all-read-questions?type=${subject}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+
+      if (data.length === 0) {
+        isFetchingRef.current = true;
+        setIsLoading(true);
+      } else {
+        setQuestions((prev) => [...prev, ...data]);
+        setPage((prev) => prev + 1);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+      setIsLoading(false);
+    } finally {
+      isFetchingRef.current = false; // Reset flag
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log(window.innerHeight + window.scrollY)
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 500 &&
+        !isFetchingRef.current &&
+        !isLoading
+      ) {
+        console.log( document.body.offsetHeight)
+        fetchChunkData();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [page, isLoading, subject]); // Only re-run when `hasMore` changes
+
+useEffect(() => {
+   const fetchFirstTime = async ()=> {
+    try {
+      setQuestions([]);
+      const { data } = await axios.get(
+        `${baseurl}/auth/get-all-read-questions?type=${subject}&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setQuestions(data);
+      setPage(2)
+    } catch (error) {
+      
+    }
+
+   }
+
+   fetchFirstTime()
+}, [subject]);
+
+  const questionsAfterDelete = (question) => {
+    const filteredQuestions = questions?.filter((q) => q._id !== question._id);
+    setQuestions(filteredQuestions);
+  };
+
   return (
     <ProtectRoute>
       <div className="md:px-10 px-4 md:py-5 py-2">
@@ -416,7 +509,7 @@ const Page = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 w-full mt-4 text-gray-700">
-                <CiUser />
+                  <CiUser />
                   <h3>
                     Member since
                     <span className="font-semibold">
@@ -483,7 +576,7 @@ const Page = () => {
                   )}
                 </div>
                 {userDetails?.fblink && !link ? (
-                  <div className="mt-4 border-t py-2">
+                  <div className="mt-2 border-t py-2">
                     <div>
                       <h2 className="text-gray-600 font-bold mb-2">
                         Varified facebook profile
@@ -509,7 +602,7 @@ const Page = () => {
                   </div>
                 ) : (
                   <div>
-                    <div className="mt-4 border-t-2 py-4">
+                    <div className="mt-2 py-2">
                       <h2 className="text-gray-600 font-bold">
                         Set your facebook profile link
                       </h2>
@@ -554,56 +647,6 @@ const Page = () => {
               </div>
             )}
           </div>
-          {userDetails ? (
-            <div className="md:w-10/12 mx-auto bg-white mt-10 md:mt-0 md:px-10 py-6">
-              <h2 className="text-center md:text-3xl text-violet-700 mb-2">
-                All The Questions You Have read
-              </h2>
-              <div>
-                <RadarChart resize={resize} userDetails={userDetails} />
-              </div>
-              <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
-                {percentage > 0 && (
-                  <div
-                    style={{ width: percentage + "%" }}
-                    className={`duration-300 ${
-                      percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                    } h-[3px] rounded-full relative`}
-                  >
-                    <div
-                      className={`absolute -right-[14px] text-white ${
-                        percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                      } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
-                    >
-                      {percentage + "%"}
-                      <div
-                        className={`w-[3px] ${
-                          percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                        } h-4 absolute top-6 left-[43%]`}
-                      ></div>
-                    </div>
-                  </div>
-                )}
-                <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
-                  <span>0</span>
-                  <span>10</span>
-                  <span>20</span>
-                  <span>30</span>
-                  <span>40</span>
-                  <span>50</span>
-                  <span>60</span>
-                  <span>70</span>
-                  <span>80</span>
-                  <span>90</span>
-                  <span>100</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">
-              Loading...
-            </div>
-          )}
         </div>
 
         <div className="bg-white mt-5">
@@ -654,62 +697,165 @@ const Page = () => {
             <div className="md:grid grid-cols-3 gap-4">
               {getAllAcceptedFriend !== null &&
                 getAllAcceptedFriend?.map((item, i) => (
-                  <div
-                    key={i}
-                    className="bg-gray-100 p-4 rounded-lg border"
-                  >
-
+                  <div key={i} className="bg-gray-100 p-4 rounded-lg border">
                     <div className="flex justify-between items-center">
-                    <div className="flex gap-2 items-center">
-                      <div className="relative rounded-full w-fit">
-                        {myActiveFriends &&
-                        myActiveFriends?.some((O) => O === item._id) ? (
-                          <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
-                        ) : (
-                          <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
-                        )}
-                        <img
-                          className="w-20 border-2 rounded-full"
-                          src={item.profile}
-                        />
-                      </div>
-                      <div>
-                        <a
-                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                        >
-                          <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
-                            {item.name}
-                          </h2>
-                        </a>
-                        <h2 className="text-gray-700">
-                          Status : {item.status}
-                        </h2>
-                      </div>
-                    </div>
-                    {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
-                    <div>
-                      <AddAndDeleteFriendRequestButton id={item._id} />
-                      {myActiveFriends &&
-                        myActiveFriends?.some((O) => O === item._id) && (
-                          <h2
-                            onClick={() => {
-                              inviteYourFriend(item._id);
-                            }}
-                            className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                      <div className="flex gap-2 items-center">
+                        <div className="relative rounded-full w-fit">
+                          {myActiveFriends &&
+                          myActiveFriends?.some((O) => O === item._id) ? (
+                            <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                          ) : (
+                            <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                          )}
+                          <img
+                            className="w-20 border-2 rounded-full"
+                            src={item.profile}
+                          />
+                        </div>
+                        <div>
+                          <a
+                            href={`${viewurl}/userdashboard/searchusers/${item._id}`}
                           >
-                            Invite
+                            <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
+                              {item.name}
+                            </h2>
+                          </a>
+                          <h2 className="text-gray-700">
+                            Status : {item.status}
                           </h2>
-                        )}
+                        </div>
+                      </div>
+                      {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
+                      <div>
+                        <AddAndDeleteFriendRequestButton id={item._id} />
+                        {myActiveFriends &&
+                          myActiveFriends?.some((O) => O === item._id) && (
+                            <h2
+                              onClick={() => {
+                                inviteYourFriend(item._id);
+                              }}
+                              className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                            >
+                              Invite
+                            </h2>
+                          )}
+                      </div>
                     </div>
-                    </div>
- 
                   </div>
                 ))}
             </div>
-            <button className="text-gray-700 py-2 border bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">See all your friends</button>
+            <button className="text-gray-700 py-2 border bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">
+              See all your friends
+            </button>
           </div>
         </div>
-        <div className="mb-24">
+
+        <div className="">
+          <div className="border-t-2 py-2 mt-4">
+            <div className="flex w-full items-center justify-center gap-2">
+              <div
+                onClick={() => setRecord("History")}
+                className={`px-6 border cursor-pointer ${
+                  record == "History"
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-700"
+                } rounded-md`}
+              >
+                History
+              </div>
+              <div
+                onClick={() => setRecord("Statistic")}
+                className={`px-6 border cursor-pointer ${
+                  record == "Statistic"
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-700"
+                } rounded-md`}
+              >
+                Statistic
+              </div>
+            </div>
+          </div>
+          {record === "Statistic" && (
+            <>
+              {userDetails ? (
+                <div className="md:w-10/12 mx-auto bg-white mt-10 md:mt-0 md:px-10 py-6">
+                  <h2 className="text-center md:text-3xl text-violet-700 mb-2">
+                    All The Questions You Have read
+                  </h2>
+                  <div>
+                    <RadarChart resize={resize} userDetails={userDetails} />
+                  </div>
+                  <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
+                    {percentage > 0 && (
+                      <div
+                        style={{ width: percentage + "%" }}
+                        className={`duration-300 ${
+                          percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                        } h-[3px] rounded-full relative`}
+                      >
+                        <div
+                          className={`absolute -right-[14px] text-white ${
+                            percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                          } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
+                        >
+                          {percentage + "%"}
+                          <div
+                            className={`w-[3px] ${
+                              percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                            } h-4 absolute top-6 left-[43%]`}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
+                      <span>0</span>
+                      <span>10</span>
+                      <span>20</span>
+                      <span>30</span>
+                      <span>40</span>
+                      <span>50</span>
+                      <span>60</span>
+                      <span>70</span>
+                      <span>80</span>
+                      <span>90</span>
+                      <span>100</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">
+                  Loading...
+                </div>
+              )}
+            </>
+          )}
+
+          {record === "History" && (
+            <>
+              {questions && (
+                <div className="mx-auto md:px-20">
+                  <div className="flex gap-2 my-2">
+                  <div onClick={()=>{setSubject('বাংলা')}} className={`${subject === 'বাংলা' ? "bg-gray-700 text-white" : "bg-gray-100"} shadow-md rounded-md px-4 text-sm border cursor-pointer`}>Bangla</div>
+                  <div onClick={()=>{setSubject('ইংরেজি')}} className={`${subject === 'ইংরেজি' ? "bg-gray-700 text-white" : "bg-gray-100"} shadow-md rounded-md px-4 text-sm border cursor-pointer`}>Bangla</div>
+                  </div>
+
+                  {questions?.map((question, i) => {
+                    return (
+                      <div key={i}>
+                        <QuestionCard
+                          questionsAfterDelete={questionsAfterDelete}
+                          myQuestion={question}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* <div className="mb-24">
           {userDetails.totalCountQuestions?.map((item, i) => {
             return (
               <div
@@ -722,7 +868,7 @@ const Page = () => {
               </div>
             );
           })}
-        </div>
+        </div> */}
         <div className="fixed bottom-0 left-0 w-full">
           <div className="mobile-responsive flex md:hidden justify-around rounded-t-3xl items-center py-4 w-full bg-white">
             <div>
@@ -752,7 +898,7 @@ const Page = () => {
             </div>
             <div className="">
               <div
-                className={`shadow-md text-violet-700 shadow-fuchsia-500 duration-500 p-2 rounded-full`}
+                className={`shadow-md text-violet-700 duration-500 p-2 rounded-full`}
               >
                 <Link href={"./myprofile"}>
                   <CgProfile size={30} />

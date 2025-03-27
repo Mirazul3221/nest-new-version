@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UsePipes, ValidationPipe, UseGuards, HttpException, HttpStatus, UseInterceptors, Bind, UploadedFile, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UsePipes, ValidationPipe, UseGuards, HttpException, HttpStatus, UseInterceptors, Bind, UploadedFile, Request, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { CreateUserDto } from './dto/create-user-dto';
@@ -195,8 +195,18 @@ return await this.authService.questionCollecton(questions,req)
 }
 
 
-//===================================================
-//==========Logic for block and unblock users========
+
+////////////////////////////////////////////////////////////
+@Get('get-all-read-questions')
+@UseGuards(AuthGuard())
+async retriveAllReadQuestion (@Req() req, @Query('type') type, @Query('page') page){
+  const userId = req.user._id;
+  return await this.authService.retrieveAllReadQuestion(userId,type,page,2)
+}
+
+
+//====================================================
+//===========Logic for block and unblock users========
 //===================================================
 @Post('user/block/:targetId')
 @UseGuards(AuthGuard())

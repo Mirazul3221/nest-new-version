@@ -93,6 +93,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     // console.log(ans)
   }, []);
 
+  
   const handleDelete = async () => {
     try {
       const { data } = await axios.get(

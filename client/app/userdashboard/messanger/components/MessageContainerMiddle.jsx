@@ -584,7 +584,7 @@ const Middle = ({
     }
   };
 
-  // Handle scroll event to detect when user scrolls to the top
+  // Handle scroll event to detect when user scrolls to the top //
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && hasMore && !loading) {
       fetchMessages(page, "dynamic");

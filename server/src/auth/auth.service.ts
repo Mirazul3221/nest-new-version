@@ -19,6 +19,7 @@ import { ConfigService } from '@nestjs/config';
 import { use } from 'passport';
 import { FriendRequest, FriendRequestDocument } from 'src/friend-request/schemas/friend-request.schema';
 import { userInfo } from 'os';
+import { UsersQuestion } from 'src/userquestions/schema/userquestions.schema';
 const nodemailer = require('nodemailer');
 
 @Injectable()
@@ -474,7 +475,7 @@ const nearbyUsers = await this.userModel
     if (targetUser.totalCountQuestionsId.includes(id)) {
       return null;
     } else {
-      targetUser?.totalCountQuestionsId.push(id); //
+      targetUser?.totalCountQuestionsId.push(id); 
       await targetUser.save();
       //=============UPDATE ENGLISH=================
       if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
@@ -505,7 +506,33 @@ const nearbyUsers = await this.userModel
       }
     }
   }
+  /////////////////////////////Retrive all read question/////////////////////////////
 
+  async retrieveAllReadQuestion(id: string, type: string,page:number,limit:number) {
+       console.log(page)//
+       console.log(type)//
+      const targetUser = await this.userModel.findById(id)
+          .populate({
+              path: "totalCountQuestionsId",
+              select: "_id userId slug userName userProfile prevExam question option_01 option_02 option_03 option_04 rightAns content likes comments createdAt subject chapter",  
+              model: "UsersQuestion"
+          })
+          .lean();  // Ensure returned data is a plain JSON object
+  
+      if (!targetUser) return { message: "User not found" };
+  
+      // Type-casting to UsersQuestion[]
+      const questions = targetUser.totalCountQuestionsId as unknown as UsersQuestion[];
+  
+      const filteredQuestions = questions.filter(q => q.subject === type);
+      
+    // Pagination logic
+    const startIndex = (page - 1) * limit;
+    const result = filteredQuestions.slice(startIndex, startIndex + limit);
+    return result
+         
+  }
+  
   //////////////////////////////////////////////////////Here is the logic to block and unblock users/////////////////////////////////////////////
   async blockUser(authId: string, targetId: string) {
     const isExist = await this.userModel.findById(authId);

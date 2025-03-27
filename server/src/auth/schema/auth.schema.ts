@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsOptional } from 'class-validator';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import mongoose, { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Reader extends Document {
@@ -67,8 +67,8 @@ export class Reader extends Document {
   totalCountQuestions: [];
 
   @IsOptional()
-  @Prop({ type: [{ type: String, required: false }] })
-  totalCountQuestionsId: string[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref:"UsersQuestion", required: true }] })
+  totalCountQuestionsId:[{type:mongoose.Schema.Types.ObjectId, ref:"UsersQuestion"}];
 
   @IsOptional()
   @Prop({ type: [String], default: [] })

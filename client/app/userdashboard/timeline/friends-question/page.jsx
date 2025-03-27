@@ -75,7 +75,7 @@ const Page = () => {
   const questionsAfterDelete = (question) => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
-  };
+  };//
 
   const [myDetails, setMyDetails] = useState();
   useEffect(() => {
