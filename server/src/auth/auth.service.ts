@@ -508,30 +508,38 @@ const nearbyUsers = await this.userModel
   }
   /////////////////////////////Retrive all read question/////////////////////////////
 
-  async retrieveAllReadQuestion(id: string, type: string,page:number,limit:number) {
-       console.log(page)//
-       console.log(type)//
-      const targetUser = await this.userModel.findById(id)
-          .populate({
-              path: "totalCountQuestionsId",
-              select: "_id userId slug userName userProfile prevExam question option_01 option_02 option_03 option_04 rightAns content likes comments createdAt subject chapter",  
-              model: "UsersQuestion"
-          })
-          .lean();  // Ensure returned data is a plain JSON object
-  
-      if (!targetUser) return { message: "User not found" };
-  
-      // Type-casting to UsersQuestion[]
-      const questions = targetUser.totalCountQuestionsId as unknown as UsersQuestion[];
-  
-      const filteredQuestions = questions.filter(q => q.subject === type);
-      
+  async retrieveAllReadQuestion(id: string, type: string, page: number, limit: number) {
+    console.log("Page:", page);
+    console.log("Type:", type);
+
+    const targetUser = await this.userModel.findById(id)
+        .populate({
+            path: "totalCountQuestionsId",
+            select: "_id userId slug userName userProfile prevExam question option_01 option_02 option_03 option_04 rightAns content likes comments createdAt subject chapter",
+            model: "UsersQuestion"
+        })
+        .lean(); // Convert Mongoose document to a plain JavaScript object
+
+    if (!targetUser) return { message: "User not found" };
+
+    // Ensure totalCountQuestionsId is an array
+    const questions: any[] = targetUser.totalCountQuestionsId || [];
+
+    // Filter by subject type
+    const filteredQuestions = questions
+        .filter(q => q.subject === type)
+        .map(q => ({
+            ...q,
+            totalComments: q.comments?.length || 0 // Add totalComments field
+        }));
+
     // Pagination logic
     const startIndex = (page - 1) * limit;
     const result = filteredQuestions.slice(startIndex, startIndex + limit);
-    return result
-         
-  }
+
+    console.log("Paginated Questions:", result);
+    return result;
+}
   
   //////////////////////////////////////////////////////Here is the logic to block and unblock users/////////////////////////////////////////////
   async blockUser(authId: string, targetId: string) {

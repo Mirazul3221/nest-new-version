@@ -32,12 +32,15 @@ const CommentBox = ({ question }) => {
   const sortComments = question?.comments.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+const extractQuestion = [question?.comments[0],question?.comments[1]]
+  console.log(question?.comments)
+
   const [open, setOpen] = useState(false);
   const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
-  const [comments, setComments] = useState(sortComments);
+  const [comments, setComments] = useState(extractQuestion);
   const [hideImoji, setHideImoji] = useState(false);
   const insertANewComment = (newComment) => {
     const newObject = {
@@ -224,9 +227,9 @@ const CommentBox = ({ question }) => {
         </div>
 
         <div className="display_comments p-2">
-          {comments.length > 0 && comments[0] !== undefined && (
+          {comments?.length > 0 && comments[0] !== undefined && (
             <div>
-              {question.totalComments > 2 && (
+              {question?.totalComments > 2 && (
                 <button
                   onClick={() => setOpenCommentsBox(true)}
                   className="underline"
@@ -261,6 +264,7 @@ const CommentBox = ({ question }) => {
             </div>
           )}
         </div>
+
         <div
           className={`flex items-end gap-2 ${
             open ? "max-h-[100vh] duration-[2s]" : "max-h-0 duration-1000"

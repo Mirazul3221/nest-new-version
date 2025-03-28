@@ -308,76 +308,89 @@ const Page = () => {
   const [page, setPage] = useState(1);
   const isFetchingRef = useRef(false); // Track ongoing fetch request
 
-  const fetchChunkData = async () => {
+  /**
+   * Fetch questions in chunks (pagination)
+   * Prevents duplicate requests by using isFetchingRef
+   */
+  const fetchChunkData = useCallback(async () => {
     if (isFetchingRef.current || isLoading) return; // Prevent duplicate requests
-    setIsLoading(true);
     isFetchingRef.current = true; // Mark as fetching
+    setIsLoading(true);
+
     try {
       const { data } = await axios.get(
         `${baseurl}/auth/get-all-read-questions?type=${subject}&page=${page}`,
         {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
+          headers: { Authorization: `Bearer ${store.token}` },
         }
       );
 
       if (data.length === 0) {
-        isFetchingRef.current = true;
-        setIsLoading(true);
+        setHasMore(false); // No more data
       } else {
         setQuestions((prev) => [...prev, ...data]);
         setPage((prev) => prev + 1);
-        setIsLoading(false);
       }
     } catch (error) {
       console.error("Failed to fetch questions:", error);
-      setIsLoading(false);
     } finally {
       isFetchingRef.current = false; // Reset flag
+      setIsLoading(false);
     }
-  };
+  }, [baseurl, store.token, subject, page, isLoading]);
 
+  /**
+   * Handle infinite scrolling
+   * Calls fetchChunkData when user scrolls near the bottom of the page
+   */
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+      !isFetchingRef.current &&
+      !isLoading &&
+      hasMore
+    ) {
+      fetchChunkData();
+    }
+  }, [isLoading, fetchChunkData, hasMore]);
+
+  /**
+   * Attach scroll event listener on mount, clean up on unmount
+   * Also reattaches the listener when subject changes
+   */
   useEffect(() => {
-    const handleScroll = () => {
-      console.log(window.innerHeight + window.scrollY)
-      if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 500 &&
-        !isFetchingRef.current &&
-        !isLoading
-      ) {
-        console.log( document.body.offsetHeight)
-        fetchChunkData();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  /**
+   * Fetch initial questions when `subject` changes
+   */
+  useEffect(() => {
+    const fetchFirstTime = async () => {
+      setQuestions([]);
+      setPage(1);
+      setHasMore(true);
+      setIsLoading(true);
+
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/auth/get-all-read-questions?type=${subject}&page=1`,
+          {
+            headers: { Authorization: `Bearer ${store.token}` },
+          }
+        );
+        setQuestions(data);
+        setPage(2);
+      } catch (error) {
+        console.error("Error fetching initial questions:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [page, isLoading, subject]); // Only re-run when `hasMore` changes
-
-useEffect(() => {
-   const fetchFirstTime = async ()=> {
-    try {
-      setQuestions([]);
-      const { data } = await axios.get(
-        `${baseurl}/auth/get-all-read-questions?type=${subject}&page=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        }
-      );
-      setQuestions(data);
-      setPage(2)
-    } catch (error) {
-      
-    }
-
-   }
-
-   fetchFirstTime()
-}, [subject]);
+    fetchFirstTime();
+  }, [subject, baseurl, store.token]);
 
   const questionsAfterDelete = (question) => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
@@ -649,211 +662,241 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="bg-white mt-5">
-          {getAllPendingFriend?.length > 0 && (
-            <div className="box1 mb-4 md:mb-10">
+        {userDetails && (
+          <div className="bg-white mt-5">
+            {getAllPendingFriend?.length > 0 && (
+              <div className="box1 mb-4 md:mb-10">
+                <h2 className="md:text-2xl flex gap-2 items-center font-semibold">
+                  <RiUserReceived2Line /> Incoming Friends
+                </h2>
+                <div className="md:grid grid-cols-3 gap-4">
+                  {getAllPendingFriend !== null &&
+                    getAllPendingFriend?.map((item, i) => (
+                      <div
+                        key={i}
+                        className={`mt-4 bg-gray-100 p-4 ${
+                          accptReq ? "hidden" : ""
+                        }`}
+                      >
+                        <img
+                          className="w-48 mx-auto border-2 md:border-4 rounded-full"
+                          src={item.profile}
+                        />
+                        <h2 className="text-center text-2xl mt-2">
+                          {item.name}
+                        </h2>
+                        <div className="flex gap-2 mt-2 justify-center items-center">
+                          <h2
+                            onClick={() => setAcceptReq(true)}
+                            className="py-2 px-4 cursor-pointer bg-white rounded-md"
+                          >
+                            Cancel
+                          </h2>
+                          <h2
+                            onClick={() => {
+                              handleAcceptRequest(item);
+                            }}
+                            className="py-2 px-4 cursor-pointer bg-violet-700 rounded-md text-white"
+                          >
+                            Accept
+                          </h2>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+            <div className="box2">
               <h2 className="md:text-2xl flex gap-2 items-center font-semibold">
-                <RiUserReceived2Line /> Incoming Friends
+                <HiOutlineUserGroup /> Friends
               </h2>
               <div className="md:grid grid-cols-3 gap-4">
-                {getAllPendingFriend !== null &&
-                  getAllPendingFriend?.map((item, i) => (
-                    <div
-                      key={i}
-                      className={`mt-4 bg-gray-100 p-4 ${
-                        accptReq ? "hidden" : ""
-                      }`}
-                    >
-                      <img
-                        className="w-48 mx-auto border-2 md:border-4 rounded-full"
-                        src={item.profile}
-                      />
-                      <h2 className="text-center text-2xl mt-2">{item.name}</h2>
-                      <div className="flex gap-2 mt-2 justify-center items-center">
-                        <h2
-                          onClick={() => setAcceptReq(true)}
-                          className="py-2 px-4 cursor-pointer bg-white rounded-md"
-                        >
-                          Cancel
-                        </h2>
-                        <h2
-                          onClick={() => {
-                            handleAcceptRequest(item);
-                          }}
-                          className="py-2 px-4 cursor-pointer bg-violet-700 rounded-md text-white"
-                        >
-                          Accept
-                        </h2>
+                {getAllAcceptedFriend !== null &&
+                  getAllAcceptedFriend?.map((item, i) => (
+                    <div key={i} className="bg-gray-100 p-4 rounded-lg border">
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2 items-center">
+                          <div className="relative rounded-full w-fit">
+                            {myActiveFriends &&
+                            myActiveFriends?.some((O) => O === item._id) ? (
+                              <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                            ) : (
+                              <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                            )}
+                            <img
+                              className="w-20 border-2 rounded-full"
+                              src={item.profile}
+                            />
+                          </div>
+                          <div>
+                            <a
+                              href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                            >
+                              <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
+                                {item.name}
+                              </h2>
+                            </a>
+                            <h2 className="text-gray-700">
+                              Status : {item.status}
+                            </h2>
+                          </div>
+                        </div>
+                        {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
+                        <div>
+                          <AddAndDeleteFriendRequestButton id={item._id} />
+                          {myActiveFriends &&
+                            myActiveFriends?.some((O) => O === item._id) && (
+                              <h2
+                                onClick={() => {
+                                  inviteYourFriend(item._id);
+                                }}
+                                className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                              >
+                                Invite
+                              </h2>
+                            )}
+                        </div>
                       </div>
                     </div>
                   ))}
               </div>
+              <button className="text-gray-700 py-2 border bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">
+                See all your friends
+              </button>
             </div>
-          )}
-          <div className="box2">
-            <h2 className="md:text-2xl flex gap-2 items-center font-semibold">
-              <HiOutlineUserGroup /> Friends
-            </h2>
-            <div className="md:grid grid-cols-3 gap-4">
-              {getAllAcceptedFriend !== null &&
-                getAllAcceptedFriend?.map((item, i) => (
-                  <div key={i} className="bg-gray-100 p-4 rounded-lg border">
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-2 items-center">
-                        <div className="relative rounded-full w-fit">
-                          {myActiveFriends &&
-                          myActiveFriends?.some((O) => O === item._id) ? (
-                            <div className="w-3 h-3 border border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
-                          ) : (
-                            <div className="w-3 h-3 border border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
-                          )}
-                          <img
-                            className="w-20 border-2 rounded-full"
-                            src={item.profile}
+          </div>
+        )}
+
+        {userDetails && (
+          <div className="">
+            <div className="border-t-2 py-2 mt-4">
+              <div className="flex w-full items-center justify-center gap-2">
+                <div
+                  onClick={() => setRecord("History")}
+                  className={`px-6 border cursor-pointer ${
+                    record == "History"
+                      ? "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-700"
+                  } rounded-md`}
+                >
+                  History
+                </div>
+                <div
+                  onClick={() => setRecord("Statistic")}
+                  className={`px-6 border cursor-pointer ${
+                    record == "Statistic"
+                      ? "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-700"
+                  } rounded-md`}
+                >
+                  Statistic
+                </div>
+              </div>
+            </div>
+            {record === "Statistic" && userDetails && (
+              <>
+                {userDetails ? (
+                  <div className="md:w-10/12 mx-auto bg-white mt-10 md:mt-0 md:px-10 py-6">
+                    <h2 className="text-center md:text-3xl text-violet-700 mb-2">
+                      All The Questions You Have read
+                    </h2>
+                    <div>
+                      <RadarChart resize={resize} userDetails={userDetails} />
+                    </div>
+                    <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
+                      {percentage > 0 && (
+                        <div
+                          style={{ width: percentage + "%" }}
+                          className={`duration-300 ${
+                            percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                          } h-[3px] rounded-full relative`}
+                        >
+                          <div
+                            className={`absolute -right-[14px] text-white ${
+                              percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
+                            } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
+                          >
+                            {percentage + "%"}
+                            <div
+                              className={`w-[3px] ${
+                                percentage < 60
+                                  ? "bg-[#fc0303]"
+                                  : "bg-green-500"
+                              } h-4 absolute top-6 left-[43%]`}
+                            ></div>
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
+                        <span>0</span>
+                        <span>10</span>
+                        <span>20</span>
+                        <span>30</span>
+                        <span>40</span>
+                        <span>50</span>
+                        <span>60</span>
+                        <span>70</span>
+                        <span>80</span>
+                        <span>90</span>
+                        <span>100</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">
+                    Loading...
+                  </div>
+                )}
+              </>
+            )}
+
+            {record === "History" && userDetails && (
+              <>
+                {questions && (
+                  <div className="mx-auto md:px-20">
+                    <div className="flex gap-2 my-2">
+                      <div
+                        onClick={() => {
+                          setSubject("বাংলা");
+                        }}
+                        className={`${
+                          subject === "বাংলা"
+                            ? "bg-gray-700 text-white"
+                            : "bg-gray-100"
+                        } shadow-md rounded-md px-4 text-sm border cursor-pointer`}
+                      >
+                        Bangla
+                      </div>
+                      <div
+                        onClick={() => {
+                          setSubject("ইংরেজি");
+                        }}
+                        className={`${
+                          subject === "ইংরেজি"
+                            ? "bg-gray-700 text-white"
+                            : "bg-gray-100"
+                        } shadow-md rounded-md px-4 text-sm border cursor-pointer`}
+                      >
+                        Bangla
+                      </div>
+                    </div>
+
+                    {questions?.map((question, i) => {
+                      return (
+                        <div key={i}>
+                          <QuestionCard
+                            questionsAfterDelete={questionsAfterDelete}
+                            myQuestion={question}
                           />
                         </div>
-                        <div>
-                          <a
-                            href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                          >
-                            <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
-                              {item.name}
-                            </h2>
-                          </a>
-                          <h2 className="text-gray-700">
-                            Status : {item.status}
-                          </h2>
-                        </div>
-                      </div>
-                      {/* <CallMessageContainer id={item?._id} userDetails={item} /> */}
-                      <div>
-                        <AddAndDeleteFriendRequestButton id={item._id} />
-                        {myActiveFriends &&
-                          myActiveFriends?.some((O) => O === item._id) && (
-                            <h2
-                              onClick={() => {
-                                inviteYourFriend(item._id);
-                              }}
-                              className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
-                            >
-                              Invite
-                            </h2>
-                          )}
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
-                ))}
-            </div>
-            <button className="text-gray-700 py-2 border bg-gray-100 hover:bg-gray-200 w-full text-center duration-100 rounded-md mt-2">
-              See all your friends
-            </button>
+                )}
+              </>
+            )}
           </div>
-        </div>
-
-        <div className="">
-          <div className="border-t-2 py-2 mt-4">
-            <div className="flex w-full items-center justify-center gap-2">
-              <div
-                onClick={() => setRecord("History")}
-                className={`px-6 border cursor-pointer ${
-                  record == "History"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-700"
-                } rounded-md`}
-              >
-                History
-              </div>
-              <div
-                onClick={() => setRecord("Statistic")}
-                className={`px-6 border cursor-pointer ${
-                  record == "Statistic"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-700"
-                } rounded-md`}
-              >
-                Statistic
-              </div>
-            </div>
-          </div>
-          {record === "Statistic" && (
-            <>
-              {userDetails ? (
-                <div className="md:w-10/12 mx-auto bg-white mt-10 md:mt-0 md:px-10 py-6">
-                  <h2 className="text-center md:text-3xl text-violet-700 mb-2">
-                    All The Questions You Have read
-                  </h2>
-                  <div>
-                    <RadarChart resize={resize} userDetails={userDetails} />
-                  </div>
-                  <div className="progress_bar relative duration-300 mt-4 w-full bg-gray-200 rounded-full p-[5px]">
-                    {percentage > 0 && (
-                      <div
-                        style={{ width: percentage + "%" }}
-                        className={`duration-300 ${
-                          percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                        } h-[3px] rounded-full relative`}
-                      >
-                        <div
-                          className={`absolute -right-[14px] text-white ${
-                            percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                          } rounded-full -top-12 w-8 h-8 text-[11px] flex justify-center items-center`}
-                        >
-                          {percentage + "%"}
-                          <div
-                            className={`w-[3px] ${
-                              percentage < 60 ? "bg-[#fc0303]" : "bg-green-500"
-                            } h-4 absolute top-6 left-[43%]`}
-                          ></div>
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex absolute -bottom-4 justify-between w-full left-0 text-[10px]">
-                      <span>0</span>
-                      <span>10</span>
-                      <span>20</span>
-                      <span>30</span>
-                      <span>40</span>
-                      <span>50</span>
-                      <span>60</span>
-                      <span>70</span>
-                      <span>80</span>
-                      <span>90</span>
-                      <span>100</span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-gray-100 w-full h-[50vh] flex justify-center items-center animate-pulse">
-                  Loading...
-                </div>
-              )}
-            </>
-          )}
-
-          {record === "History" && (
-            <>
-              {questions && (
-                <div className="mx-auto md:px-20">
-                  <div className="flex gap-2 my-2">
-                  <div onClick={()=>{setSubject('বাংলা')}} className={`${subject === 'বাংলা' ? "bg-gray-700 text-white" : "bg-gray-100"} shadow-md rounded-md px-4 text-sm border cursor-pointer`}>Bangla</div>
-                  <div onClick={()=>{setSubject('ইংরেজি')}} className={`${subject === 'ইংরেজি' ? "bg-gray-700 text-white" : "bg-gray-100"} shadow-md rounded-md px-4 text-sm border cursor-pointer`}>Bangla</div>
-                  </div>
-
-                  {questions?.map((question, i) => {
-                    return (
-                      <div key={i}>
-                        <QuestionCard
-                          questionsAfterDelete={questionsAfterDelete}
-                          myQuestion={question}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+        )}
 
         {/* <div className="mb-24">
           {userDetails.totalCountQuestions?.map((item, i) => {
