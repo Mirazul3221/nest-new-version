@@ -238,16 +238,16 @@ const extractQuestion = [question?.comments[0],question?.comments[1]]
                 </button>
               )}
               {openCommentsBox && (
-                <CommentsContainer
-                  setOpenCommentsBox={setOpenCommentsBox}
-                  question={question}
-                />
+                <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">                <CommentsContainer
+                setOpenCommentsBox={setOpenCommentsBox}
+                question={question}
+              /></div>
               )}
               {comments?.map((c, i) => {
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
-                       <CommentProfile id={c.userId} name={c.name}/>
+                       <CommentProfile id={c?.userId} name={c?.name}/>
                     </div>
                     <div className="w-fit max-w-11/12">
                       <div className="px-3 py-1 rounded-[20px] bg-gray-100">

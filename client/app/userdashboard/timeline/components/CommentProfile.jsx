@@ -25,7 +25,7 @@ const CommentProfile = ({ id,name }) => {
           style={{ background: `hsl(${randomCount}, 65%, 40%)` }}
           className="w-6 h-6 text-white flex justify-center items-center uppercase text-lg rounded-full"
         >
-          {name.split("")[0]}
+          {name?.split("")[0]}
         </div>
       )}
     </div>

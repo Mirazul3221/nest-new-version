@@ -201,13 +201,13 @@ return await this.authService.questionCollecton(questions,req)
 @UseGuards(AuthGuard())
 async retriveAllReadQuestion (@Req() req, @Query('type') type, @Query('page') page){
   const userId = req.user._id;
-  return await this.authService.retrieveAllReadQuestion(userId,type,page,2)
+  return await this.authService.retrieveAllReadQuestion(userId,type,page,10)
 }
 
 
 //====================================================
 //===========Logic for block and unblock users========
-//===================================================
+//====================================================
 @Post('user/block/:targetId')
 @UseGuards(AuthGuard())
 async blockUser (@Req() req :any, @Param('targetId') targetId : string){

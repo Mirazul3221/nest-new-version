@@ -538,7 +538,7 @@ const nearbyUsers = await this.userModel
     const result = filteredQuestions.slice(startIndex, startIndex + limit);
 
     console.log("Paginated Questions:", result);
-    return result;
+    return result.reverse();
 }
   
   //////////////////////////////////////////////////////Here is the logic to block and unblock users/////////////////////////////////////////////

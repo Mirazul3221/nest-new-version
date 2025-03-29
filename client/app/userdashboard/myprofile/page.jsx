@@ -327,12 +327,14 @@ const Page = () => {
 
       if (data.length === 0) {
         setHasMore(false); // No more data
+        isFetchingRef.current = false; // Reset flag
       } else {
         setQuestions((prev) => [...prev, ...data]);
         setPage((prev) => prev + 1);
       }
     } catch (error) {
       console.error("Failed to fetch questions:", error);
+      isFetchingRef.current = false; // Reset flag
     } finally {
       isFetchingRef.current = false; // Reset flag
       setIsLoading(false);
@@ -374,6 +376,7 @@ const Page = () => {
       setIsLoading(true);
 
       try {
+        isFetchingRef.current = true;
         const { data } = await axios.get(
           `${baseurl}/auth/get-all-read-questions?type=${subject}&page=1`,
           {
@@ -382,8 +385,10 @@ const Page = () => {
         );
         setQuestions(data);
         setPage(2);
+        isFetchingRef.current = false;
       } catch (error) {
         console.error("Error fetching initial questions:", error);
+        isFetchingRef.current = false;
       } finally {
         setIsLoading(false);
       }
@@ -402,15 +407,17 @@ const Page = () => {
       <div className="md:px-10 px-4 md:py-5 py-2">
         <SuperHeader />
       </div>
-      <div className="w-full">
+      <div className="w-full overflow-hidden -z-50 relative">
         <img
-          className="rounded-t-5xl"
+          className="rounded-t-5xl w-full"
           src={`/cover-photo/background-${randNum}.jpg`}
           alt=""
         />
       </div>
-      <div className="md:w-10/12 md:-translate-y-20 md:border md:rounded-t-2xl mx-auto bg-white shadow-md px-5 pb-5">
-        <div className="md:-translate-y-[7%] -translate-y-[4%]">
+      <div className="md:w-10/12 -mt-28 md:border md:rounded-t-2xl mx-auto z-50 bg-white shadow-md px-5 pb-5">
+      {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
+        <div className="md:-translate-y-[18%] -translate-y-[4%]">
+          {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
           <div>
             <div className="---profile---">
               <div className="md:w-[200px] w-[120px] md:mx-auto relative">
@@ -849,11 +856,10 @@ const Page = () => {
                 )}
               </>
             )}
-
             {record === "History" && userDetails && (
               <>
                 {questions && (
-                  <div className="mx-auto md:px-20">
+                  <div className="mx-auto md:px-20 w-full h-full">
                     <div className="flex gap-2 my-2">
                       <div
                         onClick={() => {
@@ -877,7 +883,19 @@ const Page = () => {
                             : "bg-gray-100"
                         } shadow-md rounded-md px-4 text-sm border cursor-pointer`}
                       >
-                        Bangla
+                        English
+                      </div>
+                      <div
+                        onClick={() => {
+                          setSubject("গণিত");
+                        }}
+                        className={`${
+                          subject === "গণিত"
+                            ? "bg-gray-700 text-white"
+                            : "bg-gray-100"
+                        } shadow-md rounded-md px-4 text-sm border cursor-pointer`}
+                      >
+                        Math
                       </div>
                     </div>
 
@@ -893,25 +911,13 @@ const Page = () => {
                     })}
                   </div>
                 )}
+                  {
+                   isFetchingRef.current === true && <h2 className="md:ml-20 mt-4 text-lg">Loading...</h2>
+                   }
               </>
             )}
           </div>
         )}
-
-        {/* <div className="mb-24">
-          {userDetails.totalCountQuestions?.map((item, i) => {
-            return (
-              <div
-                key={i}
-                className="mt-4 md:hidden border-b items-center gap-2"
-              >
-                <h2 className="mt-2 mb-1 text-violet-700">{item.sub} : </h2>
-                <h2>Correct Answer : {item.rightAns}</h2>
-                <h2>Wrong Answer : {item.wrongAns}</h2>
-              </div>
-            );
-          })}
-        </div> */}
         <div className="fixed bottom-0 left-0 w-full">
           <div className="mobile-responsive flex md:hidden justify-around rounded-t-3xl items-center py-4 w-full bg-white">
             <div>
