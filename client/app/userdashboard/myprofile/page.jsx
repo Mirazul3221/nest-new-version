@@ -407,16 +407,16 @@ const Page = () => {
       <div className="md:px-10 px-4 md:py-5 py-2">
         <SuperHeader />
       </div>
-      <div className="w-full overflow-hidden -z-50 relative">
+      <div className="w-full h-[30vh] md:h-[60vh] overflow-hidden -z-50 relative">
         <img
-          className="rounded-t-5xl w-full"
+          className="rounded-t-5xl w-full h-full"
           src={`/cover-photo/background-${randNum}.jpg`}
           alt=""
         />
       </div>
       <div className="md:w-10/12 -mt-28 md:border md:rounded-t-2xl mx-auto z-50 bg-white shadow-md px-5 pb-5">
       {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
-        <div className="md:-translate-y-[18%] -translate-y-[4%]">
+        <div className="md:-translate-y-[17%] -translate-y-[11%]">
           {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
           <div>
             <div className="---profile---">
@@ -458,7 +458,7 @@ const Page = () => {
                 )}
               </div>
 
-              <h1 className="text-center text-2xl text-gray-700 md:text-5xl font-semibold mt-8">
+              <h1 className="md:text-center text-2xl text-gray-700 md:text-5xl font-semibold mt-8">
                 {userDetails.name}
               </h1>
               <div className="py-2 mx-auto md:w-3/12">
@@ -498,7 +498,7 @@ const Page = () => {
                       <h2
                         className={`updateTitle ${
                           userDetails.title?.length <= 30
-                            ? "text-center text-violet-700"
+                            ? "md:text-center text-violet-700"
                             : "text-rose-500"
                         } `}
                       >

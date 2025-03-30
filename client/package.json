@@ -12,6 +12,7 @@
     "@react-three/drei": "^9.121.2",
     "@react-three/fiber": "^8.17.12",
     "axios": "^1.6.8",
+    "bd-instituition-list-by-solutya": "^1.2.0",
     "chart.js": "^4.4.3",
     "cloudinary": "^2.4.0",
     "html-react-parser": "^5.1.10",
