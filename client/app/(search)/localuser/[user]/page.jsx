@@ -6,10 +6,10 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import banner from "@/public/banner/profile-banner.jpg";
 import moment from "moment";
-import { LuUser2 } from "react-icons/lu";
 import RadarChart from "@/app/userdashboard/components/RaderChart";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
+import { FiUserPlus } from "react-icons/fi";
 
 const Page = () => {
   const pram = useParams();
@@ -110,7 +110,7 @@ const Page = () => {
                   <h2 className="font-bold text-2xl">{userDetails?.name}</h2>
                   <h2 className="text-sm mt-3">{userDetails?.title}</h2>
                   <div className="flex items-center gap-2 w-full mt-2 text-gray-700">
-              <LuUser2 />
+                  <FiUserPlus />
               <h3>
                 {" "}
                 Member since{" "}
