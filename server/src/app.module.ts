@@ -16,6 +16,7 @@ import { NotificationModule } from './notification/notification.module';
 import { MessangerModule } from './messanger/messanger.module';
 import { SocketServerModule } from './socket-server/socket-server.module';
 import { UserquestionsModule } from './userquestions/userquestions.module';
+import { UserResumeModule } from './user-resume/user-resume.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UserquestionsModule } from './userquestions/userquestions.module';
     MessangerModule,
     UserquestionsModule,
     SocketServerModule,
+    UserResumeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

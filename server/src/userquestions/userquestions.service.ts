@@ -33,7 +33,7 @@ export class UserquestionsService {
   if (hasExistingQuestion && hasExistingChapter && hasExistingPrevExam && hasExistingContent) {
     throw new ConflictException("This question already exist, please add a new one")
   } else {
-    const createQuestion = await new this.QuestionModel(fullSchema)
+    const createQuestion = new this.QuestionModel(fullSchema)
     await createQuestion.save()
     return 'Question create success';
   }
