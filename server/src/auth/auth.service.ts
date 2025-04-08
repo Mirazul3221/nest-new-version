@@ -180,6 +180,12 @@ const nearbyUsers = await this.userModel
     if (!isValid) throw new HttpException('Invalid User!', 404);
     return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
   }
+  //====================================
+ async getBio(id: string) {
+    const isValid = mongoose.Types.ObjectId.isValid(id);
+    if (!isValid) throw new HttpException('Invalid User!', 404);
+    return await this.userModel.findById({ _id: id }).select({name:1,title:1,email:1,description:1,_id:0});
+  }
   //================================
   async findSingleUserByPublic(user) {
     let option = {};

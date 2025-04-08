@@ -65,6 +65,10 @@ export class CV {
 
   @Prop({ type: [Object], default: [] })
   skills?: Skill[];
+  
+  @Prop({ type: Boolean, default: false })
+  isActive: boolean;
+
 }
 
 export type CVDocument = CV & Document;

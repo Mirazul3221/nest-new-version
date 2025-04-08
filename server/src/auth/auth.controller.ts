@@ -70,6 +70,18 @@ export class AuthController {
     return await this.authService.findSingleUser(req.user._id)
  }
 
+//========
+  //GET
+  //==============================
+  @Get("/get-bio")
+  @UseGuards(AuthGuard())
+ async getBio(@Req() req){
+  // const findUser = 
+  // if(!findUser) throw new HttpException("User not found",404)
+    return await this.authService.getBio(req.user._id)
+ }
+
+
  //================FIND USER BY PUBLIC=========================
  @Get('publicuser/find/:value')
  async findSingleUserByPublic(@Param("value") param){

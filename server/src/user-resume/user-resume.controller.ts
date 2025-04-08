@@ -10,13 +10,30 @@ export class UserResumeController {
 
   @Post('create')
     @UseGuards(AuthGuard())
-  create(@Body() createUserResumeDto: CreateUserResumeDto, @Req() req) {
-    return this.userResumeService.create(createUserResumeDto,req.user._id);
+  async create(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.create(userResumeData,req.user._id);
+  }
+  @Post('edit-primary-bio')
+    @UseGuards(AuthGuard())
+  async editPrimaryBio(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.editPrimaryBio(userResumeData,req.user._id);
   }
 
-  @Get()
-  findAll() {
-    return this.userResumeService.findAll();
+  @Post('update-education')
+    @UseGuards(AuthGuard())
+  async updateEducation(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.updateEducation(userResumeData,req.user._id);
+  }
+  @Post('delete-education')
+    @UseGuards(AuthGuard())
+  async deleteEducation(@Body() {eduId}, @Req() req) {
+    return await this.userResumeService.deleteEducation(eduId,req.user._id);
+  }
+
+  @Get('get-bio')
+  @UseGuards(AuthGuard())
+  async getPrimaryBio( @Req() req) {
+    return await this.userResumeService.getPrimaryBio(req.user._id);
   }
 
   @Get(':id')
