@@ -40,6 +40,24 @@ class Experience {
   duration?: string;
 }
 
+
+class Project {
+  @Prop({ type: String })
+  name?: string;
+
+  @Prop({ type: String })
+  duration?: string;
+
+  @Prop({ type: String })
+   url?: string;
+
+  @Prop({ type: String })
+  description?: string;
+
+}
+
+
+
 class Skill {
   @Prop({ type: String })
   name?: string;
@@ -62,6 +80,9 @@ export class CV {
 
   @Prop({ type: [Object], default: [] })
   experience?: Experience[];
+
+  @Prop({ type: [Object], default: [] })
+  project?: Project[];
 
   @Prop({ type: [Object], default: [] })
   skills?: Skill[];

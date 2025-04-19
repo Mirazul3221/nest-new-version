@@ -26,7 +26,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
   const [isOpenDeleteWindow, setIsOpenDeleteWindow] = useState(false);
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  //////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
   const [educationLevel, setEducationLevel] = useState("Secondary");
   const [examination, setExamination] = useState("S.S.C");
   const [subject, setSubject] = useState("");
@@ -105,11 +105,54 @@ const ShowEduData = ({ edu, setEducationData }) => {
     setFilteredSuggestions([]);
   };
 
-  const handleEditResumeForm = async () => {};
+  const handleEditResumeForm = async (e) => {
+        e.preventDefault()
+        const payload = {
+          educationLevel,
+          examination,
+          subject,
+          board,
+          result,
+          instValue,
+          foreignIns,
+          foreignCountry,
+          gpa,
+          courseDuration,
+          passingYear,
+        };
+  
+        // Filter out fields with falsy values (e.g., "", null, undefined)
+        const filteredPayload = Object.fromEntries(
+          Object.entries(payload).filter(
+            ([_, value]) => value !== "" && value !== null && value !== undefined
+          )
+        );
+         const { data } = await axios.post(
+           `${baseurl}/user-resume/update-education`,
+           {eduId:edu?.id,filteredPayload},
+           {
+             headers: {
+               Authorization: `Bearer ${store.token}`,
+             },
+           }
+         );
+
+         data?.educationLevel && (edu.educationLevel = data?.educationLevel);
+         data?.examinatdata && (edu.examination = data?.examinatdata);
+         data?.subject && (edu.subject= data?.subject);
+         data?.board && (edu.board =  data?.board);
+         data?.result && (edu.result = data?.result);
+         data?.gpa && (edu.gpa = data?.gpa);
+         data?.instValue && (edu.instValue = data?.instValue);
+         data?.passingYear && (edu.passingYear = data?.passingYear);
+         data?.courseDuration && (edu.courseDuration = data?.courseDuration);
+         setIsOpenFormWindow(false)
+  };
   return (
     <div>
       {isOpenFormWindow ? (
-        <form onSubmit={handleEditResumeForm} className="mt-4">
+        <form onSubmit={handleEditResumeForm} className="my-4 bg-gray-100 md:p-10 border rounded-md">
+          <h2 className="text-2xl ml-auto w-fit">Editable field</h2>
           <div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
               {/* ------------------------------------------------%%%%%%%%%%%--------------------------------------------------------*/}
@@ -120,7 +163,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                 >
                   Level of Education
                 </label>
-                <select
+                <select required
                   value={educationLevel}
                   onChange={handleEducationLevel}
                   className="w-full border outline-none rounded-md py-2 px-4"
@@ -144,7 +187,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Examination
                   </label>
-                  <select
+                  <select required
                     onChange={handleExamination}
                     value={examination}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -269,7 +312,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       Board*
                     </label>
                     <select
-                      value={board}
+                      value={board} required
                       onChange={(e) => setBoard(e.target.value)}
                       className="w-full border outline-none rounded-md py-2 px-4"
                     >
@@ -291,7 +334,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Subject/Group/Degree
                   </label>
-                  <select
+                  <select required
                     onChange={handleSubGroupDegree}
                     value={subject}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -471,7 +514,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                     >
                       University/Inst.
                     </label>
-                    <input
+                    <input required
                       type="text"
                       value={instValue}
                       onChange={handleChangeInstValue}
@@ -548,14 +591,13 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       >
                         Institute Name***
                       </label>
-                      <input
+                      <input required
                         onChange={(e) => setForeignIns(e.target.value)}
                         value={foreignIns}
                         type="text"
                         id="last_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Doe"
-                        required
                       />
                     </div>
                     <div className="w-full">
@@ -565,14 +607,13 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       >
                         Country of Foreign University
                       </label>
-                      <input
+                      <input required
                         onChange={(e) => setForeignCountry(e.target.value)}
                         value={foreignCountry}
                         type="text"
                         id="last_name"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Doe"
-                        required
                       />
                     </div>
                   </div>
@@ -591,7 +632,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   Result
                 </label>
                 <div className="flex justify-between gap-2 items-center">
-                  <select
+                  <select required
                     value={result}
                     onChange={(e) => setResult(e.target.value)}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -644,7 +685,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Passing Year
                   </label>
-                  <input
+                  <input required
                     value={passingYear}
                     onChange={(e) => setPassingYear(e.target.value)}
                     className="border w-full outline-none rounded-md py-[6px] px-4"
@@ -661,7 +702,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
                     >
                       Course Duration
                     </label>
-                    <input
+                    <input required
                       value={courseDuration}
                       onChange={(e) => setCourseDuration(e.target.value)}
                       className="border w-full outline-none rounded-md py-[6px] px-4"
@@ -672,15 +713,23 @@ const ShowEduData = ({ edu, setEducationData }) => {
               </div>
             </div>
           </div>
-          <button
+         <div className="flex gap-2 items-center">
+         <button 
+           onClick={()=> setIsOpenFormWindow(false)}
+            class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            Cancel
+          </button>
+         <button
             type="submit"
             class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
             {isLoading ? "Loading..." : "Save change"}
           </button>
+         </div>
         </form>
       ) : (
-        <div className="data mt-10 border-2 border-gray-200 text-gray-700  px-6 py-10">
+        <div className="data mt-10 md:border-2 md:border-gray-200 text-gray-700  md:px-6 md:py-10">
           {/* ////////////////Delete open window box//////////////////////// */}
           <div
             className={`fixed ${

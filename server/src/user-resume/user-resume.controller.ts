@@ -18,16 +18,61 @@ export class UserResumeController {
   async editPrimaryBio(@Body() userResumeData, @Req() req) {
     return await this.userResumeService.editPrimaryBio(userResumeData,req.user._id);
   }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  @Post('education')
+    @UseGuards(AuthGuard())
+  async addEducation(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.addEducation(userResumeData,req.user._id);
+  }
   @Post('update-education')
     @UseGuards(AuthGuard())
-  async updateEducation(@Body() userResumeData, @Req() req) {
-    return await this.userResumeService.updateEducation(userResumeData,req.user._id);
+  async updateEducation(@Body() {eduId,filteredPayload}, @Req() req) {
+    return await this.userResumeService.updateEducation(eduId,req.user._id,filteredPayload);
   }
   @Post('delete-education')
     @UseGuards(AuthGuard())
   async deleteEducation(@Body() {eduId}, @Req() req) {
     return await this.userResumeService.deleteEducation(eduId,req.user._id);
+  }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  @Post('experience')
+    @UseGuards(AuthGuard())
+  async addExperience(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.addExperience(userResumeData,req.user._id);
+  }
+  @Post('update-experience')
+    @UseGuards(AuthGuard())
+  async updateExperience(@Body() {expId,filteredPayload}, @Req() req) {
+    return await this.userResumeService.updateExperience(expId,req.user._id,filteredPayload);
+  }
+  @Post('delete-experience')
+    @UseGuards(AuthGuard())
+  async deleteExperience(@Body() {expId}, @Req() req) {
+    return await this.userResumeService.deleteExperience(expId,req.user._id);
+  }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  @Post('project')
+    @UseGuards(AuthGuard())
+  async addProject(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.addProject(userResumeData,req.user._id);
+  }
+  @Post('re-project')
+    @UseGuards(AuthGuard())
+  async addReProject(@Body() userResumeData, @Req() req) {
+    return await this.userResumeService.addReProject(userResumeData,req.user._id);
+  }
+  
+  @Post('update-project')
+    @UseGuards(AuthGuard())
+  async updateProject(@Body() {proId,updateData}, @Req() req) {
+    return await this.userResumeService.updateProject(proId,req.user._id,updateData);
+  }
+  @Post('delete-project')
+    @UseGuards(AuthGuard())
+  async deleteProject(@Body() {proId}, @Req() req) {
+    return await this.userResumeService.deleteProject(proId,req.user._id);
   }
 
   @Get('get-bio')

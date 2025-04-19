@@ -2,6 +2,7 @@ import { baseurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const AddBio = () => {
   const { store } = useStore();
@@ -108,19 +109,21 @@ const AddBio = () => {
       setIsLoading(false);
     }
   };
-
+/////////////////////////////////////////////////////////////////////
   return (
-    <div className="min-h-[50vh] flex justify-center items-center">
+    <div className="min-h-[60vh] w-full flex justify-center items-center">
       {isLoadingContainer ? (
-        <h2 className="mx-auto">Loading...</h2>
+        <h2 className="mx-auto"><AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-center" size={20} /></h2>
       ) : (
         <div className="w-full h-full">
-          <h2
-            className="ml-auto w-fit mt-8 px-6 py-1 rounded-md cursor-pointer bg-violet-500 text-white"
-            onClick={openBioBox}
-          >
-            {editBio ? "Cancel" : "Edit"}
-          </h2>
+      {
+        bio &&   !editBio &&  <h2
+        class="text-white bg-violet-500 ml-auto hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
+        onClick={openBioBox}
+      >
+        Edit
+      </h2>
+      }
           {!bio && (
             <form onSubmit={handleResumeForm} className="mt-4">
               <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -245,7 +248,7 @@ const AddBio = () => {
               </div>
               <button
                 type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                 class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 Save
               </button>
@@ -409,13 +412,22 @@ const AddBio = () => {
                         required
                       />
                     </div>
-                    <button
+
+                    <div className="flex items-center gap-2">
+              <h2
+                    class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
+                    onClick={openBioBox}
+                  >
+                    Cancel
+                  </h2>
+                  <button
                       disabled={isLoading}
                       type="submit"
-                      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                     class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
                     >
-                      {isLoading ? "Loading..." : "Save change"}
+                      {isLoading ?  <AiOutlineLoading3Quarters className="animate-spin text-white text-center" size={20} />  : "Save change"}
                     </button>
+              </div>
                   </form>
                 </>
               )}
