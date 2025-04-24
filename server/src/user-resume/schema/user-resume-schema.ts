@@ -72,24 +72,29 @@ export class CV {
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Reader' })
   userId: mongoose.Schema.Types.ObjectId; // Reference to the User model
 
-  @Prop({ type: [Object], default: [] })
+  @Prop({ type: [Object], required: false })
   primaryData?: PrimaryData[];
 
-  @Prop({ type: [Object], default: [] })
+  @Prop({ type: [Object],required: false })
   education?: Education[];
 
-  @Prop({ type: [Object], default: [] })
+  @Prop({ type: [Object],required: false })
   experience?: Experience[];
 
-  @Prop({ type: [Object], default: [] })
+  @Prop({ type: [Object],required: false })
   project?: Project[];
 
-  @Prop({ type: [Object], default: [] })
-  skills?: Skill[];
+  @Prop({ type: [Object],required: false })
+  skills?:any[];
+
+  @Prop({ type: [Object],required: false })
+  langs?:any[];
+
+  @Prop({ type: [Object],required: false })
+  hobbies?:any[];
   
   @Prop({ type: Boolean, default: false })
   isActive: boolean;
-
 }
 
 export type CVDocument = CV & Document;

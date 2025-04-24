@@ -34,7 +34,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html className="select-none" lang="en">
       <meta name="google-adsense-account" content="ca-pub-8668385137041223"></meta>
       <body className={inter.className}>
          <DataProvider>

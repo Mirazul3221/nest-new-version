@@ -154,6 +154,7 @@ async addReProject(educationData,userId) {
 }
 
 
+
 async updateProject(id,userId,projectData) {
   const isExist = await this.UserResume.findOne({userId})
   if (isExist) {
@@ -186,8 +187,116 @@ async deleteProject(id, userId) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
 
-  
+async addSkills(educationData,userId) {
+  const isExist = await this.UserResume.findOne({userId})
+  if (isExist) {
+    isExist.skills=[...educationData];
+    await isExist.save()
+  } else {
+    return null
+  }
+}
+
+async addReSkills(educationData,userId) {
+  const isExist = await this.UserResume.findOne({userId})
+
+  if (isExist) {
+    isExist.skills=[...educationData,...isExist.skills];
+    await isExist.save()
+  } else {
+    return null
+  }
+}
+
+async updateSkills(id,userId,projectData) {
+  const isExist = await this.UserResume.findOne({userId})
+  if (isExist) {
+   const currentIndex = isExist.skills.findIndex( (item:any) => item.id === id)
+   if (currentIndex !== -1) {
+    isExist.skills[currentIndex] = {id,...projectData}
+   }
+   await isExist.save()
+   return  {id,...projectData}
+       } else {
+    return null
+  }
+}//
+
+async deleteSkills(id, userId) {
+  const isExist = await this.UserResume.findOne({ userId });
+
+  if (isExist) {
+    // Filter out the item
+    const updatedPro = isExist.skills?.filter((item: any) => item?.id !== id);
+
+    // Assign it back to the document
+    isExist.skills = updatedPro;
+
+    // Save the updated document
+    await isExist.save();
+    return isExist.skills; // optional: return updated list
+  } else {
+    return null;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+async addLangs(educationData,userId) {
+  const isExist = await this.UserResume.findOne({userId})
+  if (isExist) {
+    isExist.langs=[...educationData];
+    await isExist.save()
+  } else {
+    return null
+  }
+}
+
+async addReLangs(educationData,userId) {
+  const isExist = await this.UserResume.findOne({userId})
+
+  if (isExist) {
+    isExist.langs=[...educationData,...isExist.langs];
+    await isExist.save()
+  } else {
+    return null
+  }
+}
+
+async updateLangs(id,userId,projectData) {
+  const isExist = await this.UserResume.findOne({userId})
+  if (isExist) {
+   const currentIndex = isExist.langs.findIndex( (item:any) => item.id === id)
+   if (currentIndex !== -1) {
+    isExist.langs[currentIndex] = {id,...projectData}
+   }
+   await isExist.save()
+   return  {id,...projectData}
+       } else {
+    return null
+  }
+}//
+
+async deleteLangs(id, userId) {
+  const isExist = await this.UserResume.findOne({ userId });
+
+  if (isExist) {
+    // Filter out the item
+    const updatedPro = isExist.langs?.filter((item: any) => item?.id !== id);
+
+    // Assign it back to the document
+    isExist.langs = updatedPro;
+
+    // Save the updated document
+    await isExist.save();
+    return isExist.langs; // optional: return updated list
+  } else {
+    return null;
+  }
+}
+///////////////////////////////////////////////////////////////////////////////
   async getPrimaryBio(id) {
     const getAllCvData = await this.UserResume.find({userId:id})
     return getAllCvData[0];

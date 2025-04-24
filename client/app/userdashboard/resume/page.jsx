@@ -5,11 +5,13 @@ import ProtectRoute from "@/app/global/ProtectRoute";
 import SuperHeader from "../components/SuperHeader";
 import AddBio from "./components/AddBio";
 import Education from "./components/Education";
-import AddOther from "./components/AddProject";
+import AddProject from "./components/AddProject";
 import StarRating from "./components/StarRating";
+import AddSkills from "./components/AddSkills";
+import AddLangs from "./components/AddLangs";
 
 const page = () => {
-  const defaultStape = 5;
+  const defaultStape = 7;
   const [currentStape, setCurrentStape] = useState(1);
   const nextStap = () => {
     if (currentStape < defaultStape) {
@@ -36,7 +38,9 @@ const page = () => {
                 ? "EDUCATION"
                 : currentStape === 3
                 ? "EXPERIENCE"
-                : ""}
+                : currentStape === 4
+                ? "PROJECT"
+                : currentStape === 5 ? "SKILLS" : ""}
             </h2>
             <div className="progres py-[2px] px-1 rounded-full bg-gray-200">
               <div
@@ -47,7 +51,9 @@ const page = () => {
             {currentStape === 1 && <AddBio />}
             {currentStape === 2 && <Education />}
             {currentStape === 3 && <AddExperience />}
-            {currentStape === 4 && <AddOther />}
+            {currentStape === 4 && <AddProject />}
+            {currentStape === 5 && <AddSkills />}
+            {currentStape === 6 && <AddLangs />}
 
             <div className="ml-auto w-fit gap-4 flex mt-10">
               <div
@@ -63,8 +69,8 @@ const page = () => {
                 Next
               </div>
             </div>
-            <StarRating percentage={70}/>
-            <StarRating percentage={60}/>
+            <StarRating percentage={70} />
+            <StarRating percentage={60} />
           </div>
         </div>
       </ProtectRoute>

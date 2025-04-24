@@ -69,11 +69,62 @@ export class UserResumeController {
   async updateProject(@Body() {proId,updateData}, @Req() req) {
     return await this.userResumeService.updateProject(proId,req.user._id,updateData);
   }
+
   @Post('delete-project')
     @UseGuards(AuthGuard())
   async deleteProject(@Body() {proId}, @Req() req) {
     return await this.userResumeService.deleteProject(proId,req.user._id);
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+  @Post('skills')
+  @UseGuards(AuthGuard())
+async addSkills(@Body() userResumeData, @Req() req) {
+  return await this.userResumeService.addSkills(userResumeData,req.user._id);
+}
+
+@Post('re-skills')
+@UseGuards(AuthGuard())
+async addReSkills(@Body() userResumeData, @Req() req) {
+return await this.userResumeService.addReSkills(userResumeData,req.user._id);
+}
+
+@Post('update-skills')
+@UseGuards(AuthGuard())
+async updateSkills(@Body() {sklId,updateData}, @Req() req) {
+return await this.userResumeService.updateSkills(sklId,req.user._id,updateData);
+}
+
+@Post('delete-skills')
+@UseGuards(AuthGuard())
+async deleteSkills(@Body() {sklId}, @Req() req) {
+return await this.userResumeService.deleteSkills(sklId,req.user._id);
+}
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+  @Post('langs')
+  @UseGuards(AuthGuard())
+async addLangs(@Body() userResumeData, @Req() req) {
+  return await this.userResumeService.addLangs(userResumeData,req.user._id);
+}
+
+@Post('re-langs')
+@UseGuards(AuthGuard())
+async addReLangs(@Body() userResumeData, @Req() req) {
+return await this.userResumeService.addReLangs(userResumeData,req.user._id);
+}
+
+@Post('update-langs')
+@UseGuards(AuthGuard())
+async updateLangs(@Body() {langId,updateData}, @Req() req) {
+return await this.userResumeService.updateLangs(langId,req.user._id,updateData);
+}
+
+@Post('delete-langs')
+@UseGuards(AuthGuard())
+async deleteLangs(@Body() {langId}, @Req() req) {
+return await this.userResumeService.deleteLangs(langId,req.user._id);
+}
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Get('get-bio')
   @UseGuards(AuthGuard())

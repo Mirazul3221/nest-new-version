@@ -8,7 +8,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ShowProjectData from "./ShowProjectData";
 import { MdDeleteOutline } from "react-icons/md";
 
-export default function AddOther() {
+export default function AddProject() {
   const { store } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
@@ -56,11 +56,6 @@ export default function AddOther() {
       },
     ]);
   };
-
-  const handleDeleteSection = (id) => {
-    setSections(sections.filter((section) => section.id !== id));
-  };
-
   const handleChange = (id, field, value) => {
     setSections(
       sections.map((section) =>
@@ -69,19 +64,19 @@ export default function AddOther() {
     );
   };
 
+  const handleDeleteSection = (id) => {
+    setSections(sections.filter((section) => section.id !== id));
+  };
+
   const handleFormValue = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const reverseData = sections?.reverse();
     try {
-      await axios.post(
-        `${baseurl}/user-resume/project`,
-        reverseData,
-        {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        }
-      );
+      await axios.post(`${baseurl}/user-resume/project`, reverseData, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
       setProjectData((prev) => [...reverseData, ...prev]);
       setSections([
         {
@@ -117,6 +112,9 @@ export default function AddOther() {
       setOpenProjectForm(false);
     } catch (error) {}
   };
+
+  console.log(projectData)
+  
   return (
     <div className="">
       {isLoadingContainer ? (
@@ -134,7 +132,10 @@ export default function AddOther() {
                 projectData?.map((item) => {
                   return (
                     <div key={item.id}>
-                      <ShowProjectData item={item} setProjectData={setProjectData} />
+                      <ShowProjectData
+                        item={item}
+                        setProjectData={setProjectData}
+                      />
                     </div>
                   );
                 })}
@@ -364,12 +365,12 @@ export default function AddOther() {
 
                   {/* Delete Button */}
                   {sections.length > 1 && (
-                    <button
-                      onClick={() => handleDeleteSection(section.id)}
-                      className="absolute top-2 right-2 p-2 text-red-600 hover:text-red-800"
-                    >
-                      Delete
-                    </button>
+                        <button
+                        onClick={() => handleDeleteSection(section.id)}
+                        className="flex ml-auto items-center gap-1 p-2 text-red-600 hover:text-red-800"
+                      >
+                        <MdDeleteOutline /> Delete
+                      </button>
                   )}
                 </div>
               ))}

@@ -15,10 +15,6 @@ const ShowProjectData = ({ item, setProjectData}) => {
   const [projectDuration, setProjectDuration] = useState("");
   const [projectUrl, setProjectUrl] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-
-  const handleEditorChange = (content) => {
-    setEditorContent(content);
-  };
   //////////////////////////////////////////////////////////////////////
   const handleDeleteWindow = async () => {
     try {
@@ -45,11 +41,6 @@ const ShowProjectData = ({ item, setProjectData}) => {
     setIsOpenFormWindow(true);
   };
 
-  const handleSelect = (suggestion) => {
-    setInstValue(suggestion);
-    setFilteredSuggestions([]);
-  };
-
   const handleEditResumeForm = async (e) => {
     e.preventDefault();
     const { data } = await axios.post(
@@ -68,8 +59,6 @@ const ShowProjectData = ({ item, setProjectData}) => {
     data?.projectDescription && (item.projectDescription = data?.projectDescription);
     setIsOpenFormWindow(false);
   };
-
-  console.log(item);
   return (
     <div>
       {isOpenFormWindow ? (
