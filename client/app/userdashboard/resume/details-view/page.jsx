@@ -31,34 +31,54 @@ const page = () => {
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   const downloadAsImage = async (format) => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const data = canvas.toDataURL(`image/${format}`);
+    if (!resumeRef.current) return;
 
+    const element = resumeRef.current;
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
+
+    const dataUrl = canvas.toDataURL(`image/${format}`);
     const link = document.createElement("a");
-    link.href = data;
+    link.href = dataUrl;
     link.download = `resume.${format}`;
     link.click();
   };
 
-  const downloadAsPdf = async () => {
+  const downloadAsPDF = async () => {
+    if (!resumeRef.current) return;
+
     const element = resumeRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
+
     const imgData = canvas.toDataURL("image/png");
-
     const pdf = new jsPDF("p", "mm", "a4");
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    let heightLeft = pdfHeight;
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
     let position = 0;
+    let heightLeft = pdfHeight;
 
     pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
     heightLeft -= pdf.internal.pageSize.getHeight();
 
     while (heightLeft > 0) {
-      position = heightLeft - pdfHeight;
+      position -= pdf.internal.pageSize.getHeight();
       pdf.addPage();
       pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
       heightLeft -= pdf.internal.pageSize.getHeight();
