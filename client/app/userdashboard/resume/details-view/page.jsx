@@ -109,7 +109,7 @@ const page = () => {
               Download as JPG
             </button>
             <button
-              onClick={downloadAsPdf}
+              onClick={downloadAsPDF}
               className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Download as PDF
