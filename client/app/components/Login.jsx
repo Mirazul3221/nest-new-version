@@ -61,13 +61,15 @@ const InputForm = () => {
       let uri = `${baseurl}/auth/user/login`;
       const { data } = await axios.post(uri, submitValue);
       setAlert(data.msg);
-      setLoader(false);
       if(typeof window !== 'undefined'){
         localStorage.setItem("token", data.token);
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
       router.push("/userdashboard/timeline/friends-question");
+      setTimeout(() => {
+        setLoader(false);
+      }, 10000);
     } catch (error) {
       console.log(error);
       setAlert(error.response?.data.message);

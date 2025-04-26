@@ -9,6 +9,7 @@ import AddProject from "./components/AddProject";
 import StarRating from "./components/StarRating";
 import AddSkills from "./components/AddSkills";
 import AddLangs from "./components/AddLangs";
+import CvPreview from "./details-view/components/CvPreview";
 
 const page = () => {
   const defaultStape = 7;
@@ -25,6 +26,37 @@ const page = () => {
     }
   };
   const percentage = (currentStape / defaultStape) * 100;
+
+  
+  const cData = {
+    name: "John Doe",
+    title: "Full Stack Developer",
+    contact: {
+      email: "john@example.com",
+      phone: "123-456-7890",
+      address: "New York, USA"
+    },
+    summary: "Experienced developer with a passion for building web applications.",
+    experience: [
+      {
+        role: "Frontend Developer",
+        company: "Tech Inc.",
+        duration: "2021 - Present",
+        responsibilities: [
+          "Built responsive UI components using React and Tailwind.",
+          "Collaborated with backend team on API integration.",
+        ]
+      }
+    ],
+    education: [
+      {
+        degree: "BSc in Computer Science",
+        institution: "ABC University",
+        year: "2016 - 2020"
+      }
+    ],
+    skills: ["React", "Node.js", "MongoDB", "Tailwind CSS", "Git"]
+  };
   return (
     <div className="bg-[#fcf7f8] min-h-[100vh]">
       <ProtectRoute>
@@ -40,7 +72,11 @@ const page = () => {
                 ? "EXPERIENCE"
                 : currentStape === 4
                 ? "PROJECT"
-                : currentStape === 5 ? "SKILLS" : ""}
+                : currentStape === 5
+                ? "SKILLS"
+                : currentStape === 6
+                ? "LANGUAGE"
+                : ""}
             </h2>
             <div className="progres py-[2px] px-1 rounded-full bg-gray-200">
               <div
@@ -73,6 +109,8 @@ const page = () => {
             <StarRating percentage={60} />
           </div>
         </div>
+
+<CvPreview data={cData} />
       </ProtectRoute>
     </div>
   );

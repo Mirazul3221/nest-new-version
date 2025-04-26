@@ -129,7 +129,7 @@ return await this.userResumeService.deleteLangs(langId,req.user._id);
   @Get('get-bio')
   @UseGuards(AuthGuard())
   async getPrimaryBio( @Req() req) {
-    return await this.userResumeService.getPrimaryBio(req.user._id);
+    return await this.userResumeService.getPrimaryBio(req.user);
   }
 
   @Get(':id')

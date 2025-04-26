@@ -20,7 +20,7 @@ const AddLangs = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setProjectData(data?.langs);
+      setProjectData(data?.cvdata?.langs);
       setIsLoadingContainer(false);
     } catch (error) {
       console.log(error);
@@ -30,13 +30,7 @@ const AddLangs = () => {
   useEffect(() => {
     fetchBio();
   }, []);
-  const [langs, setLangs] = useState([
-    {
-      id: Date.now(),
-      langName: "",
-      percentage: "",
-    },
-  ]);
+  const [langs, setLangs] = useState([]);
   const handleAddLangs = () => {
     setLangs([
       ...langs,
@@ -48,11 +42,20 @@ const AddLangs = () => {
     ]);
   };
 
+  useEffect(() => {
+    if (projectData.length === 0) {
+      setLangs([
+        {
+          id: Date.now(),
+          langName: "",
+          percentage: "",
+        },
+      ]);
+    }
+  }, [projectData]);
   const handleChangeLangs = (id, field, value) => {
     setLangs(
-      langs.map((lang) =>
-        lang.id === id ? { ...lang, [field]: value } : lang
-      )
+      langs.map((lang) => (lang.id === id ? { ...lang, [field]: value } : lang))
     );
   };
 
@@ -63,14 +66,14 @@ const AddLangs = () => {
   const handleLangsForm = async (e) => {
     e.preventDefault();
     const reverseData = langs?.reverse();
-    console.log(langs)
+    console.log(langs);
     try {
       await axios.post(`${baseurl}/user-resume/langs`, reverseData, {
         headers: {
           Authorization: `Bearer ${store.token}`,
         },
       });
-       setProjectData((prev) => [...reverseData, ...prev]);
+      setProjectData((prev) => [...reverseData, ...prev]);
       setLangs([
         {
           id: "",
@@ -93,7 +96,7 @@ const AddLangs = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-       setProjectData((prev) => [...reverseData, ...prev]);
+      setProjectData((prev) => [...reverseData, ...prev]);
       setLangs([
         {
           id: "",
@@ -101,7 +104,7 @@ const AddLangs = () => {
           percentage: "",
         },
       ]);
-       setOpenProjectForm(false);
+      setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
     }
@@ -145,10 +148,7 @@ const AddLangs = () => {
                           <MdDeleteOutline /> Delete
                         </button>
                       )}
-                      <div
-                        key={lang.id}
-                        className=" md:grid grid-cols-2 gap-5"
-                      >
+                      <div key={lang.id} className=" md:grid grid-cols-2 gap-5">
                         <div>
                           <label className="block mb-1 text-sm font-semibold">
                             Add Language
@@ -256,11 +256,7 @@ const AddLangs = () => {
                         required
                         value={lang.langName}
                         onChange={(e) =>
-                          handleChangeLangs(
-                            lang.id,
-                            "langName",
-                            e.target.value
-                          )
+                          handleChangeLangs(lang.id, "langName", e.target.value)
                         }
                         className="w-full p-2 border rounded mb-2"
                       />

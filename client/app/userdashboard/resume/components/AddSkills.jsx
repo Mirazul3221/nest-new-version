@@ -20,7 +20,7 @@ const AddSkills = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setProjectData(data?.skills);
+      setProjectData(data?.cvdata?.skills);
       setIsLoadingContainer(false);
     } catch (error) {
       console.log(error);
@@ -30,13 +30,8 @@ const AddSkills = () => {
   useEffect(() => {
     fetchBio();
   }, []);
-  const [skills, setSkills] = useState([
-    {
-      id: Date.now(),
-      skillName: "",
-      percentage: "",
-    },
-  ]);
+
+  const [skills, setSkills] = useState([]);
   const handleAddSkill = () => {
     setSkills([
       ...skills,
@@ -47,7 +42,17 @@ const AddSkills = () => {
       },
     ]);
   };
-
+  useEffect(() => {
+    if (projectData.length === 0) {
+      setSkills([
+        {
+          id: Date.now(),
+          skillName: "",
+          percentage: "",
+        },
+      ]);
+    }
+  }, [projectData]);
   const handleChangeSkill = (id, field, value) => {
     setSkills(
       skills.map((skill) =>
@@ -69,7 +74,7 @@ const AddSkills = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-       setProjectData((prev) => [...reverseData, ...prev]);
+      setProjectData((prev) => [...reverseData, ...prev]);
       setSkills([
         {
           id: "",
@@ -92,7 +97,7 @@ const AddSkills = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-       setProjectData((prev) => [...reverseData, ...prev]);
+      setProjectData((prev) => [...reverseData, ...prev]);
       setSkills([
         {
           id: "",
@@ -100,11 +105,13 @@ const AddSkills = () => {
           percentage: "",
         },
       ]);
-       setOpenProjectForm(false);
+      setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
     }
   };
+
+  console.log(skills);
   return (
     <div className="">
       {isLoadingContainer ? (
@@ -220,7 +227,9 @@ const AddSkills = () => {
                   {!openProjectForm && projectData?.length < 5 && (
                     <button
                       disabled={openProjectForm}
-                      onClick={() => setOpenProjectForm(true)}
+                      onClick={() => {
+                        setOpenProjectForm(true);
+                      }}
                       class={`text-white w-fit bg-violet-500 ${
                         openProjectForm ? "cursor-not-allowed" : ""
                       } hover:bg-violet-600 mt-10 ring-[3px] ring-violet-300 font-medium rounded-lg px-5 py-2.5 text-center`}

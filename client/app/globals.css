@@ -38,4 +38,22 @@ body,h1,h2,h3,h4,h5,h6,p,a,div {
     width: 100% !important;
     height: 100% !important;
   }
+
+  .make_inline p,
+  .make_inline h1,
+  .make_inline h2,
+  .make_inline h3,
+  .make_inline h4,
+  .make_inline h5,
+  .make_inline h6,
+  .make_inline div,
+  .make_inline section,
+  .make_inline article,
+  .make_inline aside,
+  .make_inline header,
+  .make_inline footer {
+    display: inline;
+  }
+  
+  
   

@@ -37,14 +37,12 @@ const AddBio = () => {
           },
         }
       );
-      if(primaryBio?.data) setBio(primaryBio?.data?.primaryData[0]);
+      if(primaryBio?.data?.cvdata) setBio(primaryBio?.data?.cvdata?.primaryData[0]);
       const { data } = await axios.get(`${baseurl}/auth/get-bio`, {
         headers: {
           Authorization: `Bearer ${store.token}`,
         },
       });
-
-      console.log(data)
       const cvName = data?.name || "";
       setFirstName(cvName.split(" ")[0]);
       setLastName(cvName.split(" ")[cvName.split(" ").length - 1]);

@@ -297,9 +297,11 @@ async deleteLangs(id, userId) {
   }
 }
 ///////////////////////////////////////////////////////////////////////////////
-  async getPrimaryBio(id) {
-    const getAllCvData = await this.UserResume.find({userId:id})
-    return getAllCvData[0];
+  async getPrimaryBio(userBio) {
+    const getAllCvData = await this.UserResume.find({userId:userBio.id})
+    const bioWithProfile = getAllCvData[0]
+    console.log(userBio.profile)
+    return {cvdata:getAllCvData[0], profile:userBio.profile} ;
   }
 
   findOne(id: number) {

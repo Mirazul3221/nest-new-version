@@ -22,7 +22,6 @@ const AddExperience = () => {
   const [employmentType, setEmploymentType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [continual, SetContinual] = useState("");
   const [team, setTeam] = useState("");
   const [level, setLevel] = useState("");
   const [tecUse, setTecUse] = useState("");
@@ -31,9 +30,9 @@ const AddExperience = () => {
 
     useEffect(() => {
       if (checked) {
-        SetContinual("Continue");
+        setEndDate("Present");
       } else {
-        SetContinual("");
+        setEndDate("");
       }
     }, [checked]);
   const handleEditorChange = (content) => {
@@ -57,7 +56,6 @@ const AddExperience = () => {
         employmentType,
         startDate,
         endDate,
-        continual,
         team,
         level,
         tecUse,
@@ -81,21 +79,20 @@ const AddExperience = () => {
           },
         }
       );
-
+      setChecked(false)
       setJobTitle("");
       setCompanyName("");
       setCompanyWeb("");
       setCompanyLocation("");
+      setEditorContent('');
       setEmploymentType("");
       setStartDate("");
       setEndDate("");
-      SetContinual("");
       setTeam("");
       setLevel("");
       setTecUse("");
       setTeamSize("");
       setLinkToWork("");
-
       setExperienceData((prev) => [...prev, filteredPayload]);
       setOpenExperienceForm(false);
       setIsLoading(false);
@@ -113,7 +110,7 @@ const AddExperience = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setExperienceData(data?.experience);
+      setExperienceData(data?.cvdata?.experience);
       setIsLoadingContainer(false);
     } catch (error) {
       console.log(error);
@@ -252,8 +249,8 @@ const AddExperience = () => {
                         </label>
                         <input
                           type="text"
-                          value={continual}
-                          onChange={(e) => SetContinual('')}
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
                           className="border w-full outline-none rounded-md py-[6px] px-4"
                           placeholder="Month, Year"
                         />
@@ -541,8 +538,8 @@ const AddExperience = () => {
                         </label>
                         <input
                           type="text"
-                          value={continual}
-                          onChange={(e) => SetContinual(e.target.value)}
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
                           className="border w-full outline-none rounded-md py-[6px] px-4"
                           placeholder="Month, Year"
                         />

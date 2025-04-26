@@ -140,7 +140,7 @@ const Education = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setEducationData(data?.education);
+      setEducationData(data?.cvdata?.education);
       setIsLoadingContainer(false);
     } catch (error) {
       console.log(error);

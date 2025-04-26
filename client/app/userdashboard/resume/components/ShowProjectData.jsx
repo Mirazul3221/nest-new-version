@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import Editor from "./Editor";
+import HTMLReactParser from "html-react-parser";
 
-const ShowProjectData = ({ item, setProjectData}) => {
+const ShowProjectData = ({ item, setProjectData }) => {
   const { store } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
@@ -44,19 +45,28 @@ const ShowProjectData = ({ item, setProjectData}) => {
   const handleEditResumeForm = async (e) => {
     e.preventDefault();
     const { data } = await axios.post(
-        `${baseurl}/user-resume/update-project`,
-        { proId: item?.id, updateData:{projectName,projectDuration,projectUrl,projectDescription}},
-        {
-          headers: {
-            Authorization: `Bearer ${store.token}`,
-          },
-        }
-      );
+      `${baseurl}/user-resume/update-project`,
+      {
+        proId: item?.id,
+        updateData: {
+          projectName,
+          projectDuration,
+          projectUrl,
+          projectDescription,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      }
+    );
 
     data?.projectName && (item.projectName = data?.projectName);
     data?.projectDuration && (item.projectDuration = data?.projectDuration);
     data?.projectUrl && (item.projectUrl = data?.projectUrl);
-    data?.projectDescription && (item.projectDescription = data?.projectDescription);
+    data?.projectDescription &&
+      (item.projectDescription = data?.projectDescription);
     setIsOpenFormWindow(false);
   };
   return (
@@ -72,9 +82,7 @@ const ShowProjectData = ({ item, setProjectData}) => {
                 type="text"
                 required
                 value={projectName}
-                onChange={(e) =>
-                  setProjectName(e.target.value)
-                }
+                onChange={(e) => setProjectName(e.target.value)}
                 className="w-full p-2 border rounded mb-2"
               />
             </div>
@@ -87,9 +95,7 @@ const ShowProjectData = ({ item, setProjectData}) => {
                 type="text"
                 required
                 value={projectDuration}
-                onChange={(e) =>
-                    setProjectDuration(e.target.value)
-                }
+                onChange={(e) => setProjectDuration(e.target.value)}
                 className="w-full p-2 border rounded mb-2"
               />
             </div>
@@ -99,9 +105,7 @@ const ShowProjectData = ({ item, setProjectData}) => {
               </label>
               <input
                 value={projectUrl}
-                onChange={(e) =>
-                    setProjectUrl(e.target.value)
-                }
+                onChange={(e) => setProjectUrl(e.target.value)}
                 type="url"
                 id="website"
                 class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700"
@@ -127,26 +131,26 @@ const ShowProjectData = ({ item, setProjectData}) => {
               />
             </div>
             <div className="flex mt-4 items-center gap-2">
-            <button
-              type="submit"
-              class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
-            >
-              {isLoading ? (
-                <AiOutlineLoading3Quarters
-                  className="animate-spin text-white text-center"
-                  size={20}
-                />
-              ) : (
-                "Save change"
-              )}
-            </button>
-            <div
-              onClick={() => setIsOpenFormWindow(false)}
-              class="text-white w-fit bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-1 text-center"
-            >
-              Cancel
+              <button
+                type="submit"
+                class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+              >
+                {isLoading ? (
+                  <AiOutlineLoading3Quarters
+                    className="animate-spin text-white text-center"
+                    size={20}
+                  />
+                ) : (
+                  "Save change"
+                )}
+              </button>
+              <div
+                onClick={() => setIsOpenFormWindow(false)}
+                class="text-white w-fit bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-1 text-center"
+              >
+                Cancel
+              </div>
             </div>
-          </div>
           </div>
         </form>
       ) : (
@@ -221,12 +225,11 @@ const ShowProjectData = ({ item, setProjectData}) => {
                 </h2>
               </div>
             )}
+            
             {item?.projectDescription && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Summary :</span>{" "}
-                  {item?.projectDescription}
-                </h2>
+              <div className="make_inline text-lg">
+                <span className="font-semibold">Summary :</span>
+                {HTMLReactParser(`${" " + item?.projectDescription}`)}
               </div>
             )}
           </div>

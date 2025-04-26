@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import Editor from "./Editor";
+import HTMLReactParser from "html-react-parser";
 
 const ShowExpData = ({ exp, setExperienceData }) => {
   const { store } = useStore();
@@ -20,7 +21,6 @@ const ShowExpData = ({ exp, setExperienceData }) => {
   const [employmentType, setEmploymentType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [continual, SetContinual] = useState("");
   const [team, setTeam] = useState("");
   const [level, setLevel] = useState("");
   const [tecUse, setTecUse] = useState("");
@@ -29,12 +29,11 @@ const ShowExpData = ({ exp, setExperienceData }) => {
 
   useEffect(() => {
     if (checked) {
-      SetContinual("Continue");
+      setEndDate("present");
     } else {
-      SetContinual("");
+      setEndDate("");
     }
   }, [checked]);
-
 
   const handleEditorChange = (content) => {
     setEditorContent(content);
@@ -68,7 +67,6 @@ const ShowExpData = ({ exp, setExperienceData }) => {
     exp?.employmentType && setEmploymentType(exp?.employmentType);
     exp?.startDate && setStartDate(exp?.startDate);
     exp?.endDate && setEndDate(exp?.endDate);
-    exp?.continual && SetContinual(exp?.continual);
     exp?.team && setTeam(exp?.team);
     exp?.level && setLevel(exp?.level);
     exp?.tecUse && setTecUse(exp?.tecUse);
@@ -93,7 +91,6 @@ const ShowExpData = ({ exp, setExperienceData }) => {
       employmentType,
       startDate,
       endDate,
-      continual,
       team,
       level,
       tecUse,
@@ -125,7 +122,6 @@ const ShowExpData = ({ exp, setExperienceData }) => {
     data?.employmentType && (exp.employmentType = data?.employmentType);
     data?.startDate && (exp.startDate = data?.startDate);
     data?.endDate && (exp.endDate = data?.endDate);
-    data?.continual && (exp.continual = data?.continual);
     data?.team && (exp.team = data?.team);
     data?.level && (exp.level = data?.level);
     data?.tecUse && (exp.tecUse = data?.tecUse);
@@ -257,8 +253,8 @@ const ShowExpData = ({ exp, setExperienceData }) => {
                     </label>
                     <input
                       type="text"
-                      value={continual}
-                      onChange={(e) => SetContinual(e.target.value)}
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                       className="border w-full outline-none rounded-md py-[6px] px-4"
                       placeholder="Month, Year"
                     />
@@ -445,136 +441,126 @@ const ShowExpData = ({ exp, setExperienceData }) => {
             </div>
           </div>
           <div className="flex gap-2 items-center w-fit ml-auto mb-2">
-              <button
-                onClick={handleOpenFormWindow}
-                className="text-green-500 text-sm font-semibold flex items-center gap-2 px-4 border-2 rounded-md border-white duration-150 hover:border-green-300"
-              >
-                <FaRegEdit /> EDIT
-              </button>
-              <button
-                onClick={() => setIsOpenDeleteWindow(true)}
-                className="text-rose-500 text-sm font-semibold px-4 border-2 flex items-center rounded-md border-white duration-150 hover:border-rose-300"
-              >
-                <MdDeleteOutline /> DELETE
-              </button>
-            </div>
-          <div>
-          <div className="md:grid grid-cols-2 gap-10">
-            <div>
-              <h2 className="text-lg">
-                <span className="font-semibold">Job Title :</span>{" "}
-                {exp?.jobTitle}
-              </h2>
-            </div>
-            {exp?.companyName && (
-              <div>
-                {" "}
-                <h2 className="text-lg">
-                  <span className="font-semibold">Company Name:</span>{" "}
-                  {exp?.companyName}
-                </h2>
-              </div>
-            )}
-            {exp?.companyWeb && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Company Website :</span>{" "}
-                  {exp?.companyWeb}
-                </h2>
-              </div>
-            )}
-            {exp?.companyLocation && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Company Location :</span>{" "}
-                  {exp?.companyLocation}
-                </h2>
-              </div>
-            )}
-            {exp?.employmentType && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Employment Type :</span>{" "}
-                  {exp?.employmentType}
-                </h2>
-              </div>
-            )}
-
-            {exp?.startDate && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Start date :</span>{" "}
-                  {exp?.startDate}
-                </h2>
-              </div>
-            )}
-
-            {exp?.endDate && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">End date :</span>{" "}
-                  {exp?.endDate}
-                </h2>
-              </div>
-            )}
-
-            {exp?.continual && (
-              <div>
-                <h2 className="text-lg">
-                  {exp?.continual}
-                </h2>
-              </div>
-            )}
-
-            {exp?.team && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Team :</span> {exp?.team}
-                </h2>
-              </div>
-            )}
-            {exp?.level && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Level :</span> {exp?.level}
-                </h2>
-              </div>
-            )}
-            {exp?.tecUse && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Technology Use :</span>{" "}
-                  {exp?.tecUse}
-                </h2>
-              </div>
-            )}
-            {exp?.teamSize && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">Team Size :</span>{" "}
-                  {exp?.teamSize}
-                </h2>
-              </div>
-            )}
-            {exp?.setLinkToWork && (
-              <div>
-                <h2 className="text-lg">
-                  <span className="font-semibold">
-                    Work Document/portfolio Link :
-                  </span>{" "}
-                  {exp?.setLinkToWork}
-                </h2>
-              </div>
-            )}
+            <button
+              onClick={handleOpenFormWindow}
+              className="text-green-500 text-sm font-semibold flex items-center gap-2 px-4 border-2 rounded-md border-white duration-150 hover:border-green-300"
+            >
+              <FaRegEdit /> EDIT
+            </button>
+            <button
+              onClick={() => setIsOpenDeleteWindow(true)}
+              className="text-rose-500 text-sm font-semibold px-4 border-2 flex items-center rounded-md border-white duration-150 hover:border-rose-300"
+            >
+              <MdDeleteOutline /> DELETE
+            </button>
           </div>
-          {exp?.editorContent && (
-              <div className="mt-10">
+          <div>
+            <div className="md:grid grid-cols-2 gap-10">
+              <div>
                 <h2 className="text-lg">
-                  <span className="font-semibold">
-                   Summary :
-                  </span>{" "}
-                  {exp?.editorContent}
+                  <span className="font-semibold">Job Title :</span>{" "}
+                  {exp?.jobTitle}
                 </h2>
+              </div>
+              {exp?.companyName && (
+                <div>
+                  {" "}
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Company Name:</span>{" "}
+                    {exp?.companyName}
+                  </h2>
+                </div>
+              )}
+              {exp?.companyWeb && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Company Website :</span>{" "}
+                    {exp?.companyWeb}
+                  </h2>
+                </div>
+              )}
+              {exp?.companyLocation && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Company Location :</span>{" "}
+                    {exp?.companyLocation}
+                  </h2>
+                </div>
+              )}
+              {exp?.employmentType && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Employment Type :</span>{" "}
+                    {exp?.employmentType}
+                  </h2>
+                </div>
+              )}
+
+              {exp?.startDate && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Start date :</span>{" "}
+                    {exp?.startDate}
+                  </h2>
+                </div>
+              )}
+
+              {exp?.endDate && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">End date :</span>{" "}
+                    {exp?.endDate}
+                  </h2>
+                </div>
+              )}
+
+              {exp?.team && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Team :</span> {exp?.team}
+                  </h2>
+                </div>
+              )}
+              {exp?.level && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Level :</span> {exp?.level}
+                  </h2>
+                </div>
+              )}
+              {exp?.tecUse && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Technology Use :</span>{" "}
+                    {exp?.tecUse}
+                  </h2>
+                </div>
+              )}
+              {exp?.teamSize && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">Team Size :</span>{" "}
+                    {exp?.teamSize}
+                  </h2>
+                </div>
+              )}
+              {exp?.setLinkToWork && (
+                <div>
+                  <h2 className="text-lg">
+                    <span className="font-semibold">
+                      Work Document/portfolio Link :
+                    </span>{" "}
+                    {exp?.setLinkToWork}
+                  </h2>
+                </div>
+              )}
+            </div>
+            {exp?.editorContent && (
+              <div className="make_inline text-lg">
+                <span className="font-semibold">
+                  Summary : 
+                </span>
+                {HTMLReactParser(`${" " + exp?.editorContent}`)}
               </div>
             )}
           </div>

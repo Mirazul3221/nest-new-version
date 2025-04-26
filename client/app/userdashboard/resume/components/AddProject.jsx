@@ -23,7 +23,7 @@ export default function AddProject() {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      setProjectData(data?.project);
+      setProjectData(data?.cvdata?.project);
       setIsLoadingContainer(false);
     } catch (error) {
       console.log(error);
@@ -35,15 +35,20 @@ export default function AddProject() {
   }, []);
 
   const [sections, setSections] = useState([
-    {
-      id: Date.now(),
-      projectName: "",
-      projectDuration: "",
-      projectUrl: "",
-      projectDescription: "",
-    },
   ]);
-
+  useEffect(() => {
+    if (projectData.length === 0) {
+      setSections([
+        {
+          id: Date.now(),
+          projectName: "",
+          projectDuration: "",
+          projectUrl: "",
+          projectDescription: "",
+        }
+      ]);
+    }
+  }, [projectData]);
   const handleAddSection = () => {
     setSections([
       ...sections,
