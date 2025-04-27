@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res } from '@nestjs/common';
 import { UserResumeService } from './user-resume.service';
 import { CreateUserResumeDto } from './dto/create-user-resume.dto';
 import { UpdateUserResumeDto } from './dto/update-user-resume.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
+import * as fs from 'fs';
 
 @Controller('user-resume')
 export class UserResumeController {
@@ -130,6 +132,28 @@ return await this.userResumeService.deleteLangs(langId,req.user._id);
   @UseGuards(AuthGuard())
   async getPrimaryBio( @Req() req) {
     return await this.userResumeService.getPrimaryBio(req.user);
+  }
+
+
+  ///////////////////////////////////Here is the logic for generate files/////////////////////////////////
+
+
+
+  @Post('generate-pdf')
+  @UseGuards(AuthGuard())
+  async generatePdf(@Body() body : { html: string }, @Res() res: Response) {
+
+    // Check if the HTML is a valid string
+    if (typeof body.html !== 'string') {
+      return res.status(400).send('Invalid HTML content');
+    }
+    const pdfBuffer = await this.userResumeService.generatePdf(body.html);
+    // Set the response headers for PDF download
+// Set the response headers for PDF download
+res.setHeader('Content-Type', 'application/pdf');
+res.setHeader('Content-Disposition', 'attachment; filename="generated.pdf"');
+res.end(pdfBuffer);  // Use res.end() to send binary data
+
   }
 
   @Get(':id')

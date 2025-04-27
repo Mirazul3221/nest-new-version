@@ -9,69 +9,149 @@ import HTMLReactParser from "html-react-parser";
 
 const Formate01 = ({ cvData }) => {
   return (
-    <div className="p-10 text-gray-700">
-      <div className="top-part flex border-b-2 pb-6 text-gray-700 mt-10">
-        <div className="w-4/12 flex justify-center items-center">
-          <img
-            className="rounded-full w-32 shadow-2xl shadow-gray-500 ring-2 ring-white"
-            src={cvData.profile}
-            alt="cv-profile"
-          />
+    <div
+      style={{
+        margin: "0 auto", // center it
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          borderBottom: "2px solid gray",
+          paddingBottom: "24px",
+          marginTop: "40px",
+          color: "gray",
+        }}
+      >
+        <div
+          style={{
+            width: "33.333%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
+              borderRadius: "9999px",
+              border: "3px solid gray",
+              width: "8rem",
+              height: "8rem",
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <img
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              src={cvData.profile}
+              alt="cv-profile"
+            />
+          </div>
         </div>
-        <div className="w-8/12">
+        <div style={{ width: "66.666%" }}>
           {cvData?.cvdata?.primaryData[0] && (
             <div>
               <div>
-                <h2 className="text-5xl font-semibold">
+                <p
+                  style={{
+                    fontSize: "3rem",
+                    fontWeight: "600",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
                   {cvData?.cvdata?.primaryData[0]?.firstName}
                   {cvData?.cvdata?.primaryData[0]?.lastName}
-                </h2>
+                </p>
                 {cvData?.cvdata?.primaryData[0]?.title && (
-                  <h2 className="text-2xl mt-1">
+                  <p style={{ fontSize: "1.5rem", marginTop: "8px" }}>
                     {cvData?.cvdata?.primaryData[0]?.title}
-                  </h2>
+                  </p>
                 )}
               </div>
-              <div className="grid border-t pt-2 gap-4 grid-cols-2 mt-5">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  borderTop: "1px solid gray",
+                  paddingTop: "8px",
+                  gap: "16px",
+                  marginTop: "20px",
+                }}
+              >
                 {cvData?.cvdata?.primaryData[0]?.number && (
-                  <div className="flex items-center gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <IconeBuilder
                       iconeHolder={<IoCallSharp color="white" size={15} />}
                     />
-                    <h2>{cvData?.cvdata?.primaryData[0]?.number}</h2>
+                    <p>{cvData?.cvdata?.primaryData[0]?.number}</p>
                   </div>
                 )}
-
                 {cvData?.cvdata?.primaryData[0]?.email && (
-                  <div className="flex items-center gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <IconeBuilder
                       iconeHolder={<FaEnvelope color="white" size={15} />}
                     />
-                    <h2>{cvData?.cvdata?.primaryData[0]?.email}</h2>
+                    <p>{cvData?.cvdata?.primaryData[0]?.email}</p>
                   </div>
                 )}
                 {cvData?.cvdata?.primaryData[0]?.in && (
-                  <div className="flex items-center gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <IconeBuilder
                       iconeHolder={<FaLinkedinIn color="white" size={15} />}
                     />
-                    <h2>{cvData?.cvdata?.primaryData[0]?.in}</h2>
+                    <p>{cvData?.cvdata?.primaryData[0]?.in}</p>
                   </div>
                 )}
                 {cvData?.cvdata?.primaryData[0]?.website && (
-                  <div className="flex items-center gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <IconeBuilder
                       iconeHolder={<BiWorld color="white" size={15} />}
                     />
-                    <h2>{cvData?.cvdata?.primaryData[0]?.website}</h2>
+                    <p>{cvData?.cvdata?.primaryData[0]?.website}</p>
                   </div>
                 )}
                 {cvData?.cvdata?.primaryData[0]?.location && (
-                  <div className="flex items-center gap-2">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <IconeBuilder
                       iconeHolder={<FaLocationDot color="white" size={15} />}
                     />
-                    <h2>{cvData?.cvdata?.primaryData[0]?.location}</h2>
+                    <p>{cvData?.cvdata?.primaryData[0]?.location}</p>
                   </div>
                 )}
               </div>
@@ -80,198 +160,363 @@ const Formate01 = ({ cvData }) => {
         </div>
       </div>
 
-      <div className="flex">
-        <div className="w-4/12">
+      <div style={{ display: "flex", marginTop: "24px" }}>
+        {/* Left Section */}
+        <div style={{ width: "33.333%" }}>
+          {/* Education */}
           {cvData?.cvdata?.education && (
-            <div className="mt-10">
-              <h2 className="uppercase text-2xl font-semibold mb-4">
+            <div style={{ marginTop: "40px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
                 Education
-              </h2>
-              {cvData?.cvdata?.education?.map((edu, i) => {
-                return (
-                  <div className="" key={i}>
-                    {edu.educationLevel && (
-                      <div className="aboutSlide year gap-4 flex items-center">
-                        <div className="bg-[#dfdfdf] w-5 h-5 -ml-[10px] rounded-full flex justify-center items-center">
-                          {i + 1}
-                        </div>
-                        <p className="font-bold">{edu.educationLevel}</p>
+              </p>
+              {cvData?.cvdata?.education?.map((edu, i) => (
+                <div key={i}>
+                  {edu.educationLevel && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#dfdfdf",
+                          width: "20px",
+                          height: "20px",
+                          marginLeft: "-10px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {i + 1}
                       </div>
-                    )}
-
-                    <div class="desc border-l-2 aboutSlide border-[#dfdfdf] pl-4">
-                      {edu.examination && <h2>{edu.examination}</h2>}
-                      {edu.subject && <h2>Subject/Gropu: {edu.subject}</h2>}
-                      {edu.board && <h2>Board:{edu.board}</h2>}
-                      {edu.result && (
-                        <h2>
-                          {" "}
-                          cgpa:{edu.gpa}{" "}
-                          {edu.result == "GPA(Out of 5)" ? (
-                            <span className="text-sm">(Out of 5)</span>
-                          ) : edu.result == "CGPA(Out of 4)" ? (
-                            <span className="text-sm">(Out of 4)</span>
-                          ) : (
-                            ""
-                          )}
-                        </h2>
-                      )}
-
-                      {edu.courseDuration && (
-                        <h2>Course Duration:{edu.courseDuration} Years</h2>
-                      )}
-                      {edu.instValue && <h2>Institution:{edu.instValue}</h2>}
+                      <p style={{ fontWeight: "bold" }}>{edu.educationLevel}</p>
                     </div>
+                  )}
+                  <div
+                    style={{
+                      borderLeft: "2px solid #dfdfdf",
+                      paddingLeft: "16px",
+                    }}
+                  >
+                    {edu.examination && <p>{edu.examination}</p>}
+                    {edu.subject && <p>Subject/Group: {edu.subject}</p>}
+                    {edu.board && <p>Board: {edu.board}</p>}
+                    {edu.result && (
+                      <p>
+                        CGPA: {edu.gpa}{" "}
+                        {edu.result === "GPA(Out of 5)"
+                          ? "(Out of 5)"
+                          : edu.result === "CGPA(Out of 4)"
+                          ? "(Out of 4)"
+                          : ""}
+                      </p>
+                    )}
+                    {edu.courseDuration && (
+                      <p>Course Duration: {edu.courseDuration} Years</p>
+                    )}
+                    {edu.instValue && <p>Institution: {edu.instValue}</p>}
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
+
+          {/* Skills */}
           {cvData?.cvdata?.skills && (
-            <div className="mt-10">
-              <h2 className="uppercase text-2xl font-semibold mb-4">Skills</h2>
-              {cvData?.cvdata?.skills?.map((skl, i) => {
-                return (
-                  <div key={i}>
-                    {skl.skillName && (
-                      <div className="aboutSlide year gap-4 flex items-center">
-                        <div className="bg-[#dfdfdf] w-5 h-5 -ml-[10px] rounded-full flex justify-center items-center">
-                          {i + 1}
-                        </div>
-                        <p className="font-bold">{skl.skillName}</p>
+            <div style={{ marginTop: "40px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
+                Skills
+              </p>
+              {cvData?.cvdata?.skills?.map((skl, i) => (
+                <div key={i}>
+                  {skl.skillName && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#dfdfdf",
+                          width: "20px",
+                          height: "20px",
+                          marginLeft: "-10px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {i + 1}
                       </div>
-                    )}
-                    <div className="border-l-2 aboutSlide border-[#dfdfdf] pl-4">
-                      <StarRating percentage={skl.percentage} starSize={18} />
+                      <p style={{ fontWeight: "bold" }}>{skl.skillName}</p>
                     </div>
+                  )}
+                  <div
+                    style={{
+                      borderLeft: "2px solid #dfdfdf",
+                      paddingLeft: "16px",
+                    }}
+                  >
+                    <StarRating percentage={skl.percentage} starSize={18} />
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
 
+          {/* Language */}
           {cvData?.cvdata?.langs && (
-            <div className="mt-10">
-              <h2 className="uppercase text-2xl font-semibold mb-4">
+            <div style={{ marginTop: "40px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
                 Language
-              </h2>
-              {cvData?.cvdata?.langs?.map((lan, i) => {
-                return (
-                  <div key={i}>
-                    {lan.langName && (
-                      <div className="aboutSlide year gap-4 flex items-center">
-                        <div className="bg-[#dfdfdf] w-5 h-5 -ml-[10px] rounded-full flex justify-center items-center">
-                          {i + 1}
-                        </div>
-                        <p className="font-bold">{lan.langName}</p>
+              </p>
+              {cvData?.cvdata?.langs?.map((lan, i) => (
+                <div key={i}>
+                  {lan.langName && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#dfdfdf",
+                          width: "20px",
+                          height: "20px",
+                          marginLeft: "-10px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {i + 1}
                       </div>
-                    )}
-                    <div className="border-l-2 aboutSlide border-[#dfdfdf] pl-4">
-                      <StarRating percentage={lan.percentage} starSize={18} />
+                      <p style={{ fontWeight: "bold" }}>{lan.langName}</p>
                     </div>
+                  )}
+                  <div
+                    style={{
+                      borderLeft: "2px solid #dfdfdf",
+                      paddingLeft: "16px",
+                    }}
+                  >
+                    <StarRating percentage={lan.percentage} starSize={18} />
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </div>
-        <div className="w-8/12">
+
+        {/* Right Section */}
+        <div style={{ width: "66.666%" }}>
+          {/* Experience */}
           {cvData?.cvdata?.experience && (
-            <div className="mt-10">
-              <h2 className="uppercase text-2xl font-semibold mb-4">
+            <div style={{ marginTop: "40px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
                 Experience
-              </h2>
-              {cvData?.cvdata?.experience?.map((exp, i) => {
-                return (
-                  <div key={i}>
-                    {exp.jobTitle && (
-                      <div className="aboutSlide year gap-4 flex items-center">
-                        <div className="bg-[#dfdfdf] w-5 h-5 -ml-[10px] rounded-full flex justify-center items-center">
-                          {i + 1}
-                        </div>
-                        <p className="font-bold">{exp.jobTitle}</p>
+              </p>
+              {cvData?.cvdata?.experience?.map((exp, i) => (
+                <div key={i}>
+                  {exp.jobTitle && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#dfdfdf",
+                          width: "20px",
+                          height: "20px",
+                          marginLeft: "-10px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {i + 1}
+                      </div>
+                      <p style={{ fontWeight: "bold" }}>{exp.jobTitle}</p>
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      borderLeft: "2px solid #dfdfdf",
+                      paddingLeft: "16px",
+                      paddingBottom: "20px",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: "40px" }}>
+                      {exp.companyName && <p>{exp.companyName}</p>}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                        }}
+                      >
+                        {exp.startDate && <p>({exp.startDate})</p>} ---{" "}
+                        {exp.endDate && <p>({exp.endDate})</p>}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: "40px" }}>
+                      {exp.companyWeb && (
+                        <a
+                          style={{ textDecoration: "underline",color:'gray' }}
+                          href={exp.companyWeb}
+                          target="_blank"
+                        >
+                          {exp.companyWeb}
+                        </a>
+                      )}
+                      {exp.companyLocation && <p>{exp.companyLocation}</p>}
+                    </div>
+                    <div style={{ display: "flex", gap: "40px" }}>
+                      {exp.team && (
+                        <p style={{ textDecoration: "underline" }}>
+                          Team Size : {exp.team}
+                        </p>
+                      )}
+                      {exp.level && <p>Level : {exp.level}</p>}
+                    </div>
+                    {exp.tecUse && <p>Technology Used : {exp.tecUse}</p>}
+                    {exp.editorContent && (
+                      <div
+                        style={{
+                          whiteSpace: "normal",
+                          lineHeight: "1.6",
+                          wordBreak: "break-word",
+                          fontSize: "1rem",
+                          marginTop: "8px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "600" }}>Summary:</span>{" "}
+                        {HTMLReactParser(exp.editorContent)}
                       </div>
                     )}
-                    <div className="border-l-2 aboutSlide pb-5 border-[#dfdfdf]">
-                      <div class="flex gap-10 pl-4">
-                        {exp.companyName && <h2>{exp.companyName}</h2>}
-                        <div className="flex items-center gap-1">
-                          {exp.startDate && <p>({exp.startDate})</p>} ---
-                          {exp.endDate && <p>({exp.endDate})</p>}
-                        </div>
-                      </div>
-                      <div class=" flex gap-10 pl-4">
-                        {exp.companyWeb && (
-                          <a
-                            className="underline"
-                            href={exp.companyWeb}
-                            target="_blank"
-                          >
-                            {exp.companyWeb}
-                          </a>
-                        )}
-                        {exp.companyLocation && <h2>{exp.companyLocation}</h2>}
-                      </div>
-
-                      <div class=" flex gap-10 pl-4">
-                        {exp.team && (
-                          <p className="underline">Team Size : {exp.team}</p>
-                        )}
-                        {exp.level && <h2>Level : {exp.level}</h2>}
-                      </div>
-                      {exp.tecUse && <h2 className="pl-4">Technology Used : {exp.tecUse}</h2>}
-                      {exp?.editorContent && (
-                        <div className="make_inline text-lg pl-4">
-                          <span className="font-semibold">Summary :</span>
-                          {HTMLReactParser(`${" " + exp?.editorContent}`)}
-                        </div>
-                      )}
-                    </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
+
+          {/* Projects */}
           {cvData?.cvdata?.project && (
-            <div className="mt-10">
-              <h2 className="uppercase text-2xl font-semibold mb-4">
+            <div style={{ marginTop: "40px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
                 Project
-              </h2>
-              {cvData?.cvdata?.project?.map((pro, i) => {
-                return (
-                  <div key={i}>
-                    {pro.projectName && (
-                      <div className="aboutSlide year gap-4 flex items-center">
-                        <div className="bg-[#dfdfdf] w-5 h-5 -ml-[10px] rounded-full flex justify-center items-center">
-                          {i + 1}
-                        </div>
-                        <p className="font-bold">{pro.projectName}</p>
+              </p>
+              {cvData?.cvdata?.project?.map((pro, i) => (
+                <div key={i}>
+                  {pro.projectName && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#dfdfdf",
+                          width: "20px",
+                          height: "20px",
+                          marginLeft: "-10px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {i + 1}
+                      </div>
+                      <p style={{ fontWeight: "bold" }}>{pro.projectName}</p>
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      borderLeft: "2px solid #dfdfdf",
+                      paddingLeft: "16px",
+                      paddingBottom: "20px",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: "40px" }}>
+                      {pro.projectUrl && (
+                        <a
+                          style={{ textDecoration: "underline",color:'gray' }}
+                          href={pro.projectUrl}
+                          target="_blank"
+                        >
+                          {pro.projectUrl}
+                        </a>
+                      )}
+                      {pro.projectDuration && <p>{pro.projectDuration}</p>}
+                    </div>
+                    {pro?.projectDescription && (
+                      <div
+                        style={{
+                          whiteSpace: "normal",
+                          lineHeight: "1.6",
+                          wordBreak: "break-word",
+                          fontSize: "1rem",
+                        }}
+                      >
+                        <span style={{ fontWeight: "600" }}>Summary:</span>{" "}
+                        {HTMLReactParser(pro.projectDescription)}
                       </div>
                     )}
-                    <div className="border-l-2 aboutSlide pb-5 border-[#dfdfdf]">
-                      <div class=" flex gap-10 pl-4">
-                        {pro.projectUrl && (
-                          <a
-                            className="underline"
-                            href={pro.projectUrl}
-                            target="_blank"
-                          >
-                            {pro.projectUrl}
-                          </a>
-                        )}
-                        {pro.projectDuration && <h2>{pro.projectDuration}</h2>}
-                      </div>
-
-                      {pro?.projectDescription && (
-                        <div className="make_inline text-lg pl-4">
-                          <span className="font-semibold">Summary :</span>
-                          {HTMLReactParser(`${" " + pro?.projectDescription}`)}
-                        </div>
-                      )}
-                    </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </div>

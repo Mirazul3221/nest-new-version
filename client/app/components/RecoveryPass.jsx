@@ -21,7 +21,6 @@ const RecoveryPass = ({mail}) => {
   };
   const handlesubmit = async (e) => {
     e.preventDefault();
-
     // redirect("/dashboard")
     try {
       setLoader(true)

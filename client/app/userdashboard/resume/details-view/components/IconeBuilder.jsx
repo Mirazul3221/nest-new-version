@@ -1,8 +1,15 @@
 import React from 'react'
 
-const IconeBuilder = ({iconeHolder,bg='gray-500'}) => {
+const IconeBuilder = ({ iconeHolder, bg = 'gray' }) => {
   return (
-    <div className={`p-1 w-fit rounded-md bg-${bg}`}>
+    <div
+      style={{
+        padding: '4px',
+        width: 'fit-content',
+        borderRadius: '6px',
+        backgroundColor: bg,
+      }}
+    >
       {iconeHolder}
     </div>
   )
