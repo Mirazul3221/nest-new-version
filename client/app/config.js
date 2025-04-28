@@ -3,4 +3,4 @@ export let baseurl = 'https://mirazul3221.vercel.app';
 //==========MyPass = @43gnertnr%&Yjk%(&(
 //====================//====================
 export let viewurl = 'https://bcs-prep.vercel.app';
-viewurl = 'http://localhost:3000'
+// viewurl = 'http://localhost:3000'

@@ -42,7 +42,7 @@ const Page = () => {
     try {
       setLoader(true)
       // // ✅ First convert all images to base64
-      // await convertImagesToBase64(resumeRef.current);
+       await convertImagesToBase64(resumeRef.current);
   
       // ✅ Then get the updated HTML
       const element = resumeRef.current.innerHTML;
