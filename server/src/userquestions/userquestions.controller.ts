@@ -18,6 +18,13 @@ async createQuestion(@Req() req, @Body() createUserquestionDto: CreateUserquesti
     return await this.userquestionsService.create(createUserquestionDto,req.user);
   }
 //
+
+  @UseGuards(AuthGuard())
+  @Post('generate-description-by-ai')
+async generateDescriptionByAi(@Body() questionData) {
+    return await this.userquestionsService.generateDescriptionByAi(questionData);
+  }
+//
   
   @UseGuards(AuthGuard())
   @Post('edit-question/:id')

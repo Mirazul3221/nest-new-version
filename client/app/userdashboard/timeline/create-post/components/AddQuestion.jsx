@@ -6,11 +6,10 @@ import Math from "./select-component-for-topic/Math";
 import JoditEditorWrapper from "@/app/assistantdashboard/components/joditEditor";
 import axios from "axios";
 import { baseurl } from "@/app/config";
-import loader from "@/public/loading-buffer.gif";
 import storeContext from "@/app/global/createContex";
-import Image from "next/image";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
@@ -24,6 +23,7 @@ const AddQuestion = () => {
   const [content, setContent] = useState("");
   const [rightAns, setRightAns] = useState("");
   const [loading, setloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { store } = useContext(storeContext);
   const editor = useRef(null);
   const handleSubmitAnswer = async (e) => {
@@ -52,20 +52,39 @@ const AddQuestion = () => {
           },
         }
       );
-      toast(data)
+      toast(data);
       setloading(false);
-      setQuestion('')
-      setPrevExm('')
-      setOption_01('')
-      setOption_02('')
-      setOption_03('')
-      setOption_04('')
-      setRightAns('')
-      setContent('')
+      setQuestion("");
+      setPrevExm("");
+      setOption_01("");
+      setOption_02("");
+      setOption_03("");
+      setOption_04("");
+      setRightAns("");
+      setContent("");
     } catch (error) {
-      toast.error(error.response.data)
+      toast.error(error.response.data);
       setloading(false);
       console.log(error);
+    }
+  };
+
+  const handleChatboat = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post(
+        `${baseurl}/userquestions/generate-description-by-ai`,
+        { subject, chapter, question, content },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setIsLoading(false);
+      setContent(data);
+    } catch (error) {
+      setIsLoading(false);
     }
   };
   return (
@@ -124,17 +143,17 @@ const AddQuestion = () => {
         </div>
 
         <div className="mt-2 block md:hidden">
-            <label htmlFor="title">Previous exam session</label>
-            <input
-              onChange={(e) => setPrevExm(e.target.value)}
-              value={prevExam}
-              type="text"
-              name="exam"
-              id="exam"
-              placeholder="optional"
-              className="outline-none flex w-10/12 py-1 px-2 rounded-md border"
-            />
-          </div>
+          <label htmlFor="title">Previous exam session</label>
+          <input
+            onChange={(e) => setPrevExm(e.target.value)}
+            value={prevExam}
+            type="text"
+            name="exam"
+            id="exam"
+            placeholder="optional"
+            className="outline-none flex w-10/12 py-1 px-2 rounded-md border"
+          />
+        </div>
         {/* ------------------------------------------------------------------------------------- */}
         <div>
           <div className="mt-6 md:w-1/2 md:pr-4">
@@ -224,10 +243,25 @@ const AddQuestion = () => {
               <option value="3">option 03</option>
               <option value="4">option 04</option>
             </select>
+            <div onClick={handleChatboat} className="px-6 py-1 cursor-pointer bg-violet-500 text-white rounded-md">
+              {isLoading ? (
+                <div className="flex items-center gap-2 ">
+                  <AiOutlineLoading3Quarters
+                    className="animate-spin text-white text-center"
+                    size={20}
+                  />{" "}
+                  Loading...
+                </div>
+              ) : (
+                "Use AI to generate description"
+              )}
+            </div>
+
             {loading ? (
-             <div className="bg-white rounded-md overflow-hidden border">
-               <Image className="w-8" src={loader} alt="Loding image"/>
-             </div>
+              <AiOutlineLoading3Quarters
+                className="animate-spin text-white text-center"
+                size={20}
+              />
             ) : (
               <button
                 type="submit"
@@ -249,7 +283,7 @@ const AddQuestion = () => {
           </div>
         </div>
       </form>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
