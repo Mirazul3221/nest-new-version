@@ -156,9 +156,10 @@ res.end(pdfBuffer);  // Use res.end() to send binary data
 
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userResumeService.findOne(+id);
+  @Get('generate-your-autobiography')
+  @UseGuards(AuthGuard())
+  async generateBio( @Req() req) {
+    return await this.userResumeService.generateBio(req.user.id)
   }
 
   @Patch(':id')
@@ -171,3 +172,5 @@ res.end(pdfBuffer);  // Use res.end() to send binary data
     return this.userResumeService.remove(+id);
   }
 }
+
+

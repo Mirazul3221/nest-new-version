@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UpdateUserResumeDto } from './dto/update-user-resume.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { CV, CVDocument } from './schema/user-resume-schema';
 import * as puppeteer from 'puppeteer';
 import { Model } from 'mongoose';
+import axios from 'axios';
 
 @Injectable()
 export class UserResumeService {
-  constructor(@InjectModel(CV.name) private UserResume: Model<CVDocument>) {}
+  private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
+  private readonly geminiApiKey: string;
+  constructor(@InjectModel(CV.name) private UserResume: Model<CVDocument>,private readonly configService: ConfigService) {
+    this.geminiApiKey = this.configService.get<string>('GEMINI_API_KEY');
+  }
   async create(primaryData, userId) {
     const isExist = await this.UserResume.findOne({ userId });
 
@@ -374,6 +380,86 @@ export class UserResumeService {
 
     return pdfBuffer;
   }
+
+  async getGeminiAnswer(question: any): Promise<string> {
+    try {
+      const response = await axios.post(
+        `${this.GEMINI_API_URL}?key=${this.geminiApiKey}`,
+        {
+          contents: [
+            {
+              parts: [{ text: question }],
+            },
+          ],
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      const candidates = response.data?.candidates;
+      if (candidates && candidates.length > 0) {
+        return candidates[0].content.parts[0].text;
+      } else {
+        return 'No valid response from Gemini.';
+      }
+    } catch (error) {
+      console.error('Gemini API error:', error.response?.data || error.message);
+      throw new Error('Failed to generate Gemini response.');
+    }
+  }
+
+async generateBio (userId){
+  const isExist = await this.UserResume.findOne({ userId });
+  const primaryData = isExist.primaryData?.[0] || {};
+  const experience = isExist.experience?.[0] || {};
+  
+  const firstName = (primaryData as any).firstName;
+  const lastName = (primaryData as any).lastName;
+  const title = (primaryData as any).title;
+  const number = (primaryData as any).number;
+  const website = (primaryData as any).website;
+  const location = (primaryData as any).location;
+  const email = (primaryData as any).email;
+  
+  const jobTitle0 = (experience as any).jobTitle;
+  const companyName0 = (experience as any).companyName;
+  const tecUse0 = (experience as any).tecUse;
+  const editorContent0 = (experience as any).editorContent;
+
+  const jobTitle1 = (isExist.experience[1] as any).jobTitle; 
+  const companyName1 = (isExist.experience[1] as any).companyName; 
+  const tecUse1 = (isExist.experience[1] as any).tecUse;
+  const editorContent1 = (isExist.experience[1] as any).editorContent;
+
+
+  const jobTitle2 = (isExist.experience[2] as any).jobTitle; 
+  const companyName2 = (isExist.experience[2] as any).companyName; 
+  const tecUse2 = (isExist.experience[2] as any).tecUse;
+  const editorContent2 = (isExist.experience[2] as any).editorContent;
+
+
+  const longText = `Write a bio in 150 words based on the full text -here is my primary information take the important thing. Though i use my name but you replace my name as I . my bio start from here ${firstName + ' ' + lastName + " " + title + ' ' + number + ' ' + website + ' '
+    + email + ' ' + location + '. Now I will provide you my experience info take only the the important value' + ' ' + jobTitle0 + ' ' + companyName0 + ' ' + tecUse0 + ' ' + editorContent0 + " Again  " + jobTitle1 + ' ' + companyName1 + ' ' + tecUse1 + ' ' + editorContent1 + '. Further '  + jobTitle2 + ' ' + companyName2 + ' ' + tecUse2 + ' ' + editorContent2
+  }`
+
+  if (
+    firstName &&
+    lastName &&
+    title &&
+    number &&
+    email &&
+    jobTitle0 &&
+    tecUse0 &&
+    editorContent0
+  ) {
+    const bio =await this.getGeminiAnswer(longText)
+    isExist.primaryData[0] = {...isExist.primaryData[0],myBioData:bio} ;
+    await isExist.save();
+  }
+}
 
   findOne(id: number) {
     return `This action returns a #${id} userResume`;

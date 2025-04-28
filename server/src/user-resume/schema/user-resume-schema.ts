@@ -73,7 +73,7 @@ export class CV {
   userId: mongoose.Schema.Types.ObjectId; // Reference to the User model
 
   @Prop({ type: [Object], required: false })
-  primaryData?: PrimaryData[];
+  primaryData?: any[];
 
   @Prop({ type: [Object],required: false })
   education?: Education[];
