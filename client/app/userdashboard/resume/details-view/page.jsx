@@ -38,15 +38,14 @@ const Page = () => {
 
   const downloadAsPDF = async () => {
     if (!resumeRef.current) return;
-  
+  console.log(resumeRef.current)
     try {
       setLoader(true)
-      // ✅ First convert all images to base64
-      await convertImagesToBase64(resumeRef.current);
+      // // ✅ First convert all images to base64
+      // await convertImagesToBase64(resumeRef.current);
   
       // ✅ Then get the updated HTML
       const element = resumeRef.current.innerHTML;
-  
       const response = await axios.post(
         `${baseurl}/user-resume/generate-pdf`,
         { html: element },
