@@ -226,7 +226,7 @@ const AddQuestion = () => {
               />
             </div>
           </div>
-          <div className="flex justify-between md:justify-start items-center gap-3 my-2">
+          <div className="md:flex space-y-2 md:space-y-0 flex-wrap justify-between md:justify-start items-center gap-3 my-2">
             <select
               required
               value={rightAns}
@@ -243,7 +243,7 @@ const AddQuestion = () => {
               <option value="3">option 03</option>
               <option value="4">option 04</option>
             </select>
-            <div onClick={handleChatboat} className="px-6 py-1 cursor-pointer bg-violet-500 text-white rounded-md">
+            <div onClick={handleChatboat} className="px-6 w-fit hidden md:block py-1 cursor-pointer bg-violet-500 text-white rounded-md">
               {isLoading ? (
                 <div className="flex items-center gap-2 ">
                   <AiOutlineLoading3Quarters
@@ -254,6 +254,19 @@ const AddQuestion = () => {
                 </div>
               ) : (
                 "Use AI to generate description"
+              )}
+            </div>
+            <div onClick={handleChatboat} className="px-6 md:hidden w-fit py-1 cursor-pointer bg-violet-500 text-white rounded-md">
+              {isLoading ? (
+                <div className="flex items-center gap-2 ">
+                  <AiOutlineLoading3Quarters
+                    className="animate-spin text-white text-center"
+                    size={20}
+                  />{" "}
+                  Loading...
+                </div>
+              ) : (
+                "Get description"
               )}
             </div>
 
