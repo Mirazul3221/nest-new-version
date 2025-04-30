@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 import NearbyUserProfileCard from "../../components/NearbyUserProfileCard";
 import { PiBookOpenTextDuotone } from "react-icons/pi";
+import { TiDocumentText } from "react-icons/ti";
 const Page = () => {
   const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -160,10 +161,21 @@ const Page = () => {
                 {tags &&
                   tags?.map((tag, i) => {
                     return (
+                      <h3 key={i} className="mt-2">{tag.subject}</h3>
+                    );
+                  })}
+              </div>
+              <div className="px-4 py-2 bg-white border mt-2">
+                <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
+                  <TiDocumentText /> Topic Based Query
+                </p>
+                {tags &&
+                  tags?.map((tag, i) => {
+                    return (
                       <div key={i} className="">
                         <h3 className="mt-2 font-semibold">{tag.subject}</h3>
                         {tag.chapter.map((chap, i) => {
-                          return <p className="ml-2">{chap}</p>;
+                          return <p key={i} className="ml-2">{chap}</p>;
                         })}
                       </div>
                     );
