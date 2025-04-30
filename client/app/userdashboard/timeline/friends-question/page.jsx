@@ -154,7 +154,8 @@ const Page = () => {
               </a>
          </div>
 
-              <div className="px-4 py-2 bg-white border mt-2">
+      <div className="max-h-[50vh] overflow-auto">
+      <div className="px-4 py-2 bg-white border mt-2">
                 <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
                   <PiBookOpenTextDuotone /> Subject Based Query
                 </p>
@@ -181,6 +182,7 @@ const Page = () => {
                     );
                   })}
               </div>
+      </div>
               <div
                 onClick={logout}
                 className="flex gap-2 mt-2 bg-rose-100 border cursor-pointer items-center hover:bg-rose-200/60 rounded-md duration-300 px-4 py-2"
