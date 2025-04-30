@@ -17,7 +17,7 @@ const page = () => {
         </div>
       </div>
       <div className="absolute -z-10 left-0 bottom-0 w-full">
-        <Image className="h-[30vh] md:h-auto" src={register_background} alt="background"></Image>
+        <Image className="h-[30vh] w-full md:h-auto" src={register_background} alt="background"></Image>
       </div>
     </div>
   );

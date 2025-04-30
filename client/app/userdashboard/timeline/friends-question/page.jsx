@@ -18,6 +18,7 @@ import MobileBanner from "@/app/adsterra/MobileBanner320";
 import { useRouter } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 import NearbyUserProfileCard from "../../components/NearbyUserProfileCard";
+import { PiBookOpenTextDuotone } from "react-icons/pi";
 const Page = () => {
   const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -75,7 +76,7 @@ const Page = () => {
   const questionsAfterDelete = (question) => {
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
-  };//
+  }; //
 
   const [myDetails, setMyDetails] = useState();
   useEffect(() => {
@@ -88,6 +89,29 @@ const Page = () => {
     route.push("/login");
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
+
+  const [tags, setTags] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/userquestions/get-tag/subject/chapter`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+        setTags(data);
+        console.log(data);
+        // Do something with `data` here (e.g., update state)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [store.token]);
   return (
     <div>
       <ProtectRoute>
@@ -98,17 +122,18 @@ const Page = () => {
           <div className="w-3/12 h-[60vh] sticky hidden md:block top-24">
             <div className=" text-gray-700">
               <a
-                className="hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 flex gap-2 items-center"
+                className="hover:bg-gray-200/60 rounded-md duration-300 bg-white border px-4 py-2 flex gap-2 items-center"
                 href="https://bcs-prep.vercel.app/userdashboard/myprofile"
               >
                 <img
-                  className="w-10"
+                  className="w-10 rounded-full"
                   src={myDetails?.profile}
                   alt={store.userInfo.name}
                 />
                 <h2 className="font-bold">{store.userInfo.name}</h2>
               </a>
-              <a
+         <div className="bg-white border mt-2">
+         <a
                 href="#"
                 className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
               >
@@ -126,9 +151,27 @@ const Page = () => {
               >
                 <IoMdSettings /> Setting
               </a>
+         </div>
+
+              <div className="px-4 py-2 bg-white border mt-2">
+                <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
+                  <PiBookOpenTextDuotone /> Subject Based Query
+                </p>
+                {tags &&
+                  tags?.map((tag, i) => {
+                    return (
+                      <div key={i} className="">
+                        <h3 className="mt-2 font-semibold">{tag.subject}</h3>
+                        {tag.chapter.map((chap, i) => {
+                          return <p className="ml-2">{chap}</p>;
+                        })}
+                      </div>
+                    );
+                  })}
+              </div>
               <div
                 onClick={logout}
-                className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
+                className="flex gap-2 mt-2 bg-rose-100 border cursor-pointer items-center hover:bg-rose-200/60 rounded-md duration-300 px-4 py-2"
               >
                 <LuLogOut /> Log out
               </div>
@@ -174,9 +217,11 @@ const Page = () => {
               </div>
             </div>
           </div>
-          
+
           <div className=" md:w-6/12">
-           <div className=""><NearbyUserProfileCard/></div>
+            <div className="">
+              <NearbyUserProfileCard />
+            </div>
             <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
               <img
                 className="w-16 rounded-full"
@@ -184,7 +229,7 @@ const Page = () => {
                 alt={store.userInfo.name}
               />
               <a
-                className="text-gray-700 text-lg md:text-2xl"
+                className="text-gray-700 text-lg font-semibold"
                 href="/userdashboard/timeline/create-post"
               >
                 Share a question with your friends

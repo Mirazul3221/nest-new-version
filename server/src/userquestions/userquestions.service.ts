@@ -5,7 +5,6 @@ import { UpdateUserquestionDto } from './dto/update-userquestion.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersQuestion, QuestionDocument } from './schema/userquestions.schema';
 import { Model, Types } from 'mongoose';
-import mongoose from 'mongoose';
 import axios from 'axios';
 
 @Injectable()
@@ -118,22 +117,55 @@ export class UserquestionsService {
     }
   } //
 
-  async generateDescriptionByAi({ subject, chapter, question,content }) {
-    if (subject && chapter && question) {
-      const direction = `Create for me a description based on Subject:${subject}, Chapter:${chapter} and Question:${question}. if question is in Bangla produce the
-    description in bangla if english then English if it is Math produce math fit for text editor in next.js as the app use text editor. while producing description 
-    you can use html tag to bold and list the important text or use color because I use react Rich Text Edito. You can also seperate between two line. also you should point important part following this text editoe 
-    also seperate the lines and show the description like I write description in text editor where I can bold color some inportant text etc. the description will be between 100 to 1000 words. Again I say if this is a math you can do the math in such a way where it can be fit in the text editor.I hope you understand
-    . Again you do non show any unwanted text in the description box only the important things. thank you`;
-    if (!content) {
-      const genData = await this.getGeminiAnswer(direction);
-      return genData;
-    } else {
-      return content
+  async generateDescriptionByAi({ subject, chapter, question, content }) {
+    if (!subject || !chapter || !question) {
+      return 'Please add a question set its subject and chapter to get a right description!';
     }
-    } else {
-      return 'Please add a question set it`s subject and chapter to get a right description!';
+  
+    if (content) {
+      return content;
     }
+  
+    const prompt = `
+      Create a description based on the following:
+      - Subject: ${subject}
+      - Chapter: ${chapter}
+      - Question: ${question}
+  
+      Rules:
+      - If the question is in Bangla, write the description in Bangla.
+      - If the question is in English, write in English.
+      - If it's a Math question, format it clearly for a Next.js rich text editor (you can use HTML tags).
+      - Use <b>, <ul><li>, <span style="color:red">, <br/> to highlight key points.
+      - Structure the answer clearly, separating lines logically like a teacher would write notes.
+      - Length should be between 100 and 1000 words.
+      - Focus only on important explanation – no extra or filler text.
+  
+      Respond with only the description content. No preface or postscript.
+    `;
+  
+    const genData = await this.getGeminiAnswer(prompt);
+    return genData;
+  }
+  
+
+  async getQuestionTag(tagName01,tagName02){
+    const questions = await this.QuestionModel.find({}, { subject: 1, chapter: 1, _id: 0 }).lean();
+
+    const grouped = Object.values(
+      questions.reduce((acc, curr) => {
+        const { subject, chapter } = curr;
+        if (!acc[subject]) {
+          acc[subject] = { subject, chapter: [] };
+        }
+        if (!acc[subject].chapter.includes(chapter)) {
+          acc[subject].chapter.push(chapter);
+        }
+        return acc;
+      }, {} as Record<string, { subject: string; chapter: string[] }>)
+    );
+  
+    return grouped;
   }
 
   async edit(question, id) {

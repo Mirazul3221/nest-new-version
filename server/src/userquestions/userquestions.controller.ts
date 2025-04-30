@@ -38,6 +38,13 @@ async editQuestion(@Param("id") id, @Body() createUserquestionDto: CreateUserque
 async deleteQuestion(@Param("id") id) {
     return await this.userquestionsService.deleteQuestion(id);
   }
+
+
+  @UseGuards(AuthGuard())
+  @Get('get-tag/:tagName01/:tagName02')
+ async getQuestionTag(@Param('tagName01') tagName01,@Param('tagName02') tagName02){
+    return await this.userquestionsService.getQuestionTag(tagName01,tagName02);
+  }
 ///////////////////////////////////////////////////////////////////
   @Post('create-comment')
   @UseGuards(AuthGuard())

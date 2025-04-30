@@ -76,9 +76,6 @@ const InputForm = () => {
       setLoader(false);
     }
   };
-
-  console.log(location)
-  console.log(submitValue)
   return (
     <div>
       <div className="p-8 md:w-[400px] md:h-[74vh]">
