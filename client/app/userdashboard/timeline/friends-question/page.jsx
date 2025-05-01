@@ -26,20 +26,21 @@ const Page = () => {
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
-  //
+  const [tag,setTag] = useState(null);
+  const [flug,setFlug] = useState('all')
+
   const fetchChunkData = useCallback(async () => {
     if (isLoading || !hasMore) return; // Avoid duplicate requests
     setIsLoading(true);
     try {
       const { data } = await axios.get(
-        `${baseurl}/userquestions/all-friends-questions?skip=${page * 10}`,
+        `${baseurl}/userquestions/all-friends-questions?skip=${page * 10}&flug=${flug}&tag=${tag}`,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
           },
         }
       );
-      console.log(data);
       if (data.length === 0) {
         setHasMore(false); // No more comments to fetch
       } else {
@@ -52,6 +53,35 @@ const Page = () => {
       setIsLoading(false);
     }
   }, [page, isLoading, hasMore]);
+
+  const reFormate = async (sub,val)=>{
+    setIsLoading(false);
+    setHasMore(true)
+    setPage(0);
+    setQuestions([]);
+    setIsLoading(true);
+    try {
+      const { data } = await axios.get(
+        `${baseurl}/userquestions/all-friends-questions?skip=${0 * 10}&flug=${sub}&tag=${val}`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      if (data.length === 0) {
+        setHasMore(false); // No more comments to fetch
+      } else {
+        setQuestions((prev) => [...prev, ...data]);
+        setPage((prev) => prev + 1); // Increment page
+      }
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+    } finally {
+      setIsLoading(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
 
   // Infinite Scroll Event Listener//
   useEffect(() => {
@@ -162,7 +192,11 @@ const Page = () => {
                 {tags &&
                   tags?.map((tag, i) => {
                     return (
-                      <h3 key={i} className="mt-2">{tag.subject}</h3>
+                      <h3 onClick={()=>{
+                        setTag(tag.subject)
+                        setFlug('subject')
+                        reFormate('subject',tag.subject)
+                      }} key={i} className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer">{tag.subject}</h3>
                     );
                   })}
               </div>
@@ -176,7 +210,11 @@ const Page = () => {
                       <div key={i} className="">
                         <h3 className="mt-2 font-semibold">{tag.subject}</h3>
                         {tag.chapter.map((chap, i) => {
-                          return <p key={i} className="ml-2">{chap}</p>;
+                          return <p key={i} onClick={()=>{
+                            setTag(chap)
+                            setFlug('chapter')
+                            reFormate('chapter',chap)
+                          }} className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer">{chap}</p>;
                         })}
                       </div>
                     );

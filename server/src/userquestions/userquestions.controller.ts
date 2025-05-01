@@ -86,9 +86,9 @@ async deleteQuestion(@Param("id") id) {
 
   @UseGuards(AuthGuard())//
   @Get('all-friends-questions')
-  async findMyFriendsAllQuestions(@Query('skip') skip : number, @Req() req) {
+  async findMyFriendsAllQuestions(@Query('skip') skip : number, @Query('flug') flug:string, @Query('tag') tag:string, @Req() req) {
     const id = req.user._id
-    return await this.userquestionsService.findMyFriendsAllQuestions(id,skip);
+    return await this.userquestionsService.findMyFriendsAllQuestions(id,skip,flug,tag);
   }//
 
   @Get('single-questions')

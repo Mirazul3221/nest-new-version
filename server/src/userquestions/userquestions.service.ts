@@ -278,7 +278,7 @@ export class UserquestionsService {
       },
     ]);
     return filteredQuestions;
-  } //
+  } ////////
 
   async getAQuestion(slug) {
     const result = await this.QuestionModel.find(
@@ -288,36 +288,40 @@ export class UserquestionsService {
     return result;
   }
 
-  async findMyFriendsAllQuestions(id, skip) {
+  async findMyFriendsAllQuestions(id: string, skip: number, flug: string, tag: string) {
+    if (!id || !Types.ObjectId.isValid(id)) {
+      throw new Error('Invalid user ID');
+    }
+  
+    const objectId = new Types.ObjectId(id);
+  
+    const variant: any = {
+      userId: { $ne: objectId }, // Exclude user's own questions properly
+    };
+  
+    if (flug && flug !== 'all' && tag) {
+      variant[flug] = tag;
+    }
+  
     const questions = await this.QuestionModel.aggregate([
-      {
-        $match: {
-          userId: { $ne: id }, // Exclude user's questions
-        },
-      },
+      { $match: variant },
       {
         $lookup: {
-          from: 'readers', // The name of the user profiles collection
-          localField: 'userId', // The field in the questions collection
-          foreignField: '_id', // The field in the users collection
-          as: 'userProfile', // The name of the new field to store the joined data
+          from: 'readers',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userProfile',
         },
       },
       {
         $unwind: {
           path: '$userProfile',
-          preserveNullAndEmptyArrays: true, // Optional: keep questions even if user profile doesn't exist
+          preserveNullAndEmptyArrays: true,
         },
       },
-      {
-        $sort: { createdAt: -1 }, // Sort questions by creation date (newest first)
-      },
-      {
-        $skip: +skip, // Skip the required number of documents
-      },
-      {
-        $limit: 10, // Limit the number of documents
-      },
+      { $sort: { createdAt: -1 } },
+      { $skip: +skip },
+      { $limit: 10 },
       {
         $project: {
           slug: 1,
@@ -335,12 +339,13 @@ export class UserquestionsService {
           rightAns: 1,
           content: 1,
           likes: 1,
-          comments: { $slice: ['$comments', -2] }, // Include only the last 2 comments
-          totalComments: { $size: '$comments' }, // Count the total number of comments
+          comments: { $slice: ['$comments', -2] },
+          totalComments: { $size: '$comments' },
           createdAt: 1,
         },
       },
     ]);
+  
     return questions;
   }
 
