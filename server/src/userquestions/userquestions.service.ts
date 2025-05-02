@@ -149,25 +149,31 @@ export class UserquestionsService {
   }
   
 
-  async getQuestionTag(tagName01,tagName02){
-    const questions = await this.QuestionModel.find({}, { subject: 1, chapter: 1, _id: 0 }).lean();
 
-    const grouped = Object.values(
-      questions.reduce((acc, curr) => {
-        const { subject, chapter } = curr;
-        if (!acc[subject]) {
-          acc[subject] = { subject, chapter: [] };
+  async getQuestionTag(tagName01, tagName02) {
+    const grouped = await this.QuestionModel.aggregate([
+      {
+        $group: {
+          _id: { subject: "$subject", chapter: "$chapter" }
         }
-        if (!acc[subject].chapter.includes(chapter)) {
-          acc[subject].chapter.push(chapter);
+      },
+      {
+        $group: {
+          _id: "$_id.subject",
+          chapters: { $addToSet: "$_id.chapter" }
         }
-        return acc;
-      }, {} as Record<string, { subject: string; chapter: string[] }>)
-    );
-  
+      },
+      {
+        $project: {
+          _id: 0,
+          subject: "$_id",
+          chapter: "$chapters"
+        }
+      }
+    ]);
     return grouped;
   }
-
+  
   async edit(question, id) {
     await this.QuestionModel.findByIdAndUpdate(id, question, { new: true });
     return null;

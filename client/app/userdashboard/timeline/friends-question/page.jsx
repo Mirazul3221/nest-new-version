@@ -55,6 +55,7 @@ const Page = () => {
   }, [page, isLoading, hasMore]);
 
   const reFormate = async (sub,val)=>{
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     setIsLoading(false);
     setHasMore(true)
     setPage(0);
@@ -79,7 +80,6 @@ const Page = () => {
       console.error("Failed to fetch comments:", error);
     } finally {
       setIsLoading(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -144,188 +144,163 @@ const Page = () => {
     fetchData();
   }, [store.token]);
   return (
-    <div>
-      <ProtectRoute>
-        <div className="md:px-10 px-4 py-3">
-          <SuperHeader />
-        </div>
-        <div className="md:px-6 flex md:pt-4 gap-4 bg-gray-50">
-          <div className="w-3/12 h-[60vh] sticky hidden md:block top-24">
-            <div className=" text-gray-700">
-              <a
-                className="hover:bg-gray-200/60 rounded-md duration-300 bg-white border px-4 py-2 flex gap-2 items-center"
-                href="https://bcs-prep.vercel.app/userdashboard/myprofile"
-              >
-                <img
-                  className="w-10 rounded-full"
-                  src={myDetails?.profile}
-                  alt={store.userInfo.name}
-                />
-                <h2 className="font-bold">{store.userInfo.name}</h2>
-              </a>
-         <div className="bg-white border mt-2">
-         <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <BsCardText /> About
-              </a>
-              <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <FiFileText /> Bcs Question
-              </a>
-              <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <IoMdSettings /> Setting
-              </a>
-         </div>
-
-      <div className="max-h-[50vh] overflow-auto">
-      <div className="px-4 py-2 bg-white border mt-2">
-                <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
-                  <PiBookOpenTextDuotone /> Subject Based Query
-                </p>
-                {tags &&
-                  tags?.map((tag, i) => {
-                    return (
-                      <h3 onClick={()=>{
-                        setTag(tag.subject)
-                        setFlug('subject')
-                        reFormate('subject',tag.subject)
-                      }} key={i} className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer">{tag.subject}</h3>
-                    );
-                  })}
-              </div>
-              <div className="px-4 py-2 bg-white border mt-2">
-                <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
-                  <TiDocumentText /> Topic Based Query
-                </p>
-                {tags &&
-                  tags?.map((tag, i) => {
-                    return (
-                      <div key={i} className="">
-                        <h3 className="mt-2 font-semibold">{tag.subject}</h3>
-                        {tag.chapter.map((chap, i) => {
-                          return <p key={i} onClick={()=>{
-                            setTag(chap)
-                            setFlug('chapter')
-                            reFormate('chapter',chap)
-                          }} className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer">{chap}</p>;
-                        })}
-                      </div>
-                    );
-                  })}
-              </div>
-      </div>
-              <div
-                onClick={logout}
-                className="flex gap-2 mt-2 bg-rose-100 border cursor-pointer items-center hover:bg-rose-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <LuLogOut /> Log out
-              </div>
-            </div>
-          </div>
-
-          {/* ================================for mobile=================================================== */}
-          <div
-            className={`w-1/2 duration-150 fixed z-50 ${
-              openSideMenu ? "-translate-x-[0%]" : "-translate-x-[110%]"
-            } md:hidden bg-white`}
-          >
-            <div
-              onClick={() => setOpenSideMenu(false)}
-              className="ml-4 flex justify-end w-full"
-            >
-              <RxCross2 size={22} />
-            </div>
-            <div className=" text-gray-700">
-              <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <BsCardText /> About
-              </a>
-              <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <FiFileText /> Bcs Question
-              </a>
-              <a
-                href="#"
-                className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <IoMdSettings /> Setting
-              </a>
-              <div
-                onClick={logout}
-                className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"
-              >
-                <LuLogOut /> Log out
-              </div>
-            </div>
-          </div>
-
-          <div className=" md:w-6/12">
-            <div className="">
-              <NearbyUserProfileCard />
-            </div>
-            <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
-              <img
-                className="w-16 rounded-full"
-                src={store.userInfo.profile}
-                alt={store.userInfo.name}
-              />
-              <a
-                className="text-gray-700 text-lg font-semibold"
-                href="/userdashboard/timeline/create-post"
-              >
-                Share a question with your friends
-              </a>
-              <p
-                onClick={() => setOpenSideMenu(true)}
-                className=" md:hidden cursor-pointer"
-              >
-                {" "}
-                <span>...</span>
-              </p>
-            </div>
-            {questions?.map((question, i) => {
-              return (
-                <div key={i} className="mx-auto">
-                  <QuestionCard
-                    questionsAfterDelete={questionsAfterDelete}
-                    myQuestion={question}
-                  />
-                </div>
-              );
-            })}
-            {isLoading && (
-              <div className="flex bg-white justify-center">
-                <div className="flex items-center gap-2">
-                  <Image src={loder} />{" "}
-                  <h2 className="text-center text-gray-500">Loading...</h2>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="w-3/12 hidden md:block">
-            <div className="">
-              <VerticleBanner />
-            </div>
-            {/* <div className="">
-               <MobileBanner/>
-            </div> */}
-          </div>
-        </div>
-
-        <Footer />
-      </ProtectRoute>
+<div className="min-h-screen">
+  <ProtectRoute>
+    {/* Header */}
+    <div className="md:px-10 px-4 py-3">
+      <SuperHeader />
     </div>
+
+    {/* Main Content */}
+    <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-50">
+      
+      {/* Sidebar (Sticky - Desktop Only) */}
+      <div className="w-3/12 h-fit sticky top-24 hidden md:block">
+        <div className="text-gray-700">
+          {/* User Profile Link */}
+          <a
+            className="hover:bg-gray-200/60 rounded-md duration-300 bg-white border px-4 py-2 flex gap-2 items-center"
+            href="https://bcs-prep.vercel.app/userdashboard/myprofile"
+          >
+            <img
+              className="w-10 rounded-full"
+              src={myDetails?.profile}
+              alt={store.userInfo.name}
+            />
+            <h2 className="font-bold">{store.userInfo.name}</h2>
+          </a>
+
+          {/* Sidebar Links */}
+          <div className="bg-white border mt-2">
+            <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+              <BsCardText /> About
+            </a>
+            <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+              <FiFileText /> Bcs Question
+            </a>
+            <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+              <IoMdSettings /> Setting
+            </a>
+          </div>
+
+          {/* Subject & Topic Filters */}
+          <div className="max-h-[48vh] overflow-auto">
+            <div className="px-4 py-2 bg-white border mt-2">
+              <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
+                <PiBookOpenTextDuotone /> Subject Based Query
+              </p>
+              {tags?.map((tag, i) => (
+                <h3
+                  key={i}
+                  onClick={() => {
+                    setTag(tag.subject);
+                    setFlug('subject');
+                    reFormate('subject', tag.subject);
+                  }}
+                  className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer"
+                >
+                  {tag.subject}
+                </h3>
+              ))}
+            </div>
+
+            <div className="px-4 py-2 bg-white border mt-2">
+              <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
+                <TiDocumentText /> Topic Based Query
+              </p>
+              {tags?.map((tag, i) => (
+                <div key={i}>
+                  <h3 className="mt-2 font-semibold">{tag.subject}</h3>
+                  {[...tag.chapter].reverse().map((chap, i) => (
+                    <p
+                      key={i}
+                      onClick={() => {
+                        setTag(chap);
+                        setFlug('chapter');
+                        reFormate('chapter', chap);
+                      }}
+                      className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer"
+                    >
+                      {chap}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Logout Button */}
+          <div
+            onClick={logout}
+            className="flex gap-2 mt-2 bg-rose-100 border cursor-pointer items-center hover:bg-rose-200/60 rounded-md duration-300 px-4 py-2"
+          >
+            <LuLogOut /> Log out
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <div className={`w-1/2 duration-150 fixed z-50 ${openSideMenu ? "-translate-x-[0%]" : "-translate-x-[110%]"} md:hidden bg-white`}>
+        <div onClick={() => setOpenSideMenu(false)} className="ml-4 flex justify-end w-full">
+          <RxCross2 size={22} />
+        </div>
+        <div className="text-gray-700">
+          <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+            <BsCardText /> About
+          </a>
+          <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+            <FiFileText /> Bcs Question
+          </a>
+          <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+            <IoMdSettings /> Setting
+          </a>
+          <div onClick={logout} className="flex gap-2 cursor-pointer items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+            <LuLogOut /> Log out
+          </div>
+        </div>
+      </div>
+
+      {/* Main Feed */}
+      <div className="md:w-6/12">
+        <NearbyUserProfileCard />
+        <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
+          <img className="w-16 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name} />
+          <a className="text-gray-700 text-lg font-semibold" href="/userdashboard/timeline/create-post">
+            Share a question with your friends
+          </a>
+          <p onClick={() => setOpenSideMenu(true)} className="md:hidden cursor-pointer">
+            <span>...</span>
+          </p>
+        </div>
+
+        {/* Questions */}
+        {questions?.map((question, i) => (
+          <div key={i} className="mx-auto">
+            <QuestionCard questionsAfterDelete={questionsAfterDelete} myQuestion={question} />
+          </div>
+        ))}
+        {isLoading && (
+          <div className="flex bg-white justify-center">
+            <div className="flex items-center gap-2">
+              <Image src={loder} />
+              <h2 className="text-center text-gray-500">Loading...</h2>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Right Sidebar (e.g., Ads or Extra Info) */}
+      <div className="w-3/12 hidden md:block">
+        <VerticleBanner />
+        {/* Optional: <MobileBanner /> */}
+      </div>
+    </div>
+
+    {/* Footer */}
+    <Footer />
+  </ProtectRoute>
+</div>
+
   );
 };
 

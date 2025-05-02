@@ -320,7 +320,7 @@ const SuperHeader = () => {
             <div className="flex gap-4 items-center">
               <ul className="md:w-full md:flex hidden justify-center py-4 gap-3">
                 <li
-                  className={`text-lg font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
+                  className={`font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
                 >
                   <Link
                     href={"/userdashboard/myfavourite"}
@@ -330,7 +330,7 @@ const SuperHeader = () => {
                   </Link>
                 </li>
                 <li
-                  className={`text-lg font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
+                  className={`font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
                 >
                   <Link
                     href={"#"}
@@ -340,7 +340,7 @@ const SuperHeader = () => {
                   </Link>
                 </li>
                 <li
-                  className={`text-lg font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
+                  className={`font-normal px-4 py-[4px] text-gray-700 w-fit cursor-pointer duration-500 rounded-md`}
                 >
                   <Link
                     href={"/userdashboard/myfavourite"}
