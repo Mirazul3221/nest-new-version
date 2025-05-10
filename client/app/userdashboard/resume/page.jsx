@@ -10,6 +10,7 @@ import StarRating from "./components/StarRating";
 import AddSkills from "./components/AddSkills";
 import AddLangs from "./components/AddLangs";
 import CvPreview from "./details-view/components/CvPreview";
+import AddSummary from "./components/AddSummary";
 
 const page = () => {
   const defaultStape = 7;
@@ -27,16 +28,16 @@ const page = () => {
   };
   const percentage = (currentStape / defaultStape) * 100;
 
-  
   const cData = {
     name: "John Doe",
     title: "Full Stack Developer",
     contact: {
       email: "john@example.com",
       phone: "123-456-7890",
-      address: "New York, USA"
+      address: "New York, USA",
     },
-    summary: "Experienced developer with a passion for building web applications.",
+    summary:
+      "Experienced developer with a passion for building web applications.",
     experience: [
       {
         role: "Frontend Developer",
@@ -45,17 +46,17 @@ const page = () => {
         responsibilities: [
           "Built responsive UI components using React and Tailwind.",
           "Collaborated with backend team on API integration.",
-        ]
-      }
+        ],
+      },
     ],
     education: [
       {
         degree: "BSc in Computer Science",
         institution: "ABC University",
-        year: "2016 - 2020"
-      }
+        year: "2016 - 2020",
+      },
     ],
-    skills: ["React", "Node.js", "MongoDB", "Tailwind CSS", "Git"]
+    skills: ["React", "Node.js", "MongoDB", "Tailwind CSS", "Git"],
   };
   return (
     <div className="bg-[#fcf7f8] min-h-[100vh]">
@@ -76,7 +77,7 @@ const page = () => {
                 ? "SKILLS"
                 : currentStape === 6
                 ? "LANGUAGE"
-                : ""}
+                : "CAREER OBJECTIVE"}
             </h2>
             <div className="progres py-[2px] px-1 rounded-full bg-gray-200">
               <div
@@ -90,6 +91,7 @@ const page = () => {
             {currentStape === 4 && <AddProject />}
             {currentStape === 5 && <AddSkills />}
             {currentStape === 6 && <AddLangs />}
+            {currentStape === 7 && <AddSummary />}
 
             <div className="ml-auto w-fit gap-4 flex mt-10">
               <div
@@ -110,7 +112,7 @@ const page = () => {
           </div>
         </div>
 
-<CvPreview data={cData} />
+        <CvPreview data={cData} />
       </ProtectRoute>
     </div>
   );

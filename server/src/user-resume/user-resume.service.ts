@@ -329,20 +329,20 @@ export class UserResumeService {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-          body {
-            font-family: Arial, sans-serif;
-        color: "gray",
-        padding: "40px",
-        width: "794px", // A4 page width at 96 DPI
-        min-height: "1123px", // A4 page height at 96 DPI (optional)
-        margin: "0 auto", // center it
-        background-color: "white", // to ensure white background for PDF
-          }
-        h1,h2,h3,h4,h5,h6,p,div {
-          margin: 0;
-        }
-          /* Add more global styles here */
-        </style>
+  body {
+    font-family: Arial, sans-serif;
+    color: gray;
+    width: 794px;
+    min-height: 1123px;
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2, h3, h4, h5, h6, p, div {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
       </head>
     `;
 
@@ -356,7 +356,10 @@ export class UserResumeService {
       </html>
     `;
     // Launch Puppeteer and create the PDF
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      defaultViewport: null,
+    });
+    
     const page = await browser.newPage();
 
     // Set the page content
@@ -367,11 +370,11 @@ export class UserResumeService {
       format: 'A4',                  // A4 paper size
       printBackground: true,          // Include background graphics
       margin: {
-        top: '5mm',                  // Top padding
-        right: '5mm',                // Right padding
-        bottom: '5mm',               // Bottom padding
-        left: '5mm',                 // Left padding
-      },
+        top: '2mm',
+        bottom: '2mm',
+        left: '2mm',
+        right: '2mm',
+      }
     });
     
 
@@ -411,55 +414,57 @@ export class UserResumeService {
     }
   }
 
-async generateBio (userId){
-  const isExist = await this.UserResume.findOne({ userId });
-  const primaryData = isExist.primaryData?.[0] || {};
-  const experience = isExist.experience?.[0] || {};
+  async generateBio(userId: string): Promise<void> {
+    console.log('Biograpthy call')
+    const userResume = await this.UserResume.findOne({ userId });
+    if (!userResume || !userResume.primaryData?.[0]) return;
   
-  const firstName = (primaryData as any).firstName;
-  const lastName = (primaryData as any).lastName;
-  const title = (primaryData as any).title;
-  const number = (primaryData as any).number;
-  const website = (primaryData as any).website;
-  const location = (primaryData as any).location;
-  const email = (primaryData as any).email;
+    const primary = userResume.primaryData[0];
+    const experiences = userResume.experience || [];
   
-  const jobTitle0 = (experience as any).jobTitle;
-  const companyName0 = (experience as any).companyName;
-  const tecUse0 = (experience as any).tecUse;
-  const editorContent0 = (experience as any).editorContent;
-
-  const jobTitle1 = (isExist.experience[1] as any).jobTitle; 
-  const companyName1 = (isExist.experience[1] as any).companyName; 
-  const tecUse1 = (isExist.experience[1] as any).tecUse;
-  const editorContent1 = (isExist.experience[1] as any).editorContent;
-
-
-  const jobTitle2 = (isExist.experience[2] as any).jobTitle; 
-  const companyName2 = (isExist.experience[2] as any).companyName; 
-  const tecUse2 = (isExist.experience[2] as any).tecUse;
-  const editorContent2 = (isExist.experience[2] as any).editorContent;
-
-
-  const longText = `Write a bio in 150 words based on the full text -here is my primary information take the important thing. Though i use my name but you replace my name as I . my bio start from here ${firstName + ' ' + lastName + " " + title + ' ' + number + ' ' + website + ' '
-    + email + ' ' + location + '. Now I will provide you my experience info take only the the important value' + ' ' + jobTitle0 + ' ' + companyName0 + ' ' + tecUse0 + ' ' + editorContent0 + " Again  " + jobTitle1 + ' ' + companyName1 + ' ' + tecUse1 + ' ' + editorContent1 + '. Further '  + jobTitle2 + ' ' + companyName2 + ' ' + tecUse2 + ' ' + editorContent2
-  }`
-
-  if (
-    firstName &&
-    lastName &&
-    title &&
-    number &&
-    email &&
-    jobTitle0 &&
-    tecUse0 &&
-    editorContent0
-  ) {
-    const bio =await this.getGeminiAnswer(longText)
-    isExist.primaryData[0] = {...isExist.primaryData[0],myBioData:bio} ;
-    await isExist.save();
+    const {
+      firstName = '',
+      lastName = '',
+      title = '',
+      number = '',
+      website = '',
+      location = '',
+      email = '',
+    } = primary;
+  
+    // Ensure required primary and at least one experience data
+    if (!firstName || !lastName || !title || !number || !email || !experiences[0]) return;
+  
+    const formatExperience = (exp: any, index: number): string => {
+      if (!exp || !exp.jobTitle || !exp.tecUse || !exp.editorContent) return '';
+      const label = ['First', 'Second', 'Third'][index] || 'Additional';
+      return `${label} experience: ${exp.jobTitle} at ${exp.companyName}, using ${exp.tecUse}. Work summary: ${exp.editorContent}`;
+    };
+  
+    const experienceDetails = experiences
+      .slice(0, 3)
+      .map((exp, index) => formatExperience(exp, index))
+      .filter(Boolean)
+      .join('\n');
+  
+    const prompt = `
+      Write a professional bio in 150 words.
+      Replace my name with "I".
+      My profile: ${firstName} ${lastName}, ${title}, ${number}, ${website}, ${email}, ${location}.
+      Work Experience Summary:
+      ${experienceDetails}
+    `;
+  
+    const bio = await this.getGeminiAnswer(prompt.trim());
+  
+    userResume.primaryData[0] = {
+      ...primary,
+      myBioData: bio,
+    };
+  
+    await userResume.save();
   }
-}
+  
 
   findOne(id: number) {
     return `This action returns a #${id} userResume`;

@@ -7,7 +7,7 @@ import InputForm from "../components/Login";
 // import storeContext from "../global/createContex";
 const page = () => {
   return (
-    <div className="md:h-screen h-[94vh] md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] mx-auto">
+    <div className="md:h-screen h-[94vh] md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] w-full mx-auto">
       <div className="md:flex md:p-10 bg-white rounded-md md:drop-shadow-2xl shadow-black md:w-2/3">
       <div className="hidden w-1/2 md:block">
        <img className="" src="login.jpg" alt="login"/>

@@ -5,13 +5,14 @@ import React, { useEffect, useRef, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import Footer from "@/app/components/Footer";
 import axios from "axios";
-import { baseurl } from "@/app/config";
+import { baseurl, baseurl01 } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Formate01 from "./components/Formate01";
 import Formate02 from "./components/Formate02";
 import { convertImagesToBase64 } from "./components/convertImagesToBase64";
+import Formate03 from "./components/Formate03";
 
 const Page = () => {
   const { store } = useStore();
@@ -38,7 +39,6 @@ const Page = () => {
 
   const downloadAsPDF = async () => {
     if (!resumeRef.current) return;
-  console.log(resumeRef.current)
     try {
       setLoader(true)
       // // ✅ First convert all images to base64
@@ -47,13 +47,9 @@ const Page = () => {
       // ✅ Then get the updated HTML
       const element = resumeRef.current.innerHTML;
       const response = await axios.post(
-        `${baseurl}/user-resume/generate-pdf`,
+        `${baseurl01}/user-resume/generate-pdf`,
         { html: element },
         {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${store.token}`,
-          },
           responseType: "blob",
         }
       );
@@ -83,7 +79,7 @@ const Page = () => {
         <div className="w-10/12 py-10 flex flex-col items-center">
 
         <div ref={resumeRef}>
-              <Formate01 cvData={cvData} />
+              <Formate02 cvData={cvData} />
             </div>
 
           {/* Download Buttons */}

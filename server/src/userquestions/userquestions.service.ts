@@ -9,8 +9,12 @@ import axios from 'axios';
 
 @Injectable()
 export class UserquestionsService {
+  // private readonly GEMINI_API_URL =
+  //   'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
+
   private readonly GEMINI_API_URL =
-    'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
+    'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
+
   private readonly geminiApiKey: string;
   constructor(
     @InjectModel(UsersQuestion.name)
@@ -121,11 +125,11 @@ export class UserquestionsService {
     if (!subject || !chapter || !question) {
       return 'Please add a question set its subject and chapter to get a right description!';
     }
-  
+
     if (content) {
       return content;
     }
-  
+
     const prompt = `
       Create a description based on the following:
       - Subject: ${subject}
@@ -143,37 +147,35 @@ export class UserquestionsService {
   
       Respond with only the description content. No preface or postscript.
     `;
-  
+
     const genData = await this.getGeminiAnswer(prompt);
     return genData;
   }
-  
-
 
   async getQuestionTag(tagName01, tagName02) {
     const grouped = await this.QuestionModel.aggregate([
       {
         $group: {
-          _id: { subject: "$subject", chapter: "$chapter" }
-        }
+          _id: { subject: '$subject', chapter: '$chapter' },
+        },
       },
       {
         $group: {
-          _id: "$_id.subject",
-          chapters: { $addToSet: "$_id.chapter" }
-        }
+          _id: '$_id.subject',
+          chapters: { $addToSet: '$_id.chapter' },
+        },
       },
       {
         $project: {
           _id: 0,
-          subject: "$_id",
-          chapter: "$chapters"
-        }
-      }
+          subject: '$_id',
+          chapter: '$chapters',
+        },
+      },
     ]);
     return grouped;
   }
-  
+
   async edit(question, id) {
     await this.QuestionModel.findByIdAndUpdate(id, question, { new: true });
     return null;
@@ -294,21 +296,26 @@ export class UserquestionsService {
     return result;
   }
 
-  async findMyFriendsAllQuestions(id: string, skip: number, flug: string, tag: string) {
+  async findMyFriendsAllQuestions(
+    id: string,
+    skip: number,
+    flug: string,
+    tag: string,
+  ) {
     if (!id || !Types.ObjectId.isValid(id)) {
       throw new Error('Invalid user ID');
     }
-  
+
     const objectId = new Types.ObjectId(id);
-  
+
     const variant: any = {
       userId: { $ne: objectId }, // Exclude user's own questions properly
     };
-  
+
     if (flug && flug !== 'all' && tag) {
       variant[flug] = tag;
     }
-  
+
     const questions = await this.QuestionModel.aggregate([
       { $match: variant },
       {
@@ -351,7 +358,7 @@ export class UserquestionsService {
         },
       },
     ]);
-  
+
     return questions;
   }
 
@@ -365,6 +372,20 @@ export class UserquestionsService {
       .reverse()
       .slice((skip - 1) * 5, skip * 5);
     return { comments: sliceComments, total: result.comments.length };
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////
+  async getSuggestions(query: string): Promise<string[]> {
+    const regex = new RegExp(query, 'i'); // case-insensitive regex
+    const results = await this.QuestionModel.find({
+      $or: [{ question: regex }],
+    })
+      .select('question') // Only fetch these fields
+      .limit(10)
+      .exec();
+
+    // You can return any field you prefer — here we prioritize title
+    return results.map((item) => item.question || '');
   }
 
   findAll() {

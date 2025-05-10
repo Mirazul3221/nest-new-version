@@ -56,7 +56,7 @@ export default function Home() {
     return (
       <div>
         {isClient ? (
-          <main className="max-w-[1440px] relative mx-auto bg-gradient-to-r from-[#1d0021] via-[#1e0133] to-[#012233]">
+          <main className="max-w-[1440px] w-full relative mx-auto bg-gradient-to-r from-[#1d0021] via-[#1e0133] to-[#012233]">
             {/* <div className="absolute">
             <img className="w-10" src="/banner/ballad.png"/>
           </div> */}

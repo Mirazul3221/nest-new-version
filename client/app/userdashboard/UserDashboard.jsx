@@ -128,7 +128,7 @@ const UserDashboard = () => {
         type="text/javascript"
         src="//pl23641250.highrevenuenetwork.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
       /> */}
-      <div className="min-h-screen max-w-screen overflow-hidden bg-gray-50">
+      <div className="min-h-screen max-w-[1440px] w-full overflow-hidden bg-gray-50">
         <div className="bg-white border-b px-10 py-4">
           <SuperHeader/>
           <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3">

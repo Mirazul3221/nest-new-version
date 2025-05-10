@@ -15,7 +15,7 @@ const Page = () => {
 
     // }
   return (
-    <div className="h-screen md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] mx-auto">
+    <div className="h-screen md:flex md:mt-0 mt-10 items-center justify-center relative max-w-[1440px] w-full mx-auto">
       <div className="md:flex overflow-hidden bg-white rounded-md md:drop-shadow-2xl shadow-black">
       <div className="hidden md:block">
      <img className="h-full" src="/recoverypass.jpg" alt="recoverypass" />

@@ -24,7 +24,7 @@ const Header = ({}) => {
  }, []);
 
   return (
-    <div className={`md:p-0 md:px-20 px-4 ${header ? "fixed max-w-[1440px] mx-auto w-full left-0 top-0 bg-white/50 shadow-lg duration-500 z-50 backdrop-blur-md" : ""}`}>
+    <div className={`md:p-0 md:px-20 px-4 ${header ? "fixed max-w-[1440px] w-full mx-auto w-full left-0 top-0 bg-white/50 shadow-lg duration-500 z-50 backdrop-blur-md" : ""}`}>
       <div className={`flex justify-between items-center py-3 ${header ? "duration-100" : ""}`}>
         <FaBars
           onClick={() => {

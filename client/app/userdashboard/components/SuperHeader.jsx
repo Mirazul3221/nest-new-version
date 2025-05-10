@@ -213,7 +213,7 @@ const SuperHeader = () => {
   //=============set scroll for header================
   const [header, setHeader] = useState(false);
   const scrollHeader = () => {
-    if (window.scrollY >= 40) {
+    if (window.scrollY >= 1) {
       setHeader(true);
     } else {
       setHeader(false);
@@ -264,7 +264,6 @@ const SuperHeader = () => {
       socket.on("get-seen-validation", (data) => {
         console.log("yes");
         if (!path.includes("userdashboard/messanger") && !path.includes("userdashboard/searchusers")) {
-          console.log("go");
           socket &&
             socket.emit("validation-status", {
               sender: data.senderId,
@@ -301,7 +300,7 @@ const SuperHeader = () => {
     <div
       className={`font-title ${
         header
-          ? "fixed top-0 left-0 w-screen z-50 bg-white/50 backdrop-blur-md px-4 md:px-10 py-2"
+          ? "fixed top-0 left-0 w-screen z-50 backdrop-blur-md px-4 md:px-20 py-2"
           : ""
       }`}
     >

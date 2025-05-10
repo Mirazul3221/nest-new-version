@@ -187,7 +187,7 @@ const Page = () => {
     myStream.current !== null
   ) {
     exchangeLocalStream.current.srcObject = myStream.current;
-  }
+  }; console.log(remoteVideo)
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////Here is the logic for screen sharing method/////////////////////////////////
@@ -356,7 +356,6 @@ const Page = () => {
   ///////////////////////////////////////setIceCandidate/////////////////////////////////////////////////////////
   if (peearConnectionRef.current !== null) {
     peearConnectionRef.current.onicecandidate = async function (event) {
-      console.log(event.candidate);
       if (event.candidate) {
         await socket?.emit("icecandidate", {
           me: myId,
@@ -749,6 +748,13 @@ const Page = () => {
         {/* ///////////////////////////////////////////////////////////video call logic here///////////////////////////////////////////////////////////// */}
         {!remoteVideo.current &&
           callInv === "call-received" &&
+          type === "Video" && (
+            <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
+              <h2 className="text-2xl text-white">Loading...</h2>
+            </div>
+          )}
+        {!remoteVideo.current &&
+          callInv === "call-start" &&
           type === "Video" && (
             <div className="w-screen h-screen fixed top-0 left-0 overflow-hidden flex justify-center items-center">
               <h2 className="text-2xl text-white">Loading...</h2>

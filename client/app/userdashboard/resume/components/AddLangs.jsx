@@ -10,6 +10,7 @@ const AddLangs = () => {
   const { store } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [openProjectForm, setOpenProjectForm] = useState(false);
+  const [checkBio, setCheckBio] = useState(null);
   const [projectData, setProjectData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const fetchBio = async () => {
@@ -20,6 +21,15 @@ const AddLangs = () => {
           Authorization: `Bearer ${store.token}`,
         },
       });
+
+      setCheckBio(data?.cvdata?.primaryData?.myBioData)
+      if(!data?.cvdata?.primaryData[0]?.myBioData){
+        await axios.get(`${baseurl}/user-resume/generate-your-autobiography`,{
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        });
+      }
       setProjectData(data?.cvdata?.langs);
       setIsLoadingContainer(false);
     } catch (error) {
@@ -66,7 +76,6 @@ const AddLangs = () => {
   const handleLangsForm = async (e) => {
     e.preventDefault();
     const reverseData = langs?.reverse();
-    console.log(langs);
     try {
       await axios.post(`${baseurl}/user-resume/langs`, reverseData, {
         headers: {

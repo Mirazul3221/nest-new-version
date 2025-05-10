@@ -11,7 +11,8 @@ const Formate01 = ({ cvData }) => {
   return (
     <div
       style={{
-        margin: "0 auto", // center it
+        margin: "0 auto",
+        // padding:'20px' // center it
       }}
     >
       <div
@@ -19,7 +20,7 @@ const Formate01 = ({ cvData }) => {
           display: "flex",
           borderBottom: "2px solid gray",
           paddingBottom: "24px",
-          marginTop: "40px",
+          marginTop: "20px",
           color: "gray",
         }}
       >
@@ -36,8 +37,8 @@ const Formate01 = ({ cvData }) => {
               boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
               borderRadius: "9999px",
               border: "3px solid gray",
-              width: "8rem",
-              height: "8rem",
+              width: "10rem",
+              height: "10rem",
               overflow: "hidden",
               display: "flex",
               alignItems: "center",
@@ -162,10 +163,25 @@ const Formate01 = ({ cvData }) => {
 
       <div style={{ display: "flex", marginTop: "24px" }}>
         {/* Left Section */}
-        <div style={{ width: "33.333%" }}>
+        <div style={{ width: "30%" }}>
+          {cvData?.cvdata?.primaryData[0]?.myBioData && (
+            <div style={{ paddingRight: "10px", marginTop: "20px" }}>
+              <p
+                style={{
+                  textTransform: "uppercase",
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
+                Career Objective
+              </p>
+             <p style={{textAlign:"justify"}}>{HTMLReactParser(cvData?.cvdata?.primaryData[0]?.myBioData)}</p>
+            </div>
+          )}
           {/* Education */}
           {cvData?.cvdata?.education && (
-            <div style={{ marginTop: "40px" }}>
+            <div style={{ marginTop: "20px" }}>
               <p
                 style={{
                   textTransform: "uppercase",
@@ -404,7 +420,7 @@ const Formate01 = ({ cvData }) => {
                     <div style={{ display: "flex", gap: "40px" }}>
                       {exp.companyWeb && (
                         <a
-                          style={{ textDecoration: "underline",color:'gray' }}
+                          style={{ textDecoration: "underline", color: "gray" }}
                           href={exp.companyWeb}
                           target="_blank"
                         >
@@ -492,7 +508,7 @@ const Formate01 = ({ cvData }) => {
                     <div style={{ display: "flex", gap: "40px" }}>
                       {pro.projectUrl && (
                         <a
-                          style={{ textDecoration: "underline",color:'gray' }}
+                          style={{ textDecoration: "underline", color: "gray" }}
                           href={pro.projectUrl}
                           target="_blank"
                         >
