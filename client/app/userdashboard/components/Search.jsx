@@ -1,15 +1,24 @@
+'use client'
 import React, { useContext, useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import storeContext from "@/app/global/createContex";
 import { baseurl, viewurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 const Search = () => {
   const { store } = useStore();
-  const [search, setSearch] = useState("");
+    const searchParams = useSearchParams();
+  const queryVal = searchParams.get('q');
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
+  console.log(queryVal)
+
+  useEffect(() => {
+   if (queryVal) {
+    setQuery(queryVal)
+   }
+  }, [queryVal]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -39,12 +48,9 @@ const Search = () => {
   }, [query]);
 
 const handleSearch = (value) => {
-  const url = `${viewurl}/userdashboard/${value}`;
+  const url = `${viewurl}/userdashboard/search?q=${value}`;
   window.location.href = url; // 👈 Opens in same tab
 };
-
-
-  const { dispatch } = useContext(storeContext);
   // const handleSearch = ()=>{
   //   dispatch({ type: "authenticUserSearch", paylod: { searchReasultFromAuthenticUser: search } });
   // }
@@ -68,14 +74,12 @@ const handleSearch = (value) => {
           type="text"
           placeholder="Search Questions"
         />
-        {search.length > 0 ? (
+        {query.length > 0 ? (
           <div
-            onClick={handleSearch}
+            onClick={()=>handleSearch(query)}
             className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white cursor-pointer duration-00 border-violet-700 hover:border-fuchsia-600 hover:bg-violet-600"
           >
-            <a href={`/userdashboard/${search}`}>
-              <FiSearch size={22} />
-            </a>
+           <FiSearch size={22} />
           </div>
         ) : (
           <div className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white duration-00 border-violet-700">
@@ -83,7 +87,7 @@ const handleSearch = (value) => {
           </div>
         )}
         {isFocused && suggestions.length > 0 && (
-         <ul className="absolute z-10 w-full top-10 overflow-x-hidden overflow-y-auto h-[50vh] bg-white border border-t-0 rounded-b-md shadow">
+         <ul className="absolute z-10 w-full top-10 overflow-x-hidden overflow-y-auto amx-h-[50vh] bg-white border border-t-0 rounded-b-md shadow">
             {suggestions.map((item, index) => (
               <li
                 key={index}

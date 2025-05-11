@@ -121,28 +121,6 @@ const Page = () => {
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
 
-  const [tags, setTags] = useState(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${baseurl}/userquestions/get-tag/subject/chapter`,
-          {
-            headers: {
-              Authorization: `Bearer ${store.token}`,
-            },
-          }
-        );
-        setTags(data);
-        console.log(data);
-        // Do something with `data` here (e.g., update state)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [store.token]);
   return (
 <div className="min-h-screen">
   <ProtectRoute>

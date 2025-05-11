@@ -381,11 +381,42 @@ export class UserquestionsService {
       $or: [{ question: regex }],
     })
       .select('question') // Only fetch these fields
-      .limit(10)
+      .limit(15)
       .exec();
 
     // You can return any field you prefer — here we prioritize title
     return results.map((item) => item.question || '');
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+    async searchQuestionByQuery(q){
+    let option = {}
+   if(q){
+    option = {
+      $or : [
+        {subject : new RegExp(q.toLowerCase(),"i")},
+        {question : new RegExp(q.toLowerCase(),"i")},
+      ]
+    }
+   }
+
+    const data = await this.QuestionModel.find(option)
+    const shuffle = function (array) {
+      let randomArr = [];
+      let indexArr = [];
+      let i = 0;
+      while (i < array.length) {
+        let randomNumber = Math.floor(Math.random() * array.length);
+        if (!indexArr.includes(randomNumber)) {
+          randomArr.push(array[randomNumber]);
+          indexArr.push(randomNumber);
+          i++;
+        }
+      }
+      return randomArr; //
+    };
+
+   return data
   }
 
   findAll() {

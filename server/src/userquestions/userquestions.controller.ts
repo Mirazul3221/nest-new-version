@@ -149,6 +149,11 @@ export class UserquestionsController {
     return this.userquestionsService.getSuggestions(q);
   }
 
+    @Get('api/search/:value')
+   async searchQuestionByQuery(@Param("value") param){
+       return await this.userquestionsService.searchQuestionByQuery(param)
+    } 
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userquestionsService.findOne(+id);
