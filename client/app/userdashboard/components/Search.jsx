@@ -1,23 +1,30 @@
-'use client'
+"use client";
 import React, { useContext, useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { baseurl, viewurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import { getHighlightedText } from "../resume/components/data";
+import { BiSearch } from "react-icons/bi";
 const Search = () => {
   const { store } = useStore();
-    const searchParams = useSearchParams();
-  const queryVal = searchParams.get('q');
+  const searchParams = useSearchParams();
+  const queryVal = searchParams.get("q");
+  const searchPinVal = searchParams.get("pin");
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
-  console.log(queryVal)
+  const [pinVal, setPinVal] = useState("");
 
   useEffect(() => {
-   if (queryVal) {
-    setQuery(queryVal)
-   }
+    setPinVal(searchPinVal);
+  }, []);
+
+  useEffect(() => {
+    if (queryVal) {
+      setQuery(queryVal);
+    }
   }, [queryVal]);
 
   useEffect(() => {
@@ -47,10 +54,10 @@ const Search = () => {
     return () => clearTimeout(debounce);
   }, [query]);
 
-const handleSearch = (value) => {
-  const url = `${viewurl}/userdashboard/search?q=${value}`;
-  window.location.href = url; // 👈 Opens in same tab
-};
+  const handleSearch = (value) => {
+    const url = `${viewurl}/userdashboard/search?q=${value}&pin=${pinVal}`;
+    window.location.href = url; // 👈 Opens in same tab
+  };
   // const handleSearch = ()=>{
   //   dispatch({ type: "authenticUserSearch", paylod: { searchReasultFromAuthenticUser: search } });
   // }
@@ -76,28 +83,64 @@ const handleSearch = (value) => {
         />
         {query.length > 0 ? (
           <div
-            onClick={()=>handleSearch(query)}
+            onClick={() => handleSearch(query)}
             className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white cursor-pointer duration-00 border-violet-700 hover:border-fuchsia-600 hover:bg-violet-600"
           >
-           <FiSearch size={22} />
+            <FiSearch size={22} />
           </div>
         ) : (
           <div className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white duration-00 border-violet-700">
             <FiSearch size={22} />
           </div>
         )}
-        {isFocused && suggestions.length > 0 && (
-         <ul className="absolute z-10 w-full top-10 overflow-x-hidden overflow-y-auto amx-h-[50vh] bg-white border border-t-0 rounded-b-md shadow">
-            {suggestions.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => {setIsFocused(false); handleSearch(item)}}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
+        {isFocused && (
+          <div className="absolute z-10 w-full top-10 py-2 overflow-x-hidden overflow-y-auto amx-h-[50vh] bg-white border border-t-0 rounded-b-md shadow">
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="choice"
+                  value="option1"
+                  checked={pinVal === "questions"}
+                  onChange={() => setPinVal("questions")}
+                />
+                Option 1
+              </label>
+
+              <label style={{ marginLeft: "1rem" }}>
+                <input
+                  type="radio"
+                  name="choice"
+                  value="option2"
+                  checked={pinVal === "users"}
+                  onChange={() => setPinVal("users")}
+                />
+                Option 2
+              </label>
+
+              <p>Selected: {pinVal}</p>
+            </div>
+
+            {suggestions.length > 0 && (
+              <ul>
+                {suggestions.map((item, index) => (
+                  <div className="flex items-center gap-1 hover:bg-gray-100 cursor-pointer px-4">
+                    <BiSearch />
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setIsFocused(false);
+                        setQuery(item);
+                        handleSearch(item);
+                      }}
+                    >
+                      {getHighlightedText(item, query)}
+                    </li>
+                  </div>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
       </div>
     </div>

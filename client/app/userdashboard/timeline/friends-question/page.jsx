@@ -26,9 +26,30 @@ const Page = () => {
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
+  const [tags,setTags] = useState(null);
   const [tag,setTag] = useState(null);
   const [flug,setFlug] = useState('all')
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/userquestions/get-tag/subject/chapter`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+        setTags(data);
+        console.log(data);
+        // Do something with `data` here (e.g., update state)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    fetchData();
+  }, [store.token]);
   const fetchChunkData = useCallback(async () => {
     if (isLoading || !hasMore) return; // Avoid duplicate requests
     setIsLoading(true);

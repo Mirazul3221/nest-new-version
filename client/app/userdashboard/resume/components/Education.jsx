@@ -150,7 +150,6 @@ const Education = () => {
   useEffect(() => {
     fetchBio();
   }, []);
-  console.log(educationData?.length);
   return (
     <div className=" min-h-[60vh] flex justify-center items-center">
       {isLoadingContainer ? (
