@@ -5,12 +5,7 @@ import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { GoHistory } from "react-icons/go";
@@ -32,10 +27,10 @@ const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
   const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
   const messageContainerRef = useRef(null);
-  CurrentWindowChecker()
+  CurrentWindowChecker();
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
-  const { messanger, dispatch:messangerUser } = useMessage();
+  const { messanger, dispatch: messangerUser } = useMessage();
   const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
@@ -43,22 +38,26 @@ const SuperHeader = () => {
     balance: 0,
   });
 
-    useEffect(() => {
-      async function loadmessage() {
-        const data = await fetchAllFriendsByMessage(store.token);
-        messangerUser({type:'STORE_ALL_MESSANGER_USER',payload:data})
-      }
-      loadmessage();
-    }, []);
+  useEffect(() => {
+    async function loadmessage() {
+      const data = await fetchAllFriendsByMessage(store.token);
+      messangerUser({ type: "STORE_ALL_MESSANGER_USER", payload: data });
+    }
+    loadmessage();
+  }, []);
 
-      useEffect(() => {
-        socket && socket.on('lastMsgWithProfile',(data)=>{
-          messangerUser({type:'STORE_REMOTE_USER_PROFILE',payload:{data,id:'122'}})
-        })
-        return () => {
-           socket && socket.off('lastMsgWithProfile')
-        };
-      }, [socket]);
+  useEffect(() => {
+    socket &&
+      socket.on("lastMsgWithProfile", (data) => {
+        messangerUser({
+          type: "STORE_REMOTE_USER_PROFILE",
+          payload: { data, id: "122" },
+        });
+      });
+    return () => {
+      socket && socket.off("lastMsgWithProfile");
+    };
+  }, [socket]);
 
   useEffect(() => {
     async function fetchData() {
@@ -112,48 +111,8 @@ const SuperHeader = () => {
       console.log(error);
     }
   };
-  /////////////////////////////Here is the logic for new message come/////////////////////////////////
-  const [openMessage, setOpenMessage] = useState(false);
-  const messangerBoxRef = useRef(null);
-  useEffect(() => {
-    console.log(messangerBoxRef.current);
-    function handleClickOutside(event) {
-      console.log(event.target);
-      console.log(messangerBoxRef.current.contains(event.target));
-      if (
-        messangerBoxRef.current &&
-        !messangerBoxRef.current.contains(event.target)
-      ) {
-        setOpenMessage(false);
-      }
-    }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (openMessage) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openMessage]);
-
-  const [messangerFriends, setMessangerFriends] = useState(null);
-  const handleUrl = (friend) => {
-    window.open(
-      `${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`
-    );
-    //
-  };
-
-  useEffect(() => {
-    async function loadmessage() {
-      const data = await fetchAllFriendsByMessage(store.token);
-      setMessangerFriends(data);
-    }
-    loadmessage();
-  }, []);
   const sortedMessages = messanger?.user?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
   );
@@ -238,32 +197,33 @@ const SuperHeader = () => {
         }
       );
 
-      console.log(data)
+      console.log(data);
       setCountUnreadMessage(data);
     } catch (error) {}
   }
 
   useEffect(() => {
-    countMessage();//
+    countMessage(); //
   }, []);
 
-
   useEffect(() => {
-    if (isOpenMobileMessage) return
+    if (isOpenMobileMessage) return;
     socket &&
       socket.on("message-from", () => {
-        countMessage();//
-        console.log('Blooth from the best part of the')
+        countMessage(); //
+        console.log("Blooth from the best part of the");
       });
-  }, [socket,isOpenMobileMessage]);
+  }, [socket, isOpenMobileMessage]);
 
-
-    /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
+  /////////////////////////////////Here is the logic to check current message window or not//////////////////////////////////////////
   useEffect(() => {
     socket &&
       socket.on("get-seen-validation", (data) => {
         console.log("yes");
-        if (!path.includes("userdashboard/messanger") && !path.includes("userdashboard/searchusers")) {
+        if (
+          !path.includes("userdashboard/messanger") &&
+          !path.includes("userdashboard/searchusers")
+        ) {
           socket &&
             socket.emit("validation-status", {
               sender: data.senderId,
@@ -275,6 +235,7 @@ const SuperHeader = () => {
       socket && socket.off("get-seen-validation");
     };
   }, [socket]);
+
   const toggleMessage = () => setIsOpenMessage(!isOpenMessage);
   useEffect(() => {
     const handleMessage = (e) => {
@@ -287,15 +248,42 @@ const SuperHeader = () => {
     };
 
     if (isOpenMessage) {
-      document.addEventListener("mousedown", handleMessage);
+      document.addEventListener("click", handleMessage);
     } else {
-      document.removeEventListener("mousedown", handleMessage);
+      document.removeEventListener("click", handleMessage);
     }
     return () => {
-      document.removeEventListener("mousedown", handleMessage);
+      document.removeEventListener("click", handleMessage);
     };
   }, [isOpenMessage]);
 
+  ////////////////////////////////////Notification open/close logic////////////////////////////
+  const [isOpenNotif, setIsOpenNotif] = useState(false);
+  // const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
+  const notifContainerRef = useRef(null);
+  const handleNotificationToggle = () => {
+    setIsOpenNotif(!isOpenNotif);
+  };
+
+  useEffect(() => {
+    const handleNotif = (e) => {
+      if (
+        notifContainerRef.current &&
+        !notifContainerRef.current.contains(e.target)
+      ) {
+        setIsOpenNotif(false);
+      }
+    };
+
+    if (isOpenNotif) {
+      document.addEventListener("click", handleNotif);
+    } else {
+      document.removeEventListener("click", handleNotif);
+    }
+    return () => {
+      document.removeEventListener("click", handleNotif);
+    };
+  }, [isOpenNotif]);
   return (
     <div
       className={`font-title ${
@@ -374,7 +362,7 @@ const SuperHeader = () => {
                 )}
                 <li
                   onClick={() => {
-                    setOpenNotif(!openNotif);
+                    handleNotificationToggle();
                     seenAndDeleteNotif();
                   }}
                   className={`text-lg header-box font-normal relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
@@ -398,17 +386,10 @@ const SuperHeader = () => {
                     sortedMessages={sortedMessages}
                     setCountUnreadMessage={setCountUnreadMessage}
                     messageContainerRef={messageContainerRef}
-                    toggleMessage = {toggleMessage}
+                    toggleMessage={toggleMessage}
                   />
                 )}
                 {/* ==================Open and close notification in desktop==================== */}
-
-                {openNotif && (
-                  <NotificationContainer
-                    notificationList={notificationList}
-                    sayThanks={sayThanks}
-                  />
-                )}
 
                 {/* <li className="text-lg font-normal px-4 py-[4px] hover:bg-slate-100 hover:border-gray-200 text-gray-700 w-fit cursor-pointer duration-500 rounded-md border-[1px] border-white">
           Contact Info//
@@ -416,6 +397,15 @@ const SuperHeader = () => {
               </ul>
             </div>
           </div>
+
+          {isOpenNotif && (
+            <NotificationContainer
+              notificationList={notificationList}
+              notifContainerRef={notifContainerRef}
+              sayThanks={sayThanks}
+              handleNotificationToggle ={handleNotificationToggle}
+            />
+          )}
           {/* ///////////////////////////////////////////////////////////////////message box for mobile from here///////////////////////////////////////////// */}
           {!path.includes("userdashboard/messanger") && (
             <div
@@ -425,29 +415,33 @@ const SuperHeader = () => {
               }}
               className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
             >
-                    <div className={`absolute top-1 right-[0px]`}>
-                      {countUnreadMessage > 0 && (
-                        <div
-                          className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
-                        >
-                          <p className="text-white header-box text-[10px]">
-                            {countUnreadMessage > 9
-                              ? 9 + "+"
-                              : countUnreadMessage}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+              <div className={`absolute top-1 right-[0px]`}>
+                {countUnreadMessage > 0 && (
+                  <div
+                    className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
+                  >
+                    <p className="text-white header-box text-[10px]">
+                      {countUnreadMessage > 9 ? 9 + "+" : countUnreadMessage}
+                    </p>
+                  </div>
+                )}
+              </div>
               <HiOutlineEnvelope className="header-box" size={26} />
             </div>
           )}
 
-          {isOpenMobileMessage && <MessageContainerBoxMobile sortedMessages={sortedMessages} setIsOpenMobileMessage={setIsOpenMobileMessage}  setCountUnreadMessage={setCountUnreadMessage}/>}
-          
+          {isOpenMobileMessage && (
+            <MessageContainerBoxMobile
+              sortedMessages={sortedMessages}
+              setIsOpenMobileMessage={setIsOpenMobileMessage}
+              setCountUnreadMessage={setCountUnreadMessage}
+            />
+          )}
+
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
             onClick={() => {
-              setOpenNotif(!openNotif);
+           handleNotificationToggle();
               seenAndDeleteNotif();
             }}
             className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
@@ -465,13 +459,13 @@ const SuperHeader = () => {
             </div>
             <IoIosNotificationsOutline className="header-box" size={26} />
           </div>
-          {openNotif && (
+          {/* {openNotif && (
             <NotificationContainer
               notificationList={notificationList}
               sayThanks={sayThanks}
               setOpenNotif={setOpenNotif}
             />
-          )}
+          )} */}
           {/* ////////////////////////////////////////////////////////////// */}
           <div className="group relative duration-100">
             {me.profile.length > 0 ? (

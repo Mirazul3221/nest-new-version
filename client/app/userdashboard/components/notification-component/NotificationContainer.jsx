@@ -6,20 +6,16 @@ import { RxCross2 } from "react-icons/rx";
 import FriendRequest from './FriendRequest';
 import QuestionLikeCard from './QuestionLikeCard';
 import QuestionCommentCard from './QuestionCommentCard';
-const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
+const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,handleNotificationToggle}) => {
   return (
-    <div className="bg-gray-50 shadow-md absolute z-50 top-6 md:top-[90px] w-full md:w-4/12 right-0 md:right-12">
-    <div className="text-center relative rounded-t-lg py-2 md:py-3 bg-gray-200 flex justify-center items-center">
-      <div className="flex gap-1">
-        <div className="w-2 h-2 bg-white rounded-full"></div>
-        <div className="w-2 h-2 bg-white rounded-full"></div>
-        <div className="w-2 h-2 bg-white rounded-full"></div>
+    <div ref={notifContainerRef} className="text-sm px-2 absolute top-0 md:top-20 shadow-2xl py-4 right-0 md:right-28 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
+      <div className="flex justify-between items-center">
+        <h2 className='font-semibold'>Notifications</h2>
+        <span onClick={()=>handleNotificationToggle()} className='text-gray-700 md:hidden'><RxCross2 size={20}/></span>
       </div>
-      <div  onClick={()=>setOpenNotif(false)} className="left-0 px-2 md:hidden bg-white w-full -top-[110%] absolute flex justify-end"> <span className='text-gray-700'><RxCross2 size={30}/></span> </div>
-    </div>
-    <div className="overflow-y-scroll h-[92vh] md:h-[70vh]">
+    <div className="overflow-y-scroll w-full h-[92vh] md:h-[70vh]">
       {notificationList?.length > 0 ? (
-        <div className="rounded-md px-6 w-full">
+        <div className="md:rounded-md md:px-6 w-full">
           {notificationList?.map((item, i) => {
             // -------------------------------------------------------------------------------------------------
             if (item.type === "friend-request") {
@@ -132,7 +128,7 @@ const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
             //-------------------------------------------------------------------------------------------------------------------------
             if(item.type === 'like-question'){
                return (
-                <div className="bg-gray-100 w-full " key={i}>
+                <div className="w-full" key={i}>
                 <QuestionLikeCard
                   item={item}
                 />
@@ -164,7 +160,6 @@ const NotificationContainer = ({notificationList,sayThanks,setOpenNotif}) => {
         </div>
       )}
     </div>
-    <div className="py-3 bg-gray-200"></div>
   </div>
   )
 }

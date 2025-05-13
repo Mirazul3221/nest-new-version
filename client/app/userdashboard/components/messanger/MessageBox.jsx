@@ -35,7 +35,7 @@ const MessageBox = ({sortedMessages,setCountUnreadMessage,messageContainerRef,to
     dispatch({type:'STORE_ALL_MESSANGER_USER',payload:data})
   }
   return (
-    <div ref={messageContainerRef} className="choda md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-20 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
+    <div ref={messageContainerRef} className="md:absolute fixed pl-2 top-0 md:top-20 shadow-2xl py-4 right-0 md:right-40 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
       <div className="flex px-4 md:block justify-between items-center">
       <h2 className="text-2xl">Chats</h2> <span className="md:hidden">closs</span>
       </div>

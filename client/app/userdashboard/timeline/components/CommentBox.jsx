@@ -27,14 +27,14 @@ import { BiCross } from "react-icons/bi";
 import { formatRelativeTime } from "./common";
 import CommentProfile from "./CommentProfile";
 const CommentBox = ({ question }) => {
+  console.log(question)
+  if(!question) return
   const { store } = useContext(storeContext);
   const { socket } = useSocket();
-  const sortComments = question?.comments.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
-const extractQuestion = [question?.comments[0],question?.comments[1]]
-  console.log(question?.comments)
-
+  // const sortComments = question?.comments.sort(
+  //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  // );
+const extractQuestion = question?.commence? [question?.comments[0],question?.comments[1]] : []
   const [open, setOpen] = useState(false);
   const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);

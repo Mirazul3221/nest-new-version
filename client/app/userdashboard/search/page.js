@@ -33,6 +33,12 @@ const Page = () => {
   const [flug, setFlug] = useState("all");
   const searchParams = useSearchParams();
   const searchVal = searchParams.get("q");
+    const searchPinVal = searchParams.get("pin");
+    useEffect(() => {
+     if(searchPinVal) {
+     searchPinVal=='question' ? setSynce('Questions') : setSynce('Users')
+     }
+    }, []);
   const route = useRouter();
   const logout = () => {
     dispatch({ type: "logout" });
@@ -75,7 +81,7 @@ const Page = () => {
     try {
       setLoader(true);
       const { data } = await axios.get(
-        `${baseurl}/allquestionscollection/api/search/${decodeURIComponent(
+        `${baseurl}/userquestions/api/search/${decodeURIComponent(
           searchVal
         )}`
       );
@@ -251,7 +257,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="md:w-9/12">
+          <div className="md:w-9/12 w-full">
             {loader ? (
               <div className="w-full h-[89vh] flex justify-center bg-white items-center">
                 <Image
@@ -329,7 +335,7 @@ const Page = () => {
                     )}
                     {synce == "Users" && (
                       <div>
-                        {data.map((user, i) => {
+                        {questions.map((user, i) => {
                           return (
                             <div key={i} className="md:flex gap-4">
                               <div className="px-4 py-2 bg-white md:w-1/2">
