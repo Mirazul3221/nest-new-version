@@ -1,5 +1,5 @@
 "use client";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import axios from "axios";
 import loder from "@/public/loading-buffer.gif";
@@ -177,7 +177,7 @@ const Page = () => {
             <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
               <FiFileText /> Bcs Question
             </a>
-            <a href="#" className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
+            <a href={`${viewurl}/userdashboard/setting`} className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2">
               <IoMdSettings /> Setting
             </a>
           </div>

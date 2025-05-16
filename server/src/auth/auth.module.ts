@@ -11,6 +11,7 @@ import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { FriendRequestModule } from 'src/friend-request/friend-request.module';
+import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { FriendRequestModule } from 'src/friend-request/friend-request.module';
       },
     ]),
     forwardRef(() => FriendRequestModule), // Fix circular dependency
+    forwardRef(() => LoginstatusModule), // Fix circular dependency
   ],
   controllers: [AuthController],
   providers: [AuthService, jwtStrategy, FacebookStrategy, GoogleStrategy],

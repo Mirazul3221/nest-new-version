@@ -17,24 +17,38 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { use } from 'passport';
-import { FriendRequest, FriendRequestDocument } from 'src/friend-request/schemas/friend-request.schema';
+import {
+  FriendRequest,
+  FriendRequestDocument,
+} from 'src/friend-request/schemas/friend-request.schema';
 import { userInfo } from 'os';
 import { UsersQuestion } from 'src/userquestions/schema/userquestions.schema';
+import {
+  SessionSchemaName,
+  SessionSchema,
+  Session,
+} from 'src/loginstatus/schema/schema';
 const nodemailer = require('nodemailer');
+import { v4 as uuidv4 } from 'uuid';
+import { UAParser } from 'ua-parser-js';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(user_model)
     private userModel: mongoose.Model<Reader>,
-     @InjectModel(FriendRequest.name) private friendRequestModel: mongoose.Model<FriendRequestDocument>,
+    @InjectModel(FriendRequest.name)
+    private friendRequestModel: mongoose.Model<FriendRequestDocument>,
+    @InjectModel(SessionSchemaName) private sessionModel: mongoose.Model<Session>,
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
   async register_user(
     createAuthDto: CreateAuthDto,
   ): Promise<{ token: string; msg: string }> {
-    const { name, email, password,location, role, status, balance } = createAuthDto;
+    const { name, email, password, location, role, status, balance } =
+      createAuthDto;
     const userInfo = await this.userModel.findOne({ email });
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
@@ -50,9 +64,9 @@ export class AuthService {
         name: name,
         email: email,
         password: await bcrypt.hash(password, 9),
-        location:{
-          type:'Point',
-          coordinates:[location.lon,location.lat]
+        location: {
+          type: 'Point',
+          coordinates: [location.lon, location.lat],
         },
         title: 'Untitled User',
         description: '',
@@ -78,23 +92,23 @@ export class AuthService {
 
   async loginInfo(
     userDto: CreateUserDto,
+    req,
   ): Promise<{ token: string; message: string }> {
     const { email, password, location } = userDto;
-    const { lat, lon } = location || {};  // Destructure location if it exists
-  
+    const { lat, lon } = location || {}; // Destructure location if it exists
     const loginInfo = await this.userModel
       .findOne({ email })
       .select('+password');
-  
+
     if (!loginInfo) {
       throw new NotFoundException('User not found!');
     }
-  
+
     const check_password = await bcrypt.compare(password, loginInfo.password);
     if (!check_password) {
       throw new UnauthorizedException('Invalid password!');
     }
-  
+
     // If geolocation (lat, lon) is provided, update the user's location
     if (lat && lon) {
       loginInfo.location = {
@@ -103,76 +117,141 @@ export class AuthService {
       };
       await loginInfo.save(); // Save the updated location
     }
+
+    
+    ////////////////////////////////////////////////////////////////////////
+// Inside your method
+let ip =
+  req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+  req.socket?.remoteAddress || // fallback
+  req.ip; // fallback
+
+if (ip?.startsWith('::ffff:')) {
+  ip = ip.replace('::ffff:', '');
+}
+
+if (
+  ip === '::1' ||
+  ip === '127.0.0.1' ||
+  ip.startsWith('192.168') ||
+  ip.startsWith('10.') ||
+  ip.startsWith('172.')
+) {
+  // For development fallback only, NOT in production
+  if (process.env.NODE_ENV !== 'production') {
+    ip = '8.8.8.8';
+  }
+}
+
+const sessionId = uuidv4();
+const userAgent = req.headers['user-agent'];
+const parser = new UAParser(userAgent);
+const parsedUA = parser.getResult();
+// Get location from IP
+try {
+    const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+  const data = geo.data;
+    const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
   
+const session = await this.sessionModel.create({
+  userId: loginInfo._id,
+  sessionId,
+  ipAddress: ip,
+  userAgent, // raw user-agent string
+  device: parsedUA.device.model || 'Unknown device',
+  browser: parsedUA.browser.name || 'Unknown browser',
+  os: parsedUA.os.name || 'Unknown OS',
+  location:geoLocation
+  // location: (optional, set below if you use geo-IP),
+});
+
+// 🔻 Delete older sessions beyond the most recent 5
+await this.sessionModel.deleteMany({
+  userId: loginInfo._id,
+  _id: { 
+    $nin: await this.sessionModel
+      .find({ userId: loginInfo._id })
+      .sort({ createdAt: -1 }) // latest first
+      .limit(5)
+      .select('_id')
+      .then((docs) => docs.map((d) => d._id)),
+  },
+});
+
+//////////////////////////////////////////////////////////////////////
+
     // Create JWT token
     const token = await this.jwtService.sign({
       id: loginInfo._id,
+      sessionId,
       name: loginInfo.name,
       profile: loginInfo.profile,
       role: loginInfo.role,
     });
-  
-    return { token, message: 'User login success' };
+
+  return { token, message: 'User login success' };
+} catch (error) {
+  console.log(error)
+}
+
   }
-  
 
   //===================================
 
   async findNearbyUsers(id) {
-   // Step 1: Get all accepted and pending friend requests
-const friendRequests = await this.friendRequestModel
-.find({
-  $or: [{ requester: id }, { recipient: id}],
-  status: { $in: ["accepted", "pending"] }, // ✅ Get only accepted and pending requests
-})
-.select("requester recipient")
-.lean();
+    // Step 1: Get all accepted and pending friend requests
+    const friendRequests = await this.friendRequestModel
+      .find({
+        $or: [{ requester: id }, { recipient: id }],
+        status: { $in: ['accepted', 'pending'] }, // ✅ Get only accepted and pending requests
+      })
+      .select('requester recipient')
+      .lean();
 
-// Step 2: Extract the user IDs from friend requests
-const excludedUserIds = friendRequests.flatMap((req) => [
-  req.requester.toString(),
-  req.recipient.toString(),
-]);
+    // Step 2: Extract the user IDs from friend requests
+    const excludedUserIds = friendRequests.flatMap((req) => [
+      req.requester.toString(),
+      req.recipient.toString(),
+    ]);
 
-// Remove the logged-in user ID (since we don't need to exclude themselves)
-const filteredExcludedUserIds = excludedUserIds.filter(
-  (uid) => uid !== id.toString()
-);
+    // Remove the logged-in user ID (since we don't need to exclude themselves)
+    const filteredExcludedUserIds = excludedUserIds.filter(
+      (uid) => uid !== id.toString(),
+    );
 
     const currentUser = await this.userModel.findById(id);
-    
+
     if (!currentUser) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
-  
+
     const coordinates = currentUser?.location?.coordinates;
-    
+
     if (!coordinates || coordinates.length !== 2) {
-      throw new Error("Invalid location data");
+      throw new Error('Invalid location data');
     }
-  
+
     // Step 3: Fetch nearby users but exclude the ones in `filteredExcludedUserIds`
-const nearbyUsers = await this.userModel
-.find({
-  _id: { $nin: filteredExcludedUserIds, $ne: id }, // ✅ Exclude friends and current user
-  location: {
-    $near: {
-      $geometry: {
-        type: "Point",
-        coordinates,
-      },
-      $maxDistance: 914000, // 50 km
-    },
-  },
-})
-.select(
-  "-balance -email -createdAt -updatedAt -role -otp -totalCountQuestionsId -location -totalCountQuestions -blockedUsers -description"
-)
-.limit(50)
-.exec();
+    const nearbyUsers = await this.userModel
+      .find({
+        _id: { $nin: filteredExcludedUserIds, $ne: id }, // ✅ Exclude friends and current user
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates,
+            },
+            $maxDistance: 914000, // 50 km
+          },
+        },
+      })
+      .select(
+        '-balance -email -createdAt -updatedAt -role -otp -totalCountQuestionsId -location -totalCountQuestions -blockedUsers -description',
+      )
+      .limit(50)
+      .exec();
     return nearbyUsers;
   }
-  
 
   //====================================
   findSingleUser(id: string) {
@@ -181,10 +260,12 @@ const nearbyUsers = await this.userModel
     return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
   }
   //====================================
- async getBio(id: string) {
+  async getBio(id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid User!', 404);
-    return await this.userModel.findById({ _id: id }).select({name:1,title:1,email:1,description:1,_id:0});
+    return await this.userModel
+      .findById({ _id: id })
+      .select({ name: 1, title: 1, email: 1, description: 1, _id: 0 });
   }
   //================================
   async findSingleUserByPublic(user) {
@@ -481,7 +562,7 @@ const nearbyUsers = await this.userModel
     if (targetUser.totalCountQuestionsId.includes(id)) {
       return null;
     } else {
-      targetUser?.totalCountQuestionsId.push(id); 
+      targetUser?.totalCountQuestionsId.push(id);
       await targetUser.save();
       //=============UPDATE ENGLISH=================
       if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
@@ -514,39 +595,46 @@ const nearbyUsers = await this.userModel
   }
   /////////////////////////////Retrive all read question/////////////////////////////
 
-  async retrieveAllReadQuestion(id: string, type: string, page: number, limit: number) {
-    console.log("Page:", page);
-    console.log("Type:", type);
+  async retrieveAllReadQuestion(
+    id: string,
+    type: string,
+    page: number,
+    limit: number,
+  ) {
+    console.log('Page:', page);
+    console.log('Type:', type);
 
-    const targetUser = await this.userModel.findById(id)
-        .populate({
-            path: "totalCountQuestionsId",
-            select: "_id userId slug userName userProfile prevExam question option_01 option_02 option_03 option_04 rightAns content likes comments createdAt subject chapter",
-            model: "UsersQuestion"
-        })
-        .lean(); // Convert Mongoose document to a plain JavaScript object
+    const targetUser = await this.userModel
+      .findById(id)
+      .populate({
+        path: 'totalCountQuestionsId',
+        select:
+          '_id userId slug userName userProfile prevExam question option_01 option_02 option_03 option_04 rightAns content likes comments createdAt subject chapter',
+        model: 'UsersQuestion',
+      })
+      .lean(); // Convert Mongoose document to a plain JavaScript object
 
-    if (!targetUser) return { message: "User not found" };
+    if (!targetUser) return { message: 'User not found' };
 
     // Ensure totalCountQuestionsId is an array
     const questions: any[] = targetUser.totalCountQuestionsId || [];
 
     // Filter by subject type
     const filteredQuestions = questions
-        .filter(q => q.subject === type)
-        .map(q => ({
-            ...q,
-            totalComments: q.comments?.length || 0 // Add totalComments field
-        }));
+      .filter((q) => q.subject === type)
+      .map((q) => ({
+        ...q,
+        totalComments: q.comments?.length || 0, // Add totalComments field
+      }));
 
     // Pagination logic
     const startIndex = (page - 1) * limit;
     const result = filteredQuestions.slice(startIndex, startIndex + limit);
 
-    console.log("Paginated Questions:", result);
+    console.log('Paginated Questions:', result);
     return result.reverse();
-}
-  
+  }
+
   //////////////////////////////////////////////////////Here is the logic to block and unblock users/////////////////////////////////////////////
   async blockUser(authId: string, targetId: string) {
     const isExist = await this.userModel.findById(authId);
@@ -561,13 +649,14 @@ const nearbyUsers = await this.userModel
   async unBlockUser(authId: string, targetId: string) {
     const isExist = await this.userModel.findById(authId);
     if (!isExist) throw new NotFoundException('User not found');
-  
-    isExist.blockedUsers = isExist.blockedUsers.filter((id) => id.toString() !== targetId); // Ensure proper type comparison
+
+    isExist.blockedUsers = isExist.blockedUsers.filter(
+      (id) => id.toString() !== targetId,
+    ); // Ensure proper type comparison
     await isExist.save();
-    
+
     return 'User unblocked successfully';
   }
-  
 
   async isBlockUser(authId: string, targetId: string) {
     const isExist = await this.userModel.findById(authId);

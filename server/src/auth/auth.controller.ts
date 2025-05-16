@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UsePipes, ValidationPipe, UseGuards, HttpException, HttpStatus, UseInterceptors, Bind, UploadedFile, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UsePipes, ValidationPipe, UseGuards, HttpException, HttpStatus, UseInterceptors, Bind, UploadedFile, Query, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { CreateUserDto } from './dto/create-user-dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateAuthProfileDto } from './dto/update-auth.dto';
-import { Request as ExpReq } from 'express';
 import { FileSystemStoredFile, FormDataRequest } from 'nestjs-form-data';
+import { Request } from 'express';
 // import { FileInterceptor } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 
@@ -22,10 +22,8 @@ export class AuthController {
 
   @Post('/user/login')
   @UsePipes(ValidationPipe)
- async login(@Request() req, @Body() userDto:CreateUserDto) : Promise<{ token: string; message: string }> {
-  console.log(req.ip,req.headers['sec-ch-ua'])
-  // console.log(req)
-    return await this.authService.loginInfo(userDto);
+ async login(@Req() req:Request, @Body() userDto:CreateUserDto) : Promise<{ token: string; message: string }> {
+    return await this.authService.loginInfo(userDto,req);
   }
 
   @Get('user/nearby')

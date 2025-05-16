@@ -21,25 +21,25 @@ export default async function sitemap() {
       {
         url: `${viewurl}/subject/english`,
         lastModified: new Date(),
-        changeFrequency: 'monthly',
+        changeFrequency: 'yearly',
         priority: 0.8,
       },
       {
         url: `${viewurl}/blogs/static/how-to-prepare-myself-for-bcs-and-other-job`,
         lastModified: new Date(),
-        changeFrequency: 'monthly',
+        changeFrequency: 'yearly',
         priority: 0.8,
       },
       {
         url: `${viewurl}/blogs/static/bcs-preliminary-exam`,
         lastModified: new Date(),
-        changeFrequency: 'monthly',
+        changeFrequency: 'yearly',
         priority: 0.8,
       },
       {
         url: `${viewurl}/subject/bangla`,
         lastModified: new Date(),
-        changeFrequency: 'monthly',
+        changeFrequency: 'yearly',
         priority: 0.8,
       },
       ...dynamicUrl
