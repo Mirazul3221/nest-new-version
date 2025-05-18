@@ -19,10 +19,10 @@ import { PiBookOpenTextDuotone } from "react-icons/pi";
 import { TiDocumentText } from "react-icons/ti";
 import { LuLogOut } from "react-icons/lu";
 import QuestionCard from "../timeline/components/QuestionCard";
+import { commonLogout } from "../components/common";
 
 const Page = () => {
-  const { store } = useContext(storeContext);
-  const [data, setData] = useState([]);
+  const { store,dispatch } = useContext(storeContext);
   const [loader, setLoader] = useState(false);
   const [synce, setSynce] = useState("Questions");
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -123,6 +123,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      commonLogout(dispatch)
     } finally {
       setIsLoading(false);
     }
@@ -150,6 +151,7 @@ const Page = () => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
+        commonLogout(dispatch)
       }
     };
 

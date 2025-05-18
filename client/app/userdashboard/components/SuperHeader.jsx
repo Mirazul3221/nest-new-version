@@ -22,6 +22,7 @@ import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 import CurrentWindowChecker from "../global/CurrentWindowChecker";
 import { useMessage } from "../global/messageProvider";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
+import { commonLogout } from "./common";
 
 const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
@@ -95,7 +96,7 @@ const SuperHeader = () => {
         },
       });
       setNotificationList(data);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   //====================================================================
   //====================================================================
@@ -109,6 +110,7 @@ const SuperHeader = () => {
       });
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,6 +166,7 @@ const SuperHeader = () => {
       socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -199,7 +202,7 @@ const SuperHeader = () => {
 
       console.log(data);
       setCountUnreadMessage(data);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   }
 
   useEffect(() => {

@@ -1,11 +1,12 @@
 "use client"
 import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
+import { commonLogout } from "@/app/userdashboard/components/common";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 const UserList = () => {
-  const { store } = useContext(storeContext);
+  const { store,dispatch} = useContext(storeContext);
   const [generalusrs, setGeneralusrs] = useState();
   const [registeredUsers, setRegisteredUsers] = useState();
   const [switcher, setSwitcher] = useState("assistant");
@@ -27,6 +28,7 @@ const UserList = () => {
         setGeneralusrs(generalusrs);
         setRegisteredUsers(registeredUsers);
       } catch (error) {
+        commonLogout(dispatch)
         console.log(error);
       }
     }

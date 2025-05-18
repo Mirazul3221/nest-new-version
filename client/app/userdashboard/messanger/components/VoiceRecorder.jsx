@@ -9,6 +9,7 @@ import { baseurl } from "@/app/config";
 import { useSocket } from "../../global/SocketProvider";
 import { useMessage } from "../../global/messageProvider";
 import Image from "next/image";
+import { commonLogout } from "../../components/common";
 
 const VoiceRecorder = ({
   isStartRecord,
@@ -19,7 +20,7 @@ const VoiceRecorder = ({
   toReplyerId,
   scrollToBottom,
 }) => {
-  const { store } = useStore();
+  const { store,dispatch:dps } = useStore();
   const { dispatch } = useMessage();
   const { socket } = useSocket();
   const [loading, setLoading] = useState(false);
@@ -131,6 +132,7 @@ const VoiceRecorder = ({
           "Error uploading file:",
           error.response?.data || error.message
         );
+        commonLogout(dps)
       } finally {
         setLoading(false);
       }
@@ -172,6 +174,7 @@ const VoiceRecorder = ({
           "Error uploading file:",
           error.response?.data || error.message
         );
+        commonLogout(dps)
       } finally {
         setLoading(false);
       }

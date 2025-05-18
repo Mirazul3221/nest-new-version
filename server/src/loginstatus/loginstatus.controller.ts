@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Req } from '@nestjs/common';
 import { LoginstatusService } from './loginstatus.service';
 import { CreateLoginstatusDto } from './dto/create-loginstatus.dto';
 import { UpdateLoginstatusDto } from './dto/update-loginstatus.dto';
@@ -12,8 +12,8 @@ export class LoginstatusController {
  async findAll(@Req() req:any) {
     return await this.loginstatusService.findAll(req);
   }
-  @Delete(':id')
+  @Get(':id')
   remove(@Param('id') id: string) {
-    return this.loginstatusService.remove(+id);
+    return this.loginstatusService.remove(id);
   }
 }

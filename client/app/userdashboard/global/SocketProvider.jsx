@@ -21,7 +21,7 @@ const SocketProvider = ({ children }) => {
     setSocket(socketInstance);
     socketInstance?.emit("myUserInfo", {
       id: store?.userInfo?.id,
-      name: store.userInfo.name,
+      name: store.userInfo?.name,
     });
     return () => {
       socketInstance.disconnect();

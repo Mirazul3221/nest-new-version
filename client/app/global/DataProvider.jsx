@@ -5,7 +5,6 @@ import storeContext from "./createContex";
 import { decode_token } from "./extract_jwt";
 import axios from "axios";
 import { baseurl } from "../config";
-
 const DataProvider = ({ children }) => {
   const localstore = {};
   if (typeof window !== "undefined") {
@@ -37,7 +36,7 @@ const DataProvider = ({ children }) => {
       }
     );
    } catch (error) {
-    
+     console.log(error)
    }
   }
   useEffect(() => {

@@ -14,7 +14,7 @@ const Math = () => {
   //=====All state related question value========================
   const [show,setShow] = useState(false)
   const [isExam, setIsExam] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store,dispatch} = useContext(storeContext);
   const [alert, setAlert] = useState("");
   const [loader, setLoader] = useState(false);
   //=============================================================
@@ -77,9 +77,7 @@ const Math = () => {
     } catch (error) {
       setLoader(false);
       setAlert(error.response.data.message);
-      setTimeout(() => {
-        setAlert("");
-      }, 1000);
+      commonLogout(dispatch)
       //error.response.data.message
     }
   };

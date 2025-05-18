@@ -37,6 +37,7 @@ import AddAndDeleteFriendRequestButton from "../components/messanger/components/
 import CallMessageContainer from "../components/messanger/CallMessageContainer";
 import { CiUser } from "react-icons/ci";
 import QuestionCard from "../timeline/components/QuestionCard";
+import { commonLogout } from "../components/common";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -52,7 +53,7 @@ const Page = () => {
   const [openMOdel, setOpenModel] = useState(false);
   // const isBrowser = typeof window !== undefined;
   const [percentage, setPercentage] = useState(0);
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -78,6 +79,7 @@ const Page = () => {
         setUpdateDesc(userDetails?.description);
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     }
     fetchData();
@@ -111,6 +113,7 @@ const Page = () => {
       console.log(error);
       setLoader(false);
       setOpenModel(false);
+      commonLogout(dispatch)
     }
   };
 
@@ -126,7 +129,7 @@ const Page = () => {
           },
         }
       );
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   const updateUserDescription = async () => {
@@ -140,7 +143,7 @@ const Page = () => {
           },
         }
       );
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   const updateFacebookLink = async () => {
@@ -156,7 +159,7 @@ const Page = () => {
       );
 
       setLink(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   const popup = () => {
     setOpenModel(true);
@@ -233,6 +236,7 @@ const Page = () => {
         setGetAllAcceptedFriend(accepted.data);
       } catch (error) {
         //   setLoader(false);
+        commonLogout(dispatch)
       }
     }
 
@@ -254,6 +258,7 @@ const Page = () => {
       setAcceptReq(true);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -275,7 +280,7 @@ const Page = () => {
           Authorization: `Bearer ${store?.token}`,
         },
       });
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   const inviteYourFriend = async (id) => {
     try {
@@ -291,6 +296,7 @@ const Page = () => {
       socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   const { socket, myActiveFriends } = useSocket();
@@ -335,6 +341,7 @@ const Page = () => {
     } catch (error) {
       console.error("Failed to fetch questions:", error);
       isFetchingRef.current = false; // Reset flag
+      commonLogout(dispatch)
     } finally {
       isFetchingRef.current = false; // Reset flag
       setIsLoading(false);
@@ -387,6 +394,7 @@ const Page = () => {
         setPage(2);
         isFetchingRef.current = false;
       } catch (error) {
+        commonLogout(dispatch)
         console.error("Error fetching initial questions:", error);
         isFetchingRef.current = false;
       } finally {
@@ -973,6 +981,7 @@ const Page = () => {
                 <AvatarWrapper
                   width={200}
                   height={200}
+                  borderRadius={0}
                   imageWidth={resize}
                   onCrop={onCrop}
                   onClose={onClose}

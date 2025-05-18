@@ -2,9 +2,8 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import loaderImg from "@/public/loader.gif";
-import { useRouter } from "next/navigation";
 import storeContext from "../global/createContex";
-import { baseurl } from "../config";
+import { baseurl, viewurl } from "../config";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import Image from "next/image";
@@ -15,7 +14,6 @@ const InputForm = () => {
   //get userinfo from global data====================
   const [loader, setLoader] = useState(false);
   const { dispatch } = useContext(storeContext);
-  const router = useRouter();
   const [alert, setAlert] = useState("");
   const [location, setLocation] = useState({ lon: null, lat: null });
   const [submitValue, setSubmitValue] = useState({
@@ -66,10 +64,10 @@ const InputForm = () => {
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
-      router.push("/userdashboard/timeline/friends-question");
-      setTimeout(() => {
+       window.location.href = `${viewurl}/userdashboard/timeline/friends-question`
+       setTimeout(() => {
         setLoader(false);
-      }, 10000);
+       }, 60000);
     } catch (error) {
       console.log(error);
       setAlert(error.response?.data.message);

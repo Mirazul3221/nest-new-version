@@ -5,11 +5,12 @@ import { baseurl, viewurl } from '@/app/config';
 import { formatetime } from '../../components/messanger/components/time';
 import axios from 'axios';
 import { useMessage } from '../../global/messageProvider';
+import { commonLogout } from '../../components/common';
 
 const MessageBar = ({setId,setUserDetails,friend,setMessangerFriends}) => {
     const {messanger,dispatch} = useMessage();
     const {socket, myActiveFriends} = useSocket();   
-      const { store } = useStore();
+      const { store,dispatch:dps } = useStore();
 //////////////////////////////typing effect///////////////////////////////////
 const [typing, setTyping] = useState("");
 useEffect(() => {
@@ -40,6 +41,7 @@ const handleUrl = () => {
         });
       } catch (error) {
         console.log(error);
+        commonLogout(dps)
       }
   }
   const checkMessageStatus =async ()=>{

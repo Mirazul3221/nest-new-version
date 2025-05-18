@@ -6,11 +6,11 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { BsPersonUp } from "react-icons/bs";
 import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
+import { commonLogout } from "../../common";
 
 const AddAndDeleteFriendRequestButton = ({ id }) => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const { socket } = useSocket();
-  const [isAdd, setIsAdd] = useState();
   const [requestStatus, setRequestStatus] = useState();
   const [loading, setLoading] = useState(false);
   ////////////////notification api////////////////////////
@@ -26,7 +26,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   const checkFriendRequestStatus = async () => {
@@ -43,6 +43,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
       setRequestStatus(data);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -77,6 +78,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      commonLogout(dispatch)
     }
   };
   return (

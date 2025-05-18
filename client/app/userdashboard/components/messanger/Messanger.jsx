@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useSocket } from "../../global/SocketProvider";
 import EntryPoint from "./video-audio-callcenter/EntryPoint";
 import { formatetime } from "./components/time";
+import { commonLogout } from "../common";
 const Messanger = ({
   id,
   name,
@@ -40,7 +41,7 @@ const Messanger = ({
   const [invoke, setInvoke] = useState(null);
   const [typingloading, setTypingLoading] = useState();
   const messangerRef = useRef(null);
-  const { store } = useContext(storeContext);
+  const { store,dispatch} = useContext(storeContext);
   const { socket } = useSocket();
   const bottomRef = useRef(null);
   const scrollToBottom = () => {
@@ -93,7 +94,7 @@ const Messanger = ({
           },
         });
         setMyAndFriendMessage(data);
-      } catch (error) {}
+      } catch (error) {commonLogout(dispatch)}
     }
     switcher && new Audio("/notification-soun/som_da_kiwify.mp3").play();
     fetchMessage();

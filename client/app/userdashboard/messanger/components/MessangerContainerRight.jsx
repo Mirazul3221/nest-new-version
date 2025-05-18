@@ -4,10 +4,11 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import BlockButton from "../../components/messanger/BlockButton";
 import { useStore } from "@/app/global/DataProvider";
+import { commonLogout } from "../../components/common";
 
 const MessangerContainerRight = ({ id,globleCheckIsBlockedByMe }) => {
   const [data, setData] = useState(null);
-  const {store} = useStore()
+  const {store,dispatch} = useStore()
   useEffect(() => {
     const fetchuser = async () => {
       try {
@@ -42,6 +43,7 @@ const MessangerContainerRight = ({ id,globleCheckIsBlockedByMe }) => {
       globleCheckIsBlockedByMe(data)
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {

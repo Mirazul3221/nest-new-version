@@ -7,8 +7,9 @@ import QuestionCard from "../components/QuestionCard";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import { baseurl } from "@/app/config";
+import { commonLogout } from "../../components/common";
 const Page = () => {
-  const { store } = useContext(storeContext);
+  const { store ,dispatch} = useContext(storeContext);
   const [allQuestions, setAllQuestions] = useState([]);
    const [page, setPage] = useState(0);
      const [isLoading, setIsLoading] = useState(false); // Loading state
@@ -33,6 +34,7 @@ const Page = () => {
       }
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }finally {
       setIsLoading(false);
     }

@@ -5,9 +5,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { TbRuler3 } from "react-icons/tb";
 import { useSocket } from "../../global/SocketProvider";
+import { commonLogout } from "../common";
 
 const BlockButton = ({ blockedUserId, name,status, globleCheckIsBlockedByMe,setIsBlockedByMe}) => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const {socket} = useSocket();
   const [isBlocked, setIsBlocked] = useState(status);
   const [loading,setLoading] = useState(false);
@@ -31,6 +32,7 @@ const BlockButton = ({ blockedUserId, name,status, globleCheckIsBlockedByMe,setI
     } catch (error) {
       console.log(error);
       setLoading(false)
+      commonLogout(dispatch)
     }
      }
   };

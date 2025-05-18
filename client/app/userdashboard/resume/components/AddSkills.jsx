@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDeleteOutline } from "react-icons/md";
 import ShowSkillsData from "./ShowSkillsData";
+import { commonLogout } from "../../components/common";
 
 const AddSkills = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [openProjectForm, setOpenProjectForm] = useState(false);
   const [projectData, setProjectData] = useState("");
@@ -25,6 +26,7 @@ const AddSkills = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {
@@ -85,6 +87,7 @@ const AddSkills = () => {
       //  setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -108,6 +111,7 @@ const AddSkills = () => {
       setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 

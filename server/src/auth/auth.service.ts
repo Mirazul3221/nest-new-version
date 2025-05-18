@@ -40,12 +40,14 @@ export class AuthService {
     private userModel: mongoose.Model<Reader>,
     @InjectModel(FriendRequest.name)
     private friendRequestModel: mongoose.Model<FriendRequestDocument>,
-    @InjectModel(SessionSchemaName) private sessionModel: mongoose.Model<Session>,
+    @InjectModel(SessionSchemaName)
+    private sessionModel: mongoose.Model<Session>,
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
   async register_user(
     createAuthDto: CreateAuthDto,
+    req,
   ): Promise<{ token: string; msg: string }> {
     const { name, email, password, location, role, status, balance } =
       createAuthDto;
@@ -76,17 +78,78 @@ export class AuthService {
         totalCountQuestions: allSubject,
         totalCountQuestionsId: [],
       });
-      const token = await this.jwtService.sign({
-        id: (await new_user)._id,
-        name: (await new_user).name,
-        profile: (await new_user).profile,
-        role: (await new_user).role,
-      }); //
-      return {
-        token,
-        msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
-      };
-      //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
+
+      ////////////////////////////////////////////////////////////////////////
+      // Inside your method
+      let ip =
+        req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+        req.socket?.remoteAddress || // fallback
+        req.ip; // fallback
+
+      if (ip?.startsWith('::ffff:')) {
+        ip = ip.replace('::ffff:', '');
+      }
+
+      if (
+        ip === '::1' ||
+        ip === '127.0.0.1' ||
+        ip.startsWith('192.168') ||
+        ip.startsWith('10.') ||
+        ip.startsWith('172.')
+      ) {
+        // For development fallback only, NOT in production
+        if (process.env.NODE_ENV !== 'production') {
+          ip = '8.8.8.8';
+        }
+      }
+
+      const sessionId = uuidv4();
+      const userAgent = req.headers['user-agent'];
+      const parser = new UAParser(userAgent);
+      const parsedUA = parser.getResult();
+      ///////////////////////////////////////////////////////////////////////////////////
+      try {
+        const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+        const data = geo.data;
+        const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+
+        const session = await this.sessionModel.create({
+          userId: new_user._id,
+          sessionId,
+          ipAddress: ip,
+          userAgent, // raw user-agent string
+          device: parsedUA.device.model || 'Unknown device',
+          browser: parsedUA.browser.name || 'Unknown browser',
+          os: parsedUA.os.name || 'Unknown OS',
+          location: geoLocation,
+          // location: (optional, set below if you use geo-IP),
+        });
+        ///////////////////////////////////////////////////////////////////////////////
+        // 🔻 Delete older sessions beyond the most recent 5
+        await this.sessionModel.deleteMany({
+          userId: new_user._id,
+          _id: {
+            $nin: await this.sessionModel
+              .find({ userId: new_user._id })
+              .sort({ createdAt: -1 }) // latest first
+              .limit(5)
+              .select('_id')
+              .then((docs) => docs.map((d) => d._id)),
+          },
+        });
+        const token = await this.jwtService.sign({
+          id: (await new_user)._id,
+          sessionId,
+          name: (await new_user).name,
+          profile: (await new_user).profile,
+          role: (await new_user).role,
+        }); //
+        return {
+          token,
+          msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
+        };
+        //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
+      } catch (error) {}
     }
   }
 
@@ -118,82 +181,80 @@ export class AuthService {
       await loginInfo.save(); // Save the updated location
     }
 
-    
     ////////////////////////////////////////////////////////////////////////
-// Inside your method
-let ip =
-  req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
-  req.socket?.remoteAddress || // fallback
-  req.ip; // fallback
+    // Inside your method
+    let ip =
+      req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+      req.socket?.remoteAddress || // fallback
+      req.ip; // fallback
 
-if (ip?.startsWith('::ffff:')) {
-  ip = ip.replace('::ffff:', '');
-}
+    if (ip?.startsWith('::ffff:')) {
+      ip = ip.replace('::ffff:', '');
+    }
 
-if (
-  ip === '::1' ||
-  ip === '127.0.0.1' ||
-  ip.startsWith('192.168') ||
-  ip.startsWith('10.') ||
-  ip.startsWith('172.')
-) {
-  // For development fallback only, NOT in production
-  if (process.env.NODE_ENV !== 'production') {
-    ip = '8.8.8.8';
-  }
-}
+    if (
+      ip === '::1' ||
+      ip === '127.0.0.1' ||
+      ip.startsWith('192.168') ||
+      ip.startsWith('10.') ||
+      ip.startsWith('172.')
+    ) {
+      // For development fallback only, NOT in production
+      if (process.env.NODE_ENV !== 'production') {
+        ip = '8.8.8.8';
+      }
+    }
 
-const sessionId = uuidv4();
-const userAgent = req.headers['user-agent'];
-const parser = new UAParser(userAgent);
-const parsedUA = parser.getResult();
-// Get location from IP
-try {
-    const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-  const data = geo.data;
-    const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
-  
-const session = await this.sessionModel.create({
-  userId: loginInfo._id,
-  sessionId,
-  ipAddress: ip,
-  userAgent, // raw user-agent string
-  device: parsedUA.device.model || 'Unknown device',
-  browser: parsedUA.browser.name || 'Unknown browser',
-  os: parsedUA.os.name || 'Unknown OS',
-  location:geoLocation
-  // location: (optional, set below if you use geo-IP),
-});
+    const sessionId = uuidv4();
+    const userAgent = req.headers['user-agent'];
+    const parser = new UAParser(userAgent);
+    const parsedUA = parser.getResult();
+    // Get location from IP
+    try {
+      const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+      const data = geo.data;
+      const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
 
-// 🔻 Delete older sessions beyond the most recent 5
-await this.sessionModel.deleteMany({
-  userId: loginInfo._id,
-  _id: { 
-    $nin: await this.sessionModel
-      .find({ userId: loginInfo._id })
-      .sort({ createdAt: -1 }) // latest first
-      .limit(5)
-      .select('_id')
-      .then((docs) => docs.map((d) => d._id)),
-  },
-});
+      const session = await this.sessionModel.create({
+        userId: loginInfo._id,
+        sessionId,
+        ipAddress: ip,
+        userAgent, // raw user-agent string
+        device: parsedUA.device.model || 'Unknown device',
+        browser: parsedUA.browser.name || 'Unknown browser',
+        os: parsedUA.os.name || 'Unknown OS',
+        location: geoLocation,
+        // location: (optional, set below if you use geo-IP),
+      });
 
-//////////////////////////////////////////////////////////////////////
+      // 🔻 Delete older sessions beyond the most recent 5
+      await this.sessionModel.deleteMany({
+        userId: loginInfo._id,
+        _id: {
+          $nin: await this.sessionModel
+            .find({ userId: loginInfo._id })
+            .sort({ createdAt: -1 }) // latest first
+            .limit(5)
+            .select('_id')
+            .then((docs) => docs.map((d) => d._id)),
+        },
+      });
 
-    // Create JWT token
-    const token = await this.jwtService.sign({
-      id: loginInfo._id,
-      sessionId,
-      name: loginInfo.name,
-      profile: loginInfo.profile,
-      role: loginInfo.role,
-    });
+      //////////////////////////////////////////////////////////////////////
 
-  return { token, message: 'User login success' };
-} catch (error) {
-  console.log(error)
-}
+      // Create JWT token
+      const token = await this.jwtService.sign({
+        id: loginInfo._id,
+        sessionId,
+        name: loginInfo.name,
+        profile: loginInfo.profile,
+        role: loginInfo.role,
+      });
 
+      return { token, message: 'User login success' };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //===================================

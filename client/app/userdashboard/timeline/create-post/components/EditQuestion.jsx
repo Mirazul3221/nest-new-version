@@ -11,6 +11,7 @@ import storeContext from "@/app/global/createContex";
 import Image from "next/image";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { commonLogout } from "@/app/userdashboard/components/common";
 
 const EditQuestion = ({Q}) => {
   const [subject, setSubject] = useState(Q.subject);
@@ -24,7 +25,7 @@ const EditQuestion = ({Q}) => {
   const [content, setContent] = useState(Q.content);
   const [rightAns, setRightAns] = useState(Q.rightAns);
   const [loading, setloading] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store,dispatch} = useContext(storeContext);
   const editor = useRef(null);
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
@@ -58,6 +59,7 @@ const EditQuestion = ({Q}) => {
       toast.error('Server error')
       setloading(false);
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   console.log(Q)

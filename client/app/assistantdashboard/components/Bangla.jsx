@@ -9,6 +9,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import Gallery from "./Gallery";
 import Image from "next/image";
 import loderImage from "@/public/loader.gif"
+import { commonLogout } from "@/app/userdashboard/components/common";
 const Bangla = () => {
   const editor = useRef(null);
   //=====All state related question value========================
@@ -16,7 +17,7 @@ const Bangla = () => {
   const [show,setShow] = useState(false)
   const [imageLoader,setImageLoader] = useState(false)
   const [isExam, setIsExam] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const [alert, setAlert] = useState("");
   const [loader, setLoader] = useState(false);
   //=============================================================
@@ -85,6 +86,7 @@ const Bangla = () => {
         setAlert("");
       }, 1000);
       //error.response.data.message
+      commonLogout(dispatch)
     }
   };
   //=================Handle multiple images================
@@ -107,6 +109,7 @@ const Bangla = () => {
    } catch (error) {
     console.log(error)
     setImageLoader(false)
+    commonLogout(dispatch)
    }
   }
 
@@ -122,6 +125,7 @@ const Bangla = () => {
       setImages(data)
      } catch (error) {
       console.log(error)
+      commonLogout(dispatch)
      }
    }
    getImages()

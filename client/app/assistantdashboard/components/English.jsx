@@ -8,13 +8,14 @@ import { englishTopicValue, examTypeValue } from "./data";
 import JoditEditorWrapper from "./joditEditor";
 import Gallery from "./Gallery";
 import { toast, ToastContainer } from "react-toastify";
+import { commonLogout } from "@/app/userdashboard/components/common";
 
 const English = () => {
   const editor = useRef(null);
   //=====All state related question value========================
   const [show, setShow] = useState(false);
   const [isExam, setIsExam] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store, dispatch } = useContext(storeContext);
   const [alert, setAlert] = useState("");
   const [loader, setLoader] = useState(false);
   //=============================================================
@@ -99,6 +100,7 @@ const English = () => {
       }, 1000);
       toast.error(error.response.data.message);
       //error.response.data.message
+      commonLogout(dispatch)
     }
   };
 

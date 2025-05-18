@@ -8,6 +8,7 @@ import HTMLReactParser from "html-react-parser";
 import React, { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import { useSocket } from "../../global/SocketProvider";
+import { commonLogout } from "../common";
 
 const MyCurrentMessage = ({
   id,
@@ -21,7 +22,7 @@ const MyCurrentMessage = ({
   desc,
   msg,
 }) => {
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const [msgStatus, setMsgStatus] = useState('sending...');
   const [loader, setLoader] = useState(false);
   const removeMsgRef = useRef(null);
@@ -75,6 +76,7 @@ const MyCurrentMessage = ({
     } catch (error) {
       setLoader(false);
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 

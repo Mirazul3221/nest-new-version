@@ -10,6 +10,7 @@ import storeContext from "@/app/global/createContex";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { commonLogout } from "@/app/userdashboard/components/common";
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
@@ -24,7 +25,7 @@ const AddQuestion = () => {
   const [rightAns, setRightAns] = useState("");
   const [loading, setloading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store , dispatch } = useContext(storeContext);
   const editor = useRef(null);
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
@@ -66,6 +67,7 @@ const AddQuestion = () => {
       toast.error(error.response.data);
       setloading(false);
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -85,6 +87,7 @@ const AddQuestion = () => {
       setContent(data);
     } catch (error) {
       setIsLoading(false);
+      commonLogout(dispatch)
     }
   };
   return (

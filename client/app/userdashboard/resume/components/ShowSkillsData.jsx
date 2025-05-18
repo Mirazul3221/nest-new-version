@@ -5,9 +5,10 @@ import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import { commonLogout } from "../../components/common";
 
 const ShowSkillsData = ({ item, setProjectData }) => {
-  const { store } = useStore();
+  const { store ,dispatch} = useStore();
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
   const [isOpenDeleteWindow, setIsOpenDeleteWindow] = useState(false);
   const [skillName, setSkillName] = useState(false);
@@ -31,6 +32,7 @@ const ShowSkillsData = ({ item, setProjectData }) => {
       setIsOpenFormWindow(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ const ShowSkillsData = ({ item, setProjectData }) => {
       );
       setProjectData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   return (
     <div>

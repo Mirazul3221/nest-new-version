@@ -11,6 +11,7 @@ import OnlyCard from "../components/OnlyCard";
 import { useStore } from "@/app/global/DataProvider";
 import { RiSendPlaneLine } from "react-icons/ri";
 import moment from "moment";
+import { commonLogout } from "../../components/common";
 
 const Page = () => {
   const [question, setQuestion] = useState();
@@ -32,7 +33,7 @@ const Page = () => {
     fetchMyData();
   }, []);
   //////////////////////////////////////////////////////////////////////////////////////////////
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
@@ -72,6 +73,7 @@ const Page = () => {
       scrollToBottom();
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -98,6 +100,7 @@ const Page = () => {
       setMessage("");
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   console.log(totalComments);

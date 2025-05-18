@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { IoPersonAdd } from "react-icons/io5";
 import { useSocket } from "../../global/SocketProvider";
 import { useStore } from "@/app/global/DataProvider";
+import { commonLogout } from "../../components/common";
 
 const ProfileCard = ({ id }) => {
   const { dispatch, store } = useStore();
@@ -43,6 +44,7 @@ const ProfileCard = ({ id }) => {
         setSendFriend(requesID.data.some((id) => id === data._id));
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     }
     fetchData();
@@ -61,7 +63,7 @@ const ProfileCard = ({ id }) => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   ////////////////////////////////////////////////////////////////////
   const friendRequestApi = async (recipient) => {
@@ -81,6 +83,7 @@ const ProfileCard = ({ id }) => {
       setFriendLoading(false);
       handleNotification(recipient);
     } catch (error) {
+      commonLogout(dispatch)
       // toast.error(error.response.data.message);
     }
   };
@@ -111,6 +114,7 @@ const ProfileCard = ({ id }) => {
     setLoader(false);
     const friendExist = data?.some((f) => f === id);
     setMyFriend(friendExist);
+    commonLogout(dispatch)
   };
   useEffect(() => {
     allFriendId();
@@ -132,6 +136,7 @@ const ProfileCard = ({ id }) => {
       );
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   return (

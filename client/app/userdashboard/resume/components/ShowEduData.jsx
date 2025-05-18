@@ -19,13 +19,14 @@ import {
   ssc_dakhil_oLevel_cambridge_SSC_equivalent_hsc_alim_business_management,
   ssc_vocational__dakhil_vocational,
 } from "./data";
+import { commonLogout } from "../../components/common";
 
 const ShowEduData = ({ edu, setEducationData }) => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenDeleteWindow, setIsOpenDeleteWindow] = useState(false);
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
-    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   /////////////////////////////////////////////////////////////////////
   const [educationLevel, setEducationLevel] = useState("Secondary");
   const [examination, setExamination] = useState("S.S.C");
@@ -52,22 +53,24 @@ const ShowEduData = ({ edu, setEducationData }) => {
       );
       setEducationData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {}
+    } catch (error) {
+      commonLogout(dispatch);
+    }
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   const handleOpenFormWindow = () => {
-    edu?.educationLevel &&  setEducationLevel(edu?.educationLevel)
-    edu?.examination &&  setExamination(edu?.examination)
-    edu?.subject &&  setSubject(edu?.subject)
-    edu?.board &&  setBoard(edu?.board)
-    edu?.result &&  setResult(edu?.result)
-    edu?.gpa &&  setGpa(edu?.gpa)
-    edu?.instValue &&  setInstValue(edu?.instValue)
-    edu?.passingYear &&  setPassingYear(edu?.passingYear)
-    edu?.courseDuration &&  setCourseDuration(edu?.courseDuration)
-    setIsOpenFormWindow(true)
-  }
+    edu?.educationLevel && setEducationLevel(edu?.educationLevel);
+    edu?.examination && setExamination(edu?.examination);
+    edu?.subject && setSubject(edu?.subject);
+    edu?.board && setBoard(edu?.board);
+    edu?.result && setResult(edu?.result);
+    edu?.gpa && setGpa(edu?.gpa);
+    edu?.instValue && setInstValue(edu?.instValue);
+    edu?.passingYear && setPassingYear(edu?.passingYear);
+    edu?.courseDuration && setCourseDuration(edu?.courseDuration);
+    setIsOpenFormWindow(true);
+  };
   ////////////////////////////////////////////////////////////////////////////////////////////////
   const [checked, setChecked] = useState(false);
   const handleChange = () => {
@@ -106,52 +109,60 @@ const ShowEduData = ({ edu, setEducationData }) => {
   };
 
   const handleEditResumeForm = async (e) => {
-        e.preventDefault()
-        const payload = {
-          educationLevel,
-          examination,
-          subject,
-          board,
-          result,
-          instValue,
-          foreignIns,
-          foreignCountry,
-          gpa,
-          courseDuration,
-          passingYear,
-        };
-  
-        // Filter out fields with falsy values (e.g., "", null, undefined)
-        const filteredPayload = Object.fromEntries(
-          Object.entries(payload).filter(
-            ([_, value]) => value !== "" && value !== null && value !== undefined
-          )
-        );
-         const { data } = await axios.post(
-           `${baseurl}/user-resume/update-education`,
-           {eduId:edu?.id,filteredPayload},
-           {
-             headers: {
-               Authorization: `Bearer ${store.token}`,
-             },
-           }
-         );
+    e.preventDefault();
 
-         data?.educationLevel && (edu.educationLevel = data?.educationLevel);
-         data?.examinatdata && (edu.examination = data?.examinatdata);
-         data?.subject && (edu.subject= data?.subject);
-         data?.board && (edu.board =  data?.board);
-         data?.result && (edu.result = data?.result);
-         data?.gpa && (edu.gpa = data?.gpa);
-         data?.instValue && (edu.instValue = data?.instValue);
-         data?.passingYear && (edu.passingYear = data?.passingYear);
-         data?.courseDuration && (edu.courseDuration = data?.courseDuration);
-         setIsOpenFormWindow(false)
+    try {
+      const payload = {
+        educationLevel,
+        examination,
+        subject,
+        board,
+        result,
+        instValue,
+        foreignIns,
+        foreignCountry,
+        gpa,
+        courseDuration,
+        passingYear,
+      };
+
+      // Filter out fields with falsy values (e.g., "", null, undefined)
+      const filteredPayload = Object.fromEntries(
+        Object.entries(payload).filter(
+          ([_, value]) => value !== "" && value !== null && value !== undefined
+        )
+      );
+      const { data } = await axios.post(
+        `${baseurl}/user-resume/update-education`,
+        { eduId: edu?.id, filteredPayload },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+
+      data?.educationLevel && (edu.educationLevel = data?.educationLevel);
+      data?.examinatdata && (edu.examination = data?.examinatdata);
+      data?.subject && (edu.subject = data?.subject);
+      data?.board && (edu.board = data?.board);
+      data?.result && (edu.result = data?.result);
+      data?.gpa && (edu.gpa = data?.gpa);
+      data?.instValue && (edu.instValue = data?.instValue);
+      data?.passingYear && (edu.passingYear = data?.passingYear);
+      data?.courseDuration && (edu.courseDuration = data?.courseDuration);
+      setIsOpenFormWindow(false);
+    } catch (error) {
+      commonLogout(dispatch);
+    }
   };
   return (
     <div>
       {isOpenFormWindow ? (
-        <form onSubmit={handleEditResumeForm} className="my-4 bg-gray-100 md:p-10 border rounded-md">
+        <form
+          onSubmit={handleEditResumeForm}
+          className="my-4 bg-gray-100 md:p-10 border rounded-md"
+        >
           <h2 className="text-2xl ml-auto w-fit">Editable field</h2>
           <div>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
@@ -163,7 +174,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                 >
                   Level of Education
                 </label>
-                <select required
+                <select
+                  required
                   value={educationLevel}
                   onChange={handleEducationLevel}
                   className="w-full border outline-none rounded-md py-2 px-4"
@@ -187,7 +199,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Examination
                   </label>
-                  <select required
+                  <select
+                    required
                     onChange={handleExamination}
                     value={examination}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -312,7 +325,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       Board*
                     </label>
                     <select
-                      value={board} required
+                      value={board}
+                      required
                       onChange={(e) => setBoard(e.target.value)}
                       className="w-full border outline-none rounded-md py-2 px-4"
                     >
@@ -334,7 +348,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Subject/Group/Degree
                   </label>
-                  <select required
+                  <select
+                    required
                     onChange={handleSubGroupDegree}
                     value={subject}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -514,7 +529,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                     >
                       University/Inst.
                     </label>
-                    <input required
+                    <input
+                      required
                       type="text"
                       value={instValue}
                       onChange={handleChangeInstValue}
@@ -591,7 +607,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       >
                         Institute Name***
                       </label>
-                      <input required
+                      <input
+                        required
                         onChange={(e) => setForeignIns(e.target.value)}
                         value={foreignIns}
                         type="text"
@@ -607,7 +624,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                       >
                         Country of Foreign University
                       </label>
-                      <input required
+                      <input
+                        required
                         onChange={(e) => setForeignCountry(e.target.value)}
                         value={foreignCountry}
                         type="text"
@@ -632,7 +650,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   Result
                 </label>
                 <div className="flex justify-between gap-2 items-center">
-                  <select required
+                  <select
+                    required
                     value={result}
                     onChange={(e) => setResult(e.target.value)}
                     className="w-full border outline-none rounded-md py-2 px-4"
@@ -685,7 +704,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                   >
                     Passing Year
                   </label>
-                  <input required
+                  <input
+                    required
                     value={passingYear}
                     onChange={(e) => setPassingYear(e.target.value)}
                     className="border w-full outline-none rounded-md py-[6px] px-4"
@@ -702,7 +722,8 @@ const ShowEduData = ({ edu, setEducationData }) => {
                     >
                       Course Duration
                     </label>
-                    <input required
+                    <input
+                      required
                       value={courseDuration}
                       onChange={(e) => setCourseDuration(e.target.value)}
                       className="border w-full outline-none rounded-md py-[6px] px-4"
@@ -713,20 +734,20 @@ const ShowEduData = ({ edu, setEducationData }) => {
               </div>
             </div>
           </div>
-         <div className="flex gap-2 items-center">
-         <button 
-           onClick={()=> setIsOpenFormWindow(false)}
-            class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          >
-            Cancel
-          </button>
-         <button
-            type="submit"
-            class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-          >
-            {isLoading ? "Loading..." : "Save change"}
-          </button>
-         </div>
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setIsOpenFormWindow(false)}
+              class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            >
+              {isLoading ? "Loading..." : "Save change"}
+            </button>
+          </div>
         </form>
       ) : (
         <div className="data mt-10 md:border-2 md:border-gray-200 text-gray-700  md:px-6 md:py-10">

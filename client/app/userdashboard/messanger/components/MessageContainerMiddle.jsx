@@ -25,6 +25,7 @@ import VoiceRecorder from "./VoiceRecorder";
 import MessagePlayer from "./MessagePlayer";
 import { showNotification } from "../../global/UseBrowserNotification";
 import BlockButton from "../../components/messanger/BlockButton";
+import { commonLogout } from "../../components/common";
 const Middle = ({
   id,
   userDetails,
@@ -46,7 +47,7 @@ const Middle = ({
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
-  const { store } = useStore();
+  const { store,dispatch:dps } = useStore();
   const { socket } = useSocket();
   const currentMessages = useRef([]);
 
@@ -60,7 +61,7 @@ const Middle = ({
           },
         });
         dispatch({ type: "fetch-message", payload: data });
-      } catch (error) {}
+      } catch (error) {commonLogout(dps)}
     }
     // fetchMessage();
   }, [id]);
@@ -392,6 +393,7 @@ const Middle = ({
       );
     } catch (error) {
       console.log(error);
+      commonLogout(dps)
     }
     if (store.userInfo.id !== msg.senderId) {
       socket && socket.emit("sendEmojiInMessage", emojiElements);
@@ -505,6 +507,7 @@ const Middle = ({
           "Error uploading file:",
           error.response?.data || error.message
         );
+        commonLogout(dps)
       }
     } else {
       console.log("No file selected.");
@@ -579,6 +582,7 @@ const Middle = ({
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
+      commonLogout(dps);
     } finally {
       setLoading(false);
     }
@@ -624,6 +628,7 @@ const Middle = ({
       setIsBlockedByHim(data);
     } catch (error) {
       console.log(error);
+      commonLogout(dps)
     }
   };
 
@@ -662,6 +667,7 @@ const Middle = ({
       setIsBlockedByMe(data);
     } catch (error) {
       console.log(error);
+      commonLogout(dps)
     }
   };
   useEffect(() => {
@@ -687,6 +693,7 @@ const Middle = ({
     } catch (error) {
       console.log(error);
       setLoadingBlc(false);
+      commonLogout(dps)
     }
   };
 

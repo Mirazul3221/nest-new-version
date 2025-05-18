@@ -20,7 +20,7 @@ import { GrDocumentText } from "react-icons/gr";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useStore } from "../global/DataProvider";
-import { myDetailsApi, profileApi } from "./components/common";
+import { commonLogout, myDetailsApi } from "./components/common";
 import VerticleBanner from "../adsterra/VerticleBanner";
 // import Image from "next/image";
 // import logo from "@/public/bcs-logo.png"
@@ -72,7 +72,7 @@ const UserDashboard = () => {
             Authorization: `Bearer ${store.token}`,
           },
         });
-      } catch (error) {}
+      } catch (error) {commonLogout(dispatch)}
     };
     updateUserData();
   }, []);
@@ -101,7 +101,6 @@ const UserDashboard = () => {
             },
           }
         );
-    console.log(data)
         dispatch({type:'PendingFriend', payload:data})
         //====================================================================================
         //====================================================================================
@@ -117,6 +116,7 @@ const UserDashboard = () => {
        dispatch({type:'AcceptedFriend', payload:accepted.data})
       } catch (error) {
         //   setLoader(false);
+        commonLogout(dispatch)
       }
     }
 

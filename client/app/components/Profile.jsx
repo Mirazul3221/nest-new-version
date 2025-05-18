@@ -4,9 +4,10 @@ import { ImCamera } from "react-icons/im";
 import storeContext from "../global/createContex";
 import axios from "axios";
 import { baseurl } from "../config";
+import { commonLogout } from "../userdashboard/components/common";
 const Profile = ({ profile}) => {
   const [imageUrl, setImageUrl] = useState("");
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const handleImg =async (e) => {
     if (e.target.files.length > 0) {
       setImageUrl(URL.createObjectURL(e.target.files[0]));
@@ -24,6 +25,7 @@ try {
       });
 } catch (error) {
   console.log(error)
+  commonLogout(dispatch)
 }
   }
   return (

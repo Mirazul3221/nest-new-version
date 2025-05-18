@@ -23,6 +23,7 @@ import CurrentMessage from "../../messanger/components/CurrentMessage";
 import VoiceRecorder from "../../messanger/components/VoiceRecorder";
 import MessagePlayer from "../../messanger/components/MessagePlayer";
 import BlockButton from "./BlockButton";
+import { commonLogout } from "../common";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -33,7 +34,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
-  const { store } = useStore();
+  const { store,dispatch:storeDispatch } = useStore();
   const { socket } = useSocket();
   const currentMessages = useRef([]);
   const groupMessages = groupMessagesBysender(messanger.message);
@@ -251,6 +252,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       );
     } catch (error) {
       console.log(error);
+      commonLogout(storeDispatch)
     }
     if (store.userInfo.id !== msg.senderId) {
       socket && socket.emit("sendEmojiInMessage", emojiElements);
@@ -365,6 +367,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           "Error uploading file:",
           error.response?.data || error.message
         );
+         commonLogout(storeDispatch)
       }
     } else {
       console.log("No file selected.");
@@ -434,6 +437,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
+       commonLogout(storeDispatch)
     } finally {
       setLoading(false);
     }
@@ -470,6 +474,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       setIsBlockedByHim(data);
     } catch (error) {
       console.log(error);
+       commonLogout(storeDispatch)
     }
   };
 
@@ -505,6 +510,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     setIsBlockedByMe(data);
     } catch (error) {
       console.log(error);
+       commonLogout(storeDispatch)
     }
   };
   useEffect(() => {
@@ -525,6 +531,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     } catch (error) {
       console.log(error);
       setLoadingBlc(false)
+       commonLogout(storeDispatch)
     }
   };
 

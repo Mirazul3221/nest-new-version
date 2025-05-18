@@ -5,11 +5,12 @@ import { baseurl } from "@/app/config";
 import axios from "axios";
 import storeContext from "@/app/global/createContex";
 import JoditEditorWrapper from "../../joditEditor";
+import { commonLogout } from "@/app/userdashboard/components/common";
 
 const EditEnglish = ({ setSwitcher, editQuestion }) => {
   const editor = useRef(null);
   //=====All state related question value========================
-  const { store } = useContext(storeContext);
+  const { store, dispatch } = useContext(storeContext);
   const [alert, setAlert] = useState("");
   const [loader, setLoader] = useState(false);
   //=============================================================
@@ -48,10 +49,8 @@ const EditEnglish = ({ setSwitcher, editQuestion }) => {
     } catch (error) {
       setLoader(false);
       setAlert(error.response.data.message);
-      setTimeout(() => {
-        setAlert("");
-      }, 1000);
       //error.response.data.message
+      commonLogout(dispatch)
     }
   };
 

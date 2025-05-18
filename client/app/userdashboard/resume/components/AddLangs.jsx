@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdDeleteOutline } from "react-icons/md";
 import ShowLangsData from "./ShowLangsData";
+import { commonLogout } from "../../components/common";
 
 const AddLangs = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [openProjectForm, setOpenProjectForm] = useState(false);
   const [checkBio, setCheckBio] = useState(null);
@@ -35,6 +36,7 @@ const AddLangs = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {
@@ -93,6 +95,7 @@ const AddLangs = () => {
       //  setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -116,6 +119,7 @@ const AddLangs = () => {
       setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
   return (

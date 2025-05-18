@@ -18,6 +18,8 @@ import lodingImage from "@/public/wating.gif";
 import Image from "next/image";
 import Footer from "@/app/components/Footer";
 import SuperHeader from "@/app/userdashboard/components/SuperHeader";
+import { useRouter } from "next/navigation";
+import { commonLogout } from "@/app/userdashboard/components/common";
 const Page = () => {
   // const [navValue, setNaveValue] = useState("home");
   const [title, setTitle] = useState("");
@@ -27,7 +29,8 @@ const Page = () => {
   const [subSwitcher, setSubSwitcher] = useState(false);
   const [loadingGif, setLoadingGif] = useState(false);
   //==============API====================
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
+   const route = useRouter();
   const [data, setData] = useState(null);
   const [count, setCount] = useState(null);
   // useEffect(() => {
@@ -68,6 +71,7 @@ const Page = () => {
       setData(data);
     } catch (error) {
       setLoadingGif(false);
+      commonLogout(dispatch,route)
     }
   };
 

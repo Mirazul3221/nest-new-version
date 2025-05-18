@@ -15,11 +15,10 @@ import ProfileCard from "./ProfileCard";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { CountQuestionsCollection } from "../../global/common";
 import { useEffect } from "react";
-import { profileApi } from "../../components/common";
+import { commonLogout, profileApi } from "../../components/common";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
-  const { store } = useContext(storeContext);
-  const [allQuestions, setAllQuestions] = useState();
+  const { store,dispatch } = useContext(storeContext);
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
   const [profileContainer, setProfileContainer] = useState(false);
@@ -108,6 +107,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       setDelete(false);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 

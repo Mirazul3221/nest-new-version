@@ -11,9 +11,10 @@ import {
   } from "react-icons/fa";
 import { LuShare2 } from 'react-icons/lu';
 import '../components/likeButtonAnimation.css'
+import { commonLogout } from '../../components/common';
 const LikeCommentShare = ({question}) => {
     const [putLike, setPutLike] = useState(false); 
-    const {store} = useStore();
+    const {store,dispatch} = useStore();
     //////////////////////////////////////////////////////////////////////
       ////////////////notification api////////////////////////
   const handleNotification = async (type) => {
@@ -41,7 +42,7 @@ const LikeCommentShare = ({question}) => {
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   const handleSendLike = useCallback(async () => {
@@ -60,6 +61,7 @@ const LikeCommentShare = ({question}) => {
         handleNotification("like-question");
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   }, []);
   return (

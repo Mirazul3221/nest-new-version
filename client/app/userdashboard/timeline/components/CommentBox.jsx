@@ -26,10 +26,11 @@ import { imojis } from "../../components/imoji";
 import { BiCross } from "react-icons/bi";
 import { formatRelativeTime } from "./common";
 import CommentProfile from "./CommentProfile";
+import { commonLogout } from "../../components/common";
 const CommentBox = ({ question }) => {
   console.log(question)
   if(!question) return
-  const { store } = useContext(storeContext);
+  const { store ,dispatch} = useContext(storeContext);
   const { socket } = useSocket();
   // const sortComments = question?.comments.sort(
   //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -90,7 +91,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   const handleSendLike = useCallback(async () => {
@@ -110,6 +111,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         handleNotification("like-question");
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   }, []);
   const handleSendComment = useCallback(async () => {
@@ -129,6 +131,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
       setMessage("");
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   }, [message, comments]);
 

@@ -18,7 +18,9 @@ export class LoginstatusService {
 
     return `This action returns all loginstatus`;
   }
-  remove(id: number) {
-    return `This action removes a #${id} loginstatus`;
+
+async remove(id: string) {
+   await this.sessionModel.findByIdAndDelete({_id:id})
+    return `Done!`;
   }
 }

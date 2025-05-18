@@ -8,9 +8,10 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { MdDeleteOutline } from "react-icons/md";
 import EditEnglish from "./update/English";
 import { toast, ToastContainer } from "react-toastify";
+import { commonLogout } from "@/app/userdashboard/components/common";
 
 const English = () => {
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const [data, setData] = useState(null);
   const [singleData, setSingleData] = useState(null);
   const [switcher, setSwitcher] = useState(true);
@@ -28,6 +29,7 @@ const English = () => {
         setData(data);
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     }
     fetchData();
@@ -46,6 +48,7 @@ const English = () => {
       } catch (error) {
         // setSwitcher(true)
         console.log(error);
+        commonLogout(dispatch)
       }
     }
     if (id !== null) {
@@ -69,6 +72,7 @@ const English = () => {
   } catch (error) {
     // setSwitcher(true)
     console.log(error);
+    commonLogout(dispatch)
   }
   } 
  }

@@ -2,8 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { baseurl } from "../config";
+import { baseurl, viewurl } from "../config";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Logo from "./Logo";
@@ -11,7 +10,6 @@ import loaderImg from "@/public/loader.gif";
 import Image from "next/image";
 import { useStore } from "../global/DataProvider";
 const InputForm = () => {
-  const router = useRouter();
   const {dispatch} = useStore()
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
@@ -61,10 +59,7 @@ const InputForm = () => {
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
-      setTimeout(() => {
-        router.push("/userdashboard/timeline/friends-question");
-      }, 100);
-       console.log(data)
+      window.location.href = `${viewurl}/userdashboard/timeline/friends-question`
       setLoader(false)
     } catch (error) {
       console.log(error);

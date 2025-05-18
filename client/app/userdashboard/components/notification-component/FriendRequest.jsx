@@ -4,10 +4,11 @@ import axios from "axios";
 import moment from "moment";
 import React, { useContext, useState } from "react";
 import { useSocket } from "../../global/SocketProvider";
+import { commonLogout } from "../common";
 
 const FriendRequest = ({item}) => {
     const [closeContainer,setCloseContainer] = useState(false)
-    const { store  } = useContext(storeContext);
+    const { store, dispatch } = useContext(storeContext);
     const {socket} = useSocket()
     const handleAcceptRequest = async (item) => {
         try {
@@ -21,6 +22,7 @@ const FriendRequest = ({item}) => {
          setCloseContainer(true)
         } catch (error) {
           console.log(error);
+          commonLogout(dispatch)
         }
       };
 
@@ -42,7 +44,7 @@ const FriendRequest = ({item}) => {
           Authorization: `Bearer ${store?.token}`,
         },
       });
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   ///////////////////////////////////////////////Cancel friend request//////////////////////////////////////////
   const cancleFriendRequest = async (item) => {
@@ -65,6 +67,7 @@ const FriendRequest = ({item}) => {
           setCloseContainer(true) 
        } catch (error) {
         console.log(error)
+        commonLogout(dispatch)
        }
   };
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import Editor from "./Editor";
 import axios from "axios";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { commonLogout } from "../../components/common";
 
 const AddSummary = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [projectData, setProjectData] = useState("");
   const [openBtn, setOpenBtn] = useState("");
@@ -25,6 +26,7 @@ const AddSummary = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {

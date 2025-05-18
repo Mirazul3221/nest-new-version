@@ -9,9 +9,10 @@ import storeContext from '@/app/global/createContex';
 import moment from 'moment';
 import { useSocket } from '../../global/SocketProvider';
 import CommentProfile from './CommentProfile';
+import { commonLogout } from '../../components/common';
 
 const CommentsContainer = ({setOpenCommentsBox,question}) => {
-    const { store } = useContext(storeContext);
+    const { store,dispatch } = useContext(storeContext);
     const {socket} = useSocket();
     const messangerRef = useRef(null);
     const [message, setMessage] = useState("");
@@ -51,6 +52,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
             scrollToBottom()
           } catch (error) {
             console.log(error);
+            commonLogout(dispatch)
           }
     }
 
@@ -87,6 +89,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         handleNotification("comment-question");
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     }
 
@@ -117,7 +120,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   return (
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">

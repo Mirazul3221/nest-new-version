@@ -3,9 +3,10 @@ import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { commonLogout } from "../../components/common";
 
 const AddBio = () => {
-  const { store } = useStore();
+  const { store ,dispatch} = useStore();
   const [bio, setBio] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState("");
@@ -51,6 +52,7 @@ const AddBio = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
 
@@ -73,6 +75,7 @@ const AddBio = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      commonLogout(dispatch)
     }
   };
 
@@ -105,6 +108,7 @@ const AddBio = () => {
       setEditBio(false);
     } catch (error) {
       setIsLoading(false);
+      commonLogout(dispatch)
     }
   };
 /////////////////////////////////////////////////////////////////////

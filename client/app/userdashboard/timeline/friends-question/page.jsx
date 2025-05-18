@@ -14,12 +14,11 @@ import { FiFileText } from "react-icons/fi";
 import { LuLogOut } from "react-icons/lu";
 import { BsCardText } from "react-icons/bs";
 import VerticleBanner from "@/app/adsterra/VerticleBanner";
-import MobileBanner from "@/app/adsterra/MobileBanner320";
-import { useRouter } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 import NearbyUserProfileCard from "../../components/NearbyUserProfileCard";
 import { PiBookOpenTextDuotone } from "react-icons/pi";
 import { TiDocumentText } from "react-icons/ti";
+import { commonLogout } from "../../components/common";
 const Page = () => {
   const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -45,6 +44,7 @@ const Page = () => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
+        commonLogout(dispatch)
       }
     };
 
@@ -70,6 +70,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      commonLogout(dispatch)
     } finally {
       setIsLoading(false);
     }
@@ -99,6 +100,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      commonLogout(dispatch)
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +137,6 @@ const Page = () => {
     setMyDetails(JSON.parse(localStorage.getItem("myDetails")));
   }, []);
 
-  const route = useRouter();
   const logout = () => {
     dispatch({ type: "logout" });
     route.push("/login");
@@ -164,9 +165,9 @@ const Page = () => {
             <img
               className="w-10 rounded-full"
               src={myDetails?.profile}
-              alt={store.userInfo.name}
+              alt={store?.userInfo?.name}
             />
-            <h2 className="font-bold">{store.userInfo.name}</h2>
+            <h2 className="font-bold">{store?.userInfo?.name}</h2>
           </a>
 
           {/* Sidebar Links */}
@@ -263,7 +264,7 @@ const Page = () => {
       <div className="md:w-6/12">
         <NearbyUserProfileCard />
         <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
-          <img className="w-16 rounded-full" src={store.userInfo.profile} alt={store.userInfo.name} />
+          <img className="w-16 rounded-full" src={store?.userInfo?.profile} alt={store?.userInfo?.name} />
           <a className="text-gray-700 text-lg font-semibold" href="/userdashboard/timeline/create-post">
             Share a question with your friends
           </a>

@@ -8,8 +8,9 @@ import { useSearchParams } from "next/navigation";
 import { getHighlightedText } from "../resume/components/data";
 import { BiSearch } from "react-icons/bi";
 import Link from "next/link";
+import { commonLogout } from "./common";
 const Search = () => {
-  const { store } = useStore();
+  const { store ,dispatch} = useStore();
   const searchParams = useSearchParams();
   const queryVal = searchParams.get("q");
   const searchPinVal = searchParams.get("pin");
@@ -52,6 +53,7 @@ const Search = () => {
       } catch (err) {
         console.error("Error fetching suggestions:", err);
         setFetchLoading(false);
+        commonLogout(dispatch)
       }
     };
 

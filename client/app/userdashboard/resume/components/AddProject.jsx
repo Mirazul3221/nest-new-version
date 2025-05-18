@@ -7,9 +7,10 @@ import { useStore } from "@/app/global/DataProvider";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ShowProjectData from "./ShowProjectData";
 import { MdDeleteOutline } from "react-icons/md";
+import { commonLogout } from "../../components/common";
 
 export default function AddProject() {
-  const { store } = useStore();
+  const { store ,dispatch} = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [openProjectForm, setOpenProjectForm] = useState(false);
@@ -28,6 +29,7 @@ export default function AddProject() {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {
@@ -93,7 +95,7 @@ export default function AddProject() {
         },
       ]);
       setOpenProjectForm(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   const reHandleFormValue = async (e) => {
     e.preventDefault();
@@ -115,7 +117,7 @@ export default function AddProject() {
         },
       ]);
       setOpenProjectForm(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   console.log(projectData)

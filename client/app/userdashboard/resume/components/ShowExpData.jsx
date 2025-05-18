@@ -6,9 +6,10 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import Editor from "./Editor";
 import HTMLReactParser from "html-react-parser";
+import { commonLogout } from "../../components/common";
 
 const ShowExpData = ({ exp, setExperienceData }) => {
-  const { store } = useStore();
+  const { store, dispatch } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
   const [isOpenDeleteWindow, setIsOpenDeleteWindow] = useState(false);
@@ -55,7 +56,7 @@ const ShowExpData = ({ exp, setExperienceData }) => {
       );
       setExperienceData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +130,7 @@ const ShowExpData = ({ exp, setExperienceData }) => {
     data?.linkToWork && (exp.linkToWork = data?.linkToWork);
     data?.editorContent && (exp.editorContent = data?.editorContent);
     setIsOpenFormWindow(false);
+    commonLogout(dispatch)
   };
   return (
     <div>

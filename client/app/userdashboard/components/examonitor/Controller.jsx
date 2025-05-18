@@ -42,6 +42,7 @@ import telegram from "@/public/share-icone/telegram.png"
 import twitter from "@/public/share-icone/twitter.png"
 import pinterest from "@/public/share-icone/pinterast.png"
 import { CountQuestionsCollection } from "../../global/common";
+import { commonLogout } from "../common";
 
 const Controller = ({
   getLocalVal,
@@ -54,7 +55,7 @@ const Controller = ({
   isSaveInHistory,
   setMark
 }) => {
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const [countReadingQuestion, setCountReadingQuestion] = useState(0);
   //Here is the statement about correct and inCorrect ans
   //Here is thatement about negitive and positive marks
@@ -183,6 +184,7 @@ const Controller = ({
     })
   } catch (error) {
     console.log(error)
+    commonLogout(dispatch)
   }
   
     }
@@ -277,6 +279,7 @@ const Controller = ({
     } catch (error) {
       setSaveQueLoader(false);
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 
@@ -292,6 +295,7 @@ const Controller = ({
         setSaveQue(data);
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     }
     fetchData();

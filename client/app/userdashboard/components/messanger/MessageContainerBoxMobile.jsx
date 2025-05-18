@@ -14,6 +14,7 @@ import { GrRotateRight } from "react-icons/gr";
 import { LiaTimesSolid } from "react-icons/lia";
 import MessageBar from "./MessageBar";
 import { useMessage } from "../../global/messageProvider";
+import { commonLogout } from "../common";
 
 const MessageContainerBoxMobile = ({
   sortedMessages,
@@ -26,7 +27,7 @@ const MessageContainerBoxMobile = ({
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [hiddenNumber, setHiddenNumber] = useState(false);
-  const { store } = useStore();
+  const { store,dispatch:storeDispatch } = useStore();
     const { dispatch } = useMessage();
   const updateUnseenMessage = async (id) => {
     try {
@@ -43,6 +44,7 @@ const MessageContainerBoxMobile = ({
     } catch (error) {
       console.log(error);
       setLoading(false);
+      commonLogout(storeDispatch)
     }
   };
 

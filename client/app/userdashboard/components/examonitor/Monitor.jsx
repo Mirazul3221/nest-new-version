@@ -8,6 +8,7 @@ import PaginationNumber from "./PaginationNumber";
 import axios from "axios";
 import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
+import { commonLogout } from "../common";
 
 
 const Monitor = ({ questions,megaQuestions,isSave ,isSaveInHistory,pagination = 'yes' }) => {
@@ -23,7 +24,7 @@ const Monitor = ({ questions,megaQuestions,isSave ,isSaveInHistory,pagination = 
   const [wrong,setWrong] = useState(0)
   const [getLocalVal,setGetLocalVal] = useState('')
 const [getRobot,setGetRobotic] = useState('on')
-const { store } = useContext(storeContext);
+const { store, dispatch} = useContext(storeContext);
   useEffect(() => {
     setGetLocalVal(localStorage.getItem("setrandom"))
     setGetRobotic(localStorage.getItem("robot"))
@@ -69,7 +70,7 @@ const { store } = useContext(storeContext);
         }
       );
      } catch (error) {
-      
+      commonLogout(dispatch)
      }
    }//
 

@@ -6,9 +6,10 @@ import { useEffect } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ShowExpData from "./ShowExpData";
 import Editor from "./Editor";
+import { commonLogout } from "../../components/common";
 
 const AddExperience = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [experienceData, setExperienceData] = useState([]);
@@ -98,6 +99,7 @@ const AddExperience = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      commonLogout(dispatch)
     }
   };
 
@@ -115,6 +117,7 @@ const AddExperience = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {

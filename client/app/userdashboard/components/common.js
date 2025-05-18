@@ -47,3 +47,8 @@ export const profileApi =async (token,id) => {
     return false;
   }
 }
+
+ export const commonLogout =async (dispatch) => {
+   await dispatch({ type: "logout" });
+   window.location.href ='/login'
+  };

@@ -20,6 +20,7 @@ import { useSocket } from "../../global/SocketProvider";
 import CallMessageContainer from "../../components/messanger/CallMessageContainer";
 import AddAndDeleteFriendRequestButton from "../../components/messanger/components/AddAndDeleteFriendRequestButton";
 import { CiUser } from "react-icons/ci";
+import { commonLogout } from "../../components/common";
 
 const Page = () => {
   const pram = useParams();
@@ -31,7 +32,7 @@ const Page = () => {
   const [loderReq, setLoaderReq] = useState(false);
   const [openMessangerBox, setOpenMessangerBox] = useState(true);
   const [openMessangerBox1, setOpenMessangerBox1] = useState(false);
-  const { store } = useContext(storeContext);
+  const { store,dispatch } = useContext(storeContext);
   const { socket, myActiveFriends } = useSocket();
   useEffect(() => {
     const fetchUser = async () => {
@@ -72,6 +73,7 @@ const Page = () => {
       } catch (error) {
         //   setLoader(false);
         console.log(error);
+        commonLogout(dispatch)
       }
     };
     fetchUser();
@@ -90,6 +92,7 @@ const Page = () => {
     );
     someOfMyFriend(id);
     setSomeFriendProfileAndId(someFriendsProfileAndId.data);
+    commonLogout(dispatch)
   };
   //=======================================================
   //=======================================================
@@ -104,6 +107,7 @@ const Page = () => {
       }
     );
     setSomeOfMyFriendDetails(someFriendsProfileAndId.data);
+    commonLogout(dispatch)
   };
 
   const hasInList = acceptedFriendsId?.includes(userDetails._id);
@@ -151,6 +155,7 @@ const Page = () => {
       //   setLoader(false);
       setLoaderReq(false);
       toast.error(error.response.data.message);
+      commonLogout(dispatch)
     }
   };
   ////////////////send message api////////////////////////
@@ -175,7 +180,7 @@ const Page = () => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
   //==================================================================
   const cancleFriendRequest = async (id) => {

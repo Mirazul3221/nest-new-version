@@ -20,9 +20,10 @@ import { useStore } from "@/app/global/DataProvider";
 import { useEffect } from "react";
 import ShowEduData from "./ShowEduData";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { commonLogout } from "../../components/common";
 
 const Education = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const [isLoadingContainer, setIsLoadingContainer] = useState(false);
   const [educationData, setEducationData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -128,6 +129,7 @@ const Education = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      commonLogout(dispatch)
     }
   };
 
@@ -145,6 +147,7 @@ const Education = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
+      commonLogout(dispatch)
     }
   };
   useEffect(() => {

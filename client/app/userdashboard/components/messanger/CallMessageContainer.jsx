@@ -6,10 +6,11 @@ import { useSocket } from "../../global/SocketProvider";
 import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import axios from "axios";
+import { commonLogout } from "../common";
 
 const CallMessageContainer = ({ id, userDetails }) => {
   const {socket} = useSocket()
-  const {store} = useStore()
+  const {store,dispatch} = useStore()
   const [switcher, setSwitcher] = useState(false);
   const check_my_friend_window =async () => {
     socket && socket.emit('check-my-friend-window',{from:store.userInfo.id,to:id,status:true})
@@ -47,6 +48,7 @@ const CallMessageContainer = ({ id, userDetails }) => {
           });
         } catch (error) {
           console.log(error);
+          commonLogout(dispatch)
         }
     }
 

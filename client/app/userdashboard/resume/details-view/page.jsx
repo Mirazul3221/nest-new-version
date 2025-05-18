@@ -13,9 +13,10 @@ import Formate01 from "./components/Formate01";
 import Formate02 from "./components/Formate02";
 import { convertImagesToBase64 } from "./components/convertImagesToBase64";
 import Formate03 from "./components/Formate03";
+import { commonLogout } from "../../components/common";
 
 const Page = () => {
-  const { store } = useStore();
+  const { store,dispatch } = useStore();
   const resumeRef = useRef();
   const [cvData, setCvData] = useState("");
   const [loader,setLoader] = useState(false)
@@ -30,6 +31,7 @@ const Page = () => {
       setCvData(data);
     } catch (error) {
       console.log(error);
+      commonLogout(dispatch)
     }
   };
 

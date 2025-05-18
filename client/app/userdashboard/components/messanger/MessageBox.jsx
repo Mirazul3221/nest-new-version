@@ -8,9 +8,10 @@ import Image from "next/image";
 import loader from '@/public/loading-buffer.gif'
 import MessageBar from "./MessageBar";
 import { useMessage } from "../../global/messageProvider";
+import { commonLogout } from "../common";
 
 const MessageBox = ({sortedMessages,setCountUnreadMessage,messageContainerRef,toggleMessage}) => {
-    const {store} = useStore()
+    const {store,dispatch:storeDisp} = useStore()
         const { dispatch } = useMessage();
       const [hiddenNumber, setHiddenNumber] = useState(false);
       const handleUrl = (friend) => {
@@ -27,6 +28,7 @@ const MessageBox = ({sortedMessages,setCountUnreadMessage,messageContainerRef,to
         });
       } catch (error) {
         console.log(error);
+        commonLogout(storeDisp)
       }
   }
 

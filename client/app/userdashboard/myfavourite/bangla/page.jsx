@@ -5,7 +5,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 import Monitor from '../../components/examonitor/Monitor';
 const Page = () => {
-    const { store } = useContext(storeContext);
+    const { store,dispatch } = useContext(storeContext);
     const [allQuestionId,setAllQuestionId] = useState()
     const [allQuestion,setAllQuestion] = useState([])
     const [loader,setLoader] = useState(false)
@@ -45,6 +45,7 @@ const Page = () => {
                // setSaveQueLoader(false);
                setLoader(false)
                console.log(error);
+               commonLogout(dispatch)
              }
         }
         fetchFevourite()

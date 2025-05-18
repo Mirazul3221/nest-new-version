@@ -18,6 +18,7 @@ import "../../userdashboard/components/cssfiles/marksmcq.css";
 import CommingSoom from "../conponents/CommingSoom";
 import { ExamBasedQuestion } from "../conponents/ExamBased";
 import ProtectRoute from "@/app/global/ProtectRoute";
+import { commonLogout } from "@/app/userdashboard/components/common";
 const Page = () => {
   // const [navValue, setNaveValue] = useState("home");
   const [title, setTitle] = useState("");
@@ -40,6 +41,7 @@ const Page = () => {
         setData(data);
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch,route)
       }
     }
     fetchData();

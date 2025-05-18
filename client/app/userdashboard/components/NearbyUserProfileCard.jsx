@@ -5,9 +5,10 @@ import React, { useEffect, useState, useRef } from "react";
 import AddAndDeleteFriendRequestButton from "./messanger/components/AddAndDeleteFriendRequestButton";
 import "./cssfiles/scrolling_bar.css";
 import Link from "next/link";
+import { commonLogout } from "./common";
 
 const NearbyUserProfileCard = () => {
-  const { store } = useStore();
+  const { store ,dispatch} = useStore();
   const [loading, setLoading] = useState(false);
   const [nearby, setNearby] = useState(null);
   const scrollRef = useRef(null);
@@ -29,6 +30,7 @@ const NearbyUserProfileCard = () => {
         setNearby(data);
       } catch (error) {
         console.log(error);
+        commonLogout(dispatch)
       }
     };
     nearbyUsers();

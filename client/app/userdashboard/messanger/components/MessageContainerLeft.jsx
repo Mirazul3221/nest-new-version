@@ -7,10 +7,10 @@ import axios from "axios";
 import { baseurl } from "@/app/config";
 import { useMessage } from "../../global/messageProvider";
 import { useSocket } from "../../global/SocketProvider";
+import { commonLogout } from "../../components/common";
 
 const MessageBox = ({ setId, setUserDetails }) => {
-  const { store } = useStore();
-     const {socket} = useSocket();   
+  const { store,dispatch:dps } = useStore(); 
   const [messangerFriends, setMessangerFriends] = useState(null);
   const [loading, setLoading] = useState(false);
   const { dispatch, messanger } = useMessage();
@@ -31,6 +31,7 @@ const MessageBox = ({ setId, setUserDetails }) => {
     } catch (error) {
       console.error("API Fetch Error:", error.response?.data || error.message);
       setLoading(false);
+    commonLogout(dps)
       throw error; // ❗ Rethrow the error to handle it properly
     }
   };

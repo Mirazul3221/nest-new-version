@@ -6,9 +6,10 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import Editor from "./Editor";
 import HTMLReactParser from "html-react-parser";
+import { commonLogout } from "../../components/common";
 
 const ShowProjectData = ({ item, setProjectData }) => {
-  const { store } = useStore();
+  const { store, dispatch } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenFormWindow, setIsOpenFormWindow] = useState(false);
   const [isOpenDeleteWindow, setIsOpenDeleteWindow] = useState(false);
@@ -30,7 +31,7 @@ const ShowProjectData = ({ item, setProjectData }) => {
       );
       setProjectData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {}
+    } catch (error) {commonLogout(dispatch)}
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,7 @@ const ShowProjectData = ({ item, setProjectData }) => {
     data?.projectDescription &&
       (item.projectDescription = data?.projectDescription);
     setIsOpenFormWindow(false);
+    commonLogout(dispatch)
   };
   return (
     <div>

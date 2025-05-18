@@ -5,22 +5,21 @@ import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useMessage } from "../../global/messageProvider";
 import { useSocket } from "../../global/SocketProvider";
+import { commonLogout } from "../../components/common";
 
 const CurrentMessage = ({
   msg,
   setSendCurrentMsg,
   replyMsgContent,
   setReplyContent,
-  replyMsgStatus,
   toReplyerId,
   setToReplyerId,
 }) => {
-  const { store } = useContext(storeContext);
+  const { store,dispatch:dps } = useContext(storeContext);
   const { socket } = useSocket();
   const element = useRef(null);
   const { dispatch } = useMessage();
   const [isSend, setIsSend] = useState(false);
-  const [isSendFromSkt, setIsSendFromSkt] = useState(false);
   const sendMessage = async () => {
 
     try {
@@ -54,6 +53,7 @@ const CurrentMessage = ({
       }
     } catch (error) {
       console.log(error);
+      commonLogout(dps)
     }
   };
 useEffect(() => {

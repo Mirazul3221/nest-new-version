@@ -20,6 +20,7 @@ import { TiDocumentText } from "react-icons/ti";
 import SuperHeader from "../components/SuperHeader";
 import QuestionCard from "../timeline/components/QuestionCard";
 import Settings from "./components/Settings";
+import { commonLogout } from "../components/common";
 const Page = () => {
   const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -47,6 +48,7 @@ const Page = () => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
+        commonLogout(dispatch)
       }
     };
 
@@ -74,6 +76,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      commonLogout(dispatch)
     } finally {
       setIsLoading(false);
     }
@@ -105,6 +108,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
+      commonLogout(dispatch)
     } finally {
       setIsLoading(false);
     }
