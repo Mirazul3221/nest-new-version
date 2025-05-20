@@ -291,11 +291,11 @@ const SuperHeader = () => {
     <div
       className={`font-title ${
         header
-          ? "fixed top-0 left-0 w-screen z-50 backdrop-blur-md px-4 md:px-20 py-2"
+          ? "fixed top-0 left-0 w-screen z-50 backdrop-blur-md px-2 md:px-20 py-2"
           : ""
       }`}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center px-2">
         <div className="md:w-20 w-16">
           <Link href="/">
             {/* <Image src={logo} alt="bffd" /> */}
@@ -506,7 +506,7 @@ const SuperHeader = () => {
         </div>
       </div>
       <div className="md:hidden">
-        <div className="gap-1 justify-between md:flex my-3">
+        <div className="gap-1 justify-between md:flex my-2 px-3">
           <h2 className="text-md font-semibold text-gray-500 text-balance">
             Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
             Welcome back

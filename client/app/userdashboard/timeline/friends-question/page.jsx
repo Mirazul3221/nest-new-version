@@ -147,7 +147,7 @@ const Page = () => {
 <div className="min-h-screen">
   <ProtectRoute>
     {/* Header */}
-    <div className="md:px-10 px-4 py-3">
+    <div className="md:px-10 px-2 py-3">
       <SuperHeader />
     </div>
 

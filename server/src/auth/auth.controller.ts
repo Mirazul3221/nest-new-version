@@ -95,6 +95,7 @@ export class AuthController {
  //=====================
  @Patch("/updateProfile")
  @UseGuards(AuthGuard())
+  @FormDataRequest({storage:FileSystemStoredFile})
  async updateUser(@Body() profile ,@Req() req){
   return await this.authService.updateAuthinticUserProfile(req.user,profile)
  }//

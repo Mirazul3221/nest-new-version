@@ -365,12 +365,13 @@ export class AuthService {
 
     let url = '';
     try {
-      if (profile.profile) {
+      if (profile) {
         const devide = user.profile.split('/');
         const lastPart = devide[devide.length - 1];
         const finalPart = lastPart.split('.')[0];
+       console.log(finalPart)
         await cloudinary.uploader.destroy(`mcq_reader_profile/${finalPart}`);
-        const data = await cloudinary.uploader.upload(profile.profile, {
+        const data = await cloudinary.uploader.upload(profile.file.path, {
           folder: 'mcq_reader_profile',
           public_id: `${Date.now()}`,
           resource_type: 'auto',
@@ -385,6 +386,8 @@ export class AuthService {
           profile: url,
         },
       );
+     console.log(url)
+      return url
     } catch (error) {
       console.log(error);
     }

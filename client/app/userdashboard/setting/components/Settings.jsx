@@ -10,7 +10,7 @@ import { FaLocationDot, FaMobileScreen } from "react-icons/fa6";
 import { GrFirefox } from "react-icons/gr";
 import { IoGitNetworkSharp, IoLogoWindows } from "react-icons/io5";
 import { toast, ToastContainer } from "react-toastify";
-import FabricExample from "./Test";
+import ProfileCropper from "../../components/ProfileCropper";
 
 const Settings = () => {
   const { store, dispatch } = useStore();
@@ -131,7 +131,7 @@ const Settings = () => {
         <p className="text-center mt-5">Data Not Found!</p>
       )}
       <ToastContainer />
-      <FabricExample/>
+      <ProfileCropper name="Mirazul Islam" profile="http://res.cloudinary.com/df5rvx2id/image/upload/v1747748657/mcq_reader_profile/1747748657460.jpg"/>
     </div>
   );
 };

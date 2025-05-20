@@ -129,7 +129,7 @@ const UserDashboard = () => {
         src="//pl23641250.highrevenuenetwork.com/9d/dd/06/9ddd062e14b034f4d6043be8bf0a1f91.js"
       /> */}
       <div className="min-h-screen max-w-[1440px] w-full overflow-hidden bg-gray-50">
-        <div className="bg-white border-b px-10 py-4">
+        <div className="bg-white border-b md:px-10 px-2 md:py-4">
           <SuperHeader/>
           <div className="gap-1 mt-8 hidden md:flex justify-between items-center my-3">
             <h2 className="font-title md:text-2xl text-md font-semibold text-gray-500 text-balance">
@@ -189,7 +189,7 @@ const UserDashboard = () => {
             <Banner />
           </div>
         </div>
-        <div className="fixed bottom-0 md:hidden left-0 w-full px-10 py-4 bg-white rounded-t-md">
+        <div className="fixed bottom-0 md:hidden left-0 w-full md:px-10 px-4 py-4 bg-white rounded-t-md">
           <div className="mobile flex w-full justify-between">
             <div className="">
               <div className="text-violet-700 scale-110  shadow-md shadow-fuchsia-500 duration-500 p-2 rounded-full">

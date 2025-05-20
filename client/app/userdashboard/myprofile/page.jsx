@@ -38,6 +38,7 @@ import CallMessageContainer from "../components/messanger/CallMessageContainer";
 import { CiUser } from "react-icons/ci";
 import QuestionCard from "../timeline/components/QuestionCard";
 import { commonLogout } from "../components/common";
+import ProfileCropper from "../components/ProfileCropper";
 const Page = () => {
   // SocketInvocation(4356786)
   const [loader, setLoader] = useState(false);
@@ -412,61 +413,22 @@ const Page = () => {
 
   return (
     <ProtectRoute>
-      <div className="md:px-10 px-4 md:py-5 py-2">
+      <div className="md:px-10 md:py-5 py-1">
         <SuperHeader />
       </div>
-      <div className="w-full h-[30vh] md:h-[60vh] overflow-hidden -z-50 relative">
-        <img
-          className="rounded-t-5xl w-full h-full"
-          src={`/cover-photo/background-${randNum}.jpg`}
-          alt=""
-        />
-      </div>
-      <div className="md:w-10/12 -mt-28 md:border md:rounded-t-2xl mx-auto z-50 bg-white shadow-md px-5 pb-5">
+<img
+  className="rounded-b-3xl rounded-t-md w-full md:h-[50vh] object-cover -z-30"
+  src={`/cover-photo/background-${randNum}.jpg`}
+  alt="cover"
+/>
+      <div className="md:w-10/12 mt-2 md:mt-0 md:rounded-t-2xl mx-auto z-50 bg-white shadow-md md:shadow-none px-5 pb-5 border-2 md:border-0 rounded-t-3xl">
       {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
-        <div className="md:-translate-y-[17%] -translate-y-[11%]">
+           <div className="-mt-16 md:-mt-28 md:flex justify-center">
+            <ProfileCropper name={userDetails.name} profile={userDetails.profile} wm={120} wl={200} /></div>
           {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
           <div>
             <div className="---profile---">
-              <div className="md:w-[200px] w-[120px] md:mx-auto relative">
-                {userDetails?.profile?.length > 0 ? (
-                  <div className="relative flex justify-center">
-                    <div onClick={popup}>
-                      <div className="relative group">
-                        <div className="absolute w-[120px] md:w-[200px] h-[120px] md:h-[200px] p-0 left-0 rounded-full bg-black/50 duration-100 cursor-pointer flex justify-center items-center scale-0 group-hover:scale-100">
-                          <ImCamera color="white" size={50} />
-                        </div>
-                        {preview.length > 0 ? (
-                          <div className="w-[120px] md:w-[200px] h-[120px] md:h-[200px] border-4 border-white rounded-full">
-                            <Image
-                              width={200}
-                              height={200}
-                              src={preview}
-                              alt={userDetails.name}
-                            />
-                          </div>
-                        ) : (
-                          <img
-                            className="w-[120px] md:w-[200px] h-[120px] md:h-[200px] border-4 border-white rounded-full"
-                            src={userDetails.profile}
-                            alt={userDetails.name}
-                          />
-                        )}
-                        <h4 className="absolute bottom-0 right-0 md:right-8 p-2 bg-violet-500 w-12 h-12 md:w-16 md:h-16 rounded-full flex justify-center items-center border-2 md:border-4 border-white text-center text-sm translate-x-[10%] md:translate-x-[30%] text-white translate-y-[20%]">
-                          {/* <Image className="rounded-full" src={levelUp} alt="level" /> */}
-                          {userDetails.status}
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="absolute md:-translate-y-[45%] w-[200px] h-[200px] bg-white left-0 border-4 border-white rounded-full flex justify-center items-center overflow-hidden">
-                    <Image src={waitingImg} alt="loading image" />
-                  </div>
-                )}
-              </div>
-
-              <h1 className="md:text-center text-2xl text-gray-700 md:text-5xl font-semibold mt-8">
+              <h1 className="md:text-center text-2xl text-gray-700 md:text-5xl font-semibold mt-5">
                 {userDetails.name}
               </h1>
               <div className="py-2 mx-auto md:w-3/12">
@@ -675,7 +637,6 @@ const Page = () => {
               </div>
             )}
           </div>
-        </div>
 
         {userDetails && (
           <div className="bg-white mt-5">

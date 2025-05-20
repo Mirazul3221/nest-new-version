@@ -93,7 +93,6 @@ const Search = () => {
   }, [isOpenSearchBox]);
 
   return (
-    <div>
       <div
         ref={searchBoxContainerRef}
         className="flex relative items-center w-full"
@@ -202,7 +201,6 @@ const Search = () => {
           </div>
         )}
       </div>
-    </div>
   );
 };
 
