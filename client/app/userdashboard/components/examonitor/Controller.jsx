@@ -184,7 +184,7 @@ const Controller = ({
     })
   } catch (error) {
     console.log(error)
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   }
   
     }
@@ -279,7 +279,7 @@ const Controller = ({
     } catch (error) {
       setSaveQueLoader(false);
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -295,7 +295,7 @@ const Controller = ({
         setSaveQue(data);
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
     fetchData();

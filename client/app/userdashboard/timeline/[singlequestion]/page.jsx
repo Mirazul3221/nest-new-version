@@ -73,7 +73,7 @@ const Page = () => {
       scrollToBottom();
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -100,7 +100,7 @@ const Page = () => {
       setMessage("");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   console.log(totalComments);

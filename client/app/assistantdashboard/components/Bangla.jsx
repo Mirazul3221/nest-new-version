@@ -86,7 +86,7 @@ const Bangla = () => {
         setAlert("");
       }, 1000);
       //error.response.data.message
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   //=================Handle multiple images================
@@ -109,7 +109,7 @@ const Bangla = () => {
    } catch (error) {
     console.log(error)
     setImageLoader(false)
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
    }
   }
 
@@ -125,7 +125,7 @@ const Bangla = () => {
       setImages(data)
      } catch (error) {
       console.log(error)
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
      }
    }
    getImages()

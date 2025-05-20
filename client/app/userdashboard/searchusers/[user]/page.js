@@ -73,7 +73,7 @@ const Page = () => {
       } catch (error) {
         //   setLoader(false);
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     };
     fetchUser();
@@ -92,7 +92,7 @@ const Page = () => {
     );
     someOfMyFriend(id);
     setSomeFriendProfileAndId(someFriendsProfileAndId.data);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   };
   //=======================================================
   //=======================================================
@@ -107,7 +107,7 @@ const Page = () => {
       }
     );
     setSomeOfMyFriendDetails(someFriendsProfileAndId.data);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   };
 
   const hasInList = acceptedFriendsId?.includes(userDetails._id);
@@ -155,7 +155,7 @@ const Page = () => {
       //   setLoader(false);
       setLoaderReq(false);
       toast.error(error.response.data.message);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   ////////////////send message api////////////////////////
@@ -180,7 +180,7 @@ const Page = () => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   //==================================================================
   const cancleFriendRequest = async (id) => {

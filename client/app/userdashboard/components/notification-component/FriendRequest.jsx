@@ -22,7 +22,7 @@ const FriendRequest = ({item}) => {
          setCloseContainer(true)
         } catch (error) {
           console.log(error);
-          commonLogout(dispatch)
+          commonLogout(dispatch,error)
         }
       };
 
@@ -44,7 +44,7 @@ const FriendRequest = ({item}) => {
           Authorization: `Bearer ${store?.token}`,
         },
       });
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   ///////////////////////////////////////////////Cancel friend request//////////////////////////////////////////
   const cancleFriendRequest = async (item) => {
@@ -67,7 +67,7 @@ const FriendRequest = ({item}) => {
           setCloseContainer(true) 
        } catch (error) {
         console.log(error)
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
        }
   };
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////

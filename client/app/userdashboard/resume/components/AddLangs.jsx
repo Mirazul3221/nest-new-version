@@ -36,7 +36,7 @@ const AddLangs = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {
@@ -95,7 +95,7 @@ const AddLangs = () => {
       //  setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -119,7 +119,7 @@ const AddLangs = () => {
       setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   return (

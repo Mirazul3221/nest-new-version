@@ -25,7 +25,7 @@ try {
       });
 } catch (error) {
   console.log(error)
-  commonLogout(dispatch)
+  commonLogout(dispatch,error)
 }
   }
   return (

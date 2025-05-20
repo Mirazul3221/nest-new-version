@@ -59,7 +59,7 @@ const EditQuestion = ({Q}) => {
       toast.error('Server error')
       setloading(false);
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   console.log(Q)

@@ -100,7 +100,7 @@ const English = () => {
       }, 1000);
       toast.error(error.response.data.message);
       //error.response.data.message
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

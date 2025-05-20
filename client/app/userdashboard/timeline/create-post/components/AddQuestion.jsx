@@ -67,7 +67,7 @@ const AddQuestion = () => {
       toast.error(error.response.data);
       setloading(false);
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -87,7 +87,7 @@ const AddQuestion = () => {
       setContent(data);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   return (

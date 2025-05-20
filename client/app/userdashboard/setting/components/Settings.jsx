@@ -26,7 +26,7 @@ const Settings = () => {
       // Do something with `data` here (e.g., update state)
     } catch (error) {
       console.error("Error fetching data:", error);
-      commonLogout(dispatch);
+      commonLogout(dispatch,error);
     }
   };
 
@@ -44,7 +44,7 @@ const Settings = () => {
       setSettingData(filterData);
       toast(data);
     } catch (error) {
-      commonLogout(dispatch);
+      commonLogout(dispatch,error);
     }
   };
 

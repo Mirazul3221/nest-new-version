@@ -77,7 +77,7 @@ const Math = () => {
     } catch (error) {
       setLoader(false);
       setAlert(error.response.data.message);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
       //error.response.data.message
     }
   };

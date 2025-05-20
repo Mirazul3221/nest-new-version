@@ -53,7 +53,7 @@ const Search = () => {
       } catch (err) {
         console.error("Error fetching suggestions:", err);
         setFetchLoading(false);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     };
 

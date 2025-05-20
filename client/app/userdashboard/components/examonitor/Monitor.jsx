@@ -70,7 +70,7 @@ const { store, dispatch} = useContext(storeContext);
         }
       );
      } catch (error) {
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
      }
    }//
 

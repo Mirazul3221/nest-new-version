@@ -28,7 +28,7 @@ const UserList = () => {
         setGeneralusrs(generalusrs);
         setRegisteredUsers(registeredUsers);
       } catch (error) {
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
         console.log(error);
       }
     }

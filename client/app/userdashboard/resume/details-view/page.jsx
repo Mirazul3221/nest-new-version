@@ -31,7 +31,7 @@ const Page = () => {
       setCvData(data);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

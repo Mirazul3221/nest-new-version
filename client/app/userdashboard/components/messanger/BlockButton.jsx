@@ -32,7 +32,7 @@ const BlockButton = ({ blockedUserId, name,status, globleCheckIsBlockedByMe,setI
     } catch (error) {
       console.log(error);
       setLoading(false)
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
      }
   };

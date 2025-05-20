@@ -56,7 +56,7 @@ const ShowExpData = ({ exp, setExperienceData }) => {
       );
       setExperienceData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ const ShowExpData = ({ exp, setExperienceData }) => {
     data?.linkToWork && (exp.linkToWork = data?.linkToWork);
     data?.editorContent && (exp.editorContent = data?.editorContent);
     setIsOpenFormWindow(false);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   };
   return (
     <div>

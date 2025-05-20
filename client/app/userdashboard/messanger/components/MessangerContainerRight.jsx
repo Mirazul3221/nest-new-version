@@ -43,7 +43,7 @@ const MessangerContainerRight = ({ id,globleCheckIsBlockedByMe }) => {
       globleCheckIsBlockedByMe(data)
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {

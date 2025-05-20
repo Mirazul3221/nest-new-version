@@ -96,7 +96,7 @@ const SuperHeader = () => {
         },
       });
       setNotificationList(data);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   //====================================================================
   //====================================================================
@@ -110,7 +110,7 @@ const SuperHeader = () => {
       });
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ const SuperHeader = () => {
       socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -202,7 +202,7 @@ const SuperHeader = () => {
 
       console.log(data);
       setCountUnreadMessage(data);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   }
 
   useEffect(() => {

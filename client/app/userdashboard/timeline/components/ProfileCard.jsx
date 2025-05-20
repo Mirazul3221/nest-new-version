@@ -44,7 +44,7 @@ const ProfileCard = ({ id }) => {
         setSendFriend(requesID.data.some((id) => id === data._id));
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
     fetchData();
@@ -63,7 +63,7 @@ const ProfileCard = ({ id }) => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   ////////////////////////////////////////////////////////////////////
   const friendRequestApi = async (recipient) => {
@@ -83,7 +83,7 @@ const ProfileCard = ({ id }) => {
       setFriendLoading(false);
       handleNotification(recipient);
     } catch (error) {
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
       // toast.error(error.response.data.message);
     }
   };
@@ -114,7 +114,7 @@ const ProfileCard = ({ id }) => {
     setLoader(false);
     const friendExist = data?.some((f) => f === id);
     setMyFriend(friendExist);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   };
   useEffect(() => {
     allFriendId();
@@ -136,7 +136,7 @@ const ProfileCard = ({ id }) => {
       );
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   return (

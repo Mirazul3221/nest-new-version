@@ -26,7 +26,7 @@ const AddSummary = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {

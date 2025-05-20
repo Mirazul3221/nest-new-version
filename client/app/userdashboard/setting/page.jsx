@@ -48,7 +48,7 @@ const Page = () => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     };
 
@@ -76,7 +76,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +108,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     } finally {
       setIsLoading(false);
     }

@@ -107,7 +107,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       setDelete(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

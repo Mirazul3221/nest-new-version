@@ -29,7 +29,7 @@ export default function AddProject() {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function AddProject() {
         },
       ]);
       setOpenProjectForm(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   const reHandleFormValue = async (e) => {
     e.preventDefault();
@@ -117,7 +117,7 @@ export default function AddProject() {
         },
       ]);
       setOpenProjectForm(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   console.log(projectData)

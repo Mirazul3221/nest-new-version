@@ -52,7 +52,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
             scrollToBottom()
           } catch (error) {
             console.log(error);
-            commonLogout(dispatch)
+            commonLogout(dispatch,error)
           }
     }
 
@@ -89,7 +89,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         handleNotification("comment-question");
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
 
@@ -120,7 +120,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   return (
    <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">

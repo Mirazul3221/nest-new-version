@@ -91,7 +91,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   const handleSendLike = useCallback(async () => {
@@ -111,7 +111,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         handleNotification("like-question");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   }, []);
   const handleSendComment = useCallback(async () => {
@@ -131,7 +131,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
       setMessage("");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   }, [message, comments]);
 

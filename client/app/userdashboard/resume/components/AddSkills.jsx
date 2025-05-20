@@ -26,7 +26,7 @@ const AddSkills = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {
@@ -87,7 +87,7 @@ const AddSkills = () => {
       //  setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -111,7 +111,7 @@ const AddSkills = () => {
       setOpenProjectForm(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

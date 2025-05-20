@@ -99,7 +99,7 @@ const AddExperience = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -117,7 +117,7 @@ const AddExperience = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {

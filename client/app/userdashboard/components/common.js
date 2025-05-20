@@ -48,7 +48,9 @@ export const profileApi =async (token,id) => {
   }
 }
 
- export const commonLogout =async (dispatch) => {
-   await dispatch({ type: "logout" });
-   window.location.href ='/login'
-  };
+export const commonLogout = async (dispatch, err) => {
+  if (err.response.data.error === "Unauthorized") {
+    await dispatch({ type: "logout" });
+    window.location.href = "/login";
+  }
+};

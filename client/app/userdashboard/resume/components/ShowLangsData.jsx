@@ -32,7 +32,7 @@ const ShowLangsData = ({ item, setProjectData }) => {
       setIsOpenFormWindow(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ const ShowLangsData = ({ item, setProjectData }) => {
       );
       setProjectData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   return (
     <div>

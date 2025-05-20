@@ -76,7 +76,7 @@ const MyCurrentMessage = ({
     } catch (error) {
       setLoader(false);
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

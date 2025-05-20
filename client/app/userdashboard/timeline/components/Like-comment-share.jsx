@@ -42,7 +42,7 @@ const LikeCommentShare = ({question}) => {
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   const handleSendLike = useCallback(async () => {
@@ -61,7 +61,7 @@ const LikeCommentShare = ({question}) => {
         handleNotification("like-question");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   }, []);
   return (

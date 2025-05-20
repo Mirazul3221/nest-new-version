@@ -30,7 +30,7 @@ const NearbyUserProfileCard = () => {
         setNearby(data);
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     };
     nearbyUsers();

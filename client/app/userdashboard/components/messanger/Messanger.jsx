@@ -94,7 +94,7 @@ const Messanger = ({
           },
         });
         setMyAndFriendMessage(data);
-      } catch (error) {commonLogout(dispatch)}
+      } catch (error) {commonLogout(dispatch,error)}
     }
     switcher && new Audio("/notification-soun/som_da_kiwify.mp3").play();
     fetchMessage();

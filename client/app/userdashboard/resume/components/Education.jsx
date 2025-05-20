@@ -129,7 +129,7 @@ const Education = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -147,7 +147,7 @@ const Education = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   useEffect(() => {

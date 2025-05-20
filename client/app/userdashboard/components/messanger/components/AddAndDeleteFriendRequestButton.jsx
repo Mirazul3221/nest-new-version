@@ -26,7 +26,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   const checkFriendRequestStatus = async () => {
@@ -43,7 +43,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
       setRequestStatus(data);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -78,7 +78,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   return (

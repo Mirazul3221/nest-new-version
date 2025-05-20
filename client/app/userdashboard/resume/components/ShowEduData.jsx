@@ -54,7 +54,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
       setEducationData(data);
       setIsOpenDeleteWindow(false);
     } catch (error) {
-      commonLogout(dispatch);
+      commonLogout(dispatch,error);
     }
   };
 
@@ -153,7 +153,7 @@ const ShowEduData = ({ edu, setEducationData }) => {
       data?.courseDuration && (edu.courseDuration = data?.courseDuration);
       setIsOpenFormWindow(false);
     } catch (error) {
-      commonLogout(dispatch);
+      commonLogout(dispatch,error);
     }
   };
   return (

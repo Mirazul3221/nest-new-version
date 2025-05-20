@@ -45,7 +45,7 @@ const Page = () => {
                // setSaveQueLoader(false);
                setLoader(false)
                console.log(error);
-               commonLogout(dispatch)
+               commonLogout(dispatch,error)
              }
         }
         fetchFevourite()

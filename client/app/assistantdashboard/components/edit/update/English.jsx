@@ -50,7 +50,7 @@ const EditEnglish = ({ setSwitcher, editQuestion }) => {
       setLoader(false);
       setAlert(error.response.data.message);
       //error.response.data.message
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 

@@ -29,7 +29,7 @@ const English = () => {
         setData(data);
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
     fetchData();
@@ -48,7 +48,7 @@ const English = () => {
       } catch (error) {
         // setSwitcher(true)
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
     if (id !== null) {
@@ -72,7 +72,7 @@ const English = () => {
   } catch (error) {
     // setSwitcher(true)
     console.log(error);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   }
   } 
  }

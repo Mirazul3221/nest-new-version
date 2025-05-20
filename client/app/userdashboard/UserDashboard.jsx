@@ -72,7 +72,7 @@ const UserDashboard = () => {
             Authorization: `Bearer ${store.token}`,
           },
         });
-      } catch (error) {commonLogout(dispatch)}
+      } catch (error) {commonLogout(dispatch,error)}
     };
     updateUserData();
   }, []);
@@ -116,7 +116,7 @@ const UserDashboard = () => {
        dispatch({type:'AcceptedFriend', payload:accepted.data})
       } catch (error) {
         //   setLoader(false);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
 

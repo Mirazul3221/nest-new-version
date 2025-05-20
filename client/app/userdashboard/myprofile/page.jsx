@@ -79,7 +79,7 @@ const Page = () => {
         setUpdateDesc(userDetails?.description);
       } catch (error) {
         console.log(error);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
     fetchData();
@@ -113,7 +113,7 @@ const Page = () => {
       console.log(error);
       setLoader(false);
       setOpenModel(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -129,7 +129,7 @@ const Page = () => {
           },
         }
       );
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   const updateUserDescription = async () => {
@@ -143,7 +143,7 @@ const Page = () => {
           },
         }
       );
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   const updateFacebookLink = async () => {
@@ -159,7 +159,7 @@ const Page = () => {
       );
 
       setLink(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   const popup = () => {
     setOpenModel(true);
@@ -236,7 +236,7 @@ const Page = () => {
         setGetAllAcceptedFriend(accepted.data);
       } catch (error) {
         //   setLoader(false);
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
       }
     }
 
@@ -258,7 +258,7 @@ const Page = () => {
       setAcceptReq(true);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -280,7 +280,7 @@ const Page = () => {
           Authorization: `Bearer ${store?.token}`,
         },
       });
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
   const inviteYourFriend = async (id) => {
     try {
@@ -296,7 +296,7 @@ const Page = () => {
       socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
   const { socket, myActiveFriends } = useSocket();
@@ -341,7 +341,7 @@ const Page = () => {
     } catch (error) {
       console.error("Failed to fetch questions:", error);
       isFetchingRef.current = false; // Reset flag
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     } finally {
       isFetchingRef.current = false; // Reset flag
       setIsLoading(false);
@@ -394,7 +394,7 @@ const Page = () => {
         setPage(2);
         isFetchingRef.current = false;
       } catch (error) {
-        commonLogout(dispatch)
+        commonLogout(dispatch,error)
         console.error("Error fetching initial questions:", error);
         isFetchingRef.current = false;
       } finally {

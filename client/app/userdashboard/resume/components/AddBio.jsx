@@ -52,7 +52,7 @@ const AddBio = () => {
     } catch (error) {
       console.log(error);
       setIsLoadingContainer(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -75,7 +75,7 @@ const AddBio = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 
@@ -108,7 +108,7 @@ const AddBio = () => {
       setEditBio(false);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch)
+      commonLogout(dispatch,error)
     }
   };
 /////////////////////////////////////////////////////////////////////

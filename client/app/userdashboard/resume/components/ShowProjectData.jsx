@@ -31,7 +31,7 @@ const ShowProjectData = ({ item, setProjectData }) => {
       );
       setProjectData(data);
       setIsOpenDeleteWindow(false);
-    } catch (error) {commonLogout(dispatch)}
+    } catch (error) {commonLogout(dispatch,error)}
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ const ShowProjectData = ({ item, setProjectData }) => {
     data?.projectDescription &&
       (item.projectDescription = data?.projectDescription);
     setIsOpenFormWindow(false);
-    commonLogout(dispatch)
+    commonLogout(dispatch,error)
   };
   return (
     <div>
