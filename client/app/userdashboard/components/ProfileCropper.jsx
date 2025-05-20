@@ -6,10 +6,11 @@ import { commonLogout } from "./common";
 import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import { ImCamera } from "react-icons/im";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function ProfileCropper({
   name = "unknown",
-  profile = "unknown",
+  profile,
   wm = 100,
   wl = 150
 }) {
@@ -191,7 +192,7 @@ export default function ProfileCropper({
       <img src="" alt="" />
       <div className="md:w-[200px] w-[120px] md:mx-auto relative">
         {profile?.length > 0 ? (
-            <label htmlFor="Upload_image relative flex justify-center">
+            <label className="relative flex justify-center" htmlFor="Upload_image">
               <div className="relative group">
                 <div className={`absolute w-[${wm}px] md:w-[${wl}px] h-full md:h-[${wl}px] p-0 left-0 rounded-full bg-black/50 duration-100 cursor-pointer flex justify-center items-center scale-0 group-hover:scale-100`}>
                   <ImCamera color="white" size={30} />
@@ -274,17 +275,20 @@ export default function ProfileCropper({
               <div
                 onClick={() => {
                   if (cropedImageSize > 0 && cropedImageSize < 200) {
-                    uploadImageFromCanvas();
+                   !loader && uploadImageFromCanvas();
                   }
                 }}
                 className={`updateTitle w-1/2 py-1 px-6 ${
                   loader
-                    ? "bg-white text-gray-700 hover:bg-slate-100"
+                    ? "bg-gray-200 text-gray-700 hover:bg-slate-100"
                     : "bg-violet-700 text-white cursor-pointer"
-                } hover:bg-violet-600 duration-200 text-center rounded-md`}
+                } duration-200 text-center rounded-md`}
               >
                 <div className="flex justify-center items-center gap-2">
-                  <p>Update</p>{" "}
+                  {
+                    loader ? <h2 className="mx-auto flex items-center gap-2"><AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-center" size={20} /> Processing...</h2> :   <p>Update</p>
+                  }
+                 
                 </div>
               </div>
             </div>
