@@ -190,7 +190,6 @@ export default function ProfileCropper({
   return (
     <div className="w-fit">
        <ToastContainer />
-      <img src="" alt="" />
       <div className="md:w-[200px] w-[120px] md:mx-auto relative">
         {profile?.length > 0 ? (
             <label className="relative flex justify-center" htmlFor="Upload_image">

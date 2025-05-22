@@ -54,3 +54,12 @@ export const commonLogout = async (dispatch, err) => {
     window.location.href = "/login";
   }
 };
+
+export const maskEmail = (email) => {
+  if (!email) return '';
+  const [name, domain] = email.split('@');
+  if (!name || !domain) return email;
+
+  const maskedName = name[0] +name[1] + '*'.repeat(name.length - 1) + name[name.length-2] + name[name.length-1];
+  return `${maskedName}@${domain}`;
+}; 

@@ -179,6 +179,11 @@ async userProfileAndName (@Param('id') id){
  async sendMail(@Body() user) : Promise <{msg:string}> {
  return await this.authService.sendMail(user.email)
  }
+@Get('send-mail-to-reset-email')
+ @UseGuards(AuthGuard())
+ async sendMailForChangeEmail(@Req() req) : Promise <number> {
+ return await this.authService.sendMailForChangeEmail(req.user.email)
+ }
 
 
 @Post('updateotp')
@@ -189,6 +194,12 @@ async userProfileAndName (@Param('id') id){
  async updatePass(@Body() body) {
   // console.log(body)
  return await this.authService.updatePass(body)
+ }
+@Post('update-email')
+ @UseGuards(AuthGuard())
+ async updateEmail(@Body() body, @Req() req) {
+  // console.log(body)
+ return await this.authService.updateEmail(body.email,req.user._id)
  }
 
  @Post('recovery-user')

@@ -369,7 +369,7 @@ export class AuthService {
         const devide = user.profile.split('/');
         const lastPart = devide[devide.length - 1];
         const finalPart = lastPart.split('.')[0];
-       console.log(finalPart)
+        console.log(finalPart);
         await cloudinary.uploader.destroy(`mcq_reader_profile/${finalPart}`);
         const data = await cloudinary.uploader.upload(profile.file.path, {
           folder: 'mcq_reader_profile',
@@ -386,7 +386,7 @@ export class AuthService {
           profile: url,
         },
       );
-      return url
+      return url;
     } catch (error) {
       console.log(error);
     }
@@ -557,51 +557,112 @@ export class AuthService {
     return 'Profile Update Done';
   }
 
-  async sendMail(email): Promise<{ msg: string }> {
-    const otp = await Math.floor(100000 + Math.random() * 900000);
-    const user = await this.userModel.findOne({ email: email });
-    if (user) {
-      // /===================================================================
-      const fullName = user.name.split(' ');
-      const firstName = fullName[0];
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'bdmirazul906@gmail.com',
-          pass: 'acco zbcl qzxu whzq',
-        },
-      });
-      var mailOptions = {
-        from: 'bdmirazul906@gmail.com',
-        to: email,
-        subject: 'Password recovery',
-        html: `  <div style="width: 400px; padding: 30px; background: #fff4f4;">
-    <div style="position: relative; border-bottom: 2px solid rgb(92, 92, 92);"><img style="width: 80px;position: absolute; right: 10px; top: 10px;" src="https://res.cloudinary.com/df5rvx2id/image/upload/v1716576582/ujdocgrqsgr2fhpljbiy.png" alt="bcs logo"></div>
-    <h2 style="font-weight: bolder;font-size: 26;">Hi ${firstName}</h2>
-   <p style="font-size: 20px">We received a request to reset your password.
-   Enter the following password reset code:</p>
-   <h3 style="padding-top: 10px; font-size: 30px;"><span style="border:1px solid rgb(235, 9, 133);padding-left: 20px; padding-right: 20px;font-weight: bold; background: #ffd7e8; border-radius: 4px;padding-top: 10px;padding-bottom: 10px;color: rgb(50, 51, 51); font-size:22px;">${otp}</span></h3>
-<h4 style="font-weight: bolder;font-size: 22px;">thank you</h4>
-</div>`,
-      };
-      await transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-      await this.userModel.findByIdAndUpdate(
-        user._id,
-        { otp: await otp },
-        { new: true },
-      );
-      return { msg: 'Check your email box' }; //
-    } else {
-      throw new NotFoundException('Email does not exist!');
-    }
+async sendMail(email: string): Promise<{ msg: string }> {
+  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  const user = await this.userModel.findOne({ email });
+
+  if (!user) {
+    throw new NotFoundException('Email does not exist!');
   }
 
+  const firstName = user.name?.split(' ')[0] || 'User';
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'bdmirazul906@gmail.com',
+      pass: 'acco zbcl qzxu whzq',
+    },
+  });
+
+  const mailOptions = {
+    from: '"BCS Prep" <bdmirazul906@gmail.com>',
+    to: email,
+    subject: 'Password Reset Code - BCS Prep',
+    html: `
+          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+        <div style="text-align: right;">
+          <img src="${user.profile}" alt="bcs logo" style="width: 60px; border-radius: 50%; border: 1px solid rgb(211, 210, 210);">
+        </div>
+        <h2 style="color: #333;">Hello, ${firstName}</h2>
+        <p style="font-size: 16px; color: #555;">
+          We received a request to change password for your account. Use the following code to confirm your request:
+        </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <span style="display: inline-block; background: #f1f1f1; border: 1px dashed gray; color: gray; padding: 10px 20px; font-size: 18px; font-weight: bold; border-radius: 8px;">
+              ${otp}
+            </span>
+          </div>
+        <p style="font-size: 14px; color: #888;">If you didn’t request this, you can safely ignore this email.</p>
+        <p style="font-weight: bold; color: #444;">Thank you,<br/>BCS Prep Team</p>
+      </div>
+    </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions); // await without callback
+
+  await this.userModel.findByIdAndUpdate(
+    user._id,
+    { otp },
+    { new: true },
+  );
+
+  return { msg: 'Check your email box' };
+}
+
+  
+async sendMailForChangeEmail(email: string): Promise<number> {
+  const otp = Math.floor(1000 + Math.random() * 9000); // 4-digit OTP
+  const user = await this.userModel.findOne({ email });
+
+  if (!user) {
+    throw new NotFoundException('Email does not exist!');
+  }
+
+  const fullName = user.name.split(' ');
+  const firstName = fullName[0];
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'bdmirazul906@gmail.com',
+      pass: 'acco zbcl qzxu whzq',
+    },
+  });
+
+  const mailOptions = {
+    from: '"BCS Prep" <bdmirazul906@gmail.com>',
+    to: email,
+    subject: 'Email Change Request - BCS Prep',
+    html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+        <div style="text-align: right;">
+          <img src="${user.profile}" alt="bcs logo" style="width: 60px; border-radius: 50%; border: 1px solid rgb(211, 210, 210);">
+        </div>
+        <h2 style="color: #333;">Hello, ${firstName}</h2>
+        <p style="font-size: 16px; color: #555;">
+          We received a request to change the email address for your account. Use the following code to confirm your request:
+        </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <span style="display: inline-block; background: #f1f1f1; border: 1px dashed gray; color: gray; padding: 10px 20px; font-size: 18px; font-weight: bold; border-radius: 8px;">
+              ${otp}
+            </span>
+          </div>
+        <p style="font-size: 14px; color: #888;">If you didn’t request this, you can safely ignore this email.</p>
+        <p style="font-weight: bold; color: #444;">Thank you,<br/>BCS Prep Team</p>
+      </div>
+    </div>
+    `,
+  };
+
+  // Await email sending properly
+  await transporter.sendMail(mailOptions);
+
+  return otp;
+}
   updateotp(otp) {}
   async updatePass(body) {
     const { email, password } = body;
@@ -612,6 +673,12 @@ export class AuthService {
       { password: strongPass },
       { new: true },
     );
+  }
+
+  async updateEmail(email,id){
+     const reader = await this.userModel.findOne({ _id: id });
+     reader.email = email
+     await reader.save()
   }
 
   async findUserForUpdatePass(user) {

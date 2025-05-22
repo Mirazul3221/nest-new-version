@@ -417,7 +417,7 @@ const Page = () => {
         <SuperHeader />
       </div>
 <img
-  className="rounded-b-3xl rounded-t-md w-full md:h-[50vh] object-cover -z-30"
+  className="rounded-b-3xl md:rounded-b-[60%] rounded-t-md md:rounded-t-none w-full md:h-[50vh] object-cover -z-30"
   src={`/cover-photo/background-${randNum}.jpg`}
   alt="cover"
 />
