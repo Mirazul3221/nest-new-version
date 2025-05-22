@@ -30,11 +30,18 @@ const Page = () => {
   const [tags, setTags] = useState(null);
   const [tag, setTag] = useState(null);
   const [flug, setFlug] = useState("all");
+  const [userData, setUserData] = useState(null);
   const [checkScroll, setCheckScroll] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const user = await axios.get(`${baseurl}/auth/find`, {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        });
+        setUserData(user.data);
         const { data } = await axios.get(
           `${baseurl}/userquestions/get-tag/subject/chapter`,
           {
@@ -48,7 +55,7 @@ const Page = () => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
-        commonLogout(dispatch,error)
+        commonLogout(dispatch, error);
       }
     };
 
@@ -76,7 +83,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +115,7 @@ const Page = () => {
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     } finally {
       setIsLoading(false);
     }
@@ -146,7 +153,6 @@ const Page = () => {
     route.push("/login");
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
-
   return (
     <div className="min-h-screen">
       <ProtectRoute>
@@ -299,7 +305,7 @@ const Page = () => {
 
           {questions.length == 0 && (
             <div className="w-9/12 hidden md:block">
-              <Settings/>
+              <Settings userData={userData} />
             </div>
           )}
           {questions.length > 0 && (

@@ -102,7 +102,8 @@ const ProfileCard = ({ id }) => {
   // </div>
   const [myFriend, setMyFriend] = useState();
   const allFriendId = async () => {
-    setLoader(true);
+    try {
+      setLoader(true);
     const { data } = await axios.get(
       `${baseurl}/friend-request/get-friend/acceptedFriendId`,
       {
@@ -114,7 +115,9 @@ const ProfileCard = ({ id }) => {
     setLoader(false);
     const friendExist = data?.some((f) => f === id);
     setMyFriend(friendExist);
-    commonLogout(dispatch,error)
+    } catch (error) {
+          commonLogout(dispatch,error)
+    }
   };
   useEffect(() => {
     allFriendId();

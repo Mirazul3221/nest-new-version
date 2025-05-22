@@ -4,7 +4,7 @@ import { CreateLoginstatusDto } from './dto/create-loginstatus.dto';
 import { UpdateLoginstatusDto } from './dto/update-loginstatus.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('login-status')
+@Controller('login-status')//
 export class LoginstatusController {
   constructor(private readonly loginstatusService: LoginstatusService) {}
     @UseGuards(AuthGuard())

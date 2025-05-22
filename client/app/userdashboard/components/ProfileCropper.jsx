@@ -7,6 +7,7 @@ import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import { ImCamera } from "react-icons/im";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function ProfileCropper({
   name = "unknown",
@@ -129,9 +130,8 @@ export default function ProfileCropper({
           setOpenModel(false);
           setCropedImgURL(data)
         } catch (error) {
-          console.log(error);
+         toast.error('Something went wrong!')
           setLoader(false);
-          setOpenModel(false);
           commonLogout(dispatch, error);
         }
       },
@@ -189,6 +189,7 @@ export default function ProfileCropper({
 
   return (
     <div className="w-fit">
+       <ToastContainer />
       <img src="" alt="" />
       <div className="md:w-[200px] w-[120px] md:mx-auto relative">
         {profile?.length > 0 ? (

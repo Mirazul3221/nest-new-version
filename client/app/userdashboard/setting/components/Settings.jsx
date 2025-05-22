@@ -1,3 +1,4 @@
+'use client'
 import { baseurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
@@ -11,8 +12,9 @@ import { GrFirefox } from "react-icons/gr";
 import { IoGitNetworkSharp, IoLogoWindows } from "react-icons/io5";
 import { toast, ToastContainer } from "react-toastify";
 import ProfileCropper from "../../components/ProfileCropper";
+import { commonLogout } from "../../components/common";
 
-const Settings = () => {
+const Settings = ({ userData }) => {
   const { store, dispatch } = useStore();
   const [settingData, setSettingData] = useState(null);
   const fetchSettingData = async () => {
@@ -26,7 +28,7 @@ const Settings = () => {
       // Do something with `data` here (e.g., update state)
     } catch (error) {
       console.error("Error fetching data:", error);
-      commonLogout(dispatch,error);
+      commonLogout(dispatch, error);
     }
   };
 
@@ -44,94 +46,118 @@ const Settings = () => {
       setSettingData(filterData);
       toast(data);
     } catch (error) {
-      commonLogout(dispatch,error);
+      commonLogout(dispatch, error);
     }
   };
 
   console.log(store.userInfo.sessionId);
+  console.log(userData);
   return (
     <div className="w-full h-full">
-      {settingData &&
-        settingData?.reverse().map((item, i) => {
-          return (
-            <div key={i} className="bg-white border px-6 py-3 mb-2">
-              <div className="md:flex gap-4 flex-wrap">
-                <div className="flex gap-1 items-center">
-                  {item.os == "Windows" ? (
-                    <IoLogoWindows size={20} />
-                  ) : item.os == "Android" ? (
-                    <BsAndroid2 size={18} />
-                  ) : item.os == "iOS" ? (
-                    <FaApple size={18} />
-                  ) : (
-                    <FaMobileScreen size={18} />
+      <ToastContainer />
+      <div className="">
+        <h5 className="font-semibold">Personal Info</h5>
+        <div className="w-fit mx-auto">
+          <ProfileCropper
+            name="Mirazul Islam"
+            profile="http://res.cloudinary.com/df5rvx2id/image/upload/v1747748657/mcq_reader_profile/1747748657460.jpg"
+          />
+        </div>
+        <form method="post" action="/api/register" autoComplete="on">
+          <input type="text" name="username" autoComplete="username" required />
+
+          <input
+            type="password"
+            name="new-password"
+            autoComplete="new-password"
+            required
+          />
+
+          <button type="submit">Register</button>
+        </form>
+      </div>
+      <div className="">
+        <h5 className="font-semibold">Login Status</h5>
+        {settingData &&
+          settingData?.reverse().map((item, i) => {
+            return (
+              <div key={i} className="bg-white border px-6 py-3 mb-2">
+                <div className="md:flex gap-4 flex-wrap">
+                  <div className="flex gap-1 items-center">
+                    {item.os == "Windows" ? (
+                      <IoLogoWindows size={20} />
+                    ) : item.os == "Android" ? (
+                      <BsAndroid2 size={18} />
+                    ) : item.os == "iOS" ? (
+                      <FaApple size={18} />
+                    ) : (
+                      <FaMobileScreen size={18} />
+                    )}
+                    <h6>
+                      <span className="font-bold">Os:</span>
+                      {item.os}
+                    </h6>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    {item.browser == "Chrome" ||
+                    item.browser == "Mobile Chrome" ? (
+                      <FaChrome size={20} />
+                    ) : item.browser == "Firefox" ||
+                      item.browser == "Mobile Firefox" ? (
+                      <GrFirefox size="18" />
+                    ) : item.browser == "Edge" ? (
+                      <FaEdge size={18} />
+                    ) : (
+                      <BiWorld size={18} />
+                    )}
+                    <h6>
+                      <span className="font-bold">Browser:</span>
+                      {item.browser}
+                    </h6>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <FaLocationDot size={18} />
+                    <h6>
+                      <span className="font-bold">Location:</span>
+                      {item.location}
+                    </h6>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <IoGitNetworkSharp size={18} />
+                    <h6>
+                      <span className="font-bold">IP:</span>
+                      {item.ipAddress}
+                    </h6>
+                  </div>
+                </div>
+                <h6>
+                  <span className="font-bold">Agent:</span>
+                  {item.userAgent}
+                </h6>
+                <div className="flex items-center gap-1 text-[12px]">
+                  {item.sessionId == store.userInfo.sessionId && (
+                    <div
+                      onClick={() => deleteSession(item._id)}
+                      className="text-green-500 cursor-pointer py-1 px-2 mt-1 border border-green-500 w-fit rounded-md"
+                    >
+                      THIS DEVICE
+                    </div>
                   )}
-                  <h6>
-                    <span className="font-bold">Os:</span>
-                    {item.os}
-                  </h6>
-                </div>
-                <div className="flex gap-1 items-center">
-                  {item.browser == "Chrome" ||
-                  item.browser == "Mobile Chrome" ? (
-                    <FaChrome size={20} />
-                  ) : item.browser == "Firefox" ||
-                    item.browser == "Mobile Firefox" ? (
-                    <GrFirefox size="18" />
-                  ) : item.browser == "Edge" ? (
-                    <FaEdge size={18} />
-                  ) : (
-                    <BiWorld size={18} />
-                  )}
-                  <h6>
-                    <span className="font-bold">Browser:</span>
-                    {item.browser}
-                  </h6>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaLocationDot size={18} />
-                  <h6>
-                    <span className="font-bold">Location:</span>
-                    {item.location}
-                  </h6>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <IoGitNetworkSharp size={18} />
-                  <h6>
-                    <span className="font-bold">IP:</span>
-                    {item.ipAddress}
-                  </h6>
-                </div>
-              </div>
-              <h6>
-                <span className="font-bold">Agent:</span>
-                {item.userAgent}
-              </h6>
-              <div className="flex items-center gap-1">
-                {item.sessionId == store.userInfo.sessionId && (
                   <div
                     onClick={() => deleteSession(item._id)}
-                    className="text-green-500 cursor-pointer py-1 px-2 mt-1 border border-green-500 w-fit rounded-md"
+                    className="text-rose-500 cursor-pointer py-1 px-2 mt-1 border border-rose-500 w-fit rounded-md"
                   >
-                    THIS DEVICE
+                    DELETE THIS SESSION
                   </div>
-                )}
-                <div
-                  onClick={() => deleteSession(item._id)}
-                  className="text-rose-500 cursor-pointer py-1 px-2 mt-1 border border-rose-500 w-fit rounded-md"
-                >
-                  DELETE THIS SESSION
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
 
-      {settingData && settingData.length == 0 && (
-        <p className="text-center mt-5">Data Not Found!</p>
-      )}
-      <ToastContainer />
-      <ProfileCropper name="Mirazul Islam" profile="http://res.cloudinary.com/df5rvx2id/image/upload/v1747748657/mcq_reader_profile/1747748657460.jpg"/>
+        {settingData && settingData.length == 0 && (
+          <p className="text-center mt-5">Data Not Found!</p>
+        )}
+      </div>
     </div>
   );
 };

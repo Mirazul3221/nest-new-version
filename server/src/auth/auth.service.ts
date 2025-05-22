@@ -386,7 +386,6 @@ export class AuthService {
           profile: url,
         },
       );
-     console.log(url)
       return url
     } catch (error) {
       console.log(error);
