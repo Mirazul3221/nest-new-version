@@ -63,7 +63,15 @@ const Settings = ({ userData }) => {
             profile="http://res.cloudinary.com/df5rvx2id/image/upload/v1747748657/mcq_reader_profile/1747748657460.jpg"
           />
         </div>
-        <form method="post" action="/api/register" autoComplete="on">
+     <form
+  action="https://example.com"
+  method="post"
+  autoComplete="on"
+  onSubmit={(e) => {
+    e.preventDefault();
+    // trigger your custom submit logic here
+  }}
+>
           <input type="text" name="username" autoComplete="username" required />
 
           <input
