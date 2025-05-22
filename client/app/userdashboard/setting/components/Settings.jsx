@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { baseurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
@@ -63,20 +63,29 @@ const Settings = ({ userData }) => {
             profile="http://res.cloudinary.com/df5rvx2id/image/upload/v1747748657/mcq_reader_profile/1747748657460.jpg"
           />
         </div>
-     <form
-  action="https://example.com"
-  method="post"
-  autoComplete="on"
-  onSubmit={(e) => {
-    e.preventDefault();
-    // trigger your custom submit logic here
-  }}
->
-          <input type="text" name="username" autoComplete="username" required />
+        <form
+          action="https://example.com/register"
+          method="post"
+          autoComplete="on"
+          onSubmit={(e) => {
+            e.preventDefault();
+            // your custom submit logic here
+          }}
+        >
+          {/* Hidden email field to help browsers recognize the form */}
+          <input
+            type="email"
+            name="email"
+            autoComplete="email"
+            style={{ display: "none" }}
+            tabIndex={-1}
+          />
 
+          <label htmlFor="password">New Password</label>
           <input
             type="password"
-            name="new-password"
+            id="password"
+            name="password"
             autoComplete="new-password"
             required
           />
