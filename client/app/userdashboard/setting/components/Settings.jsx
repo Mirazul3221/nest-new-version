@@ -23,14 +23,24 @@ const Settings = ({ userData }) => {
   const [mail, setMail] = useState(null);
   const [settingData, setSettingData] = useState(null);
   const [openEmail, setOpenEmail] = useState(false);
+  const [openPass, setOpenPass] = useState(false);
+  const [openDesc, setOpenDesc] = useState(false);
   const [openEmailVarifiedWindow, setOpenEmailVarifiedWindow] = useState(false);
+  const [loading02, setLoading02] = useState(false);
   const [loading01, setLoading01] = useState(false);
+  const [loading0, setLoading0] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [getOtp, setGetOpt] = useState();
   const [otpAlert, setOtpAlert] = useState("");
   const otpBoxRef = useRef(null);
+  const [exPass, setExPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confPass, setConfPass] = useState("");
+  const [desc, setDesc] = useState("");
   useEffect(() => {
     setMail(maskEmail(userData?.email));
-  }, []);
+    setDesc(userData?.description);
+  }, [userData]);
   const fetchSettingData = async () => {
     try {
       const { data } = await axios.get(`${baseurl}/login-status/all`, {
@@ -49,6 +59,7 @@ const Settings = ({ userData }) => {
   useEffect(() => {
     fetchSettingData();
   }, []);
+
   const deleteSession = async (id) => {
     try {
       const { data } = await axios.get(`${baseurl}/login-status/${id}`, {
@@ -119,19 +130,98 @@ const Settings = ({ userData }) => {
           },
         }
       );
-      toast('Email Update Successfully');
-       setOpenEmailVarifiedWindow(false);
-       setGetOpt(null)
-       setOpenEmail(false)
-       setOtpAlert('')
+      toast("Email Update Successfully");
+      setOpenEmailVarifiedWindow(false);
+      setGetOpt(null);
+      setOpenEmail(false);
+      setOtpAlert("");
     } catch (error) {
       commonLogout(dispatch, error);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setLoading(true);
+    if (!exPass) {
+      toast.error("Please, insurt your existing password");
+      setLoading(false);
+      return;
+    }
+
+    if (newPass.length < 5) {
+      toast.error("Password should be more than 6 characters!");
+      setLoading(false);
+      return;
+    }
+    if (newPass !== confPass) {
+      toast.error(
+        "Conflict issue! .New password does not match with the confirm password"
+      );
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/auth/varify-password`,
+        { password: exPass },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+
+      if (data) {
+        await axios.post(
+          `${baseurl}/auth/updatepass`,
+          { email: userData?.email, password: newPass },
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+        toast.success("Password changed successfully");
+        setOpenPass(false);
+        setExPass("");
+        setNewPass("");
+        setConfPass("");
+        setLoading(false);
+      } else
+        toast.error(
+          "Invalied password!. Enter your current password and try again"
+        );
+
+      setLoading(false);
+    } catch (error) {
+      commonLogout(dispatch, error);
+      setLoading(false);
+    }
+  };
+
+  const updateUserDescription = async () => {
+    setLoading02(true);
+    try {
+      await axios.post(
+        `${baseurl}/auth/updatemyprofile`,
+        { key: "desc", value: desc },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setLoading02(false);
+    } catch (error) {
+      commonLogout(dispatch, error);
+      setLoading02(false);
     }
   };
   return (
     <div className="w-full h-full text-gray-700">
       <ToastContainer />
-      <div className="bg-white rounded-md border px-6 py-4">
+      <div className="bg-white rounded-md border md:px-6 px-2 py-4">
         <h5 className="font-semibold md:text-2xl mb-3 text-gray-700">
           Personal Info
         </h5>
@@ -166,84 +256,156 @@ const Settings = ({ userData }) => {
             >
               Cancel
             </div>
-            <div className="px-3 py-1 bg-gray-100 rounded-md">Save Change</div>
+            {loading0 ? (
+              <span className="w-fit ml-auto -mt-4 flex items-center gap-2">
+                <AiOutlineLoading3Quarters
+                  className="animate-spin text-gray-700 text-center"
+                  size={20}
+                />{" "}
+                Processing...
+              </span>
+            ) : (
+              "Save Change"
+            )}
           </div>
         </div>
 
-        <div className="w-2/3 mx-auto">
+        <div className="md:w-2/3 mx-auto">
           <div className="mt-5 md:flex justify-center w-full gap-6">
-            <div className="border p-4 w-1/2 shadow-md">
-            <div >
-              <h5>Change Email</h5>
-              <form onSubmit={handleEmailVarifiedWindow}>
-                <input
-                  required
-                  onChange={(e) => setMail(e.target.value)}
-                  onFocus={() => setOpenEmail(true)}
-                  className="border w-full px-4 py-1 rounded-md mt-2"
-                  type="email"
-                  value={mail}
-                />
-                {openEmail && (
-                  <div className="flex gap-2 mt-1 justify-end">
-                    <div
-                      onClick={() => setOpenEmail(false)}
-                      className="px-3 py-1 bg-gray-100 rounded-md"
-                    >
-                      Cancel{" "}
+            <div className="border p-4 md:w-1/2 shadow-md">
+              <div>
+                <h5 className="text-center font-semibold">Change Email</h5>
+                <form onSubmit={handleEmailVarifiedWindow}>
+                  <label className=" mt-2 text-sm" htmlFor="new_pass">
+                    Email Address
+                  </label>
+                  <input
+                    required
+                    onChange={(e) => setMail(e.target.value)}
+                    onFocus={() => setOpenEmail(true)}
+                    className="border w-full px-4 py-1 rounded-md"
+                    type="email"
+                    value={mail}
+                  />
+                  {openEmail && (
+                    <div className="flex gap-2 mt-1 justify-end">
+                      <div
+                        onClick={() => setOpenEmail(false)}
+                        className="px-3 py-1 bg-gray-100 rounded-md"
+                      >
+                        Cancel{" "}
+                      </div>
+                      <button
+                        type="submit"
+                        className="px-3 py-1 bg-gray-100 rounded-md"
+                      >
+                        {loading01 ? "Loading..." : "Save Change"}
+                      </button>
                     </div>
-                    <button
-                      type="submit"
-                      className="px-3 py-1 bg-gray-100 rounded-md"
-                    >
-                      {loading01 ? "Loading..." : "Save Change"}
-                    </button>
-                  </div>
-                )}
-              </form>
+                  )}
+                </form>
 
-              <p className="text-rose-400 mt-1"> <span className="font-semibold">Note:</span> The email address, you will change must be valid and authentic. If you update a invalid email, you will never restore your email again. Only OTP is sent to the valid email</p>
+                <p className="text-rose-400 mt-1">
+                  {" "}
+                  <span className="font-semibold">Note:</span> The email
+                  address, you will change must be valid and authentic. If you
+                  update a invalid email, you will never restore your email
+                  again. Only OTP is sent to the valid email
+                </p>
+              </div>
             </div>
-            </div>
-            <div className="border p-4 w-1/2 flex flex-col shadow-md">
-              <h5>Change Password</h5>
+            <div className="border p-4 md:w-1/2 flex flex-col shadow-md mt-6 md:mt-0">
+              <h5 className="text-center font-semibold">Change Password</h5>
+              <label className=" mt-2 text-sm" htmlFor="new_pass">
+                Type Your Current Password
+              </label>
               <input
                 className="border px-4 py-1 rounded-md w-full"
+                onChange={(e) => setExPass(e.target.value)}
                 type="password"
-                value="*********"
+                placeholder="*******"
               />
-              <label className=" mt-2" htmlFor="new_pass">
+              <label className=" mt-2 text-sm" htmlFor="new_pass">
                 New Password
               </label>
               <input
                 className="border px-4 py-1 rounded-md w-full"
+                onChange={(e) => setNewPass(e.target.value)}
                 type="password"
-                value="*********"
+                value={newPass}
+                placeholder="*******"
               />
-              <label className=" mt-2" htmlFor="new_pass">
+              <label className=" mt-2 text-sm" htmlFor="new_pass">
                 Confirm Password
               </label>
               <input
                 className="border px-4 py-1 rounded-md w-full"
+                onChange={(e) => setConfPass(e.target.value)}
+                onFocus={() => setOpenPass(true)}
                 type="password"
-                value="*********"
+                value={confPass}
+                placeholder="*******"
               />
+              {openPass && (
+                <div className="flex gap-2 mt-1 justify-end">
+                  <div
+                    onClick={() => setOpenPass(false)}
+                    className="px-3 py-1 bg-gray-100 rounded-md"
+                  >
+                    Cancel{" "}
+                  </div>
+                  <button
+                    onClick={handleChangePassword}
+                    className="px-3 py-1 bg-gray-100 rounded-md"
+                  >
+                    {loading01 ? "Loading..." : "Save Change"}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <textarea
-            className="w-full h-[12vh] mt-6 shadow-md p-2 border"
+            className="w-full h-[30vh] mt-6 shadow-md p-2 border"
             name="go"
             id="dg"
-            value={userData?.description}
+            onChange={(e) => setDesc(e.target.value)}
+            onFocus={() => setOpenDesc(true)}
+            value={desc}
           ></textarea>
+          {openDesc && (
+            <div className="flex gap-2 mt-1 justify-end">
+              <div
+                onClick={() => setOpenDesc(false)}
+                className="px-3 py-1 bg-gray-100 rounded-md"
+              >
+                Cancel{" "}
+              </div>
+              <button
+                onClick={updateUserDescription}
+                className="px-3 py-1 bg-gray-100 rounded-md"
+              >
+                {loading02 ? (
+                  <span className="w-fit ml-auto -mt-4 flex items-center gap-2">
+                    <AiOutlineLoading3Quarters
+                      className="animate-spin text-gray-700 text-center"
+                      size={20}
+                    />{" "}
+                    Processing...
+                  </span>
+                ) : (
+                  "Save Change"
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="bg-white mt-4 border px-6 py-4 mb-2">
         <h5 className="font-semibold md:text-2xl mb-3">Login Status</h5>
         {settingData &&
-          settingData?.reverse().map((item, i) => {
+          settingData?.map((item, i) => {
             return (
-              <div key={i} className="py-3 mb-2">
+              <div key={i} className="py-3 mb-2 border md:border-none p-2 md:p-0">
                 <div className="md:flex gap-4 flex-wrap">
                   <div className="flex gap-1 items-center">
                     {item.os == "Windows" ? (

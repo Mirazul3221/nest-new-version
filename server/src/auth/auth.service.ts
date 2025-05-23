@@ -663,9 +663,18 @@ async sendMailForChangeEmail(email: string): Promise<number> {
 
   return otp;
 }
-  updateotp(otp) {}
+
+ async verifyPass(id,password) {
+     const reader = await this.userModel.findOne({ _id: id }).select("+password");
+         const check_password = await bcrypt.compare(password, reader.password);
+    if (!check_password) {
+      return false
+    } else return true
+  }
+
   async updatePass(body) {
     const { email, password } = body;
+    console.log( email, password )
     const user = await this.userModel.findOne({ email: email });
     const strongPass = await bcrypt.hash(password, 9);
     await this.userModel.findByIdAndUpdate(

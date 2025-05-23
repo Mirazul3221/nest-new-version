@@ -185,15 +185,17 @@ async userProfileAndName (@Param('id') id){
  return await this.authService.sendMailForChangeEmail(req.user.email)
  }
 
-
-@Post('updateotp')
- async updateotp(@Body() otp) {
- return await this.authService.updateotp(otp)
- }
 @Post('updatepass')
  async updatePass(@Body() body) {
   // console.log(body)
  return await this.authService.updatePass(body)
+ }
+
+ 
+@Post('varify-password')
+ @UseGuards(AuthGuard())
+ async verifyPass(@Body() data, @Req() req) {
+ return await this.authService.verifyPass(req.user._id, data.password)
  }
 @Post('update-email')
  @UseGuards(AuthGuard())

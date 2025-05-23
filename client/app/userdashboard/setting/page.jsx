@@ -304,7 +304,7 @@ const Page = () => {
           {/* Right Sidebar (e.g., Ads or Extra Info) */}
 
           {questions.length == 0 && (
-            <div className="w-9/12 hidden md:block">
+            <div className="md:w-9/12">
               <Settings userData={userData} />
             </div>
           )}

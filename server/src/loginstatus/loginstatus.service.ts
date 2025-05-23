@@ -11,7 +11,7 @@ export class LoginstatusService {
  async findAll(req) {
      try {
       const res = await this.sessionModel.find({userId:req.user._id});
-      return res
+      return res.reverse()
      } catch (error) {
       
      }
