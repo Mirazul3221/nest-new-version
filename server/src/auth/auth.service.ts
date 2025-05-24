@@ -405,7 +405,13 @@ export class AuthService {
 
   async requestedAuthData(user, req) {
     const id = req.user._id;
-    if (user.key == 'title') {
+     if (user.key == 'name') {
+      await this.userModel.findByIdAndUpdate(
+        id,
+        { name: user.value },
+        { new: true },
+      );
+    }else if (user.key == 'title') {
       await this.userModel.findByIdAndUpdate(
         id,
         { title: user.value },

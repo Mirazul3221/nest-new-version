@@ -41,7 +41,6 @@ export class AuthController {
   @Post("updatemyprofile")
   @UseGuards(AuthGuard())
   async requestedTitleData(@Body() title, @Req() req){
-    // console.log(userEmail.email)
      return await this.authService.requestedAuthData(title,req)//
   }
 

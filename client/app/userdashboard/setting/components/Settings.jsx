@@ -10,7 +10,8 @@ import { FaApple, FaChrome, FaEdge } from "react-icons/fa";
 import { FaLocationDot, FaMobileScreen } from "react-icons/fa6";
 import { GrFirefox } from "react-icons/gr";
 import { IoGitNetworkSharp, IoLogoWindows } from "react-icons/io5";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ProfileCropper from "../../components/ProfileCropper";
 import { commonLogout, maskEmail } from "../../components/common";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -19,7 +20,7 @@ import { RxCross1 } from "react-icons/rx";
 const Settings = ({ userData }) => {
   const { store, dispatch } = useStore();
   const [openName, setOpenName] = useState(false);
-  const [name, setName] = useState(userData?.name);
+  const [name, setName] = useState();
   const [mail, setMail] = useState(null);
   const [settingData, setSettingData] = useState(null);
   const [openEmail, setOpenEmail] = useState(false);
@@ -40,6 +41,7 @@ const Settings = ({ userData }) => {
   useEffect(() => {
     setMail(maskEmail(userData?.email));
     setDesc(userData?.description);
+    setName(userData?.name);
   }, [userData]);
   const fetchSettingData = async () => {
     try {
@@ -69,7 +71,7 @@ const Settings = ({ userData }) => {
       });
       const filterData = settingData.filter((data) => data._id !== id);
       setSettingData(filterData);
-      toast(data);
+      toast('Session delete success!');
     } catch (error) {
       commonLogout(dispatch, error);
     }
@@ -141,7 +143,6 @@ const Settings = ({ userData }) => {
   };
 
   const handleChangePassword = async () => {
-    setLoading(true);
     if (!exPass) {
       toast.error("Please, insurt your existing password");
       setLoading(false);
@@ -162,6 +163,7 @@ const Settings = ({ userData }) => {
     }
 
     try {
+          setLoading(true);
       const { data } = await axios.post(
         `${baseurl}/auth/varify-password`,
         { password: exPass },
@@ -218,9 +220,36 @@ const Settings = ({ userData }) => {
       setLoading02(false);
     }
   };
+
+
+  const hnadleUpdateNmae = async () => {
+    if(userData?.name == name){
+      setLoading0(false);
+      toast.error('No changed name found!')
+      return
+    }
+    try {
+          setLoading0(true);
+      await axios.post(
+        `${baseurl}/auth/updatemyprofile`,
+        { key: "name", value: name },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      toast.success('Name is changed')
+      setLoading0(false);
+    } catch (error) {
+      console.log(error)
+      commonLogout(dispatch, error);
+      setLoading0(false);
+    }
+  };
+
   return (
     <div className="w-full h-full text-gray-700">
-      <ToastContainer />
       <div className="bg-white rounded-md border md:px-6 px-2 py-4">
         <h5 className="font-semibold md:text-2xl mb-3 text-gray-700">
           Personal Info
@@ -245,6 +274,7 @@ const Settings = ({ userData }) => {
             } flex gap-2 items-center`}
           >
             <input
+              className="px-3 py-1 rounded-sm border"
               onChange={(e) => setName(e.target.value)}
               type="text"
               id="update_name"
@@ -256,17 +286,19 @@ const Settings = ({ userData }) => {
             >
               Cancel
             </div>
-            {loading0 ? (
-              <span className="w-fit ml-auto -mt-4 flex items-center gap-2">
-                <AiOutlineLoading3Quarters
-                  className="animate-spin text-gray-700 text-center"
-                  size={20}
-                />{" "}
-                Processing...
-              </span>
-            ) : (
-              "Save Change"
-            )}
+            <div onClick={hnadleUpdateNmae} className="px-3 py-1 bg-gray-100 cursor-pointer rounded-md">
+              {loading0 ? (
+                <span className="w-fit ml-auto cursor-pointer flex items-center gap-2">
+                  <AiOutlineLoading3Quarters
+                    className="animate-spin text-gray-700 text-center"
+                    size={20}
+                  />{" "}
+                  Processing...
+                </span>
+              ) : (
+                "Save Change"
+              )}
+            </div>
           </div>
         </div>
 
@@ -385,7 +417,7 @@ const Settings = ({ userData }) => {
                 className="px-3 py-1 bg-gray-100 rounded-md"
               >
                 {loading02 ? (
-                  <span className="w-fit ml-auto -mt-4 flex items-center gap-2">
+                  <span className="w-fit ml-auto mt-4 flex items-center gap-2">
                     <AiOutlineLoading3Quarters
                       className="animate-spin text-gray-700 text-center"
                       size={20}
@@ -405,7 +437,10 @@ const Settings = ({ userData }) => {
         {settingData &&
           settingData?.map((item, i) => {
             return (
-              <div key={i} className="py-3 mb-2 border md:border-none p-2 md:p-0">
+              <div
+                key={i}
+                className="py-3 mb-2 border md:border-none p-2 md:p-0"
+              >
                 <div className="md:flex gap-4 flex-wrap">
                   <div className="flex gap-1 items-center">
                     {item.os == "Windows" ? (
@@ -555,6 +590,8 @@ const Settings = ({ userData }) => {
           </div>
         </div>
       )}
+
+    <ToastContainer />
     </div>
   );
 };
