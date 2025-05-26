@@ -19,15 +19,24 @@ import NearbyUserProfileCard from "../../components/NearbyUserProfileCard";
 import { PiBookOpenTextDuotone } from "react-icons/pi";
 import { TiDocumentText } from "react-icons/ti";
 import { commonLogout } from "../../components/common";
+import FloatingMessageContainer from "../../components/messanger/MessageContainer";
 const Page = () => {
   const { dispatch, store } = useStore();
   const [questions, setQuestions] = useState([]); // Store fetched comments
+  const [userDetails,setUserDetails] = useState(null)
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
   const [tags,setTags] = useState(null);
   const [tag,setTag] = useState(null);
-  const [flug,setFlug] = useState('all')
+  const [flug,setFlug] = useState('all');
+    const [switcher, setSwitcher] = useState(false);
+    useEffect(() => {
+        setSwitcher(true)
+    }, [userDetails]);
+    useEffect(() => {
+        if(!switcher) setUserDetails(null)
+    }, [switcher]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -143,6 +152,7 @@ const Page = () => {
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
 
+  console.log(userDetails)
   return (
 <div className="min-h-screen">
   <ProtectRoute>
@@ -152,8 +162,7 @@ const Page = () => {
     </div>
 
     {/* Main Content */}
-    <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-50">
-      
+    <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-50">  
       {/* Sidebar (Sticky - Desktop Only) */}
       <div className="w-3/12 h-fit sticky top-24 hidden md:block">
         <div className="text-gray-700">
@@ -276,7 +285,7 @@ const Page = () => {
         {/* Questions */}
         {questions?.map((question, i) => (
           <div key={i} className="mx-auto">
-            <QuestionCard questionsAfterDelete={questionsAfterDelete} myQuestion={question} />
+            <QuestionCard questionsAfterDelete={questionsAfterDelete} myQuestion={question} Handler={setUserDetails} />
           </div>
         ))}
         {isLoading && (
@@ -297,6 +306,15 @@ const Page = () => {
     </div>
 
     {/* Footer */}
+{switcher && userDetails && (
+  <div className="fixed bottom-0 left-0 md:left-auto md:right-10 z-30 border w-screen md:h-auto md:w-[25vw] bg-white">
+    <FloatingMessageContainer
+      id={userDetails._id}
+      userDetails={userDetails}
+      setSwitcher={setSwitcher}
+    />
+  </div>
+)}
     <Footer />
   </ProtectRoute>
 </div>

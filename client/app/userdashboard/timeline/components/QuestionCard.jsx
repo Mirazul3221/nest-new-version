@@ -11,17 +11,16 @@ import CommentBox from "./CommentBox";
 import { RiFileEditLine } from "react-icons/ri";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../create-post/components/EditQuestion";
-import ProfileCard from "./ProfileCard";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { CountQuestionsCollection } from "../../global/common";
 import { useEffect } from "react";
 import { commonLogout, profileApi } from "../../components/common";
+import ProfileCard from "../../components/ProfileCard";
 
-const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
-  const { store,dispatch } = useContext(storeContext);
+const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
+  const { store, dispatch } = useContext(storeContext);
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
-  const [profileContainer, setProfileContainer] = useState(false);
   const dateFormate = (createdAt) => {
     const currentYear = moment().year();
     const postYear = moment(createdAt).year();
@@ -92,7 +91,6 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
     // console.log(ans)
   }, []);
 
-  
   const handleDelete = async () => {
     try {
       const { data } = await axios.get(
@@ -107,11 +105,11 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
       setDelete(false);
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
 
-  const randomCount = Math.floor(Math.random() * 360 + 1)
+  const randomCount = Math.floor(Math.random() * 360 + 1);
   return (
     <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border">
       {myQuestion && (
@@ -120,33 +118,28 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion }) => {
             <div className="top flex items-center gap-2">
               <div className="">
                 {myQuestion.profile !== "" ? (
-                  <img
-                    onMouseEnter={() => setProfileContainer(true)}
-                    onMouseLeave={() => setProfileContainer(false)}
-                    className="w-10"
-                    src={myQuestion.profile}
-                    alt={myQuestion.userName}
-                  />
+                  <ProfileCard id={myQuestion.userId} Handler={Handler}>
+                    <img
+                      className="w-10 rounded-full cursor-pointer"
+                      src={myQuestion.profile}
+                      alt={myQuestion.userName}
+                    />
+                  </ProfileCard>
                 ) : (
-                  <div style={{background:`hsl(${randomCount}, 65%, 40%)`}} className="w-10 h-10 text-white flex justify-center items-center uppercase text-2xl rounded-full">
-                    {
-                    myQuestion.userName.split('')[0]
-                    }
+                  <div
+                    style={{ background: `hsl(${randomCount}, 65%, 40%)` }}
+                    className="w-10 h-10 text-white flex justify-center items-center uppercase text-2xl rounded-full"
+                  >
+                    {myQuestion.userName.split("")[0]}
                   </div>
                 )}
-                {profileContainer &&
-                  store.userInfo.id !== myQuestion.userId && (
-                    <div
-                      onMouseEnter={() => setProfileContainer(true)}
-                      onMouseLeave={() => setProfileContainer(false)}
-                      className="absolute top-5 md:-translate-x-[50%] md:left-10"
-                    >
-                      <ProfileCard id={myQuestion.userId} />
-                    </div>
-                  )}
               </div>
               <div className="">
-                <h2 className="font-semibold text-md">{myQuestion.userName}</h2>
+                <ProfileCard id={myQuestion.userId} Handler={Handler}>
+                  <h2 className="font-semibold text-md cursor-pointer hover:underline">
+                    {myQuestion.userName}
+                  </h2>
+                </ProfileCard>
                 <p className="text-sm">{dateFormate(myQuestion.createdAt)}</p>
               </div>
             </div>

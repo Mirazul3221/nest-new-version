@@ -347,6 +347,7 @@ export class AuthService {
   }
 
   async findSingleUserByPublicUser(param) {
+    // const result = await this.userModel.findById({ _id: param }).select('name profile title status description');
     const result = await this.userModel.findById({ _id: param });
     return result;
   }

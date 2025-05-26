@@ -8,7 +8,7 @@ import { BsPersonUp } from "react-icons/bs";
 import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
 import { commonLogout } from "../../common";
 
-const AddAndDeleteFriendRequestButton = ({ id }) => {
+const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
   const { store,dispatch } = useStore();
   const { socket } = useSocket();
   const [requestStatus, setRequestStatus] = useState();
@@ -83,7 +83,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
   };
   return (
     <div>
-      <button onClick={addAndDeleteFriendRequest} className={`${(requestStatus == "accepted") ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"} cursor-pointer rounded-md w-fit px-4 flex gap-[3px] items-center`}>
+      <button onClick={addAndDeleteFriendRequest} className={`${(requestStatus == "accepted") ? "bg-violet-500 text-white" : "bg-gray-200 text-gray-700"} cursor-pointer rounded-md w-fit ${px} ${py} flex gap-[3px] items-center`}>
         {loading && "Loading..."}
          
         {!loading && (
@@ -91,7 +91,7 @@ const AddAndDeleteFriendRequestButton = ({ id }) => {
             {requestStatus == "pending"
               ? <span className="flex gap-1 items-center"><BsPersonUp />  Connecting</span>
               : requestStatus == "accepted"
-              ? <span className="flex gap-1 items-center"><IoPersonRemoveOutline />  Disconnect</span>
+              ? <span title="Click to make unfriend" className="flex gap-1 items-center"><IoPersonRemoveOutline />  Friend</span>
               : <span className="flex gap-1 items-center"><IoPersonAddOutline /> Connect</span>}
           </>
         )}

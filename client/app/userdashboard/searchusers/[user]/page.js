@@ -32,7 +32,7 @@ const Page = () => {
   const [loderReq, setLoaderReq] = useState(false);
   const [openMessangerBox, setOpenMessangerBox] = useState(true);
   const [openMessangerBox1, setOpenMessangerBox1] = useState(false);
-  const { store,dispatch } = useContext(storeContext);
+  const { store, dispatch } = useContext(storeContext);
   const { socket, myActiveFriends } = useSocket();
   useEffect(() => {
     const fetchUser = async () => {
@@ -73,7 +73,7 @@ const Page = () => {
       } catch (error) {
         //   setLoader(false);
         console.log(error);
-        commonLogout(dispatch,error)
+        commonLogout(dispatch, error);
       }
     };
     fetchUser();
@@ -82,32 +82,38 @@ const Page = () => {
   //=======================================================
   const [someFriendProfileAndId, setSomeFriendProfileAndId] = useState(null);
   const someUserProAndIds = async (id) => {
-    const someFriendsProfileAndId = await axios.get(
-      `${baseurl}/friend-request/get-your-friend/${id}/somefriendandid`,
-      {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-        },
-      }
-    );
-    someOfMyFriend(id);
-    setSomeFriendProfileAndId(someFriendsProfileAndId.data);
-    commonLogout(dispatch,error)
+    try {
+      const someFriendsProfileAndId = await axios.get(
+        `${baseurl}/friend-request/get-your-friend/${id}/somefriendandid`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      someOfMyFriend(id);
+      setSomeFriendProfileAndId(someFriendsProfileAndId.data);
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   };
   //=======================================================
   //=======================================================
   const [someOfMyFriendDetails, setSomeOfMyFriendDetails] = useState(null);
   const someOfMyFriend = async (id) => {
-    const someFriendsProfileAndId = await axios.get(
-      `${baseurl}/friend-request/get-your-friend/${id}/somefriend`,
-      {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-        },
-      }
-    );
-    setSomeOfMyFriendDetails(someFriendsProfileAndId.data);
-    commonLogout(dispatch,error)
+    try {
+      const someFriendsProfileAndId = await axios.get(
+        `${baseurl}/friend-request/get-your-friend/${id}/somefriend`,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      setSomeOfMyFriendDetails(someFriendsProfileAndId.data);
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   };
 
   const hasInList = acceptedFriendsId?.includes(userDetails._id);
@@ -155,7 +161,7 @@ const Page = () => {
       //   setLoader(false);
       setLoaderReq(false);
       toast.error(error.response.data.message);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
   ////////////////send message api////////////////////////
@@ -180,7 +186,9 @@ const Page = () => {
         }
       );
       socket && (await socket.emit("new-notification", recipient));
-    } catch (error) {commonLogout(dispatch,error)}
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   };
   //==================================================================
   const cancleFriendRequest = async (id) => {
@@ -421,34 +429,36 @@ const Page = () => {
                       key={i}
                       className="mt-4 bg-gray-100 p-2 flex gap-4 justify-between items-center rounded-lg border"
                     >
-                    <div className="flex items-center gap-2">
-                    <div className="relative rounded-full w-fit mx-auto">
-                        {myActiveFriends &&
-                        myActiveFriends?.some((O) => O === item._id) ? (
-                          <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
-                        ) : (
-                          <div className="w-3 h-3 border-2 border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
-                        )}
-                        <img
-                          className="w-20 mx-auto border md:border-4 rounded-full"
-                          src={item.profile}
-                        />
+                      <div className="flex items-center gap-2">
+                        <div className="relative rounded-full w-fit mx-auto">
+                          {myActiveFriends &&
+                          myActiveFriends?.some((O) => O === item._id) ? (
+                            <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full right-3 bottom-1"></div>
+                          ) : (
+                            <div className="w-3 h-3 border-2 border-white bg-gray-400 absolute rounded-full right-3 bottom-1"></div>
+                          )}
+                          <img
+                            className="w-20 mx-auto border md:border-4 rounded-full"
+                            src={item.profile}
+                          />
+                        </div>
+                        <div>
+                          <Link
+                            href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                          >
+                            <h2 className="text-md font-semibold text-gray-700 mt-2">
+                              {item.name}
+                            </h2>
+                          </Link>
+                          <h4 className=" text-gray-700 mt-2">
+                            Reader Type :{" "}
+                            <span className="text-violet-700">
+                              {item.status}
+                            </span>
+                          </h4>
+                        </div>
                       </div>
-                      <div>
-                        <Link
-                          href={`${viewurl}/userdashboard/searchusers/${item._id}`}
-                        >
-                          <h2 className="text-md font-semibold text-gray-700 mt-2">
-                            {item.name}
-                          </h2>
-                        </Link>
-                        <h4 className=" text-gray-700 mt-2">
-                          Reader Type :{" "}
-                          <span className="text-violet-700">{item.status}</span>
-                        </h4>
-                      </div>
-                    </div>
-                      <div className="mt-2 space-y-3">
+                      <div className="mt-2 space-y-3 bg-black">
                         <AddAndDeleteFriendRequestButton id={item?._id} />
                         <CallMessageContainer
                           id={item?._id}
