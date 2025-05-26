@@ -138,7 +138,6 @@ const ProfileCard = ({ id }) => {
         }
       );
     } catch (error) {
-      console.log(error);
       commonLogout(dispatch,error)
     }
   };

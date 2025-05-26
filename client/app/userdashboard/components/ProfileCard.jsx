@@ -7,9 +7,9 @@ import { baseurl } from "@/app/config";
 import AddAndDeleteFriendRequestButton from "./messanger/components/AddAndDeleteFriendRequestButton";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const ProfileCard = ({ children, id, Handler= null}) => {
+const ProfileCard = ({ children, id, Handler = null }) => {
   const { store, dispatch } = useContext(storeContext);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const profileRef = useRef(null);
   const windowHeight = window.innerHeight;
   const [position, setPosition] = useState("");
@@ -43,9 +43,9 @@ const ProfileCard = ({ children, id, Handler= null}) => {
     }
   };
 
- const callData = async ()=>{
+  const callData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const { data } = await axios.get(
         `${baseurl}/auth/publicuser/findbyid/${id}`,
         {
@@ -54,13 +54,13 @@ const ProfileCard = ({ children, id, Handler= null}) => {
           },
         }
       );
-      Handler(data)
-      setLoading(false)
+      Handler(data);
+      setLoading(false);
     } catch (error) {
-        commonLogout(dispatch, error);
-        setLoading(false)
+      commonLogout(dispatch, error);
+      setLoading(false);
     }
- }
+  };
   return (
     <div
       ref={profileRef}
@@ -75,8 +75,8 @@ const ProfileCard = ({ children, id, Handler= null}) => {
 
       {userData && (
         <div
-          className={`absolute hidden group-hover:block z-10 p-6 bg-white md:-translate-x-[30%] rounded-md border 
-    md:max-w-[30vw] w-max 
+          className={`absolute hidden group-hover:block z-10 p-6 bg-white md:-translate-x-[30%] rounded-2xl shadow-md border 
+    md:max-w-[30vw] md:w-max max-w-screen
     ${position === "bottom" ? "top-full" : "bottom-full"}`}
         >
           <div>
@@ -97,21 +97,33 @@ const ProfileCard = ({ children, id, Handler= null}) => {
                   <h2 className="text-lg">{userData?.title}</h2>
                 )}
                 {userData?.description && (
-                  <p>
-                    {userData?.description.slice(0, 150)} ...
-                  </p>
+                 <div>
+                   <p className="hidden md:block">{userData?.description.slice(0, 150)} ...</p>
+                   <p className="md:hidden block">{userData?.description.slice(0, 80)} ...</p>
+                 </div>
                 )}
               </div>
             </div>
             <div className="flex items-center mt-5 gap-4">
-               <AddAndDeleteFriendRequestButton px="px-8" py="py-2" id={id} />
-               <button disabled={loading} onClick={callData} className="px-8 py-2 rounded-md bg-violet-500 text-white">
-                                    {
-                                      loading ? <h2 className="mx-auto flex items-center gap-2"><AiOutlineLoading3Quarters className="animate-spin text-gray-700 text-center" size={20} /> Processing...</h2> :   <p>Message</p>
-                                    }
-               </button>
+              <AddAndDeleteFriendRequestButton px="px-8" py="py-2" id={id} />
+              <button
+                disabled={loading}
+                onClick={callData}
+                className="px-8 py-2 rounded-md bg-violet-500 text-white"
+              >
+                {loading ? (
+                  <h2 className="mx-auto flex items-center gap-2">
+                    <AiOutlineLoading3Quarters
+                      className="animate-spin text-gray-700 text-center"
+                      size={20}
+                    />{" "}
+                    Processing...
+                  </h2>
+                ) : (
+                  <p>Message</p>
+                )}
+              </button>
             </div>
-           
           </div>
         </div>
       )}
