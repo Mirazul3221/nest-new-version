@@ -1,5 +1,5 @@
 "use client";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import axios from "axios";
@@ -14,6 +14,7 @@ import React, {
 import {
   FaComments,
   FaRegCommentDots,
+  FaRegCopy,
   FaRegThumbsUp,
   FaThumbsUp,
 } from "react-icons/fa";
@@ -27,15 +28,18 @@ import { BiCross } from "react-icons/bi";
 import { formatRelativeTime } from "./common";
 import CommentProfile from "./CommentProfile";
 import { commonLogout } from "../../components/common";
-const CommentBox = ({ question }) => {
-  console.log(question)
-  if(!question) return
-  const { store ,dispatch} = useContext(storeContext);
+import ProfileCard from "../../components/ProfileCard";
+import ShareComponent from "./ShareComponent";
+const CommentBox = ({ question, Handler = null }) => {
+  if (!question) return;
+  const { store, dispatch } = useContext(storeContext);
   const { socket } = useSocket();
   // const sortComments = question?.comments.sort(
   //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   // );
-const extractQuestion = question?.commence? [question?.comments[0],question?.comments[1]] : []
+  const extractQuestion = question?.comments
+    ? [question?.comments[1], question?.comments[0]]
+    : [];
   const [open, setOpen] = useState(false);
   const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);
@@ -43,6 +47,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
   const [putLike, setPutLike] = useState(false);
   const [comments, setComments] = useState(extractQuestion);
   const [hideImoji, setHideImoji] = useState(false);
+  const [share, setShare] = useState(false);
   const insertANewComment = (newComment) => {
     const newObject = {
       userId: store.userInfo.id,
@@ -58,6 +63,22 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
       setComments((prev) => [newObject, prev[0]]);
     }
   };
+  const handleShare = () => {
+    setShare(true);
+  };
+  //====================================
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (e.target.classList.contains("shairBlankPoint")) {
+        setShare(false);
+      }
+      // if (e.target.classList.contains("updateDesc")) {
+      //   setControlDesc(true)
+      // } else {
+      //   setControlDesc(false)
+      // }
+    }); //
+  }, []);
   useEffect(() => {
     // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
     if (messangerRef.current) {
@@ -91,7 +112,9 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         }
       );
       socket && (await socket.emit("new-notification", question.userId));
-    } catch (error) {commonLogout(dispatch,error)}
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   };
 
   const handleSendLike = useCallback(async () => {
@@ -111,7 +134,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
         handleNotification("like-question");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   }, []);
   const handleSendComment = useCallback(async () => {
@@ -131,7 +154,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
       setMessage("");
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   }, [message, comments]);
 
@@ -140,18 +163,18 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
       setOpen(true);
     }, 100);
   }
-  if (openCommentsBox) {
+  /////////////////////////////////////////////////////////////////////////////////
+  if (share || openCommentsBox) {
     document.body.style.overflow = "hidden";
   } else {
     document.body.style.overflow = "auto";
   }
-  /////////////////////////////////////////////////////////////////////////////////
   return (
     <div className="relative">
       <div
         className={`border-b flex ${
           question.likes?.length === 0 ? "justify-end" : "justify-between"
-        } items-center py-2 text-gray-400`}
+        } items-center py-2`}
       >
         {putLike ? (
           <div className="w-full">
@@ -223,7 +246,10 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
               <span>Comment</span>
             </div>
           )}
-          <div className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+          <div
+            onClick={handleShare}
+            className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
+          >
             <LuShare2 size={22} />
             <span>Share</span>
           </div>
@@ -241,20 +267,30 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
                 </button>
               )}
               {openCommentsBox && (
-                <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">                <CommentsContainer
-                setOpenCommentsBox={setOpenCommentsBox}
-                question={question}
-              /></div>
+                <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">
+                  <CommentsContainer Handler={Handler}
+                    setOpenCommentsBox={setOpenCommentsBox}
+                    question={question}
+                  />
+                </div>
               )}
               {comments?.map((c, i) => {
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
-                       <CommentProfile id={c?.userId} name={c?.name}/>
+                      <CommentProfile
+                        id={c?.userId}
+                        name={c?.name}
+                        Handler={Handler}
+                      />
                     </div>
                     <div className="w-fit max-w-11/12">
                       <div className="px-3 py-1 rounded-[20px] bg-gray-100">
-                        <p className="text-lg">{c?.name}</p>
+                        <ProfileCard id={c?.userId} Handler={Handler}>
+                          <p className="text-lg hover:underline cursor-pointer">
+                            {c?.name}
+                          </p>
+                        </ProfileCard>
                         <p className="text-sm">{c?.comment}</p>
                       </div>
                       <p className={"text-[10px] ml-2"}>
@@ -273,6 +309,11 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
             open ? "max-h-[100vh] duration-[2s]" : "max-h-0 duration-1000"
           } hidden_scroll overflow-y-scroll`}
         >
+          <img
+            className="w-[35px] rounded-full cursor-pointer duration-100 border hover:border-none border-gray-300"
+            src={store?.userInfo?.profile}
+            alt={question?.userName}
+          />
           <textarea
             ref={messangerRef}
             value={message}
@@ -302,7 +343,7 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
             {message ? (
               <RiSendPlaneLine
                 className="cursor-pointer"
-                color="black"
+                color="gray"
                 onClick={() => {
                   handleSendComment(), setHideImoji(false);
                 }}
@@ -349,6 +390,8 @@ const extractQuestion = question?.commence? [question?.comments[0],question?.com
           )}
         </div>
       </div>
+
+    <ShareComponent share={share} slug={question?.slug} id={question._id} />
     </div>
   );
 };

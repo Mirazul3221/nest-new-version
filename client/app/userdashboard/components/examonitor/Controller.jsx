@@ -69,7 +69,6 @@ const Controller = ({
   //  console.log(singleUserData)
   //====================================================================
   const justifyAns = useCallback(( ans, question)=>{
-    console.log(ans)
     console.log(question.rightAns)
       if (ans == question.rightAns) {
         setMark.rf(setMark.r + 1)

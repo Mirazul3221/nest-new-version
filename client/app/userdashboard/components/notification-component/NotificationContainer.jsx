@@ -10,7 +10,7 @@ const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,han
   return (
     <div ref={notifContainerRef} className="text-sm px-2 absolute top-0 md:top-20 shadow-2xl py-4 right-0 md:right-28 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
       <div className="flex justify-between items-center">
-        <h2 className='font-semibold'>Notifications</h2>
+         <h2 className="text-2xl ml-4">Notifications</h2>
         <span onClick={()=>handleNotificationToggle()} className='text-gray-700 md:hidden'><RxCross2 size={20}/></span>
       </div>
     <div className="overflow-y-scroll w-full h-[92vh] md:h-[70vh]">
@@ -138,7 +138,7 @@ const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,han
             //-------------------------------------------------------------------------------------------------------------------------
             if(item.type === 'comment-question'){
                return (
-                <div className="bg-gray-100 w-full " key={i}>
+                <div className="w-full " key={i}>
                 <QuestionCommentCard
                   item={item}
                 />

@@ -13,8 +13,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import EditQuestion from "../create-post/components/EditQuestion";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { CountQuestionsCollection } from "../../global/common";
-import { useEffect } from "react";
-import { commonLogout, profileApi } from "../../components/common";
+import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
@@ -120,7 +119,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
                 {myQuestion.profile !== "" ? (
                   <ProfileCard id={myQuestion.userId} Handler={Handler}>
                     <img
-                      className="w-10 rounded-full cursor-pointer"
+                      className="w-10 rounded-full hover:ring-[2px] cursor-pointer"
                       src={myQuestion.profile}
                       alt={myQuestion.userName}
                     />
@@ -268,10 +267,10 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
-                    ? "ক"
+                    ? "খ"
                     : myQuestion.subject === "ইংরেজি"
                     ? "B"
-                    : "ক"}
+                    : "খ"}
                 </h2>
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_02}{" "}
@@ -289,10 +288,10 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
-                    ? "ক"
+                    ? "গ"
                     : myQuestion.subject === "ইংরেজি"
                     ? "C"
-                    : "ক"}
+                    : "গ"}
                 </h2>
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_03}{" "}
@@ -310,10 +309,10 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
-                    ? "ক"
+                    ? "ঘ"
                     : myQuestion.subject === "ইংরেজি"
                     ? "D"
-                    : "ক"}
+                    : "ঘ"}
                 </h2>
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_04}
@@ -337,7 +336,7 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
       )}
 
       <div className="mt-2 duration-300">
-        <CommentBox question={myQuestion} />
+        <CommentBox question={myQuestion} Handler={Handler} />
       </div>
     </div>
   );

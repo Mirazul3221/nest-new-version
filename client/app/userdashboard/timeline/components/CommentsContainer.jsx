@@ -11,7 +11,7 @@ import { useSocket } from '../../global/SocketProvider';
 import CommentProfile from './CommentProfile';
 import { commonLogout } from '../../components/common';
 
-const CommentsContainer = ({setOpenCommentsBox,question}) => {
+const CommentsContainer = ({setOpenCommentsBox,question, Handler}) => {
     const { store,dispatch } = useContext(storeContext);
     const {socket} = useSocket();
     const messangerRef = useRef(null);
@@ -123,7 +123,7 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
     } catch (error) {commonLogout(dispatch,error)}
   };
   return (
-   <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-lg shadow-lg relative bg-white overflow-y-auto">
+   <div className="md:w-1/2 md:max-h-8/12 min-h-1/2 rounded-2xl shadow-lg relative bg-white overflow-y-auto p-2">
    <span onClick={()=>setOpenCommentsBox(false)} className='absolute flex justify-center rounded-full cursor-pointer items-center p-2 bg-gray-100 top-1 right-1'><RxCross2 size={20}/></span>
    <div className="py-3 border-b text-center font-bold">{`${firstname}'s question`}</div>
     <div className="flex flex-col justify-center">
@@ -149,6 +149,11 @@ const CommentsContainer = ({setOpenCommentsBox,question}) => {
    <div
           className={`flex items-end gap-2`}
         >
+                    <img
+            className="w-[35px] rounded-full cursor-pointer duration-100 border hover:border-none border-gray-300"
+            src={store?.userInfo?.profile}
+            alt={question?.userName}
+          />
           <textarea id='comment'
           className=' max-h-[20vh] duration-[2s] hidden_scroll overflow-auto'
             ref={messangerRef}

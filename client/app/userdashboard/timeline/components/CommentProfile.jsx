@@ -3,8 +3,9 @@ import { useStore } from "@/app/global/DataProvider";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { profileApi } from "../../components/common";
+import ProfileCard from "../../components/ProfileCard";
 
-const CommentProfile = ({ id,name }) => {
+const CommentProfile = ({ id,name, Handler=null}) => {
   const { store } = useStore();
   const [profile, setProfile] = useState("");
   const fetChProfile = async () => {
@@ -19,7 +20,7 @@ const CommentProfile = ({ id,name }) => {
   return (
     <div>
       {profile !== "" ? (
-        <img className="rounded-full w-6" src={profile} alt="profile image" />
+         <div> <ProfileCard id={id} Handler={Handler}><img className="rounded-full w-6 cursor-pointer" src={profile} alt="profile image" /></ProfileCard></div>
       ) : (
         <div
           style={{ background: `hsl(${randomCount}, 65%, 40%)` }}
