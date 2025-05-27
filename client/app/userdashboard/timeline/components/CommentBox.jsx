@@ -30,6 +30,7 @@ import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
 import CommentProfile01 from "./CommentsProfile01";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
   const { store, dispatch } = useContext(storeContext);
@@ -41,6 +42,7 @@ const CommentBox = ({ question, Handler = null }) => {
     ? [question?.comments[1], question?.comments[0]]
     : [];
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
@@ -132,6 +134,11 @@ const CommentBox = ({ question, Handler = null }) => {
     }
   }, []);
   const handleSendComment = useCallback(async () => {
+    setLoading(true);
+    if(!message){
+       setLoading(false);
+      return
+    }
     try {
       const { data } = await axios.post(
         `${baseurl}/userquestions/create-comment`,
@@ -146,16 +153,15 @@ const CommentBox = ({ question, Handler = null }) => {
         handleNotification("comment-question");
       // insertANewComment(message);
       setMessage("");
-      console.log(comments[0]);
-      console.log(data);
       if (comments.length == 0) {
         setComments(data);
         // setOpen(true);
       } else {
-         setComments((prev) => [data, prev[0]]);
+        setComments((prev) => [data, prev[0]]);
       }
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
       commonLogout(dispatch, error);
     }
   }, [message, comments]);
@@ -171,8 +177,6 @@ const CommentBox = ({ question, Handler = null }) => {
   } else {
     document.body.style.overflow = "auto";
   }
-
-  console.log(comments)
   return (
     <div className="relative">
       <div
@@ -348,7 +352,7 @@ const CommentBox = ({ question, Handler = null }) => {
             >
               <HiOutlineFaceFrown color="gray" size={22} />
             </span>
-            {message ? (
+            {!loading ? (
               <RiSendPlaneLine
                 className="cursor-pointer"
                 color="gray"
@@ -358,7 +362,10 @@ const CommentBox = ({ question, Handler = null }) => {
                 size={20}
               />
             ) : (
-              <RiSendPlaneLine size={20} />
+              <AiOutlineLoading3Quarters
+                className="animate-spin text-gray-700 text-center"
+                size={20}
+              />
             )}
           </div>
           {hideImoji && (
