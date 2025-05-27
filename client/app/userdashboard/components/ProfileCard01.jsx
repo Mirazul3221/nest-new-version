@@ -7,7 +7,7 @@ import { baseurl, viewurl } from "@/app/config";
 import AddAndDeleteFriendRequestButton from "./messanger/components/AddAndDeleteFriendRequestButton";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt="md:-translate-x-[50%]" }) => {
+const ProfileCard01 = ({ children, id, Handler = null,smt='translate-x-[0%]',lgt="md:-translate-x-[50%]" }) => {
   const { store, dispatch } = useContext(storeContext);
   const [loading, setLoading] = useState(false);
   const profileRef = useRef(null);
@@ -83,7 +83,7 @@ const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt
       {userData && (
         <div
           className={`absolute hidden group-hover:block z-10 p-2 md:p-6 bg-white ${smt} ${lgt} left-[50%] rounded-2xl shadow-md border 
-    md:max-w-[30vw] w-max max-w-[80vw]
+    md:max-w-[30vw] md:w-max max-w-[80vw]
     ${position === "bottom" ? "top-full" : "bottom-full"}`}
         >
           <div>
@@ -149,4 +149,4 @@ const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt
   );
 };
 
-export default ProfileCard;
+export default ProfileCard01;

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { profileApi } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 
-const CommentProfile = ({ id,name, Handler=null}) => {
+const CommentProfile01 = ({ id,name, Handler=null}) => {
   const { store } = useStore();
   const [profile, setProfile] = useState("");
   const fetChProfile = async () => {
@@ -20,7 +20,7 @@ const CommentProfile = ({ id,name, Handler=null}) => {
   return (
     <div>
       {profile !== "" ? (
-         <div> <ProfileCard id={id} lgt={'md:-transform-x-10'} Handler={Handler}><img className="rounded-full w-6 cursor-pointer" src={profile} alt="profile image" /></ProfileCard></div>
+         <div> <ProfileCard id={id} Handler={Handler}><img className="rounded-full w-6 cursor-pointer" src={profile} alt="profile image" /></ProfileCard></div>
       ) : (
         <div
           style={{ background: `hsl(${randomCount}, 65%, 40%)` }}
@@ -33,4 +33,4 @@ const CommentProfile = ({ id,name, Handler=null}) => {
   );
 };
 
-export default CommentProfile;
+export default CommentProfile01;

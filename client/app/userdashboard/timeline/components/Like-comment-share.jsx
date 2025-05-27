@@ -12,7 +12,7 @@ import {
 import { LuShare2 } from 'react-icons/lu';
 import '../components/likeButtonAnimation.css'
 import { commonLogout } from '../../components/common';
-const LikeCommentShare = ({question}) => {
+const LikeCommentShare = ({question,handleShare}) => {
     const [putLike, setPutLike] = useState(false); 
     const {store,dispatch} = useStore();
     //////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ const LikeCommentShare = ({question}) => {
             <span>Comment</span>
           </div>
         )}
-        <div className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+        <div onClick={handleShare} className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
           <LuShare2 size={22} />
           <span>Share</span>
         </div>

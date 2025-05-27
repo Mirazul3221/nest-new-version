@@ -7,7 +7,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { CountQuestionsCollection } from '../../global/common';
 import LikeCommentShare from './Like-comment-share';
 
-const OnlyCard = ({question}) => {
+const OnlyCard = ({question, handleShare}) => {
   const {store} = useStore()
     const checkAns = useCallback((e, ans, question) => {
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +199,7 @@ const OnlyCard = ({question}) => {
       </div>
     )}
 
-   <LikeCommentShare question={question}/>
+   <LikeCommentShare question={question} handleShare={handleShare}/>
   </div>
   )
 }

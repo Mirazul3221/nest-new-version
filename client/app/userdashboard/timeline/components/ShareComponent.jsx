@@ -32,7 +32,7 @@ const ShareComponent = ({share,slug,id}) => {
               >
                 <div
                   className={`md:w-1/2 w-full ${
-                    share ? "translate-y-0" : "translate-y-96"
+                    share ? "-translate-y-20" : "translate-y-96"
                   } md:translate-y-0 duration-500 bg-white rounded-md p-4 md:p-10`}
                 >
                   <h2 className="text-center pb-2 border-b-[1px]">

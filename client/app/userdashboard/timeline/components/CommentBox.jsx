@@ -30,6 +30,7 @@ import CommentProfile from "./CommentProfile";
 import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
+import CommentProfile01 from "./CommentsProfile01";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
   const { store, dispatch } = useContext(storeContext);
@@ -271,6 +272,8 @@ const CommentBox = ({ question, Handler = null }) => {
                   <CommentsContainer Handler={Handler}
                     setOpenCommentsBox={setOpenCommentsBox}
                     question={question}
+                    share = {share}
+                    handleShare={handleShare}
                   />
                 </div>
               )}
@@ -278,7 +281,7 @@ const CommentBox = ({ question, Handler = null }) => {
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
-                      <CommentProfile
+                      <CommentProfile01
                         id={c?.userId}
                         name={c?.name}
                         Handler={Handler}
