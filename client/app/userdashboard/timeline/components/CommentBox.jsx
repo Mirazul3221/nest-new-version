@@ -26,7 +26,6 @@ import { HiOutlineFaceFrown } from "react-icons/hi2";
 import { imojis } from "../../components/imoji";
 import { BiCross } from "react-icons/bi";
 import { formatRelativeTime } from "./common";
-import CommentProfile from "./CommentProfile";
 import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
@@ -56,13 +55,7 @@ const CommentBox = ({ question, Handler = null }) => {
       profile: store.userInfo.profile,
       comment: newComment,
       createdAt: new Date().toISOString(),
-    };
-    if (comments[0] == undefined) {
-      setComments([newObject]);
-      setOpen(true);
-    } else {
-      setComments((prev) => [newObject, prev[0]]);
-    }
+    }; //
   };
   const handleShare = () => {
     setShare(true);
@@ -151,8 +144,16 @@ const CommentBox = ({ question, Handler = null }) => {
       );
       store.userInfo.id !== question.userId &&
         handleNotification("comment-question");
-      insertANewComment(message);
+      // insertANewComment(message);
       setMessage("");
+      console.log(comments[0]);
+      console.log(data);
+      if (comments.length == 0) {
+        setComments(data);
+        // setOpen(true);
+      } else {
+         setComments((prev) => [data, prev[0]]);
+      }
     } catch (error) {
       console.log(error);
       commonLogout(dispatch, error);
@@ -170,6 +171,8 @@ const CommentBox = ({ question, Handler = null }) => {
   } else {
     document.body.style.overflow = "auto";
   }
+
+  console.log(comments)
   return (
     <div className="relative">
       <div
@@ -269,10 +272,11 @@ const CommentBox = ({ question, Handler = null }) => {
               )}
               {openCommentsBox && (
                 <div className="bg-gray-500/20 w-screen z-50 h-screen fixed top-0 left-0 flex justify-center items-center">
-                  <CommentsContainer Handler={Handler}
+                  <CommentsContainer
+                    Handler={Handler}
                     setOpenCommentsBox={setOpenCommentsBox}
                     question={question}
-                    share = {share}
+                    share={share}
                     handleShare={handleShare}
                   />
                 </div>
@@ -284,6 +288,7 @@ const CommentBox = ({ question, Handler = null }) => {
                       <CommentProfile01
                         id={c?.userId}
                         name={c?.name}
+                        pfl={c.profile}
                         Handler={Handler}
                       />
                     </div>
@@ -394,7 +399,7 @@ const CommentBox = ({ question, Handler = null }) => {
         </div>
       </div>
 
-    <ShareComponent share={share} slug={question?.slug} id={question._id} />
+      <ShareComponent share={share} slug={question?.slug} id={question._id} />
     </div>
   );
 };

@@ -235,7 +235,7 @@ const UserComment = ({ item, Handler }) => {
     <div>
       <div className="flex py-2 gap-2 text-gray-900">
         <div>
-          <CommentProfile id={item.userId} name={item.name} Handler={Handler} />
+          <CommentProfile id={item.userId} name={item.name} pfl={item?.profile} Handler={Handler} />
         </div>
         <div className="w-fit max-w-11/12">
           <div className="px-3 py-1 rounded-[20px] bg-gray-100">

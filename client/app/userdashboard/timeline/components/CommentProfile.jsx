@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { profileApi } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 
-const CommentProfile = ({ id,name, Handler=null}) => {
+const CommentProfile = ({ id,name, Handler=null,pfl}) => {
   const { store } = useStore();
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState(pfl);
   const fetChProfile = async () => {
     const res = await profileApi(store.token, id);
     setProfile(res);
@@ -15,7 +15,7 @@ const CommentProfile = ({ id,name, Handler=null}) => {
 
   useEffect(() => {
     fetChProfile();
-  }, []);
+  }, [pfl,name]);
   const randomCount = Math.floor(Math.random() * 360 + 1)
   return (
     <div>

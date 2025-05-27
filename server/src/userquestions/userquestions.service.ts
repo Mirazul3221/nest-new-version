@@ -189,6 +189,7 @@ export class UserquestionsService {
     const targetQuestion = await this.QuestionModel.findById(questionId);
     targetQuestion.comments.push(commentSchema);
     await targetQuestion.save();
+    return await commentSchema;
   }
   /////////////////////////////////////////////////////////////////////////////////////
   async createLike(userId, questionId) {
