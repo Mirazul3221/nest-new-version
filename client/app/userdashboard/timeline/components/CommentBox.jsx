@@ -38,8 +38,8 @@ const CommentBox = ({ question, Handler = null }) => {
   // const sortComments = question?.comments.sort(
   //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   // );
-  const extractQuestion = question?.comments
-    ? [question?.comments[1], question?.comments[0]]
+  const extractQuestion = question?.comments.length == 1
+    ? [question?.comments[0]] : question?.comments.length == 2 ? [question?.comments[1],question?.comments[0]]
     : [];
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -153,8 +153,8 @@ const CommentBox = ({ question, Handler = null }) => {
         handleNotification("comment-question");
       // insertANewComment(message);
       setMessage("");
-      if (comments.length == 0) {
-        setComments(data);
+      if (comments[0] == undefined) {
+      setComments([data]);
         // setOpen(true);
       } else {
         setComments((prev) => [data, prev[0]]);
@@ -177,6 +177,7 @@ const CommentBox = ({ question, Handler = null }) => {
   } else {
     document.body.style.overflow = "auto";
   }
+  console.log(comments);
   return (
     <div className="relative">
       <div
@@ -285,14 +286,14 @@ const CommentBox = ({ question, Handler = null }) => {
                   />
                 </div>
               )}
-              {comments?.map((c, i) => {
+              {comments.length > 0 && comments?.map((c, i) => {
                 return (
                   <div key={i} className="flex py-2 gap-2 text-gray-900">
                     <div>
                       <CommentProfile01
                         id={c?.userId}
                         name={c?.name}
-                        pfl={c.profile}
+                        pfl={c?.profile}
                         Handler={Handler}
                       />
                     </div>
