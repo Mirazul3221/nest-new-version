@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { useStore } from "../global/DataProvider";
@@ -90,4 +90,12 @@ handlesubmit()
   );
 };
 
-export default Page;
+const Suspen = () => {
+  return (
+    <Suspense>
+      <Page />
+    </Suspense>
+  );
+};
+
+export default Suspen;
