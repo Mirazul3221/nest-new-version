@@ -12,12 +12,17 @@ import { Request } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+  @Post('verify-account')
+  async verifyAccount(@Body() data){
+    return await this.authService.verifyAccount(data)
+  }
+
+
   @Post('/user/register')
-  @UsePipes(ValidationPipe)
   async register(
-    @Body() createUserDto: CreateAuthDto, @Req() req : Request
+    @Body() userData: any, @Req() req : Request
   ): Promise <{msg:string}> {
-    return await this.authService.register_user(createUserDto,req);
+    return await this.authService.register_user(userData,req);
   }
 
   @Post('/user/login')

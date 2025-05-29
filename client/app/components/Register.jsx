@@ -13,11 +13,9 @@ const InputForm = () => {
   const {dispatch} = useStore()
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
+  const [bouncing,setBouncing] = useState(false)
    const [location, setLocation] = useState({ lat:-39.145175, lon: -128.232097});
   const [submitValue, setSubmitValue] = useState({
-    role : "user",
-    status:"New",
-    balance:0,
     name: "",
     email: "",
     password: "",
@@ -50,19 +48,13 @@ const InputForm = () => {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      let uri = `${baseurl}/auth/user/register`;
+      let uri = `${baseurl}/auth/verify-account`;
       setLoader(true)
       const { data } = await axios.post(uri, submitValue);
-      setAlert(data.msg);
-      if(typeof window !== 'undefined'){
-        localStorage.setItem("token", data.token);
-      }
-
-      dispatch({ type: "login_success", paylod: { token: data.token } });
-      window.location.href = `${viewurl}/userdashboard/timeline/friends-question`
-      setLoader(false)
+      setLoader(false);
+      setAlert('Check your mailbox and verify account')
+      setBouncing(true)
     } catch (error) {
-      console.log(error);
       setLoader(false)
       setAlert(error.response?.data.message);
      
@@ -90,10 +82,10 @@ const InputForm = () => {
             <h2 className="text-sm">
               Already have an account?
               <Link href={"/login"}>
-                <span className="underline text-green-700">Login here</span>
+                <span className="underline text-green-700"> Login here</span>
               </Link>
             </h2>
-            <h2 className={`text-rose-300`}>{alert}</h2>
+            <h2 className={`${alert == 'Check your mailbox and verify account' ? "text-green-300" : "text-rose-300"}`}>{alert}</h2>
             <div>
               <label
                 htmlFor="first_name"
@@ -145,7 +137,7 @@ const InputForm = () => {
                 required
               />
               <button
-              disabled={loader}
+              disabled={bouncing}
               type="submit"
               className={`mt-2 ${
                 loader
@@ -159,7 +151,7 @@ const InputForm = () => {
                   <Image src={loaderImg} className="w-5" alt="Loader" />
                 </div>
               ) : (
-                "Submit"
+                "Click to Verify"
               )}
             </button>
             </div>

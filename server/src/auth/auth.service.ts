@@ -45,50 +45,110 @@ export class AuthService {
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
   ) {}
-  async register_user(
-    createAuthDto: CreateAuthDto,
-    req,
-  ): Promise<{ token: string; msg: string }> {
-    const { name, email, password, location, role, status, balance } =
-      createAuthDto;
-    const userInfo = await this.userModel.findOne({ email });
+
+
+async verifyAccount(userData) {
+ const {email,password,name} = userData;//
+     const userInfo = await this.userModel.findOne({ email });
+console.log(userInfo)
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
-    } else {
-      const allSubject = [
-        { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
-        { sub: 'English', rightAns: 0, wrongAns: 0 },
-      ];
-      const new_user = await this.userModel.create({
-        role: role,
-        status: status,
-        balance: balance,
-        name: name,
-        email: email,
-        password: await bcrypt.hash(password, 9),
-        location: {
-          type: 'Point',
-          coordinates: [location.lon, location.lat],
-        },
-        title: 'Untitled User',
-        description: '',
-        profile:
-          'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
-        otp: '',
-        totalCountQuestions: allSubject,
-        totalCountQuestionsId: [],
-      });
+    }
+    const newPass = await bcrypt.hash(password, 9);
 
-      ////////////////////////////////////////////////////////////////////////
-      // Inside your method
-      let ip =
-        req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
-        req.socket?.remoteAddress || // fallback
-        req.ip; // fallback
+  const token = await this.jwtService.sign(
+    {...userData, password:newPass}, // or userData if needed
+    { expiresIn: '30m' }        // Override default here
+  );
 
-      if (ip?.startsWith('::ffff:')) {
-        ip = ip.replace('::ffff:', '');
+    const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'bdmirazul906@gmail.com',
+      pass: 'acco zbcl qzxu whzq',
+    },
+  });
+
+  const mailOptions = {
+    from: '"BCS Prep" <bdmirazul906@gmail.com>',
+    to: email,
+    subject: 'Account Varification Process - BCS Prep',
+    html: `
+       <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+        <h2 style="color: #333;">Hi, ${name}</h2>
+        <p style="font-size: 16px; color: #555;">
+         Hope you're doing well!. We appreciate you for your interest to open an account in our platform. We received a request for varifying your account. To complete the process, please click the link below. This verification link will be valid for 30 minutes:
+        </p>
+          <p><span style="font-weight: 700; color: #555">Verification Link:</span> <a style="color: #5846fa;" href="https://bcs-prep.vercel.app//verify-account?token=${token}">${token.slice(0,40)}</a></p>
+        <p style="font-size: 14px; color: #888;">If you did not request this, feel free to ignore this email—no further action is needed.</p>
+        <p style="font-weight: bold; color: #444;">Thank you,<br/>BCS Prep Team</p>
+      </div>
+    </div>   
+    `
+  };
+  
+  await transporter.sendMail(mailOptions); // await without callback
+}
+async register_user(
+    userData: any,
+    req,
+  ): Promise<{ token: string; msg: string }> {
+    let payload: any;
+
+    // 🔐 Verify token with error handling
+    try {
+      payload = await this.jwtService.verify(userData.token);
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired. Please register again.');
+      } else {
+        throw new UnauthorizedException('Invalid token.');
       }
+    }
+
+    const { name, email, password, location } = payload;
+
+    // ❌ Check if user already exists
+    const userInfo = await this.userModel.findOne({ email });
+    if (userInfo) {
+      throw new ConflictException('Account already exists!');
+    }
+
+    // ✅ Create user
+    const allSubject = [
+      { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
+      { sub: 'English', rightAns: 0, wrongAns: 0 },
+    ];
+
+    const new_user = await this.userModel.create({
+      role: 'user',
+      status: 'New',
+      balance: 0,
+      name,
+      email,
+      password: await bcrypt.hash(password, 9),
+      location: {
+        type: 'Point',
+        coordinates: [location.lon, location.lat],
+      },
+      title: 'Untitled User',
+      description: '',
+      profile:
+        'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
+      otp: '',
+      totalCountQuestions: allSubject,
+      totalCountQuestionsId: [],
+    });
+
+    try {
+      // 🌐 Get IP address
+      let ip =
+        req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||
+        req.socket?.remoteAddress ||
+        req.ip;
+
+      if (ip?.startsWith('::ffff:')) ip = ip.replace('::ffff:', '');
 
       if (
         ip === '::1' ||
@@ -97,61 +157,173 @@ export class AuthService {
         ip.startsWith('10.') ||
         ip.startsWith('172.')
       ) {
-        // For development fallback only, NOT in production
-        if (process.env.NODE_ENV !== 'production') {
-          ip = '8.8.8.8';
-        }
+        if (process.env.NODE_ENV !== 'production') ip = '8.8.8.8';
       }
 
+      // 📱 Device info
       const sessionId = uuidv4();
       const userAgent = req.headers['user-agent'];
       const parser = new UAParser(userAgent);
       const parsedUA = parser.getResult();
-      ///////////////////////////////////////////////////////////////////////////////////
-      try {
-        const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-        const data = geo.data;
-        const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
 
-        const session = await this.sessionModel.create({
-          userId: new_user._id,
-          sessionId,
-          ipAddress: ip,
-          userAgent, // raw user-agent string
-          device: parsedUA.device.model || 'Unknown device',
-          browser: parsedUA.browser.name || 'Unknown browser',
-          os: parsedUA.os.name || 'Unknown OS',
-          location: geoLocation,
-          // location: (optional, set below if you use geo-IP),
-        });
-        ///////////////////////////////////////////////////////////////////////////////
-        // 🔻 Delete older sessions beyond the most recent 5
-        await this.sessionModel.deleteMany({
-          userId: new_user._id,
-          _id: {
-            $nin: await this.sessionModel
-              .find({ userId: new_user._id })
-              .sort({ createdAt: -1 }) // latest first
-              .limit(5)
-              .select('_id')
-              .then((docs) => docs.map((d) => d._id)),
-          },
-        });
-        const token = await this.jwtService.sign({
-          id: (await new_user)._id,
-          sessionId,
-          name: (await new_user).name,
-          profile: (await new_user).profile,
-          role: (await new_user).role,
-        }); //
-        return {
-          token,
-          msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
-        };
-        //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
-      } catch (error) {}
+      // 🌍 Get geo-location from IP
+      const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+      const data = geo.data;
+      const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+
+      // 🛡️ Create session
+      await this.sessionModel.create({
+        userId: new_user._id,
+        sessionId,
+        ipAddress: ip,
+        userAgent,
+        device: parsedUA.device.model || 'Unknown device',
+        browser: parsedUA.browser.name || 'Unknown browser',
+        os: parsedUA.os.name || 'Unknown OS',
+        location: geoLocation,
+      });
+
+      // 🧹 Delete old sessions (keep last 5)
+      await this.sessionModel.deleteMany({
+        userId: new_user._id,
+        _id: {
+          $nin: await this.sessionModel
+            .find({ userId: new_user._id })
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select('_id')
+            .then((docs) => docs.map((d) => d._id)),
+        },
+      });
+
+      // 🪙 Create JWT
+      const token = await this.jwtService.sign({
+        id: new_user._id,
+        sessionId,
+        name: new_user.name,
+        profile: new_user.profile,
+        role: new_user.role,
+      });
+
+      return {
+        token,
+        msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform.`,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to create session or token.');
     }
   }
+
+//   async register_user(
+//     userData:any,
+//     req,
+//   ): Promise<{ token: string; msg: string }> {
+//     const { name, email, password, location } = await this.jwtService.verify(userData.token)
+//       return
+//     const userInfo = await this.userModel.findOne({ email });
+//     if (userInfo) {
+//       throw new ConflictException('User already exist ! ');
+//     } else {
+//       const allSubject = [
+//         { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
+//         { sub: 'English', rightAns: 0, wrongAns: 0 },
+//       ];
+//       const new_user = await this.userModel.create({
+//         role: 'user',
+//         status: 'New',
+//         balance: 0,
+//         name: name,
+//         email: email,
+//         password: await bcrypt.hash(password, 9),
+//         location: {
+//           type: 'Point',
+//           coordinates: [location.lon, location.lat],
+//         },
+//         title: 'Untitled User',
+//         description: '',
+//         profile:
+//           'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
+//         otp: '',
+//         totalCountQuestions: allSubject,
+//         totalCountQuestionsId: [],
+//       });
+//       try {
+// ////////////////////////////////////////////////////////////////////////
+//       // Inside your method
+//       let ip =
+//         req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+//         req.socket?.remoteAddress || // fallback
+//         req.ip; // fallback
+
+//       if (ip?.startsWith('::ffff:')) {
+//         ip = ip.replace('::ffff:', '');
+//       }
+
+//       if (
+//         ip === '::1' ||
+//         ip === '127.0.0.1' ||
+//         ip.startsWith('192.168') ||
+//         ip.startsWith('10.') ||
+//         ip.startsWith('172.')
+//       ) {
+//         // For development fallback only, NOT in production
+//         if (process.env.NODE_ENV !== 'production') {
+//           ip = '8.8.8.8';
+//         }
+//       }
+
+//       const sessionId = uuidv4();
+//       const userAgent = req.headers['user-agent'];
+//       const parser = new UAParser(userAgent);
+//       const parsedUA = parser.getResult();
+//       ///////////////////////////////////////////////////////////////////////////////////
+
+//         const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+//         const data = geo.data;
+//         const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+
+//         const session = await this.sessionModel.create({
+//           userId: new_user._id,
+//           sessionId,
+//           ipAddress: ip,
+//           userAgent, // raw user-agent string
+//           device: parsedUA.device.model || 'Unknown device',
+//           browser: parsedUA.browser.name || 'Unknown browser',
+//           os: parsedUA.os.name || 'Unknown OS',
+//           location: geoLocation,
+//           // location: (optional, set below if you use geo-IP),
+//         });
+//         ///////////////////////////////////////////////////////////////////////////////
+//         // 🔻 Delete older sessions beyond the most recent 5
+//         await this.sessionModel.deleteMany({
+//           userId: new_user._id,
+//           _id: {
+//             $nin: await this.sessionModel
+//               .find({ userId: new_user._id })
+//               .sort({ createdAt: -1 }) // latest first
+//               .limit(5)
+//               .select('_id')
+//               .then((docs) => docs.map((d) => d._id)),
+//           },
+//         });
+//         const token = await this.jwtService.sign({
+//           id: (await new_user)._id,
+//           sessionId,
+//           name: (await new_user).name,
+//           profile: (await new_user).profile,
+//           role: (await new_user).role,
+//         }); //
+//         return {
+//           token,
+//           msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
+//         };
+//         //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
+//       } catch (error) {
+
+        
+//       }
+//     }
+//   }
 
   async loginInfo(
     userDto: CreateUserDto,
