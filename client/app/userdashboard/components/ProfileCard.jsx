@@ -31,7 +31,7 @@ const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt
     try {
       if (store.userInfo.id == id) return;
       const { data } = await axios.get(
-        `${baseurl}/auth/publicuser/findbyid/${id}`,
+        `${baseurl}/auth/get-half-user-data/findbyid/${id}`,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
@@ -50,13 +50,13 @@ const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `${baseurl}/auth/publicuser/findbyid/${id}`,
+        `${baseurl}/auth/get-half-user-data/findbyid/${id}`,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
           },
         }
-      );
+      );//
       Handler(data);
       setLoading(false);
     } catch (error) {

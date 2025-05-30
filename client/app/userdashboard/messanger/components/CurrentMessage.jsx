@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useMessage } from "../../global/messageProvider";
 import { useSocket } from "../../global/SocketProvider";
 import { commonLogout } from "../../components/common";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const CurrentMessage = ({
   msg,
@@ -15,13 +16,12 @@ const CurrentMessage = ({
   toReplyerId,
   setToReplyerId,
 }) => {
-  const { store,dispatch:dps } = useContext(storeContext);
+  const { store, dispatch: dps } = useContext(storeContext);
   const { socket } = useSocket();
   const element = useRef(null);
   const { dispatch } = useMessage();
   const [isSend, setIsSend] = useState(false);
   const sendMessage = async () => {
-
     try {
       setIsSend(true);
       setSendCurrentMsg(true);
@@ -40,12 +40,17 @@ const CurrentMessage = ({
         }
       );
 
-      if(data == 'User is blocked'){
-            alert('You cannot send message to this user!')
+      if (data == "User is blocked") {
+        alert("You cannot send message to this user!");
       } else {
         setReplyContent("");
         setToReplyerId(null);
-        socket && socket.emit("message-to", {...data,name:store.userInfo.name, profile:store.userInfo.profile});
+        socket &&
+          socket.emit("message-to", {
+            ...data,
+            name: store.userInfo.name,
+            profile: store.userInfo.profile,
+          });
         dispatch({ type: "send-message", payload: data });
         setIsSend(false);
         setSendCurrentMsg(false);
@@ -53,12 +58,12 @@ const CurrentMessage = ({
       }
     } catch (error) {
       console.log(error);
-      commonLogout(dps)
+      commonLogout(dps);
     }
   };
-useEffect(() => {
-    sendMessage()
-}, []);
+  useEffect(() => {
+    sendMessage();
+  }, []);
   return (
     <div>
       <div ref={element} className="flex justify-end">
@@ -66,7 +71,16 @@ useEffect(() => {
           <h2 className="px-6 py-2 bg-violet-400 text-gray-600 rounded-full">
             {msg.message.content}
           </h2>
-          {isSend && <p>Sending...</p>}
+          {isSend && (
+            <div className="text-gray-400 flex gap-1 items-center">
+              {" "}
+              <AiOutlineLoading3Quarters
+                className="animate-spin text-gray-400 text-center"
+                size={14}
+              />{" "}
+              <p>Sending...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -302,7 +302,7 @@ const Page = () => {
 
   const [randNum, setRandNum] = useState();
   useEffect(() => {
-    setRandNum(Math.floor(Math.random() * 15) + 1);
+    setRandNum(Math.floor(Math.random() * 21) + 1);
   }, []);
 
   ///////////////////////////////////////////////////////
@@ -421,7 +421,7 @@ const Page = () => {
 />
       <div className="md:w-10/12 mt-2 md:mt-0 md:rounded-t-2xl mx-auto z-50 bg-white shadow-md md:shadow-none px-5 pb-5 border-2 md:border-0 rounded-t-3xl">
       {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
-           <div className="-mt-16 md:-mt-28 md:flex justify-center">
+           <div className="-mt-16 md:-mt-32 md:flex justify-center">
             <ProfileCropper name={userDetails.name} profile={userDetails.profile} wm={120} wl={200} /></div>
           {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
           <div>

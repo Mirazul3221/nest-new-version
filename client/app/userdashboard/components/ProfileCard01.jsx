@@ -31,7 +31,7 @@ const ProfileCard01 = ({ children, id, Handler = null,smt='translate-x-[0%]',lgt
     try {
       if (store.userInfo.id == id) return;
       const { data } = await axios.get(
-        `${baseurl}/auth/publicuser/findbyid/${id}`,
+        `${baseurl}/auth/get-half-user-data/findbyid/${id}`,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
@@ -39,7 +39,6 @@ const ProfileCard01 = ({ children, id, Handler = null,smt='translate-x-[0%]',lgt
         }
       );
       setUserData(data);
-      console.log(data);
     } catch (error) {
       commonLogout(dispatch, error);
       console.log(error);
@@ -50,7 +49,7 @@ const ProfileCard01 = ({ children, id, Handler = null,smt='translate-x-[0%]',lgt
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `${baseurl}/auth/publicuser/findbyid/${id}`,
+        `${baseurl}/auth/get-half-user-data/findbyid/${id}`,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,

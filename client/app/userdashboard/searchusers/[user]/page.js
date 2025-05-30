@@ -458,7 +458,7 @@ const Page = () => {
                           </h4>
                         </div>
                       </div>
-                      <div className="mt-2 space-y-3 bg-black">
+                      <div className="mt-2 space-y-3">
                         <AddAndDeleteFriendRequestButton id={item?._id} />
                         <CallMessageContainer
                           id={item?._id}

@@ -51,7 +51,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   useEffect(() => {
     socket &&
       socket.on("check-my-friend-window", (data) => {
-        console.log(data);
         if (data.status == false) setSeenMsg(false);
         if (data.status == true) {
           setCheckMyWindow(true);
@@ -175,7 +174,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        console.log("aita call hoy");
         setSeenMsg(false);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
@@ -222,8 +220,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     }
     //  e.target.parentElement.children[1].classList.remove('hidden')
   };
-  const emojies = ["❤️", "😍", "😭", "😮", "😡"];
 
+  const emojies = ["❤️", "😍", "😭", "😮", "😡"];
   const sendEmoji = async (e, msg, identifire) => {
     const emojiElements = {
       messageId: msg._id,
@@ -386,7 +384,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   //////////////////render message first time////////////////////////////
   useEffect(() => {
     fetchMessages(page, "static");
-  }, []);
+  }, [id]);
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
@@ -545,7 +543,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             alt={userDetails?.name}
           />
           <div className="text-black">
-            <h2 className="text-[18px]">{userDetails?.name}</h2>
+            <h2 className="text-[18px]">{userDetails?.name.split(' ')[0].slice(0,4)}</h2>
             {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
         </div>
@@ -615,7 +613,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           <div className="flex justify-center">
             <div>
               <img
-                className="rounded-full w-28 mx-auto"
+                className="rounded-full w-20 mx-auto"
                 src={userDetails?.profile}
                 alt={userDetails?.name}
               />

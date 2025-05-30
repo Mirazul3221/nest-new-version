@@ -290,7 +290,6 @@ const Middle = ({
   useEffect(() => {
     socket &&
       socket.on("message-from", (data) => {
-        console.log("tui ki call how?");
         setSeenMsg(false);
         setIsLoad(true);
         if (id == data.senderId) {

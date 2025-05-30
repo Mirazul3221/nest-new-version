@@ -94,6 +94,12 @@ export class AuthController {
   return await this.authService.findSingleUserByPublicUser(param)
  }
 
+ @Get('get-half-user-data/findbyid/:value')
+  @UseGuards(AuthGuard())
+ async getHalfUserData(@Param("value") param){
+  return await this.authService.getHalfUserData(param)
+ }
+
 
  //PATCH
  //=====================

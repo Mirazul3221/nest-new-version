@@ -50,7 +50,6 @@ export class AuthService {
 async verifyAccount(userData) {
  const {email,password,name} = userData;//
      const userInfo = await this.userModel.findOne({ email });
-console.log(userInfo)
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
     }
@@ -387,7 +386,7 @@ async register_user(
       const data = geo.data;
       const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
 
-      const session = await this.sessionModel.create({
+      await this.sessionModel.create({
         userId: loginInfo._id,
         sessionId,
         ipAddress: ip,
@@ -422,7 +421,6 @@ async register_user(
         profile: loginInfo.profile,
         role: loginInfo.role,
       });
-
       return { token, message: 'User login success' };
     } catch (error) {
       console.log(error);
@@ -521,6 +519,10 @@ async register_user(
   async findSingleUserByPublicUser(param) {
     // const result = await this.userModel.findById({ _id: param }).select('name profile title status description');
     const result = await this.userModel.findById({ _id: param });
+    return result;//
+  }
+  async getHalfUserData(param) {
+    const result = await this.userModel.findById({ _id: param }).select('name profile title description status');
     return result;//
   }
 
