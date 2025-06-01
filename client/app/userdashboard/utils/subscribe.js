@@ -17,7 +17,8 @@ export async function subscribeUser() {
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_PUBLIC_KEY),
     });
-
+    console.log(subscription)
+    console.log('dsisg nsknsghdg s gsdgnsd gdjhg fFrom subscription')
     // Send this subscription to your backend
     try {
           await fetch(`https://edu-socket.onrender.com/save-subscription`, {
