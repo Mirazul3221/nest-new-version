@@ -23,11 +23,11 @@ export class PushNotificationService implements OnModuleInit {
     for (const sub of this.subscriptions) {
       try {
         await webPush.sendNotification(sub, JSON.stringify(payload));
-        // console.log(this.subscriptions,'cvh')//
+        console.log(this.subscriptions,'cvh')//
+        return { message: 'Notifications sent success' };
       } catch (err) {
         console.error('Error sending notification', err);
       }
     }
-    return { message: 'Notifications sent' };
   }
 }
