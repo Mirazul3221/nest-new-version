@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { PushNotificationService } from './push_notification.service';
 
-@Controller()
+@Controller()//
 export class PushNotificationController {
   constructor(private readonly notificationService: PushNotificationService) {}
 
