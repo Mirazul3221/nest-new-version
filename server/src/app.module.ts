@@ -18,6 +18,7 @@ import { SocketServerModule } from './socket-server/socket-server.module';
 import { UserquestionsModule } from './userquestions/userquestions.module';
 import { UserResumeModule } from './user-resume/user-resume.module';
 import { LoginstatusModule } from './loginstatus/loginstatus.module';
+import { PushNotificationModule } from './push_notification/push_notification.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { LoginstatusModule } from './loginstatus/loginstatus.module';
     SocketServerModule,
     UserResumeModule,
     LoginstatusModule,
+    PushNotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

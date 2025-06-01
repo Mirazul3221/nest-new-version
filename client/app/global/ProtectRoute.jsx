@@ -7,6 +7,7 @@ import CallReceiverRoom from "../userdashboard/components/messanger/video-audio-
 import loading from '@/public/background-loading.gif'
 import Image from "next/image";
 import { requestNotificationPermission, showNotification } from "../userdashboard/global/UseBrowserNotification";
+import { subscribeUser } from "../userdashboard/utils/subscribe";
 export const MYONLINEFRIEND = []
 const ProtectRoute = ({children}) => {
   const [isMounted,setIsMounted] = useState(false)
@@ -17,8 +18,10 @@ const ProtectRoute = ({children}) => {
   useEffect(() => {
     setIsMounted(true)
     requestNotificationPermission()
+        if (Notification.permission === 'granted') {
+        subscribeUser();
+    }
   }, []);
-
     useEffect(() => {
       if (path.includes("userdashboard/messanger")) return
       socket &&
