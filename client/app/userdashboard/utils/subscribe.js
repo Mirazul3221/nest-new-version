@@ -4,25 +4,38 @@ export async function subscribeUser() {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     const registration = await navigator.serviceWorker.register('/worker.js');
 
+    // Check for existing subscription
+    const existingSubscription = await registration.pushManager.getSubscription();
+
+    if (existingSubscription) {
+      // Unsubscribe the existing subscription to avoid InvalidStateError
+      await existingSubscription.unsubscribe();
+    }
+
+    // Now subscribe with the correct VAPID key
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_PUBLIC_KEY),
     });
 
     // Send this subscription to your backend
-    
-await fetch(`https://edu-socket.onrender.com/save-subscription`, {
-  method: 'POST',
-  body: JSON.stringify(subscription),
-  headers: {
-    'Content-Type': 'application/json',
-    // 'Authorization': `Bearer ${token}`,
-  },
-})
+    try {
+          await fetch(`https://edu-socket.onrender.com/save-subscription`, {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    } catch (error) {
+      
+    }
+
+    return subscription; // optionally return subscription
   }
 }
 
-// helper function//
+// helper function stays the same
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding)

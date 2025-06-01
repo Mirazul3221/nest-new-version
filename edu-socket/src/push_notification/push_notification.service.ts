@@ -18,7 +18,7 @@ export class PushNotificationService implements OnModuleInit {
   addSubscription(subscription: any) {
     const exists = this.subscriptions.find(sub => sub.endpoint === subscription.endpoint);
     if (!exists) this.subscriptions.push(subscription);
-    // console.log(this.subscriptions)//
+    console.log(this.subscriptions)//
   }
 
   async getKey (){
