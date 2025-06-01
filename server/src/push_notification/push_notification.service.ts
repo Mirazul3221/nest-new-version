@@ -19,6 +19,10 @@ export class PushNotificationService implements OnModuleInit {
     // console.log(this.subscriptions)//
   }
 
+  async getKey (){
+    return await this.subscriptions
+  }
+
   async sendNotificationToAll(payload: { title: string; body: string }) {
     for (const sub of this.subscriptions) {
       try {

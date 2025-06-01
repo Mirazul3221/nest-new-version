@@ -11,6 +11,10 @@ export class PushNotificationController {
     return { message: 'Subscription saved' };
   }
 
+  @Get('get-key')
+  getkey() {
+    return this.notificationService.getKey();
+  }
   @Post('broadcast')
   broadcast(@Body() payload: { title: string; body: string }) {
     return this.notificationService.sendNotificationToAll(payload);
