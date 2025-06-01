@@ -1,7 +1,6 @@
-import { baseurl, PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
+import { PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
 
 export async function subscribeUser() {
-    const token = localStorage.getItem('token')
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     const registration = await navigator.serviceWorker.register('/worker.js');
 
@@ -12,12 +11,12 @@ export async function subscribeUser() {
 
     // Send this subscription to your backend
     
-await fetch(`${baseurl}/save-subscription`, {
+await fetch(`https://edu-socket.onrender.com/save-subscription`, {
   method: 'POST',
   body: JSON.stringify(subscription),
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
+    // 'Authorization': `Bearer ${token}`,
   },
 })
   }

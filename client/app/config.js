@@ -7,5 +7,5 @@ export let baseurl01 = 'https://template-engine-u1xl.onrender.com';
 //====================//====================
 export let viewurl = 'https://bcs-prep.vercel.app';
 // viewurl = 'http://localhost:3000'
-export const PUBLIC_VAPID_PUBLIC_KEY = `BJ2LUzmq87E_Oxwm58DnHxVHyUiOr09waF8wp0K8mmFOJfAQ3m3I-VwqhOXJxLAWdLjWi50CjmWiRrleNNnlj0g`;
+export const PUBLIC_VAPID_PUBLIC_KEY = `BI4fGU7ZATQIyPwFWUd6CFzV-__g2WPYwG_in41OFiiAOcbOUl-fTkHjXkfcYpvepsLkm2-IxSlJ8QXJeEN8eWY`;
 
