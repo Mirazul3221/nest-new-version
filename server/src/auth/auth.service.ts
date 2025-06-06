@@ -36,7 +36,7 @@ import axios from 'axios';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(user_model)
+    @InjectModel(user_model,'mcq_users')
     private userModel: mongoose.Model<Reader>,
     @InjectModel(FriendRequest.name)
     private friendRequestModel: mongoose.Model<FriendRequestDocument>,
@@ -382,9 +382,9 @@ async register_user(
     const parsedUA = parser.getResult();
     // Get location from IP
     try {
-      const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-      const data = geo.data;
-      const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+      // const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+      // const data = geo.data;
+      // const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
 
       await this.sessionModel.create({
         userId: loginInfo._id,
@@ -394,7 +394,7 @@ async register_user(
         device: parsedUA.device.model || 'Unknown device',
         browser: parsedUA.browser.name || 'Unknown browser',
         os: parsedUA.os.name || 'Unknown OS',
-        location: geoLocation,
+        location: 'geoLocation',
         // location: (optional, set below if you use geo-IP),
       });
 

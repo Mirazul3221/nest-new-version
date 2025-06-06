@@ -9,7 +9,7 @@ import { Session, SessionSchemaName } from "src/loginstatus/schema/schema";
 @Injectable()
 export class jwtStrategy extends PassportStrategy(Strategy) {
     constructor(
-        @InjectModel(user_model)
+        @InjectModel(user_model,'mcq_users')
         private readonly userModel : Model<Reader>,
     @InjectModel(SessionSchemaName) private sessionModel: mongoose.Model<Session>,
     ) {
