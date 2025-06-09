@@ -24,7 +24,6 @@ import "../components/cssfiles/scrolling_bar.css";
 import loaderImage from "@/public/loader.gif";
 import Image from "next/image";
 import RadarChart from "../components/RaderChart";
-import AvatarWrapper from "../components/profileWrapper";
 import { GoHistory } from "react-icons/go";
 import { FaFacebook } from "react-icons/fa";
 import { useSocket } from "../global/SocketProvider";
@@ -925,7 +924,7 @@ const Page = () => {
         </div>
       </div>
       {/* //======================================MODEL====================================// */}
-      <div
+      {/* <div
         className={`w-screen h-screen top-0 left-0 overflow-hidden bg-black/30 backdrop-blur-sm duration-100 ${
           openMOdel ? "scale-1" : "scale-0"
         } fixed top-0 left-0 z-50 flex justify-center items-center`}
@@ -1005,7 +1004,7 @@ const Page = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="hidden md:block">
         <Footer />
       </div>
