@@ -18,7 +18,7 @@ export class MessangerService {
   constructor(
     @InjectModel(messangerModel)
     private MessangerModel: mongoose.Model<Messanger>,
-    @InjectModel(user_model,'mcq_users')
+    @InjectModel(user_model)
     private userModel: mongoose.Model<Reader>,
     private readonly authService: AuthService,
     private readonly ConfigService: ConfigService,

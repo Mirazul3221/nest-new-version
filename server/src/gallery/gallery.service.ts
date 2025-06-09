@@ -18,7 +18,6 @@ export class GalleryService {
   //=======================================================
   async create(createGalleryDto: CreateGalleryDto,user) {
     const {images} =await createGalleryDto;
-    console.log(images)
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
       api_key: this.ConfigService.get('Api_key'),

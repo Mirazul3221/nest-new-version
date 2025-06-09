@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
-  constructor( @InjectModel(user_model,'mcq_users')
+  constructor( @InjectModel(user_model)
       private userModel: mongoose.Model<Reader>,) {
     super({
       clientID: process.env.APP_ID, // Replace with your App ID

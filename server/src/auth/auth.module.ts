@@ -40,7 +40,7 @@ import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
         name: user_model,
         schema: user_schema,
       },
-    ],'mcq_users'),
+    ]),
     forwardRef(() => FriendRequestModule), // Fix circular dependency
     forwardRef(() => LoginstatusModule), // Fix circular dependency
   ],
@@ -54,7 +54,7 @@ import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
         name: user_model,
         schema: user_schema,
       },
-    ],'mcq_users'),
+    ]),
   ],
 })
 export class AuthModule {}

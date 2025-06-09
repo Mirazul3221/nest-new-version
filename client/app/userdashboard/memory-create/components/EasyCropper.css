@@ -1,0 +1,5 @@
+.rounded-crop-area {
+  border-radius: 12px !important;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5); /* darkens outside */
+  outline: 1px solid white; /* visible white crop frame */
+}

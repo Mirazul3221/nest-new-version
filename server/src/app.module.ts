@@ -26,12 +26,7 @@ import { PushNotificationModule } from './push_notification/push_notification.mo
       envFilePath: '.env',
       isGlobal: true,
     }),
-
-    MongooseModule.forRoot(process.env.db_users_uri, {
-      dbName: 'MCQReader',
-      connectionName: 'mcq_users',
-    }),
-    MongooseModule.forRoot(process.env.db_others_uri, {
+    MongooseModule.forRoot(process.env.db_uri, {
       dbName: 'MCQReader',
     }),
     AuthModule,
@@ -54,5 +49,5 @@ import { PushNotificationModule } from './push_notification/push_notification.mo
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {} //
+export class AppModule {}//
 //

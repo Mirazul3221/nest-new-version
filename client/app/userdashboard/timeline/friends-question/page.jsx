@@ -21,7 +21,10 @@ import { TiDocumentText } from "react-icons/ti";
 import { commonLogout } from "../../components/common";
 import FloatingMessageContainer from "../../components/messanger/MessageContainer";
 import { useSocket } from "../../global/SocketProvider";
+import { TbPlus } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 const Page = () => {
+  const router = useRouter()
   const { dispatch, store } = useStore();
   const { socket } = useSocket();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -177,8 +180,9 @@ const Page = () => {
     route.push("/login");
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
-
-  console.log(userDetails);
+  const switchToStory = ()=>{
+   router.push('/userdashboard/story-create')
+  }
   return (
     <div className="min-h-screen">
       <ProtectRoute>
@@ -188,7 +192,7 @@ const Page = () => {
         </div>
 
         {/* Main Content */}
-        <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-50">
+        <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-100">
           {/* Sidebar (Sticky - Desktop Only) */}
           <div className="w-3/12 h-fit sticky top-24 hidden md:block">
             <div className="text-gray-700">
@@ -333,7 +337,7 @@ const Page = () => {
                 alt={store?.userInfo?.name}
               />
               <a
-                className="text-gray-700 text-lg font-semibold"
+                className="text-gray-700 text-lg md:font-semibold"
                 href="/userdashboard/timeline/create-post"
               >
                 Share a question with your friends
@@ -346,6 +350,22 @@ const Page = () => {
               </p>
             </div>
 
+            {/* =====================================Story sharing from here==================================== */}
+      <div className="flex space-x-4 overflow-x-auto mb-4">
+        <div onClick={switchToStory} className="bg-white w-28 h-[25vh] group relative shadow-md rounded-2xl overflow-hidden text-center cursor-pointer">
+          <img
+            className="scale-100 w-full h-2/3 group-hover:scale-105 duration-500 object-cover object-center"
+            src={store?.userInfo?.profile}
+            alt={store?.userInfo?.name}
+          />
+          <div className='relative'>
+            <div className="absolute -top-4 left-[50%]">
+          <TbPlus size={30} color="white" className="bg-[#8b36d6] border-2 border-white -translate-x-[50%] rounded-full" />
+            </div>
+          </div>
+          <p className="mt-5 text-sm font-semibold">Capture a memory</p>
+        </div>
+            </div>
             {/* Questions */}
             {questions?.map((question, i) => (
               <div key={i} className="mx-auto">

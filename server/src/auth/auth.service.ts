@@ -36,7 +36,7 @@ import axios from 'axios';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(user_model,'mcq_users')
+    @InjectModel(user_model)
     private userModel: mongoose.Model<Reader>,
     @InjectModel(FriendRequest.name)
     private friendRequestModel: mongoose.Model<FriendRequestDocument>,
