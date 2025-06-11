@@ -19,12 +19,9 @@ async  create(data,req) {
  try {
   const  uploadResponse = await cloudinary.uploader.upload(`data:image/jpeg;base64,${base64Data}`, {
     folder: 'memory', // optional
-    public_id: 'bcs-prep', // optional
-    overwrite: true,
     resource_type: 'image',
     format: 'jpg', // force .jpg format
   });
-  console.log('Uploaded image URL:', uploadResponse.secure_url);
   const newStory = new this.memoryModel({userId:req.user._id,story:uploadResponse.secure_url});
     await newStory.save();
     console.log(newStory)
