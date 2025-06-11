@@ -1,10 +1,17 @@
 "use client";
+import { baseurl } from "@/app/config";
+import { useStore } from "@/app/global/DataProvider";
+import axios from "axios";
 import html2canvas from "html2canvas";
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Moveable from "react-moveable";
+import { commonLogout } from "../../components/common";
+import { useRouter } from "next/navigation";
 
-const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
-  console.log(colorCode);
+const MoveableImage = forwardRef((prop,ref) => {
+  const { imgSrc, storyText, colorCode, font } = prop;
+  const { store, dispatch } = useStore();
+  const router = useRouter()
   const sectionRef = useRef(null);
   const imageRef = useRef(null);
   const textRef = useRef(null);
@@ -15,7 +22,8 @@ const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
     matrix: null,
   };
   const [target, setTarget] = useState(null);
-  const handleDownload = async () => {
+
+  const handleUpload = async () => {
     const element = sectionRef.current;
     if (!element) return;
 
@@ -30,7 +38,7 @@ const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
     // Wait for styles to apply
     await new Promise((r) => setTimeout(r, 50));
 
-    // Capture the canvas
+    // Capture the canvas as JPEG
     const canvas = await html2canvas(element, {
       useCORS: true,
       backgroundColor: null,
@@ -38,16 +46,38 @@ const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
 
     // Restore original styles
     element.style.borderRadius = originalBorderRadius;
-    moveableControls.forEach((el) => (el.style.display = "")); // show again
+    moveableControls.forEach((el) => (el.style.display = ""));
 
-    // Download image
+    // Convert canvas to JPEG base64 string
     const imgData = canvas.toDataURL("image/jpeg", 1.0);
-    const link = document.createElement("a");
-    link.href = imgData;
-    link.download = "section-image.jpg";
-    link.click();
-  };
 
+    // Prepare base64 string for Cloudinary upload (remove the prefix)
+    const base64Data = imgData.replace(/^data:image\/jpeg;base64,/, "");
+    // Setup FormData for upload
+    const formData = new FormData();
+    formData.append("file", `data:image/jpeg;base64,${base64Data}`);
+    formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // <-- Replace this
+    formData.append("format", "jpg"); // Force JPG format on Cloudinary
+
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/usermemory/memory-build`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+    router.push('/userdashboard/timeline/friends-question')
+    } catch (error) {
+        commonLogout(dispatch, error);
+    }
+  };
+  // Expose the function to parent using useImperativeHandle
+  useImperativeHandle(ref, () => ({
+      handleUpload
+  }));
   function updateTransform(useMatrix = false) {
     if (!target) return;
 
@@ -99,8 +129,8 @@ const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
               setTarget(textRef.current);
             }}
             ref={textRef}
-            style={{ color: colorCode }}
-            className={`break-words max-w-full p-3 mx-auto text-center absolute z-30`}
+            style={{ color: colorCode, fontSize: font + "px" }}
+            className={`break-words cursor-pointer max-w-full p-3 mx-auto text-center absolute z-30`}
           >
             {storyText}
           </h2>
@@ -150,16 +180,8 @@ const MoveableImage = ({ imgSrc, storyText, colorCode }) => {
           }}
         />
       </div>
-      <div>
-        <button
-          onClick={handleDownload}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Download as JPG
-        </button>
-      </div>
     </div>
   );
-};
+});
 
 export default MoveableImage;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import SuperHeader from "../components/SuperHeader";
 import { useStore } from "@/app/global/DataProvider";
@@ -13,6 +13,15 @@ const Page = () => {
   const [imgSrc, setImgSrc] = useState(null);
   const [storyText, setStoryText] = useState([]);
   const [colorCode, setColorCode] = useState("#FFFFFF");
+  const [fontSize, setFontSize] = useState(16);
+  const [storyData,setStoryData] = useState(null);
+  const [imgLoader,setImgLoader] = useState(false);
+    const childRef = useRef();
+      const handleClick = () => {
+      setImgLoader(true)
+    // Call child function via ref
+    childRef.current?.handleUpload();
+  };
 
   const handleFileChange = (e) => {
     if (e.target.files?.length > 0) {
@@ -31,6 +40,10 @@ const Page = () => {
     e.target.classList.add("border-violet-500");
     setColorCode(code);
   };
+
+  const handleChange = (e) => {
+    setFontSize(e.target.value);
+  }
   return (
     <div className="h-screen w-screen bg-gray-100">
       <ProtectRoute>
@@ -44,7 +57,7 @@ const Page = () => {
           {/* Sidebar */}
           <div className="w-3/12 flex flex-col justify-between bg-white h-full p-4 overflow-y-auto">
             <div>
-              <h2 className="md:text-2xl mt-4 font-semibold text-gray-700">
+              <h2 className="md:text-2xl font-semibold text-gray-700">
                 Your memory
               </h2>
               <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
@@ -223,6 +236,16 @@ const Page = () => {
                       className="w-[30px] h-[30px] ring-1 rounded-full bg-[#F8E24C]"
                     ></div>
                   </div>
+                  <label htmlFor="textSize">Text Size: </label>
+      <input className="mt-2"
+        type="range"
+        id="textSize"
+        min="10"
+        max="60"
+        value={fontSize}
+        onChange={handleChange}
+      />
+      <span>{fontSize}px</span>
                 </div>
               )}
             </div>
@@ -234,8 +257,8 @@ const Page = () => {
                 >
                   Discard
                 </button>
-                <button className="py-1 px-10 rounded-md bg-violet-500 text-white">
-                  Click to capture
+                <button disabled={imgLoader} onClick={handleClick} className="py-1 px-10 rounded-md bg-violet-500 text-white">
+                  {!imgLoader ? "Click to capture" : 'Loading...'}
                 </button>
               </div>
             )}
@@ -279,10 +302,11 @@ const Page = () => {
             )}
 
             {switcher == "image_memory" && (
-              <MoveableImage
+              <MoveableImage ref={childRef}
                 imgSrc={imgSrc}
                 storyText={storyText}
                 colorCode={colorCode}
+                font={fontSize}
               />
             )}
           </div>
