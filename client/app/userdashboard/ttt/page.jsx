@@ -28,6 +28,7 @@ export default function HomePage() {
       commonLogout(dispatch, error);
     }
   };
+
   return (
     <main className="min-h-screen bg-white">
       <h1 className="text-2xl font-bold p-4">User Stories</h1>

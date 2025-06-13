@@ -2,18 +2,30 @@
 import { useState } from "react";
 import StoryModal from "./StoryModel";
 
-export default function StorySlider({ users}) {
+export default function StorySlider({ users }) {
   const [activeUserIndex, setActiveUserIndex] = useState(null);
+  const [startingStoryIndex, setStartingStoryIndex] = useState(0); // ✅ NEW
 
   const handleStoryClick = (index) => {
     setActiveUserIndex(index);
+    setStartingStoryIndex(0); // Always start from first story on click
   };
 
   const handleNextUser = () => {
     if (activeUserIndex < users.length - 1) {
       setActiveUserIndex((prev) => prev + 1);
+      setStartingStoryIndex(0); // ✅ Start from first story for next user
     } else {
       setActiveUserIndex(null);
+    }
+  };
+
+  const handlePrevUser = () => {
+    if (activeUserIndex > 0) {
+      const prevUserIndex = activeUserIndex - 1;
+      const lastStoryIndex = users[prevUserIndex]?.stories.length - 1 || 0;
+      setActiveUserIndex(prevUserIndex);
+      setStartingStoryIndex(lastStoryIndex); // ✅ Start from LAST story of previous user
     }
   };
 
@@ -31,7 +43,6 @@ export default function StorySlider({ users}) {
               src={`${story.stories[0].story}`}
               alt=""
             />
-
             <img
               src={story?.user?.profile}
               alt={story?.user?.name}
@@ -47,10 +58,13 @@ export default function StorySlider({ users}) {
 
       {activeUserIndex !== null && (
         <StoryModal
-          key={users[activeUserIndex]?.stories[0].story} // <-- Add this line
+          key={`${activeUserIndex}-${startingStoryIndex}`} // ✅ ensure re-render on user change
+          activeUserIndex={activeUserIndex}
           user={users[activeUserIndex]}
+          startingIndex={startingStoryIndex} // ✅ NEW PROP
           onClose={() => setActiveUserIndex(null)}
           onNextUser={handleNextUser}
+          onPrevUser={handlePrevUser}
         />
       )}
     </div>

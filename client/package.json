@@ -18,6 +18,7 @@
     "bd-instituition-list-by-solutya": "^1.2.0",
     "chart.js": "^4.4.3",
     "cloudinary": "^2.4.0",
+    "framer-motion": "^12.18.1",
     "html-react-parser": "^5.1.10",
     "html2canvas": "^1.4.1",
     "jodit-react": "^4.1.2",
