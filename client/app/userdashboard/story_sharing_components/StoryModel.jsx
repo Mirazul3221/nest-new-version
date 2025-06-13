@@ -70,8 +70,8 @@ export default function StoryModal({activeUserIndex, user, startingIndex = 0, on
         ✕ Close
       </div>
       <div className="flex items-center gap-4 justify-center">
-        {(currentStoryIndex == 0 && activeUserIndex == 0) && <div className="left mt-3 text-gray-700 Arrey hidden md:block cursor-pointer"><IoIosArrowDropleft size={30} /></div>}
-        {!(currentStoryIndex == 0 && activeUserIndex == 0) &&  <div onClick={()=>prevStory()} className="left mt-3 Arrey hidden md:block cursor-pointer"><IoIosArrowDropleft size={30} /></div>}
+        {(currentStoryIndex == 0 && activeUserIndex == 0) && <div className="left mt-10 text-gray-700 Arrey hidden md:block cursor-pointer"><IoIosArrowDropleft size={30} /></div>}
+        {!(currentStoryIndex == 0 && activeUserIndex == 0) &&  <div onClick={()=>prevStory()} className="left mt-10 Arrey hidden md:block cursor-pointer"><IoIosArrowDropleft size={30} /></div>}
         <div className="md:mt-10 mt-2 text-center relative overflow-hidden rounded-md bg-violet-400/10">
           <div className="absolute -top-1 p-3 left-0 w-full bg-gradient-to-b from-black to-transparent z-20">
             <div className="w-full my-2 max-w-xl space-x-1 flex">
@@ -134,7 +134,7 @@ export default function StoryModal({activeUserIndex, user, startingIndex = 0, on
             </div>
           )}
         </div>
-        <div onClick={()=>nextStory?.()} className="mt-3 hidden md:block Arrey cursor-pointer"><IoIosArrowDropright size={30} /></div>
+        <div onClick={()=>nextStory?.()} className="mt-10 hidden md:block Arrey cursor-pointer"><IoIosArrowDropright size={30} /></div>
       </div>
     </div>
   );
