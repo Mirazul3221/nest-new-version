@@ -19,7 +19,7 @@ const ProtectRoute = ({children}) => {
     setIsMounted(true)
     requestNotificationPermission()
         if (Notification.permission === 'granted') {
-        subscribeUser();
+        subscribeUser(store?.userInfo?.id);
     }
   }, []);
     useEffect(() => {

@@ -1,54 +1,52 @@
-import { PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
+import { baseurl, PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
+import axios from "axios";
 
-export async function subscribeUser() {
-  if ('serviceWorker' in navigator && 'PushManager' in window) {
+export async function subscribeUser(id) {
+  if ("serviceWorker" in navigator && "PushManager" in window) {
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      console.warn('Notification permission denied');
+    if (permission !== "granted") {
+      console.warn("Notification permission denied");
       return;
     }
 
     try {
       // Wait until service worker is fully ready (active + controlling page)
-      const registration = await navigator.serviceWorker.register('/worker.js');
+      const registration = await navigator.serviceWorker.register("/worker.js");
       const readyRegistration = await navigator.serviceWorker.ready;
 
-      const existingSubscription = await readyRegistration.pushManager.getSubscription();
+      const existingSubscription =
+        await readyRegistration.pushManager.getSubscription();
 
       if (!existingSubscription) {
         const newSubscription = await readyRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_PUBLIC_KEY),
         });
-        await fetch(`https://edu-socket.onrender.com/save-subscription`, {
-          method: 'POST',
-          body: JSON.stringify(newSubscription),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
 
-        console.log('New push subscription saved.');
+        await axios.post(`${baseurl}/save-subscription`, {
+          key: newSubscription,
+          userId: id,
+        });
+        console.log("New push subscription saved.");
       } else {
-        console.log('User already subscribed to push.');
+        console.log("User already subscribed to push.");
       }
     } catch (err) {
-      console.error('Push subscription failed:', err);
+      console.error("Push subscription failed:", err);
     }
   }
 }
 
 // helper function//
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
 
   const rawData = atob(base64);
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
-
 
 /////
 // import { PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
@@ -113,4 +111,3 @@ function urlBase64ToUint8Array(base64String) {
 //   const rawData = atob(base64);
 //   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 // }
-

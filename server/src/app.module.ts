@@ -30,6 +30,12 @@ import { UsermemoryModule } from './usermemory/usermemory.module';
     MongooseModule.forRoot(process.env.db_uri, {
       dbName: 'MCQReader',
     }),
+
+    // Secondary MongoDB connection (AnotherDB)
+    MongooseModule.forRoot(process.env.db_uri1, {
+      dbName: 'pushConnection',
+      connectionName: 'pushConnection', // <-- important
+    }),
     AuthModule,
     BanglaModule,
     EnglishModule,

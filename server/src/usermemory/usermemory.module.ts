@@ -5,9 +5,10 @@ import { AuthModule } from 'src/auth/auth.module';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { MongooseModule } from '@nestjs/mongoose';
 import { memorySchema, UserMemory } from './schema/memorySchema';
+import { PushNotificationModule } from 'src/push_notification/push_notification.module';
 
 @Module({
-  imports:[AuthModule,NestjsFormDataModule, MongooseModule.forFeature([{ name: UserMemory.name, schema: memorySchema }])],
+  imports:[AuthModule,PushNotificationModule,NestjsFormDataModule, MongooseModule.forFeature([{ name: UserMemory.name, schema: memorySchema }])],
   controllers: [UsermemoryController],
   providers: [UsermemoryService],
 })

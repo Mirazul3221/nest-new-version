@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserMemory } from './schema/memorySchema';
 import { Model } from 'mongoose';
+import { PushNotificationService } from 'src/push_notification/push_notification.service';
 @Injectable()
 export class UsermemoryService {
   constructor(
     @InjectModel(UserMemory.name)
     private readonly memoryModel: Model<UserMemory>,
     private readonly ConfigService: ConfigService,
+    private readonly pushNotificationService: PushNotificationService,
+
   ) {}
   async create(data, req) {
     // cloudinary.config.t
@@ -101,6 +104,7 @@ async findAll() {
   return groupStoriesByUser(storiesWithCount);
 }
 
+
   async addVisitorId(req, { storyId }) {
     const isExist = await this.memoryModel.findOne({ _id: storyId });
     const isVisited = isExist.visitors.some(
@@ -112,6 +116,39 @@ async findAll() {
     isExist.visitors.push({ id: req.user._id, action: [] });
     await isExist.save();
   }
+
+
+ async addVisitorAction(req, { storyId, reaction }) {
+  const isExist = await this.memoryModel.findOne({ _id: storyId });
+  if (!isExist) throw new NotFoundException('Story not found');
+
+  const visitor = isExist.visitors?.find(
+    (visitor) => visitor.id === req.user._id.toString(),
+  );
+  if (!visitor) {
+    throw new BadRequestException('Visitor not found in story visitors list');
+  }
+
+  if (!visitor.action) {
+    visitor.action = []; // initialize if undefined
+  }
+if(visitor.action.length > 18) return;
+  visitor.action.push(reaction);
+console.log(req.user);
+  await isExist.save();
+const sendableData = {
+  title: 'New Reaction!',
+  body: `${req.user.name} ${reaction} to your story.`,
+  icon: req.user.profile?.replace('http://', 'https://'),
+  url: './userdashboard/ttt',
+};
+
+
+  await this.pushNotificationService.commonPush(isExist.userId,sendableData);
+
+  return { success: true };
+}
+
 
   async checkVisitor({ storyId }) {
     const story = await this.memoryModel.findOne(

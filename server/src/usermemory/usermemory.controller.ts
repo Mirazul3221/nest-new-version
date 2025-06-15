@@ -26,6 +26,13 @@ export class UsermemoryController {
     return await this.usermemoryService.addVisitorId(req,data);
   }
 
+  
+  @Post('add-visitor-action')
+    @UseGuards(AuthGuard())//
+  async addVisitorAction(@Body() data:any, @Req() req:any) {
+    return await this.usermemoryService.addVisitorAction(req,data);
+  }
+
     @Post('count-visitors')
   @UseGuards(AuthGuard())
  async checkVisitor(@Body() data:any) {
