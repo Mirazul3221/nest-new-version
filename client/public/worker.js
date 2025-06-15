@@ -1,11 +1,33 @@
+// 🔄 Immediately activate new service worker
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+});
+
+// 📡 Take control of clients as soon as activated
+self.addEventListener('activate', function(event) {
+  event.waitUntil(clients.claim());
+});
+
+// 📩 Handle incoming push
 self.addEventListener('push', function(event) {
-  const data = event.data.json();
+  const data = (() => {
+    try {
+      return event.data.json();
+    } catch {
+      return {
+        title: 'New Notification',
+        body: 'You have a new message.',
+        icon: '/bcs-logo.png',
+        url: '/',
+      };
+    }
+  })();
 
   const options = {
     body: data.body,
-    icon: req.user.profile?.replace('http://', 'https://') || '/bcs-logo.png', // fallback icon
+    icon: data.icon || '/bcs-logo.png',
     data: {
-      url: data.url, // attach custom URL to open on click
+      url: data.url || '/',
     },
   };
 
@@ -14,11 +36,20 @@ self.addEventListener('push', function(event) {
   );
 });
 
+// 📦 Handle notification click
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  // Open custom URL from push payload
-  if (event.notification.data && event.notification.data.url) {
-    event.waitUntil(clients.openWindow(event.notification.data.url));
-  }
+  const targetUrl = event.notification.data?.url || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(targetUrl);
+    })
+  );
 });

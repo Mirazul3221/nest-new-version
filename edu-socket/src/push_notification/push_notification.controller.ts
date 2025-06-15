@@ -15,8 +15,8 @@ export class PushNotificationController {
   getkey() {
     return this.notificationService.getKey();
   }
-  @Post('broadcast')
-  broadcast(@Body() payload: { title: string; body: string }) {
-    return this.notificationService.sendNotificationToAll(payload);
+  @Post('broadcast-to-a-single-user')
+ async broadcast(@Body() reqData:any) {
+    return await this.notificationService.sendNotificationTo(reqData);
   }
 }

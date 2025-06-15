@@ -5,11 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserMemory } from './schema/memorySchema';
 import { Model } from 'mongoose';
 import { PushNotificationService } from 'src/push_notification/push_notification.service';
+import { NotificationRecord } from 'src/push_notification/schema/subscriptionSchema';
+import axios from 'axios';
 @Injectable()
 export class UsermemoryService {
   constructor(
     @InjectModel(UserMemory.name)
     private readonly memoryModel: Model<UserMemory>,
+    @InjectModel(NotificationRecord.name,'pushConnection')
+    private readonly pushModel: Model<NotificationRecord>,
     private readonly ConfigService: ConfigService,
     private readonly pushNotificationService: PushNotificationService,
 
@@ -119,6 +123,7 @@ async findAll() {
 
 
  async addVisitorAction(req, { storyId, reaction }) {
+  console.log(reaction)
   const isExist = await this.memoryModel.findOne({ _id: storyId });
   if (!isExist) throw new NotFoundException('Story not found');
 
@@ -134,7 +139,6 @@ async findAll() {
   }
 if(visitor.action.length > 18) return;
   visitor.action.push(reaction);
-console.log(req.user);
   await isExist.save();
 const sendableData = {
   title: 'New Reaction!',
@@ -142,9 +146,19 @@ const sendableData = {
   icon: req.user.profile?.replace('http://', 'https://'),
   url: './userdashboard/ttt',
 };
+const id = isExist.userId.toString();
 
 
-  await this.pushNotificationService.commonPush(isExist.userId,sendableData);
+try {
+  //  const currentKey = await this.pushModel.find({ userId: id})//
+  //  console.log(currentKey[0].key)
+  //   if(currentKey.length === 0) return
+    await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user',{id,payload:sendableData})
+} catch (error) {
+  console.log(error)
+}
+
+  // await this.pushNotificationService.commonPush(isExist.userId,sendableData);
 
   return { success: true };
 }

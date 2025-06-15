@@ -23,7 +23,7 @@ export async function subscribeUser(id) {
           applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_PUBLIC_KEY),
         });
 
-        await axios.post(`${baseurl}/save-subscription`, {
+        await axios.post(`https://edu-socket.onrender.com/save-subscription`, {
           key: newSubscription,
           userId: id,
         });
