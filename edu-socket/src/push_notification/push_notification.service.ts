@@ -20,23 +20,31 @@ export class PushNotificationService implements OnModuleInit {
   }
 
 
-  async addSubscription(subscription: any) {
-    const { key, userId } = subscription;
-console.log(key)
-    try {
-      const isExist = await this.StoreSubKey.find({ userId });
-      //
-      if (isExist.length > 0) {
-        // console.log(isExist);
-        isExist[0].key = key;
-        await isExist[0].save(); // ✅ FIXED
+async addSubscription(subscription: any) {
+  const { key, userId } = subscription;
+
+  try {
+    const existing = await this.StoreSubKey.findOne({ userId });
+
+    if (existing) {
+      // 🔁 Update only if endpoint changed (important to avoid stale keys)
+      if (existing.key?.endpoint !== key.endpoint) {
+        existing.key = key;
+        await existing.save();
+        console.log(`🔄 Subscription updated for user: ${userId}`);
       } else {
-        await this.StoreSubKey.create({ userId, key });
+        console.log(`✅ Existing subscription already up-to-date for user: ${userId}`);
       }
-    } catch (error) {
-      console.error('❌ Error in addSubscription:', error);
+    } else {
+      // 🆕 Create new subscription
+      await this.StoreSubKey.create({ userId, key });
+      console.log(`🆕 New subscription saved for user: ${userId}`);
     }
+  } catch (error) {
+    console.error('❌ Error in addSubscription:', error);
   }
+}
+
 
   async getKey (){
     return await this.subscriptions
