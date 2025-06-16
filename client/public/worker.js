@@ -1,15 +1,14 @@
-// 🔄 Immediately activate new service worker
-self.addEventListener('install', function(event) {
+// 🔄 Activate new service worker immediately
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// 📡 Take control of clients as soon as activated
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
   event.waitUntil(clients.claim());
 });
 
-// 📩 Handle incoming push
-self.addEventListener('push', function(event) {
+// 📩 Handle incoming push notifications
+self.addEventListener('push', (event) => {
   const data = (() => {
     try {
       return event.data.json();
@@ -26,9 +25,14 @@ self.addEventListener('push', function(event) {
   const options = {
     body: data.body,
     icon: data.icon || '/bcs-logo.png',
+    badge: data.badge || '/bcs-badge.png', // small monochrome badge (optional)
     data: {
       url: data.url || '/',
     },
+    vibrate: [200, 100, 200], // for mobile visibility (optional)
+    requireInteraction: true, // keeps it on screen until user interacts (optional)
+    tag: 'bcs-notification', // to prevent stacking identical messages
+    renotify: true // re-alerts if tag is reused
   };
 
   event.waitUntil(
@@ -36,14 +40,14 @@ self.addEventListener('push', function(event) {
   );
 });
 
-// 📦 Handle notification click
-self.addEventListener('notificationclick', function(event) {
+// 🖱️ Handle click on notification
+self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
   const targetUrl = event.notification.data?.url || '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if (client.url === targetUrl && 'focus' in client) {
           return client.focus();
