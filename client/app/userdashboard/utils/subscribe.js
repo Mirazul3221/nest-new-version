@@ -48,7 +48,7 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-/////
+///
 // import { PUBLIC_VAPID_PUBLIC_KEY } from "@/app/config";
 
 // export async function subscribeUser() {
