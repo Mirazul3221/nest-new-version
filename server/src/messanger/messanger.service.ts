@@ -12,6 +12,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { Reader, user_model } from 'src/auth/schema/auth.schema';
+import axios from 'axios';
 
 @Injectable()
 export class MessangerService {
@@ -36,6 +37,17 @@ export class MessangerService {
         reply: createMessangerDto.reply,
         seenMessage: createMessangerDto.seenMessage,
       });
+
+const recId = createMessangerDto.receiverId.toString();
+
+      const sendableData = {
+  title: `New message from ${receivedUser.name}`,
+  body: `Message: ${createMessangerDto.message.slice(0.50)} to your story.`,
+  icon: receivedUser.profile?.replace('http://', 'https://'),
+  url: `./userdashboard/messanger/${receivedUser.name}/${recId}`,
+};
+
+      await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user',{recId,payload:sendableData})
       return created;
     } else {
       return 'User is blocked'

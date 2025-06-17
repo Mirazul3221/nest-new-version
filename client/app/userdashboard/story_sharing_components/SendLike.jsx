@@ -3,19 +3,20 @@ import { baseurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import React, { useState } from "react";
+import { commonLogout } from "../components/common";
 
-const SendLike = ({ emj, story }) => {
+const SendLike = ({ emj, story, setIsLongPress=null}) => {
   const { store, dispatch } = useStore();
   const [putLike, setPutLike] = useState(false);
   const handlePutLike = async () => {
     new Audio("/like-justify-sound/pick-92276.mp3").play();
+    if(setIsLongPress !== null)setIsLongPress(false)
     setPutLike(true);
     setTimeout(() => {
       setPutLike(false);
     }, 1000);
-console.log(story)
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${baseurl}/usermemory/add-visitor-action`,
         { storyId: story._id, reaction: emj },
         {

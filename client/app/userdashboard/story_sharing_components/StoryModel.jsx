@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProgressBar from "./ProgressBar";
 import { useStore } from "@/app/global/DataProvider";
 import { commonLogout } from "../components/common";
@@ -23,6 +23,21 @@ export default function StoryModal({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(startingIndex);
   const [isPaused, setIsPaused] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
+  const [isLongPress, setIsLongPress] = useState(false);
+  const LONG_PRESS_DURATION = 600; // ms
+  const timerRef = useRef(null);
+  const handleLongPress = () => {
+    setIsLongPress(true);
+  };
+  const startPressTimer = () => {
+    timerRef.current = setTimeout(handleLongPress, LONG_PRESS_DURATION);
+  };
+
+  const clearPressTimer = () => {
+    clearTimeout(timerRef.current);
+    timerRef.current = null;
+  };
+
   useEffect(() => {
     setCurrentStoryIndex(startingIndex); // ✅ reset when user changes
   }, [user, startingIndex]);
@@ -96,7 +111,7 @@ export default function StoryModal({
           </div>
         )}
         <div className="md:mt-10 mt-2 text-center relative overflow-hidden rounded-md bg-violet-400/10">
-          <div className="absolute -top-1 p-3 left-0 w-full bg-gradient-to-b from-black to-transparent z-20">
+          <div className="absolute h-[20vh] -top-1 p-3 left-0 w-full bg-gradient-to-b from-black to-transparent z-20">
             <div className="w-full my-2 max-w-xl space-x-1 flex">
               {user?.stories.map((_, i) => (
                 <ProgressBar
@@ -133,7 +148,7 @@ export default function StoryModal({
           </div>
 
           {story && (
-            <div className="md:h-[80vh] w-[300px] h-[100vh] -z-10 mx-auto rounded-md">
+            <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md">
               {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
                 <div
                   onClick={() => prevStory()}
@@ -164,7 +179,7 @@ export default function StoryModal({
           )}
 
           {user?.user?._id == store.userInfo.id && counter !== 0 && (
-            <div className="absolute flex items-center p-2 text-white bottom-0 left-0 w-full bg-gradient-to-t from-black/50 to-transparent z-20">
+            <div className="absolute flex items-center px-6 py-1 ring-1 ring-black rounded-full text-white bottom-16 bg-black/50 w-fit left-2 bg-gradient-to-t from-black/50 to-transparent z-20">
               <VscEye size={20} />
               <span className="text-sm">Visitors : {counter} </span>
             </div>
@@ -177,7 +192,7 @@ export default function StoryModal({
           <IoIosArrowDropright size={30} />
         </div>
       </div>
-      <div className="flex justify-center items-center gap-5 mt-3">
+      <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 z-40">
         <input
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
@@ -186,16 +201,47 @@ export default function StoryModal({
           }`}
           type="text"
           className={`${
-            isFocus ? "w-[40vw]" : "w-[20vw]"
-          } transition-all duration-500 ease-in-out px-6 py-1 text-white rounded-full bg-transparent border-2 border-gray-300`}
+            isFocus ? "md:w-[40vw] w-full" : "md:w-[20vw] w-[80vw]"
+          } ${
+            isLongPress ? "hidden" : ""
+          } focus:outline-none transition-all duration-500 ease-in-out px-6 py-1 md:text-white rounded-full bg-transparent border-2 border-gray-400`}
         />{" "}
+        {!isFocus && (
+          <button
+            className={`md:hidden ${isLongPress ? "hidden" : ""}`}
+            onMouseDown={startPressTimer}
+            onMouseUp={clearPressTimer}
+            onMouseLeave={clearPressTimer}
+            onTouchStart={startPressTimer}
+            onTouchEnd={clearPressTimer}
+          >
+            <SendLike emj={"👍"} story={user.stories[currentStoryIndex]} />
+          </button>
+        )}
+        <div
+          className={`${isLongPress ? "flex items-center gap-1" : "hidden"}`}
+        >
+          {emojies.map((em, i) => (
+            <SendLike
+              key={i}
+              emj={em}
+              story={user.stories[currentStoryIndex]}
+              setIsLongPress={setIsLongPress}
+            />
+          ))}
+              <button onClick={()=>setIsLongPress(false)} className="ml-3 text-2xl">✕</button>
+        </div>
         <div
           className={`${
             isFocus ? "absolute translate-y-[10000px]" : "block duration-500"
-          }  flex items-center gap-1`}
+          } hidden md:flex items-center gap-1`}
         >
           {emojies.map((em, i) => (
-            <SendLike key={i} emj={em} story={user.stories[currentStoryIndex]} />
+            <SendLike
+              key={i}
+              emj={em}
+              story={user.stories[currentStoryIndex]}
+            />
           ))}
         </div>
       </div>

@@ -17,7 +17,7 @@ export class UsermemoryController {
   @Get('all-users-memory')
   @UseGuards(AuthGuard())
  async findAll(@Req() data:any) {
-  const myId = data.user._id;
+  const myId = data.user._id.toString();
     return await this.usermemoryService.findAll(myId);
   }
 

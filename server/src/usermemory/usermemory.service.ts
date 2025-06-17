@@ -108,11 +108,14 @@ async findAll(currentUserId: string) {
 
     // Convert to array and move current user story to the front
     const groupedArray = Object.values(grouped);
-    groupedArray.sort((a, b) => {
-      if (a.user._id.toString() === currentUserId) return -1;
-      if (b.user._id.toString() === currentUserId) return 1;
-      return 0;
-    });
+groupedArray.sort((a, b) => {
+  const aId = a.user._id.toString();
+  const bId = b.user._id.toString();
+  if (aId === currentUserId) return -1;
+  if (bId === currentUserId) return 1;
+  return 0;
+});
+
 
     return groupedArray;
   }
