@@ -47,29 +47,32 @@ export class UsermemoryService {
     return 'This action adds a new usermemory';
   }
 
-async findAll() {
+async findAll(currentUserId: string) {
   const now = new Date();
   const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-  // Fetch documents excluding `visitors`, but keep it in a separate step to get its length
   const allStory = await this.memoryModel
     .find(
       { createdAt: { $gte: twentyFourHoursAgo } },
-      { visitors: 1, story: 1, createdAt: 1, updatedAt: 1, userId: 1 } // keep visitors to count, but not return full array
+      {
+        visitors: 1,
+        story: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        userId: 1,
+      }
     )
     .populate('userId', 'name profile')
     .sort({ createdAt: -1 });
 
-  // Map to remove visitors and add visitorCount
   const storiesWithCount = allStory.map((story: any) => {
-    const { visitors, ...rest } = story.toObject(); // convert to plain object
+    const { visitors, ...rest } = story.toObject();
     return {
       ...rest,
-      visitorCount: visitors?.length || 0, // count only
+      visitorCount: visitors?.length || 0,
     };
   });
 
-  // Type definition
   type GroupedStory = {
     user: {
       _id: any;
@@ -102,11 +105,21 @@ async findAll() {
         (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
       );
     }
-    return Object.values(grouped);
+
+    // Convert to array and move current user story to the front
+    const groupedArray = Object.values(grouped);
+    groupedArray.sort((a, b) => {
+      if (a.user._id.toString() === currentUserId) return -1;
+      if (b.user._id.toString() === currentUserId) return 1;
+      return 0;
+    });
+
+    return groupedArray;
   }
 
   return groupStoriesByUser(storiesWithCount);
 }
+
 
 
   async addVisitorId(req, { storyId }) {

@@ -43,7 +43,7 @@ async addSubscription(subscription: any) {
   } catch (error) {
     console.error('❌ Error in addSubscription:', error);
   }
-}
+}//
 
 
   async getKey (){
