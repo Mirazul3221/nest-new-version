@@ -22,16 +22,16 @@ const ProtectRoute = ({children}) => {
         subscribeUser(store?.userInfo?.id);
     }
   }, []);
-    useEffect(() => {
-      if (path.includes("userdashboard/messanger")) return
-      socket &&
-        socket.on("message-from", (data) => {
-          showNotification(data)
-        });
-      return () => {
-        socket && socket.off("message-from");
-      };
-    }, [socket]);//
+    // useEffect(() => {
+    //   if (path.includes("userdashboard/messanger")) return
+    //   socket &&
+    //     socket.on("message-from", (data) => {
+    //       showNotification(data)
+    //     });
+    //   return () => {
+    //     socket && socket.off("message-from");
+    //   };
+    // }, [socket]);//
 
   if(!isMounted) return <div className="flex justify-center fixed top-0 left-0 items-center w-screen h-screen"><Image src={loading} alt="Loading image" /></div>;
   const protectRouter = ()=>{

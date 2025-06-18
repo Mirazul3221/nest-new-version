@@ -693,7 +693,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </h4>
                             </div>
                           </div>
-                          <div className="max-w-[60%] w-fit">
+                          <div className="max-w-[60%] w-full">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
                                 {" "}
@@ -722,7 +722,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   messageBlog.length > 1
                                     ? "msg_anim "
                                     : ""
-                                } text-right duration-500 w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                                } text-right break-words duration-500 max-w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-l-[30px]"
@@ -762,7 +762,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </div>
                             )}
                             {msg?.message.voice !== "" && (
-                              <div className="mb-2">
+                              <div className="mb-2 w-full">
                                 <MessagePlayer
                                   url={msg?.message.voice}
                                   userType="me"
@@ -826,7 +826,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                           </p>
                         )}
                         <div className="flex justify-start items-center gap-3 group">
-                          <div className="max-w-[60%] w-fit">
+                          <div className="max-w-[60%] w-full">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] flex items-center gap-2">
                                 {" "}
@@ -849,7 +849,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               )}
                             {msg?.message?.content && (
                               <h2
-                                className={`text-left w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-r-[30px]"
@@ -889,7 +889,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                             )}
 
                             {msg?.message.voice !== "" && (
-                              <div className="mb-2">
+                              <div className="mb-2 w-full">
                                 <MessagePlayer
                                   url={msg?.message.voice}
                                   userType="he"

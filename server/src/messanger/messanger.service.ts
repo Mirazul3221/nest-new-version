@@ -41,13 +41,12 @@ export class MessangerService {
 const recId = createMessangerDto.receiverId.toString();
 
       const sendableData = {
-  title: `New message from ${receivedUser.name}`,
-  body: `Message: ${createMessangerDto.message.slice(0.50)} to your story.`,
+  title: `New message!`,
+  body: `${receivedUser.name} : ${createMessangerDto.message.slice(0.50)}.`,
   icon: receivedUser.profile?.replace('http://', 'https://'),
   url: `./userdashboard/messanger/${receivedUser.name}/${recId}`,
 };
-
-      await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user',{recId,payload:sendableData})
+      await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user',{id:recId,payload:sendableData})
       return created;
     } else {
       return 'User is blocked'

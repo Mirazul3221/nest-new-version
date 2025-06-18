@@ -9,7 +9,7 @@ import { baseurl } from "@/app/config";
 import { useSocket } from "../../global/SocketProvider";
 import { useMessage } from "../../global/messageProvider";
 import Image from "next/image";
-import { commonLogout } from "../../components/common";
+import { commonLogout, trimSilence } from "../../components/common";
 
 const VoiceRecorder = ({
   isStartRecord,
@@ -59,30 +59,33 @@ const VoiceRecorder = ({
     }
   };
 
-  const stopRecordingAndPrepareBlob = () =>
-    new Promise((resolve) => {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.onstop = () => {
-          const audioBlob = new Blob(audioChunksRef.current, {
-            type: "audio/wav",
-          });
-          setAudioBlob(audioBlob);
-          const audioUrl = URL.createObjectURL(audioBlob); // Generate a URL for playback
-          setAudioUrl(audioUrl);
+const stopRecordingAndPrepareBlob = () =>
+  new Promise(async (resolve) => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.onstop = async () => {
+        const originalBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
 
-          if (mediaStream.current) {
-            mediaStream.current.getTracks().forEach((track) => track.stop());
-            mediaStream.current = null;
-          }
+        // ✅ Trim silence here
+        const trimmedBlob = await trimSilence(originalBlob);
 
-          resolve(audioBlob);
-        };
+        setAudioBlob(trimmedBlob);
+        const audioUrl = URL.createObjectURL(trimmedBlob);
+        setAudioUrl(audioUrl);
 
-        mediaRecorderRef.current.stop();
-      } else {
-        resolve(null);
-      }
-    });
+        if (mediaStream.current) {
+          mediaStream.current.getTracks().forEach((track) => track.stop());
+          mediaStream.current = null;
+        }
+
+        resolve(trimmedBlob);
+      };
+
+      mediaRecorderRef.current.stop();
+    } else {
+      resolve(null);
+    }
+  });
+
 
   const stopRecording = async () => {
     if (mediaRecorderRef.current) {

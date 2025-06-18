@@ -66,11 +66,11 @@ export default function MessagePlayer({ url, userType = "me" }) {
 
   return (
     <div
-      className={`p-4 md:w-[27vw] ${
+      className={`py-2 px-4 min-w-full ${
         userType === "me" ? "bg-violet-500" : "bg-gray-200"
       } rounded-2xl shadow-lg`}
     >
-      <div className="relative flex items-center gap-4">
+      <div className="relative flex items-center gap-2">
         {/* Play/Pause Button */}
         <button
           className={`text-white ${
@@ -88,7 +88,7 @@ export default function MessagePlayer({ url, userType = "me" }) {
 
         {/* Time Display */}
         <div
-          className={`w-20 ${
+          className={`w-20 text-sm ${
             userType === "me" ? "text-white" : "text-gray-500"
           } flex`}
         >
