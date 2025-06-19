@@ -24,6 +24,7 @@ import VoiceRecorder from "../../messanger/components/VoiceRecorder";
 import MessagePlayer from "../../messanger/components/MessagePlayer";
 import BlockButton from "./BlockButton";
 import { commonLogout } from "../common";
+import SmartText from "./VerifyText";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { messanger, dispatch } = useMessage();
   const [message, setMessage] = useState("");
@@ -722,7 +723,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   messageBlog.length > 1
                                     ? "msg_anim "
                                     : ""
-                                } text-right break-words duration-500 max-w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                                } break-words duration-500 max-w-fit ml-auto mb-[1px] ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-l-[30px]"
@@ -747,7 +748,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                                         }
                                                         `}
                               >
-                                {msg?.message.content}
+                                <SmartText userType={"me"} message={msg} />
                               </h2>
                             )}
 
@@ -849,7 +850,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               )}
                             {msg?.message?.content && (
                               <h2
-                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-r-[30px]"
@@ -874,7 +875,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                                               : ""
                                                           }`}
                               >
-                                {msg?.message.content}
+                                <SmartText  userType={"he"} message={msg} />
                               </h2>
                             )}
 

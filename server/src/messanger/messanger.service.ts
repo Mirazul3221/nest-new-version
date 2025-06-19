@@ -13,7 +13,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { Reader, user_model } from 'src/auth/schema/auth.schema';
 import axios from 'axios';
-
+import ogs from 'open-graph-scraper';
 @Injectable()
 export class MessangerService {
   constructor(
@@ -24,11 +24,40 @@ export class MessangerService {
     private readonly authService: AuthService,
     private readonly ConfigService: ConfigService,
   ) {}
+async fetchMeta(url: string): Promise<any> {
+  try {
+    const cleanUrl = url.split('?')[0];
 
+    const data = await ogs({
+      url: cleanUrl,
+       timeout: 20000, // ⏱ 20 seconds instead of default 10
+      fetchOptions: {
+        headers: {
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        },
+      },
+    });
+
+    if (data.result.success) {
+      return {status:true,ogTitle:data.result.ogTitle,ogDescription:data.result.ogDescription,image:data.result.ogImage[0].url};
+    }
+    if (!data.result.success) {
+      return {status:false};
+    }
+    return data.result;
+  } catch (error) {
+    return {status:false};
+  }
+}
   async createTextMessage(createMessangerDto: CreateMessangerDto, id) {
     const receivedUser = await this.userModel.findById(createMessangerDto.receiverId);
     const isblocked = receivedUser.blockedUsers?.includes(id);
-    console.log(isblocked)
+    let verifyText = {status:false}
+    const urlRegex = /\bhttps?:\/\/[^\s<>"']+/gi;
+    const urls = createMessangerDto.message.match(urlRegex) || [];
+    if(urls.length !== 0){
+      verifyText = await this.fetchMeta(createMessangerDto.message);
+    }
     if (!isblocked) {
       const created = await this.MessangerModel.create({
         senderId: id,
@@ -36,6 +65,7 @@ export class MessangerService {
         message: { content: createMessangerDto.message, media: '', voice: '' },
         reply: createMessangerDto.reply,
         seenMessage: createMessangerDto.seenMessage,
+        others:verifyText.status ? verifyText : null
       });
 
 const recId = createMessangerDto.receiverId.toString();

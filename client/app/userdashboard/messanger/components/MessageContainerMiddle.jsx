@@ -26,6 +26,7 @@ import MessagePlayer from "./MessagePlayer";
 import { showNotification } from "../../global/UseBrowserNotification";
 import BlockButton from "../../components/messanger/BlockButton";
 import { commonLogout } from "../../components/common";
+import SmartText from "../../components/messanger/VerifyText";
 const Middle = ({
   id,
   userDetails,
@@ -895,7 +896,7 @@ const Middle = ({
                                   messageBlog.length > 1
                                     ? "msg_anim "
                                     : ""
-                                } text-right break-words duration-500 max-w-fit ml-auto bg-violet-500 mb-[1px] text-indigo-50 py-2 px-6 ${
+                                } break-words duration-500 max-w-fit ml-auto mb-[1px]  ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-l-[30px]"
@@ -920,7 +921,7 @@ const Middle = ({
                                                         }
                                                         `}
                               >
-                                {msg?.message.content}
+                                 <SmartText userType={"me"} message={msg} />
                               </h2>
                             )}
 
@@ -1022,7 +1023,7 @@ const Middle = ({
                               )}
                             {msg?.message?.content && (
                               <h2
-                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] text-gray-700 py-2 px-6 ${
+                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] text-gray-700 ${
                                   messageBlog.length === 1
                                     ? "rounded-[30px]"
                                     : "rounded-r-[30px]"
@@ -1047,7 +1048,7 @@ const Middle = ({
                                                               : ""
                                                           }`}
                               >
-                                {msg?.message.content}
+                                 <SmartText userType={"he"} message={msg} />
                               </h2>
                             )}
 

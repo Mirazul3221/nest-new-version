@@ -57,8 +57,7 @@ const CurrentMessage = ({
         element.current?.remove();
       }
     } catch (error) {
-      console.log(error);
-      commonLogout(dps);
+      commonLogout(error);
     }
   };
   useEffect(() => {

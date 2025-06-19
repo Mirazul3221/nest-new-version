@@ -44,6 +44,8 @@ export class Messanger extends Document {
   reply:string[]
   @Prop({required:true})
   seenMessage:boolean
+  @Prop({type:Object})
+  others:{}
 }
 
 export const messangerSchema = SchemaFactory.createForClass(Messanger);
