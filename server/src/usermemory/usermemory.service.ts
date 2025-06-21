@@ -40,7 +40,8 @@ export class UsermemoryService {
         userId: req.user._id,
         story: uploadResponse.secure_url,
       });
-      await newStory.save();
+      const res = await newStory.save();
+     return res
     } catch (error) {
       console.log(error);
     }

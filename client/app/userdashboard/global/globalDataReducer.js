@@ -1,4 +1,4 @@
-export const messageReducer = (state,action) => {
+export const globalDataReducer = (state,action) => {
   if (action.type === 'fetch-message') {
     state.message = [...action.payload]
      return state
@@ -30,18 +30,17 @@ export const messageReducer = (state,action) => {
         // //   return state
         // // }
         return {
-          message:[...state.message],user:[]
+          message:[...state.message],user:state.user,userMemories:state.userMemories
         }
     }
   
     if (action.type === 'fetch-scroll-message') {
       return {
         message:[...action.payload,...state.message],
-        user:state.user
+        user:state.user,userMemories:state.userMemories
       }
       }
     if (action.type === 'empty-message') {
-      console.log('empty message')
       state.message = []
       return state
       }
@@ -49,7 +48,7 @@ export const messageReducer = (state,action) => {
   ///////////////////////////////////////////User logic from here/////////////////////////////
   if(action.type === "STORE_ALL_MESSANGER_USER"){
     return {
-      message:state.message,user:[...action.payload]
+      message:state.message,user:[...action.payload],userMemories:state.userMemories
     }
   }
   
@@ -59,7 +58,7 @@ export const messageReducer = (state,action) => {
      const updateArrey = state.user.filter(user=> user.userId !== action.payload.userId)
      console.log(updateArrey)
     return {
-      message:state.message,user:[action.payload,...updateArrey]
+      message:state.message,user:[action.payload,...updateArrey],userMemories:state.userMemories
     }
   }
   
@@ -69,8 +68,16 @@ export const messageReducer = (state,action) => {
       const updatingUsers = state.user.filter(user=> user.userId !== action.payload.data.userId)
       const newUserModify = {...action.payload.data,unseenMessageCount:existingUser[0]?.unseenMessageCount + 1,test:'sttt'}
      return {
-      message:state.message,user:[newUserModify,...updatingUsers]
+      message:state.message,user:[newUserModify,...updatingUsers],userMemories:state.userMemories
     }
+  }
+
+  ///////////////////////////////Logic for user memory management///////////////////////////
+  if (action.type === "ADD_ALL_MEMORY") {
+    return {message:state.message, user:state.user, userMemories:action.payload}
+  }
+  if (action.type === "ADD_NEW_MEMORY") {
+    return {message:state.message, user:state.user, userMemories:action.payload}
   }
   return state
       

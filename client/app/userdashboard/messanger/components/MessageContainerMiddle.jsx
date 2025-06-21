@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
 import { groupMessagesBysender } from "./group-message";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import { RiSendPlaneLine } from "react-icons/ri";
 import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
@@ -34,7 +34,7 @@ const Middle = ({
   setOpenWindow,
   blockStatusByMe,
 }) => {
-  const { messanger, dispatch } = useMessage();
+  const { appData, dispatch } = useGlobalData();
   const [message, setMessage] = useState("");
   const [seenMessage, setSeenMessage] = useState(false);
   const [checkMyWindow, setCheckMyWindow] = useState(false);
@@ -66,7 +66,7 @@ const Middle = ({
     }
     // fetchMessage();
   }, [id]);
-  const groupMessages = groupMessagesBysender(messanger.message);
+  const groupMessages = groupMessagesBysender(appData.message);
 
   const handleMessage = (event) => {
     setMessage(event.target.value);
@@ -530,8 +530,7 @@ const Middle = ({
   }, [id]);
 
   useEffect(() => {
-    console.log("Updated Messenger Data:", messanger); // ✅ Logs updated state
-  }, [messanger]); // ✅ Runs only when `messanger` changes
+  }, [appData]); // ✅ Runs only when `messanger` changes
 
   const fetchMessages = async (page, status) => {
     if (loading) return;
@@ -601,7 +600,7 @@ const Middle = ({
     }
   }, [loading]);
 
-  const lastMessage = messanger.message[messanger.message.length - 1];
+  const lastMessage = appData.message[appData.message.length - 1];
 
   const closeWindowAlert = async () => {
     socket &&

@@ -21,8 +21,8 @@ import { TiDocumentText } from "react-icons/ti";
 import { commonLogout } from "../../components/common";
 import FloatingMessageContainer from "../../components/messanger/MessageContainer";
 import { useSocket } from "../../global/SocketProvider";
-import { TbPlus } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import DisplayMemoryCard from "../components/DisplayMemoryCard";
 const Page = () => {
   const router = useRouter()
   const { dispatch, store } = useStore();
@@ -177,12 +177,9 @@ const Page = () => {
 
   const logout = () => {
     dispatch({ type: "logout" });
-    route.push("/login");
+    router.push("/login");
   };
   const [openSideMenu, setOpenSideMenu] = useState(false);
-  const switchToStory = ()=>{
-   router.push('/userdashboard/story-create')
-  }
   return (
     <div className="min-h-screen">
       <ProtectRoute>
@@ -351,21 +348,7 @@ const Page = () => {
             </div>
 
             {/* =====================================Story sharing from here==================================== */}
-      <div className="flex space-x-4 overflow-x-auto mb-4">
-        <div onClick={switchToStory} className="bg-white w-28 h-[25vh] group relative shadow-md rounded-2xl overflow-hidden text-center cursor-pointer">
-          <img
-            className="scale-100 w-full h-2/3 group-hover:scale-105 duration-500 object-cover object-center"
-            src={store?.userInfo?.profile}
-            alt={store?.userInfo?.name}
-          />
-          <div className='relative'>
-            <div className="absolute -top-4 left-[50%]">
-          <TbPlus size={30} color="white" className="bg-[#8b36d6] border-2 border-white -translate-x-[50%] rounded-full" />
-            </div>
-          </div>
-          <p className="mt-5 text-sm font-semibold">Capture a memory</p>
-        </div>
-            </div>
+            <DisplayMemoryCard/>
             {/* Questions */}
             {questions?.map((question, i) => (
               <div key={i} className="mx-auto">

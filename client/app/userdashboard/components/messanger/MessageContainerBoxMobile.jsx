@@ -13,7 +13,7 @@ import Middle from "../../messanger/components/MessageContainerMiddle";
 import { GrRotateRight } from "react-icons/gr";
 import { LiaTimesSolid } from "react-icons/lia";
 import MessageBar from "./MessageBar";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import { commonLogout } from "../common";
 
 const MessageContainerBoxMobile = ({
@@ -28,7 +28,7 @@ const MessageContainerBoxMobile = ({
   const [loading, setLoading] = useState(false);
   const [hiddenNumber, setHiddenNumber] = useState(false);
   const { store,dispatch:storeDispatch } = useStore();
-    const { dispatch } = useMessage();
+    const { dispatch } = useGlobalData();
   const updateUnseenMessage = async (id) => {
     try {
       setLoading(true);

@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import DataProvider from "./global/DataProvider";
 import SocketProvider from "./userdashboard/global/SocketProvider";
-import MessageProvider from "./userdashboard/global/messageProvider";
+import MessageProvider from "./userdashboard/global/globalDataProvider.jsx";
 import AdScript from "./components/googleAds/AddScript";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,20 +31,26 @@ const inter = Inter({ subsets: ["latin"] });
 //   },
 // };
 
-
 export default function RootLayout({ children }) {
   return (
     <html className="select-none" lang="en">
-      <meta name="google-adsense-account" content="ca-pub-8668385137041223"></meta>
+      <meta
+        name="google-adsense-account"
+        content="ca-pub-8668385137041223"
+      ></meta>
       <body className={inter.className}>
-         <DataProvider>
-           <SocketProvider>
-              <MessageProvider>
-                  <div className="max-w-[1440px] w-full mx-auto">{children}</div>
-              </MessageProvider>
-           </SocketProvider>
-         </DataProvider>
-        </body>
+        <DataProvider>
+          <SocketProvider>
+            <MessageProvider>
+              <div className="min-h-screen w-screen">
+                <div className="max-w-[1440px] w-full mx-auto">
+                  {children}
+                </div>
+              </div>
+            </MessageProvider>
+          </SocketProvider>
+        </DataProvider>
+      </body>
     </html>
   );
 }

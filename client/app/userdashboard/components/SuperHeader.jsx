@@ -20,7 +20,7 @@ import NotificationContainer from "./notification-component/NotificationContaine
 import MessageBox from "./messanger/MessageBox";
 import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 import CurrentWindowChecker from "../global/CurrentWindowChecker";
-import { useMessage } from "../global/messageProvider";
+import { useGlobalData } from "../global/globalDataProvider.jsx";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 import { commonLogout } from "./common";
 
@@ -31,7 +31,7 @@ const SuperHeader = () => {
   CurrentWindowChecker();
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
-  const { messanger, dispatch: messangerUser } = useMessage();
+  const { appData, dispatch: messangerUser } = useGlobalData();
   const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
@@ -115,7 +115,7 @@ const SuperHeader = () => {
   };
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const sortedMessages = messanger?.user?.sort(
+  const sortedMessages = appData?.user?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
   );
 

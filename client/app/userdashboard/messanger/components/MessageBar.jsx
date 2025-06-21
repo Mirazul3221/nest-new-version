@@ -4,11 +4,9 @@ import { useStore } from '@/app/global/DataProvider';
 import { baseurl, viewurl } from '@/app/config';
 import { formatetime } from '../../components/messanger/components/time';
 import axios from 'axios';
-import { useMessage } from '../../global/messageProvider';
 import { commonLogout } from '../../components/common';
 
-const MessageBar = ({setId,setUserDetails,friend,setMessangerFriends}) => {
-    const {messanger,dispatch} = useMessage();
+const MessageBar = ({setId,setUserDetails,friend}) => {
     const {socket, myActiveFriends} = useSocket();   
       const { store,dispatch:dps } = useStore();
 //////////////////////////////typing effect///////////////////////////////////

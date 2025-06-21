@@ -7,12 +7,12 @@ import { useStore } from "@/app/global/DataProvider";
 import Image from "next/image";
 import loader from '@/public/loading-buffer.gif'
 import MessageBar from "./MessageBar";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import { commonLogout } from "../common";
 
 const MessageBox = ({sortedMessages,setCountUnreadMessage,messageContainerRef,toggleMessage}) => {
     const {store,dispatch:storeDisp} = useStore()
-        const { dispatch } = useMessage();
+        const { dispatch } = useGlobalData();
       const [hiddenNumber, setHiddenNumber] = useState(false);
       const handleUrl = (friend) => {
       window.open(`${viewurl}/userdashboard/messanger/${friend.userName}/${friend.userId}`)

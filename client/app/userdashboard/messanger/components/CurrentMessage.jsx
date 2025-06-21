@@ -3,7 +3,7 @@ import { baseurl } from "@/app/config";
 import storeContext from "@/app/global/createContex";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import { useSocket } from "../../global/SocketProvider";
 import { commonLogout } from "../../components/common";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -19,7 +19,7 @@ const CurrentMessage = ({
   const { store, dispatch: dps } = useContext(storeContext);
   const { socket } = useSocket();
   const element = useRef(null);
-  const { dispatch } = useMessage();
+  const { dispatch } = useGlobalData();
   const [isSend, setIsSend] = useState(false);
   const sendMessage = async () => {
     try {

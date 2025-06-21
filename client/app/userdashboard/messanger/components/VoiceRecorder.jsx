@@ -7,7 +7,7 @@ import axios from "axios";
 import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import { useSocket } from "../../global/SocketProvider";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import Image from "next/image";
 import { commonLogout, trimSilence } from "../../components/common";
 
@@ -21,7 +21,7 @@ const VoiceRecorder = ({
   scrollToBottom,
 }) => {
   const { store,dispatch:dps } = useStore();
-  const { dispatch } = useMessage();
+  const { dispatch } = useGlobalData();
   const { socket } = useSocket();
   const [loading, setLoading] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);

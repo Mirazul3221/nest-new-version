@@ -3,7 +3,7 @@ import { baseurl } from "@/app/config";
 import axios from "axios";
 import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from "react";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import "@/app/userdashboard/components/cssfiles/scrolling_bar.css";
 import { RiSendPlaneLine } from "react-icons/ri";
 import EntryPoint from "../../components/messanger/video-audio-callcenter/EntryPoint";
@@ -26,7 +26,7 @@ import BlockButton from "./BlockButton";
 import { commonLogout } from "../common";
 import SmartText from "./VerifyText";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
-  const { messanger, dispatch } = useMessage();
+  const { appData, dispatch } = useGlobalData();
   const [message, setMessage] = useState("");
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
@@ -38,7 +38,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { store,dispatch:storeDispatch } = useStore();
   const { socket } = useSocket();
   const currentMessages = useRef([]);
-  const groupMessages = groupMessagesBysender(messanger.message);
+  const groupMessages = groupMessagesBysender(appData.message);
   const [seenMessage, setSeenMessage] = useState(false);
   const [checkMyWindow, setCheckMyWindow] = useState(false);
   const check_my_friend_window = async () => {
@@ -455,7 +455,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     }
   }, [loading]);
 
-  const lastMessage = messanger.message[messanger.message.length - 1];
+  const lastMessage = appData.message[appData.message.length - 1];
 
   //==========================Here is the logic to check I am blocked or not======================================
   const [isBlockedByHim, setIsBlockedByHim] = useState(null);

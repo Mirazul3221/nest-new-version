@@ -5,7 +5,7 @@ import { useStore } from "@/app/global/DataProvider";
 import MessageBar from "./MessageBar";
 import axios from "axios";
 import { baseurl } from "@/app/config";
-import { useMessage } from "../../global/messageProvider";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 import { useSocket } from "../../global/SocketProvider";
 import { commonLogout } from "../../components/common";
 
@@ -13,7 +13,7 @@ const MessageBox = ({ setId, setUserDetails }) => {
   const { store,dispatch:dps } = useStore(); 
   const [messangerFriends, setMessangerFriends] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { dispatch, messanger } = useMessage();
+  const { dispatch, appData } = useGlobalData();
   const fetchAllFriendsByMessage = async () => {
     try {
       setLoading(true);
@@ -49,12 +49,11 @@ const MessageBox = ({ setId, setUserDetails }) => {
     fetchAllFriendsByMessage(store.token)
   }, []);
   
-  const sortedMessages = messanger?.user?.sort(
+  const sortedMessages = appData?.user?.sort(
     (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
   );
 
 
-  console.log(messanger.user)
   return (
     <div className="w-full bg-white">
       {loading ? (

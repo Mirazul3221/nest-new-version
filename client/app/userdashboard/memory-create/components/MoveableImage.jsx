@@ -7,9 +7,11 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import Moveable from "react-moveable";
 import { commonLogout } from "../../components/common";
 import { useRouter } from "next/navigation";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 
 const MoveableImage = forwardRef((prop,ref) => {
   const { imgSrc, storyText, colorCode, font } = prop;
+  const {appData,dispatch:globalDispatch} = useGlobalData()
   const { store, dispatch } = useStore();
   const router = useRouter()
   const sectionRef = useRef(null);
@@ -58,7 +60,6 @@ const MoveableImage = forwardRef((prop,ref) => {
     formData.append("file", `data:image/jpeg;base64,${base64Data}`);
     formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // <-- Replace this
     formData.append("format", "jpg"); // Force JPG format on Cloudinary
-
     try {
       const { data } = await axios.post(
         `${baseurl}/usermemory/memory-build`,
@@ -69,6 +70,17 @@ const MoveableImage = forwardRef((prop,ref) => {
           },
         }
       );
+      if(appData.userMemories.length > 0 && appData.userMemories[0].user._id == store.userInfo.id){
+       const ifOthers = appData.userMemories.filter((f)=>{
+       return f.user._id !== store.userInfo.id
+       })
+        appData.userMemories[0].stories=[data,...appData.userMemories[0].stories];
+        const finalData = [appData.userMemories[0],...ifOthers];
+        globalDispatch({type:'ADD_NEW_MEMORY',payload:finalData});
+      } else {
+        const finalData = [{user:{_id:store.userInfo.id,name:store.userInfo.name,profile:store.userInfo.profile},stories:[data]},...appData.userMemories]
+         globalDispatch({type:'ADD_NEW_MEMORY',payload:finalData});
+      }
     router.push('/userdashboard/timeline/friends-question')
     } catch (error) {
         commonLogout(dispatch, error);
@@ -117,10 +129,10 @@ const MoveableImage = forwardRef((prop,ref) => {
   }, []);
 
   return (
-    <div className="w-full h-full overflow-hidden flex justify-center items-center bg-black/90">
+    <div className="md:w-full md:h-full overflow-hidden flex justify-center items-center">
       <div
         ref={sectionRef}
-        className="relative flex justify-center items-center w-[300px] h-[80vh] rounded-md border-2 bg-gray-200 overflow-hidden"
+        className="relative flex justify-center items-center w-[80vw] md:w-[300px] h-[80vh] rounded-md border-2 bg-gray-200 overflow-hidden"
       >
         {storyText && (
           <h2
