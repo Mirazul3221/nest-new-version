@@ -104,7 +104,7 @@ export default function StorySlider({ users }) {
                     <div className="absolute top-0 left-0 flex items-center w-full h-full z-10">
                       <div className="w-full h-[80%] flex justify-center items-center overflow-y-auto">
                         <div style={{ color: story.stories[0].style.colorCode, fontSize:  story.stories[0].style.fontSize + "px" }} className="max-h-full w-full px-4 text-center break-words">
-                          {story.stories[0].defaultText.slice(0,100)}
+                          {story.stories[0].defaultText.slice(0,20)}
                         </div>
                       </div>
                     </div>
