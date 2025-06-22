@@ -243,7 +243,7 @@ export default function StoryModal({
           <IoIosArrowDropright size={30} />
         </div>
       </div>
-      {user?.user?._id == store.userInfo.id && (
+      {user?.user?._id !== store.userInfo.id && (
         <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 md:bg-black/20 z-40">
           <input
             onFocus={() => setIsFocus(true)}
