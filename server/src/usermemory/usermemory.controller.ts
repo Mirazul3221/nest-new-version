@@ -7,11 +7,17 @@ export class UsermemoryController {
   constructor(private readonly usermemoryService: UsermemoryService) {}
 
 
-  @Post('memory-build')
+  @Post('image-memory-build')
     @FormDataRequest({storage:FileSystemStoredFile})
     @UseGuards(AuthGuard())
-  async create(@Body() data:any, @Req() req:any) {
-    return await this.usermemoryService.create(data,req);
+  async createImageMemory(@Body() data:any, @Req() req:any) {
+    return await this.usermemoryService.createImageMemory(data,req);
+  }
+  @Post('text-memory-build')
+    @FormDataRequest({storage:FileSystemStoredFile})
+    @UseGuards(AuthGuard())
+  async createTextMemory(@Body() data:any, @Req() req:any) {
+    return await this.usermemoryService.createTextMemory(data,req);
   }
 
   @Get('all-users-memory')

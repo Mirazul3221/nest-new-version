@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsOptional } from 'class-validator';
 import mongoose, { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class UserMemory extends Document {
@@ -7,6 +8,15 @@ export class UserMemory extends Document {
   ///////////////////////////////////////////////////////////////
   @Prop({type:String, required: false })
   story: string;
+  @Prop({type:String, required: false })
+  memoryType: string;
+  @IsOptional()
+  @Prop({type:String, required: false })
+  defaultText: string;
+  @IsOptional()
+  @Prop({type:Object, required: false })
+  style: {};
+  @IsOptional()
   @Prop({
   type: [
     {

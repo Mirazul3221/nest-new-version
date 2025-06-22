@@ -10,6 +10,8 @@ import { useGlobalData } from "../global/globalDataProvider.jsx";
 import { useRouter } from "next/navigation";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import axios from "axios";
+import { baseurl } from "@/app/config";
 
 const Page = () => {
   const router = useRouter();
@@ -19,8 +21,8 @@ const Page = () => {
   const [imgSrc, setImgSrc] = useState(null);
   const [storyText, setStoryText] = useState("");
   const [colorCode, setColorCode] = useState("#FFFFFF");
+  const [textBg, setTextBg] = useState("A");
   const [fontSize, setFontSize] = useState(16);
-  const [storyData, setStoryData] = useState(null);
   const [imgLoader, setImgLoader] = useState(false);
   const childRef = useRef();
   const handleClick = () => {
@@ -29,6 +31,22 @@ const Page = () => {
     childRef.current?.handleUpload();
   };
 
+const handleTextMemory =async ()=> {
+   try {
+          const { data } = await axios.post(
+            `${baseurl}/usermemory/text-memory-build`,
+            {type:'text',text:storyText,bg:textBg,style:{colorCode,fontSize}},
+            {
+              headers: {
+                Authorization: `Bearer ${store.token}`,
+              },
+            }
+          );
+          console.log(data);
+   } catch (error) {
+    
+   }
+}
   const handleFileChange = (e) => {
     if (e.target.files?.length > 0) {
       const reader = new FileReader();
@@ -47,13 +65,18 @@ const Page = () => {
     setColorCode(code);
   };
 
-  const handleChange = (e) => {
-    setFontSize(e.target.value);
+  const handleTextBg = (e, t) => {
+    Array.from(e.currentTarget.parentElement.children).forEach((i) => {
+      i.classList.remove("border-2");
+      i.classList.remove("border-violet-500");
+    });
+    e.currentTarget.classList.add("border-2");
+    e.currentTarget.classList.add("border-violet-500");
+    setTextBg(t);
   };
 
-  const handleMemoryStore = () => {
-    dispatch({ type: "ADD NEW MEMORY" });
-    router.push("/userdashboard/timeline/friends-question");
+  const handleChange = (e) => {
+    setFontSize(e.target.value);
   };
 
   const colorCodes = [
@@ -80,6 +103,26 @@ const Page = () => {
     "#F8E24C",
   ];
 
+  const text_bg = [
+    "AA",
+    "BB",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "o",
+  ];
+
   return (
     <div>
       <ProtectRoute>
@@ -96,8 +139,7 @@ const Page = () => {
               <h2 className="md:text-2xl font-semibold text-gray-700">
                 Your memory
               </h2>
-              <h2 onClick={handleMemoryStore}>Redirecting...</h2>
-              <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
+              <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-1 px-6">
                 <img
                   className="w-16 rounded-full"
                   src={store?.userInfo?.profile}
@@ -150,7 +192,7 @@ const Page = () => {
                       <div
                         key={i}
                         onClick={(e) => handleTextColor(e, color)}
-                        className={`w-[30px] h-[30px] ring-1 rounded-full shrink-0 ${
+                        className={`w-[20px] h-[20px] ring-1 rounded-full shrink-0 ${
                           color === "#FFFFFF"
                             ? "border-2 border-violet-500"
                             : ""
@@ -173,6 +215,24 @@ const Page = () => {
                 </div>
               )}
             </div>
+            {switcher == "text_memory" && (
+              <div className="flex justify-center gap-1 flex-wrap px-4 py-2 border rounded-md shadow-md my-4">
+                {text_bg.map((t) => (
+                  <div
+                    key={t}
+                    onClick={(e) => handleTextBg(e, t)}
+                    className={`w-5 h-5 cursor-pointer rounded-full overflow-hidden ${
+                      t == "A" ? "border-2 border-violet-500" : ""
+                    }`}
+                  >
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`/story-bg/${t}.jpg`}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
             {switcher !== "default" && (
               <div className="flex justify-between">
                 <button
@@ -181,23 +241,44 @@ const Page = () => {
                 >
                   Discard
                 </button>
-                <button
-                  disabled={imgLoader}
-                  onClick={handleClick}
-                  className="py-1 px-10 rounded-md bg-violet-500 text-white"
-                >
-                  {!imgLoader ? (
-                    "Click to capture"
-                  ) : (
-                    <div>
-                      {" "}
-                      <span className="animate-spin">
-                        <AiOutlineLoading3Quarters size={25} />
-                      </span>{" "}
-                      Loading...
-                    </div>
-                  )}
-                </button>
+                {switcher == "image_memory" && (
+                  <button
+                    disabled={imgLoader}
+                    onClick={handleClick}
+                    className="py-1 px-10 rounded-md bg-violet-500 text-white"
+                  >
+                    {!imgLoader ? (
+                      "Click to capture"
+                    ) : (
+                      <div>
+                        {" "}
+                        <span className="animate-spin">
+                          <AiOutlineLoading3Quarters size={25} />
+                        </span>{" "}
+                        Loading...
+                      </div>
+                    )}
+                  </button>
+                )}
+                {switcher == "text_memory" && (
+                  <button
+                    disabled={imgLoader}
+                    onClick={handleTextMemory}
+                    className="py-1 px-10 rounded-md bg-violet-500 text-white"
+                  >
+                    {!imgLoader ? (
+                      "Click to capture"
+                    ) : (
+                      <div>
+                        {" "}
+                        <span className="animate-spin">
+                          <AiOutlineLoading3Quarters size={25} />
+                        </span>{" "}
+                        Loading...
+                      </div>
+                    )}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -221,7 +302,10 @@ const Page = () => {
                     </div>
                   </label>
                 </div>
-                <div className="flex gap-2 w-fit h-fit">
+                <div
+                  onClick={() => setSwitcher("text_memory")}
+                  className="flex gap-2 w-fit h-fit"
+                >
                   <div className="flex justify-center cursor-pointer scale-95 hover:scale-100 duration-300 items-center w-[60vw] md:w-[20vw] md:h-[60vh] bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-purple-500/40 via-pink-600/60 to-pink-700/70 p-6 text-white rounded-xl shadow">
                     <div>
                       <div className="bg-white p-3 rounded-full w-fit mx-auto mb-4">
@@ -242,7 +326,10 @@ const Page = () => {
               <div className="bg-black/80 w-screen h-screen md:w-full md:h-full md:static fixed top-0 left-0">
                 {switcher !== "default" && (
                   <div className="mx-auto w-full flex gap-1 items-center p-1 md:hidden">
-                    <button className="bg-white rounded-r-md rounded-l-full p-2" onClick={() => setSwitcher("default")}>
+                    <button
+                      className="bg-white rounded-r-md rounded-l-full p-2"
+                      onClick={() => setSwitcher("default")}
+                    >
                       <RxCross2 size={26} color={"gray"} />
                     </button>
                     <input
@@ -265,7 +352,6 @@ const Page = () => {
                           <span className="animate-spin">
                             <AiOutlineLoading3Quarters size={25} />
                           </span>
-
                         </div>
                       )}
                     </button>
@@ -297,7 +383,93 @@ const Page = () => {
                       </div>
                     </div>
                     <div className="flex text-white items-center gap-1 mt-2 w-full">
-                       <span>Font:</span>
+                      <span>Font:</span>
+                      <input
+                        className="w-full"
+                        type="range"
+                        min="10"
+                        max="60"
+                        value={fontSize}
+                        onChange={handleChange}
+                      />
+                      <span>{fontSize}px</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {switcher == "text_memory" && (
+              <div className="bg-black/80 w-screen h-screen md:w-full md:h-full md:static fixed top-0 left-0">
+                {switcher !== "default" && (
+                  <div className="mx-auto w-full flex gap-1 items-center p-1 md:hidden">
+                    <button
+                      className="bg-white rounded-r-md rounded-l-full p-2"
+                      onClick={() => setSwitcher("default")}
+                    >
+                      <RxCross2 size={26} color={"gray"} />
+                    </button>
+                    <input
+                      type="text"
+                      onChange={(e) => setStoryText(e.target.value)}
+                      className="border focus:outline-none p-2 shadow-md rounded-md w-full"
+                      placeholder="Start typing here"
+                      name="story_text"
+                      rows="2"
+                    ></input>
+                    <button
+                      disabled={imgLoader}
+                      onClick={handleTextMemory}
+                      className="py-2 px-3 rounded-l-md rounded-r-full bg-violet-500 text-white"
+                    >
+                      {!imgLoader ? (
+                        "capture"
+                      ) : (
+                        <div>
+                          <span className="animate-spin">
+                            <AiOutlineLoading3Quarters size={25} />
+                          </span>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                )}
+                <div className="w-full h-full flex justify-center items-center">
+                  <div className="md:w-[300px] h-[80vh] rounded-md border-white border-2 relative">
+                    <img
+                      className="w-full h-full"
+                      src={`/story-bg/${textBg}.jpg`}
+                      alt="story_image"
+                    />
+
+                    <div className="absolute top-0 left-0 flex items-center w-full h-full z-10">
+                      <div className="w-full h-[80%] flex justify-center items-center overflow-y-auto">
+                        <div style={{ color: colorCode, fontSize: fontSize + "px" }} className="max-h-full w-full px-4 text-center break-words">
+                          {storyText}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {storyText && (
+                  <div className="w-[80vw] mx-auto md:hidden">
+                    <div className="overflow-x-auto w-full mt-1">
+                      <div className="flex gap-2 mt-2 w-max">
+                        {colorCodes.map((color, i) => (
+                          <div
+                            key={i}
+                            onClick={(e) => handleTextColor(e, color)}
+                            className={`w-[30px] h-[30px] ring-1 rounded-full shrink-0 ${
+                              color === "#FFFFFF"
+                                ? "border-2 border-violet-500"
+                                : ""
+                            }`}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex text-white items-center gap-1 mt-2 w-full">
+                      <span>Font:</span>
                       <input
                         className="w-full"
                         type="range"

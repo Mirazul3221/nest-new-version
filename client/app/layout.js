@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         <DataProvider>
           <SocketProvider>
             <MessageProvider>
-              <div className="min-h-screen w-screen">
+              <div className="min-h-screen w-full">
                 <div className="max-w-[1440px] w-full mx-auto">
                   {children}
                 </div>

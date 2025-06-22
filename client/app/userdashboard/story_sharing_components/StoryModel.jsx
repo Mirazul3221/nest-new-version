@@ -66,6 +66,9 @@ export default function StoryModal({
   const story = user.stories[currentStoryIndex].story;
   const id = user.stories[currentStoryIndex]._id;
   const counter = user.stories[currentStoryIndex].visitorCount;
+  const defText = user.stories[currentStoryIndex].memoryType;
+  const style = user.stories[currentStoryIndex].style;
+  const type = user.stories[currentStoryIndex].memoryType;
 
   const visited = async () => {
     try {
@@ -148,33 +151,81 @@ export default function StoryModal({
           </div>
 
           {story && (
-            <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md">
-              {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
-                <div
-                  onClick={() => prevStory()}
-                  className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] left-2"
-                >
-                  <IoIosArrowDropleft size={30} />
+            <div>
+              {type == "image" ? (
+                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md">
+                  {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
+                    <div
+                      onClick={() => prevStory()}
+                      className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] left-2"
+                    >
+                      <IoIosArrowDropleft size={30} />
+                    </div>
+                  )}
+                  <div
+                    onClick={() => nextStory?.()}
+                    className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] right-2"
+                  >
+                    <IoIosArrowDropright size={30} />
+                  </div>
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={story} // important for animation to trigger on story change
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full h-full rounded-md"
+                      src={story}
+                      alt="story"
+                    />
+                  </AnimatePresence>
                 </div>
+              ) : type == "text" ? (
+                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md relative">
+                  {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
+                    <div
+                      onClick={() => prevStory()}
+                      className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] left-2"
+                    >
+                      <IoIosArrowDropleft size={30} />
+                    </div>
+                  )}
+                  <div
+                    onClick={() => nextStory?.()}
+                    className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] right-2"
+                  >
+                    <IoIosArrowDropright size={30} />
+                  </div>
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={story} // important for animation to trigger on story change
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full h-full rounded-md"
+                      src={`/story-bg/${story}.jpg`}
+                      alt="story"
+                    />
+                  </AnimatePresence>
+                  <div className="absolute top-0 left-0 flex items-center w-full h-full z-10">
+                    <div className="w-full h-[80%] flex justify-center items-center overflow-y-auto">
+                      <div
+                        style={{
+                          color: style.colorCode,
+                          fontSize: style.fontSize + "px",
+                        }}
+                        className="max-h-full w-full px-4 text-center break-words"
+                      >
+                        {defText}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                ""
               )}
-              <div
-                onClick={() => nextStory?.()}
-                className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] right-2"
-              >
-                <IoIosArrowDropright size={30} />
-              </div>
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={story} // important for animation to trigger on story change
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full h-full rounded-md"
-                  src={story}
-                  alt="story"
-                />
-              </AnimatePresence>
             </div>
           )}
 
@@ -192,59 +243,66 @@ export default function StoryModal({
           <IoIosArrowDropright size={30} />
         </div>
       </div>
-      <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 z-40">
-        <input
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          placeholder={`${
-            isFocus ? "Reply to " + user?.user?.name : "Reply..."
-          }`}
-          type="text"
-          className={`${
-            isFocus ? "md:w-[40vw] w-full" : "md:w-[20vw] w-[80vw]"
-          } ${
-            isLongPress ? "hidden" : ""
-          } focus:outline-none transition-all duration-500 ease-in-out px-6 py-1 md:text-white rounded-full bg-transparent border-2 border-gray-400`}
-        />{" "}
-        {!isFocus && (
-          <button
-            className={`md:hidden ${isLongPress ? "hidden" : ""}`}
-            onMouseDown={startPressTimer}
-            onMouseUp={clearPressTimer}
-            onMouseLeave={clearPressTimer}
-            onTouchStart={startPressTimer}
-            onTouchEnd={clearPressTimer}
+      {user?.user?._id == store.userInfo.id && (
+        <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 md:bg-black/20 z-40">
+          <input
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            placeholder={`${
+              isFocus ? "Reply to " + user?.user?.name : "Reply..."
+            }`}
+            type="text"
+            className={`${
+              isFocus ? "md:w-[40vw] w-full" : "md:w-[20vw] w-[80vw]"
+            } ${
+              isLongPress ? "hidden" : ""
+            } focus:outline-none transition-all duration-500 ease-in-out px-6 py-1 md:text-white rounded-full bg-transparent border-2 border-gray-400`}
+          />{" "}
+          {!isFocus && (
+            <button
+              className={`md:hidden ${isLongPress ? "hidden" : ""}`}
+              onMouseDown={startPressTimer}
+              onMouseUp={clearPressTimer}
+              onMouseLeave={clearPressTimer}
+              onTouchStart={startPressTimer}
+              onTouchEnd={clearPressTimer}
+            >
+              <SendLike emj={"👍"} story={user.stories[currentStoryIndex]} />
+            </button>
+          )}
+          <div
+            className={`${isLongPress ? "flex items-center gap-1" : "hidden"}`}
           >
-            <SendLike emj={"👍"} story={user.stories[currentStoryIndex]} />
-          </button>
-        )}
-        <div
-          className={`${isLongPress ? "flex items-center gap-1" : "hidden"}`}
-        >
-          {emojies.map((em, i) => (
-            <SendLike
-              key={i}
-              emj={em}
-              story={user.stories[currentStoryIndex]}
-              setIsLongPress={setIsLongPress}
-            />
-          ))}
-              <button onClick={()=>setIsLongPress(false)} className="ml-3 text-2xl">✕</button>
+            {emojies.map((em, i) => (
+              <SendLike
+                key={i}
+                emj={em}
+                story={user.stories[currentStoryIndex]}
+                setIsLongPress={setIsLongPress}
+              />
+            ))}
+            <button
+              onClick={() => setIsLongPress(false)}
+              className="ml-3 text-2xl"
+            >
+              ✕
+            </button>
+          </div>
+          <div
+            className={`${
+              isFocus ? "absolute translate-y-[10000px]" : "block duration-500"
+            } hidden md:flex items-center gap-1`}
+          >
+            {emojies.map((em, i) => (
+              <SendLike
+                key={i}
+                emj={em}
+                story={user.stories[currentStoryIndex]}
+              />
+            ))}
+          </div>
         </div>
-        <div
-          className={`${
-            isFocus ? "absolute translate-y-[10000px]" : "block duration-500"
-          } hidden md:flex items-center gap-1`}
-        >
-          {emojies.map((em, i) => (
-            <SendLike
-              key={i}
-              emj={em}
-              story={user.stories[currentStoryIndex]}
-            />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

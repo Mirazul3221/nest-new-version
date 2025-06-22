@@ -60,9 +60,10 @@ const MoveableImage = forwardRef((prop,ref) => {
     formData.append("file", `data:image/jpeg;base64,${base64Data}`);
     formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // <-- Replace this
     formData.append("format", "jpg"); // Force JPG format on Cloudinary
+    formData.append("type", "image"); // Force JPG format on Cloudinary
     try {
       const { data } = await axios.post(
-        `${baseurl}/usermemory/memory-build`,
+        `${baseurl}/usermemory/image-memory-build`,
         formData,
         {
           headers: {

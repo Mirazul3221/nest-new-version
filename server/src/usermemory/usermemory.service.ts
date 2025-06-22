@@ -18,7 +18,7 @@ export class UsermemoryService {
     private readonly pushNotificationService: PushNotificationService,
 
   ) {}
-  async create(data, req) {
+  async createImageMemory(data, req) {
     // cloudinary.config.t
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name1'),
@@ -38,6 +38,7 @@ export class UsermemoryService {
       );
       const newStory = new this.memoryModel({
         userId: req.user._id,
+        memoryType:data.type,
         story: uploadResponse.secure_url,
       });
       const res = await newStory.save();
@@ -46,6 +47,23 @@ export class UsermemoryService {
       console.log(error);
     }
     return 'This action adds a new usermemory';
+  }
+
+  async createTextMemory(data,req){
+    const {type,bg,text,style} = data;
+     try {
+      const newStory = new this.memoryModel({
+        userId: req.user._id,
+        memoryType:type,
+        story: bg,
+        defaultText:text,
+        style
+      });
+      const res = await newStory.save();
+     return res
+     } catch (error) {
+      
+     }
   }
 
 async findAll(currentUserId: string) {
@@ -58,6 +76,9 @@ async findAll(currentUserId: string) {
       {
         visitors: 1,
         story: 1,
+        memoryType:1,
+        defaultText:1,
+        style:1,
         createdAt: 1,
         updatedAt: 1,
         userId: 1,
