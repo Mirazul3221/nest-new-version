@@ -120,7 +120,7 @@ const handleTextMemory =async ()=> {
     "L",
     "M",
     "N",
-    "o",
+    "O",
   ];
 
   return (
