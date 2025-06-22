@@ -66,7 +66,7 @@ export default function StoryModal({
   const story = user.stories[currentStoryIndex].story;
   const id = user.stories[currentStoryIndex]._id;
   const counter = user.stories[currentStoryIndex].visitorCount;
-  const defText = user.stories[currentStoryIndex].memoryType;
+  const defText = user.stories[currentStoryIndex].defaultText;
   const style = user.stories[currentStoryIndex].style;
   const type = user.stories[currentStoryIndex].memoryType;
 
