@@ -31,22 +31,26 @@ const Page = () => {
     childRef.current?.handleUpload();
   };
 
-const handleTextMemory =async ()=> {
-   try {
-          const { data } = await axios.post(
-            `${baseurl}/usermemory/text-memory-build`,
-            {type:'text',text:storyText,bg:textBg,style:{colorCode,fontSize}},
-            {
-              headers: {
-                Authorization: `Bearer ${store.token}`,
-              },
-            }
-          );
-          console.log(data);
-   } catch (error) {
-    
-   }
-}
+  const handleTextMemory = async () => {
+    try {
+      setImgLoader(true);
+      const { data } = await axios.post(
+        `${baseurl}/usermemory/text-memory-build`,
+        {
+          type: "text",
+          text: storyText,
+          bg: textBg,
+          style: { colorCode, fontSize },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+      router.push("/userdashboard/timeline/friends-question");
+    } catch (error) {}
+  };
   const handleFileChange = (e) => {
     if (e.target.files?.length > 0) {
       const reader = new FileReader();
@@ -252,8 +256,11 @@ const handleTextMemory =async ()=> {
                     ) : (
                       <div>
                         {" "}
-                        <span className="animate-spin">
-                          <AiOutlineLoading3Quarters size={25} />
+                        <span>
+                          <AiOutlineLoading3Quarters
+                            className="animate-spin"
+                            size={25}
+                          />
                         </span>{" "}
                         Loading...
                       </div>
@@ -269,11 +276,11 @@ const handleTextMemory =async ()=> {
                     {!imgLoader ? (
                       "Click to capture"
                     ) : (
-                      <div>
-                        {" "}
-                        <span className="animate-spin">
-                          <AiOutlineLoading3Quarters size={25} />
-                        </span>{" "}
+                      <div className="flex items-center gap-1">
+                        <AiOutlineLoading3Quarters
+                          className="animate-spin"
+                          size={25}
+                        />
                         Loading...
                       </div>
                     )}
@@ -348,11 +355,9 @@ const handleTextMemory =async ()=> {
                       {!imgLoader ? (
                         "capture"
                       ) : (
-                        <div>
-                          <span className="animate-spin">
-                            <AiOutlineLoading3Quarters size={25} />
-                          </span>
-                        </div>
+                        <span className="animate-spin">
+                          <AiOutlineLoading3Quarters size={25} />
+                        </span>
                       )}
                     </button>
                   </div>
@@ -401,7 +406,7 @@ const handleTextMemory =async ()=> {
             {switcher == "text_memory" && (
               <div className="bg-black/80 w-screen h-screen md:w-full md:h-full md:static fixed top-0 left-0">
                 {switcher !== "default" && (
-                  <div className="mx-auto w-full flex gap-1 items-center p-1 md:hidden">
+                  <div className="mx-auto w-full flex gap-[2px] items-center p-1 md:hidden relative">
                     <button
                       className="bg-white rounded-r-md rounded-l-full p-2"
                       onClick={() => setSwitcher("default")}
@@ -411,30 +416,46 @@ const handleTextMemory =async ()=> {
                     <input
                       type="text"
                       onChange={(e) => setStoryText(e.target.value)}
-                      className="border focus:outline-none p-2 shadow-md rounded-md w-full"
+                      className="border focus:outline-none p-2 shadow-md rounded-md w-[calc(100%-140px)]"
                       placeholder="Start typing here"
                       name="story_text"
                       rows="2"
                     ></input>
+                    <div
+                      title="click to change color"
+                      style={{ background: colorCode }}
+                      className="w-10  h-10 rounded-md text-center text-white border overflow-hidden"
+                    >
+                      <input
+                        id="color_picker"
+                        type="color"
+                        name="colorPicker"
+                        value={colorCode}
+                        onChange={(e) => setColorCode(e.target.value)}
+                        className="w-full h-full cursor-pointer appearance-none border-none p-0"
+                      />
+                    </div>
+
                     <button
                       disabled={imgLoader}
                       onClick={handleTextMemory}
                       className="py-2 px-3 rounded-l-md rounded-r-full bg-violet-500 text-white"
                     >
-                      {!imgLoader ? (
-                        "capture"
+                      {imgLoader ? (
+                        <span>
+                          <AiOutlineLoading3Quarters
+                            className="animate-spin"
+                            size={25}
+                          />
+                        </span>
                       ) : (
-                        <div>
-                          <span className="animate-spin">
-                            <AiOutlineLoading3Quarters size={25} />
-                          </span>
-                        </div>
+                        "Capture"
                       )}
                     </button>
                   </div>
                 )}
-                <div className="w-full h-full flex justify-center items-center">
-                  <div className="md:w-[300px] h-[80vh] rounded-md border-white border-2 relative">
+                <div className="md:w-full md:h-full flex justify-center items-center">
+                  <div className="w-[80vw] md:w-[300px] h-[80dvh] rounded-md border-white border-2 relative">
                     <img
                       className="w-full h-full"
                       src={`/story-bg/${textBg}.jpg`}
@@ -443,7 +464,13 @@ const handleTextMemory =async ()=> {
 
                     <div className="absolute top-0 left-0 flex items-center w-full h-full z-10">
                       <div className="w-full h-[80%] flex justify-center items-center overflow-y-auto">
-                        <div style={{ color: colorCode, fontSize: fontSize + "px" }} className="max-h-full w-full px-4 text-center break-words">
+                        <div
+                          style={{
+                            color: colorCode,
+                            fontSize: fontSize + "px",
+                          }}
+                          className="max-h-full w-full px-4 text-center break-words"
+                        >
                           {storyText}
                         </div>
                       </div>
@@ -454,17 +481,19 @@ const handleTextMemory =async ()=> {
                   <div className="w-[80vw] mx-auto md:hidden">
                     <div className="overflow-x-auto w-full mt-1">
                       <div className="flex gap-2 mt-2 w-max">
-                        {colorCodes.map((color, i) => (
+                        {text_bg.map((t) => (
                           <div
-                            key={i}
-                            onClick={(e) => handleTextColor(e, color)}
-                            className={`w-[30px] h-[30px] ring-1 rounded-full shrink-0 ${
-                              color === "#FFFFFF"
-                                ? "border-2 border-violet-500"
-                                : ""
+                            key={t}
+                            onClick={(e) => handleTextBg(e, t)}
+                            className={`w-5 h-5 cursor-pointer rounded-full overflow-hidden ${
+                              t == "A" ? "border-2 border-violet-500" : ""
                             }`}
-                            style={{ backgroundColor: color }}
-                          />
+                          >
+                            <img
+                              className="w-full h-full object-cover"
+                              src={`/story-bg/${t}.jpg`}
+                            />
+                          </div>
                         ))}
                       </div>
                     </div>

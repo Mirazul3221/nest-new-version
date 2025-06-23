@@ -153,7 +153,7 @@ export default function StoryModal({
           {story && (
             <div>
               {type == "image" ? (
-                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md">
+                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100dvh] -z-10 mx-auto rounded-md">
                   {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
                     <div
                       onClick={() => prevStory()}
@@ -182,18 +182,18 @@ export default function StoryModal({
                   </AnimatePresence>
                 </div>
               ) : type == "text" ? (
-                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100vh] -z-10 mx-auto rounded-md relative">
+                <div className="md:h-[80vh] md:w-[300px] max-w-full h-[100dvh] mx-auto rounded-md relative">
                   {!(currentStoryIndex == 0 && activeUserIndex == 0) && (
                     <div
                       onClick={() => prevStory()}
-                      className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] left-2"
+                      className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] left-2 z-20"
                     >
                       <IoIosArrowDropleft size={30} />
                     </div>
                   )}
                   <div
                     onClick={() => nextStory?.()}
-                    className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] right-2"
+                    className="left Arrey md:hidden cursor-pointer bg-white rounded-full text-gray-700 absolute -translate-y-[50%] top-[50%] right-2 z-20"
                   >
                     <IoIosArrowDropright size={30} />
                   </div>
@@ -209,7 +209,7 @@ export default function StoryModal({
                       alt="story"
                     />
                   </AnimatePresence>
-                  <div className="absolute top-0 left-0 flex items-center w-full h-full z-10">
+                  <div className="absolute top-0 left-0 flex items-center w-full h-full">
                     <div className="w-full h-[80%] flex justify-center items-center overflow-y-auto">
                       <div
                         style={{
