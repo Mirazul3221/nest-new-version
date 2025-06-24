@@ -137,6 +137,11 @@ async userProfile (@Param('id') id){
 async userProfileAndName (@Param('id') id){
    return await this.authService.userProfileAndName(id)
 }
+//======================================
+@Post('get-multiple-profile')
+async multipleUsersProfile (@Body() {ids}){
+   return await this.authService.multipleUsersProfile(ids)
+}
  //======================================
  //======================================
  //======LOGIN WITH FACEBOOK
@@ -266,6 +271,15 @@ async isBlockUser (@Req() req :any, @Param('targetId') targetId : string){
 async isBlockedMe (@Req() req :any, @Param('targetId') targetId : string){
   const userId = req.user._id;
  return await this.authService.isBlockedMe(userId,targetId)
+}
+
+
+
+///////////////////////////Here is mutual friend related query//////////////////////
+@Get('suggested-friends')
+@UseGuards(AuthGuard())
+async suggestedFriends (@Req() req :any){
+ return await this.authService.suggestedFriends(req)
 }
 
 }

@@ -23,8 +23,9 @@ import FloatingMessageContainer from "../../components/messanger/MessageContaine
 import { useSocket } from "../../global/SocketProvider";
 import { useRouter } from "next/navigation";
 import DisplayMemoryCard from "../components/DisplayMemoryCard";
+import FrindSuggestedCard from "../../suggested_card/FrindSuggestedCard";
 const Page = () => {
-  const router = useRouter()
+  const router = useRouter();
   const { dispatch, store } = useStore();
   const { socket } = useSocket();
   const [questions, setQuestions] = useState([]); // Store fetched comments
@@ -37,15 +38,16 @@ const Page = () => {
   const [flug, setFlug] = useState("all");
   //////////////////Floating messanger logic////////////////////////
   const [switcher, setSwitcher] = useState(false);
-  const [gard,setGard] = useState(1)
+  const [suggestionShown, setSuggestionShown] = useState(false);
+  const [gard, setGard] = useState(1);
   useEffect(() => {
-    setGard(gard+1)
+    setGard(gard + 1);
     if (window.innerWidth > 900) {
       socket &&
         socket.on("message-from", (data) => {
           const { name, profile, senderId } = data;
-          if(gard < 2){
-           new Audio('/notification-soun/openBox.mp3').play() 
+          if (gard < 2) {
+            new Audio("/notification-soun/openBox.mp3").play();
           }
 
           setUserDetails({ name, profile, _id: senderId });
@@ -346,19 +348,22 @@ const Page = () => {
                 <span>...</span>
               </p>
             </div>
-
             {/* =====================================Story sharing from here==================================== */}
-            <DisplayMemoryCard/>
-            {/* Questions */}
-            {questions?.map((question, i) => (
-              <div key={i} className="mx-auto">
-                <QuestionCard
-                  questionsAfterDelete={questionsAfterDelete}
-                  myQuestion={question}
-                  Handler={setUserDetails}
-                />
-              </div>
-            ))}
+            <DisplayMemoryCard />
+   {questions?.map((question, i) => (
+  <div key={i} className="mx-auto">
+    {/* This will render the suggestion card in the middle of the list */}
+    {i === Math.floor(questions.length / 2) && <FrindSuggestedCard />}
+    {i === Math.floor(questions.length) && <DisplayMemoryCard />}
+
+    <QuestionCard
+      questionsAfterDelete={questionsAfterDelete}
+      myQuestion={question}
+      Handler={setUserDetails}
+    />
+  </div>
+))}
+
             {isLoading && (
               <div className="flex bg-white justify-center">
                 <div className="flex items-center gap-2">

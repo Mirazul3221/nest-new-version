@@ -22,7 +22,7 @@ export class jwtStrategy extends PassportStrategy(Strategy) {
 async validate(payload: any) {
   const { id, sessionId } = payload;
 
-  const userInfo = await this.userModel.findById(id);
+  const userInfo = await this.userModel.findById(id).select('_id name email status role profile totalCountQuestions');
   if (!userInfo) {
     throw new UnauthorizedException('Unauthorized, login first');
   }

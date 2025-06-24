@@ -32,6 +32,7 @@ const nodemailer = require('nodemailer');
 import { v4 as uuidv4 } from 'uuid';
 import { UAParser } from 'ua-parser-js';
 import axios from 'axios';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -46,50 +47,49 @@ export class AuthService {
     private readonly ConfigService: ConfigService,
   ) {}
 
-
-async verifyAccount(userData) {
- const {email,password,name} = userData;//
-     const userInfo = await this.userModel.findOne({ email });
+  async verifyAccount(userData) {
+    const { email, password, name } = userData; //
+    const userInfo = await this.userModel.findOne({ email });
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
     }
     const newPass = await bcrypt.hash(password, 9);
 
-  const token = await this.jwtService.sign(
-    {...userData, password:newPass}, // or userData if needed
-    { expiresIn: '30m' }        // Override default here
-  );
+    const token = await this.jwtService.sign(
+      { ...userData, password: newPass }, // or userData if needed
+      { expiresIn: '30m' }, // Override default here
+    );
 
     const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'bdmirazul906@gmail.com',
-      pass: 'acco zbcl qzxu whzq',
-    },
-  });
+      service: 'gmail',
+      auth: {
+        user: 'bdmirazul906@gmail.com',
+        pass: 'acco zbcl qzxu whzq',
+      },
+    });
 
-  const mailOptions = {
-    from: '"BCS Prep" <bdmirazul906@gmail.com>',
-    to: email,
-    subject: 'Account Varification Process - BCS Prep',
-    html: `
+    const mailOptions = {
+      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      to: email,
+      subject: 'Account Varification Process - BCS Prep',
+      html: `
        <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
       <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
         <h2 style="color: #333;">Hi, ${name}</h2>
         <p style="font-size: 16px; color: #555;">
          Hope you're doing well!. We appreciate you for your interest to open an account in our platform. We received a request for varifying your account. To complete the process, please click the link below. This verification link will be valid for 30 minutes:
         </p>
-          <p><span style="font-weight: 700; color: #555">Verification Link:</span> <a style="color: #5846fa;" href="https://bcs-prep.vercel.app//verify-account?token=${token}">${token.slice(0,40)}</a></p>
+          <p><span style="font-weight: 700; color: #555">Verification Link:</span> <a style="color: #5846fa;" href="https://bcs-prep.vercel.app//verify-account?token=${token}">${token.slice(0, 40)}</a></p>
         <p style="font-size: 14px; color: #888;">If you did not request this, feel free to ignore this email—no further action is needed.</p>
         <p style="font-weight: bold; color: #444;">Thank you,<br/>BCS Prep Team</p>
       </div>
     </div>   
-    `
-  };
-  
-  await transporter.sendMail(mailOptions); // await without callback
-}
-async register_user(
+    `,
+    };
+
+    await transporter.sendMail(mailOptions); // await without callback
+  }
+  async register_user(
     userData: any,
     req,
   ): Promise<{ token: string; msg: string }> {
@@ -100,7 +100,9 @@ async register_user(
       payload = await this.jwtService.verify(userData.token);
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired. Please register again.');
+        throw new UnauthorizedException(
+          'Token expired. Please register again.',
+        );
       } else {
         throw new UnauthorizedException('Invalid token.');
       }
@@ -213,116 +215,115 @@ async register_user(
     }
   }
 
-//   async register_user(
-//     userData:any,
-//     req,
-//   ): Promise<{ token: string; msg: string }> {
-//     const { name, email, password, location } = await this.jwtService.verify(userData.token)
-//       return
-//     const userInfo = await this.userModel.findOne({ email });
-//     if (userInfo) {
-//       throw new ConflictException('User already exist ! ');
-//     } else {
-//       const allSubject = [
-//         { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
-//         { sub: 'English', rightAns: 0, wrongAns: 0 },
-//       ];
-//       const new_user = await this.userModel.create({
-//         role: 'user',
-//         status: 'New',
-//         balance: 0,
-//         name: name,
-//         email: email,
-//         password: await bcrypt.hash(password, 9),
-//         location: {
-//           type: 'Point',
-//           coordinates: [location.lon, location.lat],
-//         },
-//         title: 'Untitled User',
-//         description: '',
-//         profile:
-//           'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
-//         otp: '',
-//         totalCountQuestions: allSubject,
-//         totalCountQuestionsId: [],
-//       });
-//       try {
-// ////////////////////////////////////////////////////////////////////////
-//       // Inside your method
-//       let ip =
-//         req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
-//         req.socket?.remoteAddress || // fallback
-//         req.ip; // fallback
+  //   async register_user(
+  //     userData:any,
+  //     req,
+  //   ): Promise<{ token: string; msg: string }> {
+  //     const { name, email, password, location } = await this.jwtService.verify(userData.token)
+  //       return
+  //     const userInfo = await this.userModel.findOne({ email });
+  //     if (userInfo) {
+  //       throw new ConflictException('User already exist ! ');
+  //     } else {
+  //       const allSubject = [
+  //         { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
+  //         { sub: 'English', rightAns: 0, wrongAns: 0 },
+  //       ];
+  //       const new_user = await this.userModel.create({
+  //         role: 'user',
+  //         status: 'New',
+  //         balance: 0,
+  //         name: name,
+  //         email: email,
+  //         password: await bcrypt.hash(password, 9),
+  //         location: {
+  //           type: 'Point',
+  //           coordinates: [location.lon, location.lat],
+  //         },
+  //         title: 'Untitled User',
+  //         description: '',
+  //         profile:
+  //           'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
+  //         otp: '',
+  //         totalCountQuestions: allSubject,
+  //         totalCountQuestionsId: [],
+  //       });
+  //       try {
+  // ////////////////////////////////////////////////////////////////////////
+  //       // Inside your method
+  //       let ip =
+  //         req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+  //         req.socket?.remoteAddress || // fallback
+  //         req.ip; // fallback
 
-//       if (ip?.startsWith('::ffff:')) {
-//         ip = ip.replace('::ffff:', '');
-//       }
+  //       if (ip?.startsWith('::ffff:')) {
+  //         ip = ip.replace('::ffff:', '');
+  //       }
 
-//       if (
-//         ip === '::1' ||
-//         ip === '127.0.0.1' ||
-//         ip.startsWith('192.168') ||
-//         ip.startsWith('10.') ||
-//         ip.startsWith('172.')
-//       ) {
-//         // For development fallback only, NOT in production
-//         if (process.env.NODE_ENV !== 'production') {
-//           ip = '8.8.8.8';
-//         }
-//       }
+  //       if (
+  //         ip === '::1' ||
+  //         ip === '127.0.0.1' ||
+  //         ip.startsWith('192.168') ||
+  //         ip.startsWith('10.') ||
+  //         ip.startsWith('172.')
+  //       ) {
+  //         // For development fallback only, NOT in production
+  //         if (process.env.NODE_ENV !== 'production') {
+  //           ip = '8.8.8.8';
+  //         }
+  //       }
 
-//       const sessionId = uuidv4();
-//       const userAgent = req.headers['user-agent'];
-//       const parser = new UAParser(userAgent);
-//       const parsedUA = parser.getResult();
-//       ///////////////////////////////////////////////////////////////////////////////////
+  //       const sessionId = uuidv4();
+  //       const userAgent = req.headers['user-agent'];
+  //       const parser = new UAParser(userAgent);
+  //       const parsedUA = parser.getResult();
+  //       ///////////////////////////////////////////////////////////////////////////////////
 
-//         const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-//         const data = geo.data;
-//         const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+  //         const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+  //         const data = geo.data;
+  //         const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
 
-//         const session = await this.sessionModel.create({
-//           userId: new_user._id,
-//           sessionId,
-//           ipAddress: ip,
-//           userAgent, // raw user-agent string
-//           device: parsedUA.device.model || 'Unknown device',
-//           browser: parsedUA.browser.name || 'Unknown browser',
-//           os: parsedUA.os.name || 'Unknown OS',
-//           location: geoLocation,
-//           // location: (optional, set below if you use geo-IP),
-//         });
-//         ///////////////////////////////////////////////////////////////////////////////
-//         // 🔻 Delete older sessions beyond the most recent 5
-//         await this.sessionModel.deleteMany({
-//           userId: new_user._id,
-//           _id: {
-//             $nin: await this.sessionModel
-//               .find({ userId: new_user._id })
-//               .sort({ createdAt: -1 }) // latest first
-//               .limit(5)
-//               .select('_id')
-//               .then((docs) => docs.map((d) => d._id)),
-//           },
-//         });
-//         const token = await this.jwtService.sign({
-//           id: (await new_user)._id,
-//           sessionId,
-//           name: (await new_user).name,
-//           profile: (await new_user).profile,
-//           role: (await new_user).role,
-//         }); //
-//         return {
-//           token,
-//           msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
-//         };
-//         //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
-//       } catch (error) {
+  //         const session = await this.sessionModel.create({
+  //           userId: new_user._id,
+  //           sessionId,
+  //           ipAddress: ip,
+  //           userAgent, // raw user-agent string
+  //           device: parsedUA.device.model || 'Unknown device',
+  //           browser: parsedUA.browser.name || 'Unknown browser',
+  //           os: parsedUA.os.name || 'Unknown OS',
+  //           location: geoLocation,
+  //           // location: (optional, set below if you use geo-IP),
+  //         });
+  //         ///////////////////////////////////////////////////////////////////////////////
+  //         // 🔻 Delete older sessions beyond the most recent 5
+  //         await this.sessionModel.deleteMany({
+  //           userId: new_user._id,
+  //           _id: {
+  //             $nin: await this.sessionModel
+  //               .find({ userId: new_user._id })
+  //               .sort({ createdAt: -1 }) // latest first
+  //               .limit(5)
+  //               .select('_id')
+  //               .then((docs) => docs.map((d) => d._id)),
+  //           },
+  //         });
+  //         const token = await this.jwtService.sign({
+  //           id: (await new_user)._id,
+  //           sessionId,
+  //           name: (await new_user).name,
+  //           profile: (await new_user).profile,
+  //           role: (await new_user).role,
+  //         }); //
+  //         return {
+  //           token,
+  //           msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform`,
+  //         };
+  //         //{ token, message: `Hey ${userName}, Welcome To My Plateform` }
+  //       } catch (error) {
 
-        
-//       }
-//     }
-//   }
+  //       }
+  //     }
+  //   }
 
   async loginInfo(
     userDto: CreateUserDto,
@@ -519,11 +520,13 @@ async register_user(
   async findSingleUserByPublicUser(param) {
     // const result = await this.userModel.findById({ _id: param }).select('name profile title status description');
     const result = await this.userModel.findById({ _id: param });
-    return result;//
+    return result; //
   }
   async getHalfUserData(param) {
-    const result = await this.userModel.findById({ _id: param }).select('name profile title description status');
-    return result;//
+    const result = await this.userModel
+      .findById({ _id: param })
+      .select('name profile title description status');
+    return result; //
   }
 
   // update(id: number, updateAuthDto: UpdateAuthDto) {
@@ -580,13 +583,13 @@ async register_user(
 
   async requestedAuthData(user, req) {
     const id = req.user._id;
-     if (user.key == 'name') {
+    if (user.key == 'name') {
       await this.userModel.findByIdAndUpdate(
         id,
         { name: user.value },
         { new: true },
       );
-    }else if (user.key == 'title') {
+    } else if (user.key == 'title') {
       await this.userModel.findByIdAndUpdate(
         id,
         { title: user.value },
@@ -738,29 +741,29 @@ async register_user(
     return 'Profile Update Done';
   }
 
-async sendMail(email: string): Promise<{ msg: string }> {
-  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
-  const user = await this.userModel.findOne({ email });
+  async sendMail(email: string): Promise<{ msg: string }> {
+    const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+    const user = await this.userModel.findOne({ email });
 
-  if (!user) {
-    throw new NotFoundException('Email does not exist!');
-  }
+    if (!user) {
+      throw new NotFoundException('Email does not exist!');
+    }
 
-  const firstName = user.name?.split(' ')[0] || 'User';
+    const firstName = user.name?.split(' ')[0] || 'User';
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'bdmirazul906@gmail.com',
-      pass: 'acco zbcl qzxu whzq',
-    },
-  });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'bdmirazul906@gmail.com',
+        pass: 'acco zbcl qzxu whzq',
+      },
+    });
 
-  const mailOptions = {
-    from: '"BCS Prep" <bdmirazul906@gmail.com>',
-    to: email,
-    subject: 'Password Reset Code - BCS Prep',
-    html: `
+    const mailOptions = {
+      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      to: email,
+      subject: 'Password Reset Code - BCS Prep',
+      html: `
           <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
       <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
         <div style="text-align: right;">
@@ -780,44 +783,39 @@ async sendMail(email: string): Promise<{ msg: string }> {
       </div>
     </div>
     `,
-  };
+    };
 
-  await transporter.sendMail(mailOptions); // await without callback
+    await transporter.sendMail(mailOptions); // await without callback
 
-  await this.userModel.findByIdAndUpdate(
-    user._id,
-    { otp },
-    { new: true },
-  );
+    await this.userModel.findByIdAndUpdate(user._id, { otp }, { new: true });
 
-  return { msg: 'Check your email box' };
-}
-
-  
-async sendMailForChangeEmail(email: string): Promise<number> {
-  const otp = Math.floor(1000 + Math.random() * 9000); // 4-digit OTP
-  const user = await this.userModel.findOne({ email });
-
-  if (!user) {
-    throw new NotFoundException('Email does not exist!');
+    return { msg: 'Check your email box' };
   }
 
-  const fullName = user.name.split(' ');
-  const firstName = fullName[0];
+  async sendMailForChangeEmail(email: string): Promise<number> {
+    const otp = Math.floor(1000 + Math.random() * 9000); // 4-digit OTP
+    const user = await this.userModel.findOne({ email });
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'bdmirazul906@gmail.com',
-      pass: 'acco zbcl qzxu whzq',
-    },
-  });
+    if (!user) {
+      throw new NotFoundException('Email does not exist!');
+    }
 
-  const mailOptions = {
-    from: '"BCS Prep" <bdmirazul906@gmail.com>',
-    to: email,
-    subject: 'Email Change Request - BCS Prep',
-    html: `
+    const fullName = user.name.split(' ');
+    const firstName = fullName[0];
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'bdmirazul906@gmail.com',
+        pass: 'acco zbcl qzxu whzq',
+      },
+    });
+
+    const mailOptions = {
+      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      to: email,
+      subject: 'Email Change Request - BCS Prep',
+      html: `
         <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
       <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
         <div style="text-align: right;">
@@ -837,25 +835,27 @@ async sendMailForChangeEmail(email: string): Promise<number> {
       </div>
     </div>
     `,
-  };
+    };
 
-  // Await email sending properly
-  await transporter.sendMail(mailOptions);
+    // Await email sending properly
+    await transporter.sendMail(mailOptions);
 
-  return otp;
-}
+    return otp;
+  }
 
- async verifyPass(id,password) {
-     const reader = await this.userModel.findOne({ _id: id }).select("+password");
-         const check_password = await bcrypt.compare(password, reader.password);
+  async verifyPass(id, password) {
+    const reader = await this.userModel
+      .findOne({ _id: id })
+      .select('+password');
+    const check_password = await bcrypt.compare(password, reader.password);
     if (!check_password) {
-      return false
-    } else return true
+      return false;
+    } else return true;
   }
 
   async updatePass(body) {
     const { email, password } = body;
-    console.log( email, password )
+    console.log(email, password);
     const user = await this.userModel.findOne({ email: email });
     const strongPass = await bcrypt.hash(password, 9);
     await this.userModel.findByIdAndUpdate(
@@ -865,10 +865,10 @@ async sendMailForChangeEmail(email: string): Promise<number> {
     );
   }
 
-  async updateEmail(email,id){
-     const reader = await this.userModel.findOne({ _id: id });
-     reader.email = email
-     await reader.save()
+  async updateEmail(email, id) {
+    const reader = await this.userModel.findOne({ _id: id });
+    reader.email = email;
+    await reader.save();
   }
 
   async findUserForUpdatePass(user) {
@@ -998,6 +998,15 @@ async sendMailForChangeEmail(email: string): Promise<number> {
       );
   }
 
+async multipleUsersProfile(ids: string[]): Promise<string[]> {
+  const profiles = await this.userModel
+    .find({ _id: { $in: ids } })
+    .select('profile')
+    .lean();
+
+  return profiles.map((user) => user.profile);
+}
+
   //===========================================================================================================
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
   //===========================================================================================================
@@ -1014,5 +1023,114 @@ async sendMailForChangeEmail(email: string): Promise<number> {
       { _id: id },
       { isOnline: bool },
     );
+  }
+
+  /////////////////////////// Here is mutual friend related query ///////////////////////
+  async suggestedFriends(req) {
+    const currentUserId = req.user._id.toString();
+
+    // 1. Get all accepted friend requests of current user
+    const friendRequests = await this.friendRequestModel
+      .find({
+        status: 'accepted',
+        $or: [{ requester: currentUserId }, { recipient: currentUserId }],
+      })
+      .select('requester recipient')
+      .lean();
+
+    // 2. Extract direct friends' IDs
+    const directFriendIds = [
+      ...new Set(
+        friendRequests
+          .flatMap(({ requester, recipient }) => [
+            requester.toString(),
+            recipient.toString(),
+          ])
+          .filter((id) => id !== currentUserId),
+      ),
+    ];
+
+// 3. Get recent connections of all direct friends (second-degree)
+const allFriendConnections = await this.friendRequestModel
+  .find({
+    status: 'accepted',
+    $or: [
+      { requester: { $in: directFriendIds } },
+      { recipient: { $in: directFriendIds } },
+    ],
+  })
+  .select('requester recipient createdAt')
+  .sort({ createdAt: -1 }) // most recent first
+  .limit(1000) // tweak this number based on how far back you want to go
+  .lean();
+  // 4. Build mutual friend map with IDs
+const mutualFriendCounts: Record<string, number> = {};
+const mutualFriendIdsMap: Record<string, Set<string>> = {}; // new
+
+for (const conn of allFriendConnections) {
+  const [userA, userB] = [conn.requester.toString(), conn.recipient.toString()];
+
+  const isUserAFriend = directFriendIds.includes(userA);
+  const isUserBFriend = directFriendIds.includes(userB);
+
+  // If both are not direct friends, skip
+  if (!isUserAFriend && !isUserBFriend) continue;
+
+  // Find the friend (mutual) and the candidate (non-direct-friend)
+  const mutualFriend = isUserAFriend ? userA : userB;
+  const friendCandidate = isUserAFriend ? userB : userA;
+
+  // Skip if candidate is current user or already a friend
+  if (
+    friendCandidate === currentUserId ||
+    directFriendIds.includes(friendCandidate)
+  )
+    continue;
+
+  // Count and track mutual friend
+  mutualFriendCounts[friendCandidate] =
+    (mutualFriendCounts[friendCandidate] || 0) + 1;
+
+  if (!mutualFriendIdsMap[friendCandidate]) {
+    mutualFriendIdsMap[friendCandidate] = new Set();
+  }
+  mutualFriendIdsMap[friendCandidate].add(mutualFriend);
+}
+
+    // 5. Get all pending friend requests sent by current user
+    const pendingSentRequests = await this.friendRequestModel
+      .find({
+        requester: currentUserId,
+        status: 'pending',
+      })
+      .select('recipient')
+      .lean();
+
+    const pendingRecipientIds = new Set(
+      pendingSentRequests.map((r) => r.recipient.toString()),
+    );
+
+    // 6. Filter users who have at least 2 mutual friends and are not in pending requests
+    const suggestedUserIds = Object.entries(mutualFriendCounts)
+      .filter(([id, count]) => count >= 1 && !pendingRecipientIds.has(id))
+      .map(([id]) => new Types.ObjectId(id));
+
+    // 7. Optional: Populate user data from Users collection (e.g., Reader)
+    const suggestedUsers = await this.userModel
+      .find({ _id: { $in: suggestedUserIds } })
+      .select('_id name profile') // select what you need
+      .lean();
+
+const res = suggestedUsers.map((user) => {
+  const id = user._id.toString();
+  return {
+    ...user,
+    mutualFriends: mutualFriendCounts[id] || 0,
+    mutualFriendIds: Array.from(mutualFriendIdsMap[id] || []),
+  };
+});
+console.log(res)
+res.reverse();
+    return await res;
   }
 }
