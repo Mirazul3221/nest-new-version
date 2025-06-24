@@ -354,7 +354,7 @@ const Page = () => {
   <div key={i} className="mx-auto">
     {/* This will render the suggestion card in the middle of the list */}
     {i === Math.floor(questions.length / 2) && <FrindSuggestedCard />}
-    {i === Math.floor(questions.length) && <DisplayMemoryCard />}
+    {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />}
 
     <QuestionCard
       questionsAfterDelete={questionsAfterDelete}
