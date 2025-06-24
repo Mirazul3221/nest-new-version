@@ -31,7 +31,7 @@ export default function FrindSuggestedCard() {
     }
   };
   return (
-    <main className="max-w-screen bg-gray-200">
+    <main className="w-full bg-gray-200">
         <div className="overflow-x-auto w-full mt-1">
           <div className="flex gap-2 mt-2 w-max">
             {suggestedFriends.map((user, i) => {
