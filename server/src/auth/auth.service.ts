@@ -53,10 +53,9 @@ export class AuthService {
     if (userInfo) {
       throw new ConflictException('User already exist ! ');
     }
-    const newPass = await bcrypt.hash(password, 9);
 
     const token = await this.jwtService.sign(
-      { ...userData, password: newPass }, // or userData if needed
+      { ...userData, password: password }, // or userData if needed
       { expiresIn: '30m' }, // Override default here
     );
 
@@ -1061,7 +1060,7 @@ const allFriendConnections = await this.friendRequestModel
   })
   .select('requester recipient createdAt')
   .sort({ createdAt: -1 }) // most recent first
-  .limit(1000) // tweak this number based on how far back you want to go
+  .limit(100) // tweak this number based on how far back you want to go
   .lean();
   // 4. Build mutual friend map with IDs
 const mutualFriendCounts: Record<string, number> = {};

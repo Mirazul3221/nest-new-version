@@ -294,7 +294,7 @@ const AddQuestion = () => {
               ref={editor}
               tabIndex={1}
               value={content}
-              onChange={(newContent) => setContent(newContent)}
+               onBlur={(newContent) => setContent(newContent)}
             />
           </div>
         </div>
