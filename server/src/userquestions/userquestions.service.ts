@@ -140,28 +140,44 @@ Create a descriptive explanation based on the following input:
 Instructions:
 - If the question is in Bangla, write the explanation in Bangla.
 - If the question is in English, write the explanation in English.
-- If the question involves Math, format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$), so they can be rendered correctly in a Jodit-based rich text editor.
-- Use double dollar signs to wrap every math expression, for example:
-  $$
-  a^2 + b^2 = (a + b)^2 - 2ab
-  $$
- - if the digit is english you may wrap math expression in english digit, for example:   
-  $$
-  1/2 + 1/3 = 5/6
-  $$
- - if the digit is bangla you may wrap math expression in bangla digit, for example:   
-  $$
-  ১/২ + ১/৩ = ৫/৬
-  $$
-- else if the digit is in other language you may wrap math expression in other language digit.   
-- Use <b>, <ul><li>, <span style="color:(perfect color for highlight)">, and <br/> to format important points and improve readability.
-- Write in a structured, clear, and teacher-like style with logical separation of ideas.
-- The explanation should be minimum 100 and maximum 1000 words. if the answer ends less than 100 words you can generate less.
-- Avoid any filler content — focus only on the important concepts and explanation.
-- Do not include any preface or closing remarks — return only the description body.
 
-Output only the description content, no headings, no titles, no extra wrapping text.
+- If the question involves Math, format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$), so they can be rendered correctly in a Jodit-based rich text editor.
+  - Wrap each math expression in $$ ... $$, for example:
+    $$
+    a^2 + b^2 = (a + b)^2 - 2ab
+    $$
+  - Detect the numeral system used in the question:
+    - If Bangla digits are used (e.g. ১, ২, ৩), use Bangla digits in the LaTeX expression:
+      $$
+      \frac{১}{২}
+      $$
+    - If English digits are used (e.g. 1, 2, 3), use English digits in the LaTeX expression:
+      $$
+      \frac{1}{2}
+      $$
+    - If digits are in another language, use the same digit style consistently in the LaTeX output.
+
+- If the question involves grammar:
+  - Use <ul><li> to list grammar rules or points step-by-step.
+  - Highlight key grammar terms with <b> tags.
+  - If there are definitions or categories (e.g., noun, verb, etc.), present them clearly and structurally.
+
+- If the question is related to literature (essay, prose, drama, novel):
+  - Provide a short context if needed.
+  - Use <span style="color:darkblue"> to highlight literary terms or character names.
+  - Highlight any quotes using <span style="color:green"><i>"Quote here"</i></span>
+
+- If the question involves poetry:
+  - Format the poem lines using <br/> after each line.
+  - Highlight rhyme schemes or literary devices like simile, metaphor using <b> and <span style="color:purple">.
+
+- Write in a structured, clear, and teacher-like style with logical separation of ideas.
+- The explanation should be between 100 and 1000 words. If the answer naturally ends earlier (e.g., very short question), generating less is fine.
+- Avoid filler content. Focus on core explanation only.
+- Do not include any preface or closing — return only the explanation content.
 `;
+
+
     const genData = await this.getGeminiAnswer(prompt);
     return genData;
   }
