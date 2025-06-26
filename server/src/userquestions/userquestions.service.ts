@@ -125,36 +125,18 @@ export class UserquestionsService {
     if (!subject || !chapter || !question) {
       return 'Please add a question set its subject and chapter to get a right description!';
     }
-
     if (content) {
       return content;
     }
-
-const prompt = `
+let finalPrompt;
+const prompt0 = `
 Create a descriptive explanation based on the following input:
-
 - Subject: ${subject}
 - Chapter: ${chapter}
 - Question: ${question}
-
-Instructions:
-- If the question is in Bangla, write the explanation in Bangla.
-- If the question is in English, write the explanation in English.
-
-- If the question involves Math:
-  - Format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$).
-  - Detect the numeral system used in the question:
-    - If the digits in the question are in Bangla (e.g. ১, ২, ৩), then **all LaTeX math expressions must also use Bangla digits**, for example:
-      $$
-      \\frac{২}{৭}
-      $$
-    - If the digits in the question are in English (e.g. 1, 2, 3), then use English digits:
-      $$
-      \\frac{2}{7}
-      $$
-    - Do not mix digit systems — maintain consistency with the question.
-
-- If the question involves grammar:
+provide a perfect solution of this question. Do not use unnecessary word and give the solution in sort sentence. always try to generate relevent answer with sort passage. Do not use more than 1000 words is your answer is long.
+- If the question is in Bangla always analysis in bangla language.
+- If the question involves grammar always analysis in bangla language:
   - Use <ul><li> to list grammar rules or steps.
   - Highlight grammar terms using <b>.
   - Use <span style="color:blue"> for categories or labels.
@@ -170,8 +152,27 @@ Instructions:
 - The explanation should be between 100 and 1000 words. If the answer naturally ends earlier, that’s okay.
 - Do not include any preface or closing — return only the explanation body.
 `;
+const prompt1 = `
+Solve the following math question always in Bangla language.
 
-    const genData = await this.getGeminiAnswer(prompt);
+Rules:
+- If the original question contains Bangla digits (e.g. ১, ২, ৩), use Bangla digits inside LaTeX.
+- If the question contains English digits (e.g. 1, 2, 3), use English digits inside LaTeX.
+
+Instructions:
+- First, write only the final solved math expression using LaTeX inside double dollar signs: $$ ... $$.
+- Then, explain the solution step by step.
+- All mathematical expressions, including simple ones like exponents (e.g. x²), must be displayed using full-line LaTeX blocks: $$ ... $$.
+- Never write LaTeX inside paragraphs. Every expression must appear on its own line, with surrounding $$ ... $$.
+- Use only display math (not inline math with single $).
+- Ensure proper LaTeX formatting so expressions render clearly with MathJax in display mode.
+- Do not escape dollar signs.
+- Do not add any preface or closing.
+
+Question: ${question}
+`;
+    subject == 'গণিত' ? finalPrompt = prompt1 : finalPrompt = prompt0
+    const genData = await this.getGeminiAnswer(finalPrompt);
     return genData;
   }
 
