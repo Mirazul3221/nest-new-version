@@ -141,42 +141,35 @@ Instructions:
 - If the question is in Bangla, write the explanation in Bangla.
 - If the question is in English, write the explanation in English.
 
-- If the question involves Math, format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$), so they can be rendered correctly in a Jodit-based rich text editor.
-  - Wrap each math expression in $$ ... $$, for example:
-    $$
-    a^2 + b^2 = (a + b)^2 - 2ab
-    $$
+- If the question involves Math:
+  - Format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$).
   - Detect the numeral system used in the question:
-    - If Bangla digits are used (e.g. ১, ২, ৩), use Bangla digits in the LaTeX expression:
+    - If the digits in the question are in Bangla (e.g. ১, ২, ৩), then **all LaTeX math expressions must also use Bangla digits**, for example:
       $$
-      \frac{১}{২}
+      \\frac{২}{৭}
       $$
-    - If English digits are used (e.g. 1, 2, 3), use English digits in the LaTeX expression:
+    - If the digits in the question are in English (e.g. 1, 2, 3), then use English digits:
       $$
-      \frac{1}{2}
+      \\frac{2}{7}
       $$
-    - If digits are in another language, use the same digit style consistently in the LaTeX output.
+    - Do not mix digit systems — maintain consistency with the question.
 
 - If the question involves grammar:
-  - Use <ul><li> to list grammar rules or points step-by-step.
-  - Highlight key grammar terms with <b> tags.
-  - If there are definitions or categories (e.g., noun, verb, etc.), present them clearly and structurally.
+  - Use <ul><li> to list grammar rules or steps.
+  - Highlight grammar terms using <b>.
+  - Use <span style="color:blue"> for categories or labels.
 
-- If the question is related to literature (essay, prose, drama, novel):
-  - Provide a short context if needed.
-  - Use <span style="color:darkblue"> to highlight literary terms or character names.
-  - Highlight any quotes using <span style="color:green"><i>"Quote here"</i></span>
+- If the question is about literature (essay, drama, prose, poem):
+  - Highlight quotes using: <span style="color:green"><i>"Quote here"</i></span>
+  - Use <span style="color:darkblue"> for literary terms or character names.
+  - Use <br/> after each line of poetry.
+  - Highlight literary devices like <b>simile</b>, <b>metaphor</b> using color or bold tags.
 
-- If the question involves poetry:
-  - Format the poem lines using <br/> after each line.
-  - Highlight rhyme schemes or literary devices like simile, metaphor using <b> and <span style="color:purple">.
-
-- Write in a structured, clear, and teacher-like style with logical separation of ideas.
-- The explanation should be between 100 and 1000 words. If the answer naturally ends earlier (e.g., very short question), generating less is fine.
-- Avoid filler content. Focus on core explanation only.
-- Do not include any preface or closing — return only the explanation content.
+- Use <b>, <ul><li>, <span style="color:(highlight color)">, and <br/> to improve structure and readability.
+- Write in a clear, teacher-like tone with logical flow of ideas.
+- The explanation should be between 100 and 1000 words. If the answer naturally ends earlier, that’s okay.
+- Do not include any preface or closing — return only the explanation body.
 `;
-
 
     const genData = await this.getGeminiAnswer(prompt);
     return genData;
