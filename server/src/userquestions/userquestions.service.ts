@@ -142,12 +142,19 @@ Instructions:
 - If the question is in English, write the explanation in English.
 - If the question involves Math, format all mathematical expressions using LaTeX syntax inside double dollar signs ($$ ... $$), so they can be rendered correctly in a Jodit-based rich text editor.
 - Use double dollar signs to wrap every math expression, for example:
-
   $$
   a^2 + b^2 = (a + b)^2 - 2ab
   $$
-
-- Use <b>, <ul><li>, <span style="color:red">, and <br/> to format important points and improve readability.
+ - if the digit is english you may wrap math expression in english digit, for example:   
+  $$
+  1/2 + 1/3 = 5/6
+  $$
+ - if the digit is bangla you may wrap math expression in bangla digit, for example:   
+  $$
+  ১/২ + ১/৩ = ৫/৬
+  $$
+- else if the digit is in other language you may wrap math expression in other language digit.   
+- Use <b>, <ul><li>, <span style="color:(perfect color for highlight)">, and <br/> to format important points and improve readability.
 - Write in a structured, clear, and teacher-like style with logical separation of ideas.
 - The explanation should be minimum 100 and maximum 1000 words. if the answer ends less than 100 words you can generate less.
 - Avoid any filler content — focus only on the important concepts and explanation.
