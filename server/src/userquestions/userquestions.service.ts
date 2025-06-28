@@ -128,8 +128,8 @@ export class UserquestionsService {
     if (content) {
       return content;
     }
-let finalPrompt;
-const prompt0 = `
+    let finalPrompt;
+    const prompt0 = `
 Create a descriptive explanation based on the following input:
 - Subject: ${subject}
 - Chapter: ${chapter}
@@ -152,7 +152,7 @@ provide a perfect solution of this question. Do not use unnecessary word and giv
 - The explanation should be between 100 and 1000 words. If the answer naturally ends earlier, that’s okay.
 - Do not include any preface or closing — return only the explanation body.
 `;
-const prompt1 = `
+    const prompt1 = `
 Solve the following math question always in Bangla language.
 
 Rules:
@@ -171,7 +171,7 @@ Instructions:
 
 Question: ${question}
 `;
-    subject == 'গণিত' ? finalPrompt = prompt1 : finalPrompt = prompt0
+    subject == 'গণিত' ? (finalPrompt = prompt1) : (finalPrompt = prompt0);
     const genData = await this.getGeminiAnswer(finalPrompt);
     return genData;
   }
@@ -216,17 +216,73 @@ Question: ${question}
     return await commentSchema;
   }
   /////////////////////////////////////////////////////////////////////////////////////
-  async createLike(userId, questionId) {
+  async addReaction(userId, body) {
+    const { type, questionId } = body;
     const targetQuestion = await this.QuestionModel.findById(questionId);
-    if (targetQuestion.likes.includes(userId)) {
-      return 'Already Liked the question';
-    } else {
-      targetQuestion.likes.push(userId);
-      await targetQuestion.save();
+    const { likes, dislikes } = targetQuestion.reactions;
+    const isLiked = likes.includes(userId);
+    const isDisliked = dislikes.includes(userId);
+
+    if (type == 'liked') {
+      if (isLiked) {
+        return 'Already Liked the question';
+      } else {
+        await this.QuestionModel.updateOne(
+          { _id: questionId },
+          {
+            $pull: { 'reactions.dislikes': userId },
+            $addToSet: { 'reactions.likes': userId }, // avoids duplicates
+          },
+        );
+      }
+    }
+    if (type == 'disliked') {
+      if (isDisliked) {
+        return 'Already disLiked the question';
+      } else {
+        await this.QuestionModel.updateOne(
+          { _id: questionId },
+          {
+            $pull: { 'reactions.likes': userId },
+            $addToSet: { 'reactions.dislikes': userId }, // avoids duplicates
+          },
+        );
+      }
+    }
+
+    if(type == "restoreLiked"){
+              await this.QuestionModel.updateOne(
+          { _id: questionId },
+          {
+            $pull: { 'reactions.likes': userId },
+          },
+        );
+    }
+
+    if(type == "restoreDisliked"){
+              await this.QuestionModel.updateOne(
+          { _id: questionId },
+          {
+            $pull: { 'reactions.dislikes': userId },
+          },
+        );
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////
+  async checkReactionStatus(userId, body) {
+    const {questionId} = body;
+    const targetQuestion = await this.QuestionModel.findById(questionId);
+    if(!targetQuestion) return;
+    const { likes, dislikes } = targetQuestion.reactions;
+    const isLiked = likes.includes(userId);
+    const isDisliked = dislikes.includes(userId);
+    if(isLiked)return 'like-stored'
+    if(isDisliked)return 'dislike-stored'
+    return null
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////
 
   async findMyAllQuestions(id, skip) {
     const filteredQuestions = await this.QuestionModel.aggregate([
@@ -376,7 +432,7 @@ Question: ${question}
           option_04: 1,
           rightAns: 1,
           content: 1,
-          likes: 1,
+          totalReaction: { $size: '$reactions.likes'},
           comments: { $slice: ['$comments', -2] },
           totalComments: { $size: '$comments' },
           createdAt: 1,
@@ -414,18 +470,18 @@ Question: ${question}
   }
 
   ///////////////////////////////////////////////////////////////////////
-    async searchQuestionByQuery(q){
-    let option = {}
-   if(q){
-    option = {
-      $or : [
-        {subject : new RegExp(q.toLowerCase(),"i")},
-        {question : new RegExp(q.toLowerCase(),"i")},
-      ]
+  async searchQuestionByQuery(q) {
+    let option = {};
+    if (q) {
+      option = {
+        $or: [
+          { subject: new RegExp(q.toLowerCase(), 'i') },
+          { question: new RegExp(q.toLowerCase(), 'i') },
+        ],
+      };
     }
-   }
 
-    const data = await this.QuestionModel.find(option)
+    const data = await this.QuestionModel.find(option);
     const shuffle = function (array) {
       let randomArr = [];
       let indexArr = [];
@@ -441,7 +497,7 @@ Question: ${question}
       return randomArr; //
     };
 
-   return data
+    return data;
   }
 
   findAll() {

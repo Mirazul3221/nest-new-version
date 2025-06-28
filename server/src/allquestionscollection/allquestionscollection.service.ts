@@ -28,7 +28,6 @@ export class AllquestionscollectionService {
       }
       const date = new Date().getTime()
       const slug = createSlug(topic+'-'+createAllquestionscollectionDto.question+'-'+date)
-      console.log(slug)
       const fullSchema = {slug,...createAllquestionscollectionDto}
       const created = await new this.allquestionscollection(
         fullSchema,
@@ -114,7 +113,6 @@ export class AllquestionscollectionService {
 
   async findTopicForPublicUser (topic,skip,limit){
     const data = await this.allquestionscollection.find({topic}).skip(skip).limit(limit).exec();
-    console.log(data.length > 0 && 'yes')
     return data
   }
   async findEnglishSingleQuestion(id: string) {
@@ -191,7 +189,6 @@ export class AllquestionscollectionService {
 
   //===========  Delete all document =================
  async deleteQuestion(id){
-  console.log(id)
     await  this.allquestionscollection.findByIdAndDelete(id)
       return "Delete question success"
   }

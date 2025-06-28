@@ -8,8 +8,5 @@ export class AppController {
   @Get()
   @UseGuards(AuthGuard())
   getHello(@Req() req) {
-    // return this.appService.getHello();
-    //======
-    console.log(req.user)
   }
 }

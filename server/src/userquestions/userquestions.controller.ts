@@ -86,11 +86,18 @@ export class UserquestionsController {
     );
   }
   /////////////////////////////////////////////////////////////////////////////////////
-  @Post('create-like')
+  @Post('add-reaction')
   @UseGuards(AuthGuard())
-  async createLike(@Req() req, @Body() body) {
+  async addReaction(@Req() req, @Body() body) {
     const userId = req.user.id;
-    return await this.userquestionsService.createLike(userId, body.questionId);
+    return await this.userquestionsService.addReaction(userId, body);
+  }
+
+  @Post('check-reaction-status')
+  @UseGuards(AuthGuard())
+  async checkReactionStatus(@Req() req, @Body() body) {
+    const userId = req.user.id;
+    return await this.userquestionsService.checkReactionStatus(userId, body);
   }
 
   @Get('don')

@@ -546,7 +546,6 @@ export class AuthService {
         const devide = user.profile.split('/');
         const lastPart = devide[devide.length - 1];
         const finalPart = lastPart.split('.')[0];
-        console.log(finalPart);
         await cloudinary.uploader.destroy(`mcq_reader_profile/${finalPart}`);
         const data = await cloudinary.uploader.upload(profile.file.path, {
           folder: 'mcq_reader_profile',
@@ -854,7 +853,6 @@ export class AuthService {
 
   async updatePass(body) {
     const { email, password } = body;
-    console.log(email, password);
     const user = await this.userModel.findOne({ email: email });
     const strongPass = await bcrypt.hash(password, 9);
     await this.userModel.findByIdAndUpdate(
@@ -920,8 +918,6 @@ export class AuthService {
     page: number,
     limit: number,
   ) {
-    console.log('Page:', page);
-    console.log('Type:', type);
 
     const targetUser = await this.userModel
       .findById(id)
@@ -950,7 +946,6 @@ export class AuthService {
     const startIndex = (page - 1) * limit;
     const result = filteredQuestions.slice(startIndex, startIndex + limit);
 
-    console.log('Paginated Questions:', result);
     return result.reverse();
   }
 
@@ -1128,7 +1123,6 @@ const res = suggestedUsers.map((user) => {
     mutualFriendIds: Array.from(mutualFriendIdsMap[id] || []),
   };
 });
-console.log(res)
 res.reverse();
     return await res;
   }

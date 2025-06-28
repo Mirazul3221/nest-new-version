@@ -69,15 +69,12 @@ export class AllquestionscollectionController {
 
   @Get('test/data')
   async ttt (@Query() all : any){
-     console.log(all)
   }////
 
   @Get('publicUser/findbytopic')
   // @UseGuards(AuthGuard())/
   async findTopicForPublicUser(@Query('page') page:number, @Query('limit') limit : number, @Query('topic') topic : string ) {
-    console.log(page)
     const skip = (page-1) * limit;
-    console.log(skip + 'from service')
     return await this.allquestionscollectionService.findTopicForPublicUser(topic,skip,limit);
   }
   //////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +86,6 @@ export class AllquestionscollectionController {
 
   @Patch('updatenglish/:id')//
   async updateEnglish(@Param('id') id: string, @Body() body) : Promise<{msg:string}> {
-    console.log(id,body)
     return await this.allquestionscollectionService.updateEnglis(id, body);
   }
 

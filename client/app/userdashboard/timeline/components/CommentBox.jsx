@@ -11,13 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  FaComments,
-  FaRegCommentDots,
-  FaRegCopy,
-  FaRegThumbsUp,
-  FaThumbsUp,
-} from "react-icons/fa";
+import { FaComments, FaRegCommentDots, FaThumbsUp } from "react-icons/fa";
 import { LuShare2 } from "react-icons/lu";
 import { RiSendPlaneLine } from "react-icons/ri";
 import CommentsContainer from "./CommentsContainer";
@@ -31,6 +25,7 @@ import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
 import CommentProfile01 from "./CommentsProfile01";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MdOutlineThumbDownAlt, MdOutlineThumbUp } from "react-icons/md";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
   const { store, dispatch } = useContext(storeContext);
@@ -38,15 +33,20 @@ const CommentBox = ({ question, Handler = null }) => {
   // const sortComments = question?.comments.sort(
   //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   // );
-  const extractQuestion = question?.comments.length == 1
-    ? [question?.comments[0]] : question?.comments.length == 2 ? [question?.comments[1],question?.comments[0]]
-    : [];
+  const extractQuestion =
+    question?.comments.length == 1
+      ? [question?.comments[0]]
+      : question?.comments.length == 2
+      ? [question?.comments[1], question?.comments[0]]
+      : [];
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openCommentsBox, setOpenCommentsBox] = useState(false);
   const messangerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
+  const [putDislike, setPutDislike] = useState(false);
+  const [anim,setAnim] = useState(false);
   const [comments, setComments] = useState(extractQuestion);
   const [hideImoji, setHideImoji] = useState(false);
   const [share, setShare] = useState(false);
@@ -59,9 +59,35 @@ const CommentBox = ({ question, Handler = null }) => {
       createdAt: new Date().toISOString(),
     }; //
   };
+
+  useEffect(() => {
+    const checkReactionStatus = async () => {
+      try {
+        const { data } = await axios.post(
+          `${baseurl}/userquestions/check-reaction-status`,
+          { questionId: question._id },
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+
+        if (data == "like-stored") {
+          setPutLike(true);
+        }
+        if (data == "dislike-stored") {
+          setPutDislike(true);
+        }
+      } catch (error) {}
+    };
+    checkReactionStatus();
+  }, []);
   const handleShare = () => {
     setShare(true);
   };
+
+  console.log(question.totalReaction)
   //====================================
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -113,12 +139,12 @@ const CommentBox = ({ question, Handler = null }) => {
     }
   };
 
-  const handleSendLike = useCallback(async () => {
-    new Audio("/like-justify-sound/pick-92276.mp3").play();
+  const handleSendReaction = useCallback(async (react) => {
+    if(react== 'like')new Audio("/like-justify-sound/pick-92276.mp3").play();
     try {
       const { data } = await axios.post(
-        `${baseurl}/userquestions/create-like`,
-        { questionId: question._id },
+        `${baseurl}/userquestions/add-reaction`,
+        { type: react, questionId: question._id },
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
@@ -135,9 +161,9 @@ const CommentBox = ({ question, Handler = null }) => {
   }, []);
   const handleSendComment = useCallback(async () => {
     setLoading(true);
-    if(!message){
-       setLoading(false);
-      return
+    if (!message) {
+      setLoading(false);
+      return;
     }
     try {
       const { data } = await axios.post(
@@ -154,7 +180,7 @@ const CommentBox = ({ question, Handler = null }) => {
       // insertANewComment(message);
       setMessage("");
       if (comments[0] == undefined) {
-      setComments([data]);
+        setComments([data]);
         // setOpen(true);
       } else {
         setComments((prev) => [data, prev[0]]);
@@ -177,27 +203,26 @@ const CommentBox = ({ question, Handler = null }) => {
   } else {
     document.body.style.overflow = "auto";
   }
-  console.log(comments);
   return (
     <div className="relative">
       <div
         className={`border-b flex ${
-          question.likes?.length === 0 ? "justify-end" : "justify-between"
+          question.totalReaction === 0 ? "justify-end" : "justify-between"
         } items-center py-2`}
       >
-        {putLike ? (
+        {anim ? (
           <div className="w-full">
-            {question?.likes?.length == 0 ? (
+            {question.totalReaction == 0 ? (
               <h4>You like the question</h4>
             ) : (
-              <h4>{`You and ${question?.likes?.length} people like the question`}</h4>
+              <h4>{`You and ${question.totalReaction} people like the question`}</h4>
             )}
           </div>
         ) : (
           <div>
-            {question?.likes?.length > 0 && (
+            {question.totalReaction > 0 && (
               <div className="countcomments gap-2 flex items-center">
-                <h4>{question.likes.length}</h4>
+                <h4>{question.totalReaction}</h4>
                 <FaThumbsUp size={18} />
               </div>
             )}
@@ -213,33 +238,62 @@ const CommentBox = ({ question, Handler = null }) => {
       <div>
         {/* <div onClick={()=>setPutLike(!putLike)} className="">gdsg</div> */}
         <div className="footer flex justify-between items-center text-gray-500 mt-2">
-          {putLike === false && (
-            <div>
-              {question?.likes?.includes(store.userInfo.id) ? (
-                <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
-                  <FaThumbsUp color="#292929" size={22} /> <span>Like</span>
+          <div className="flex items-center">
+            {putLike ? (
+              <div
+                onClick={() => {
+                  setPutLike(false);
+                  setAnim(false)
+                  handleSendReaction("restoreLiked");
+                }}
+                className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full mb-2 flex items-center gap-2 p-2"
+              >
+                <div className={`${anim ? "likeButtonAnimation" : ""}`}>
+                  <MdOutlineThumbUp color="#292929" size={22} />
                 </div>
-              ) : (
-                <div
-                  onClick={() => {
-                    setPutLike(true);
-                    handleSendLike();
-                  }}
-                  className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
-                >
-                  <FaRegThumbsUp size={22} /> <span>Like</span>
-                </div>
-              )}
-            </div>
-          )}
-          {putLike && (
-            <div className="like mb-2 flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
-              <div className={`${putLike ? "likeButtonAnimation" : ""}`}>
-                <FaThumbsUp color="#292929" size={22} />
+                <span>Liked</span>
               </div>
-              <span>Like</span>
-            </div>
-          )}
+            ) : (
+              <div
+                onClick={() => {
+                  setPutDislike(false);
+                  setPutLike(true);
+                  setAnim(true)
+                  handleSendReaction("liked");
+                }}
+                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer p-2"
+              >
+                <MdOutlineThumbUp size={24} />
+              </div>
+            )}
+            {putDislike ? (
+              <div
+                onClick={() => {
+                  setPutDislike(false);
+                  setAnim(false)
+                  handleSendReaction("restoreDisliked");
+                }}
+                className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full flex items-center gap-2 p-2"
+              >
+                <span>Disliked</span>{" "}
+                <div>
+                  <MdOutlineThumbDownAlt color="#292929" size={22} />
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  setPutLike(false);
+                   setAnim(false)
+                  setPutDislike(true);
+                  handleSendReaction("disliked");
+                }}
+                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full cursor-pointer p-2"
+              >
+                <MdOutlineThumbDownAlt size={22} />
+              </div>
+            )}
+          </div>
 
           {question.comments.length > 0 ? (
             <div className="comment flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
@@ -286,33 +340,34 @@ const CommentBox = ({ question, Handler = null }) => {
                   />
                 </div>
               )}
-              {comments.length > 0 && comments?.map((c, i) => {
-                return (
-                  <div key={i} className="flex py-2 gap-2 text-gray-900">
-                    <div>
-                      <CommentProfile01
-                        id={c?.userId}
-                        name={c?.name}
-                        pfl={c?.profile}
-                        Handler={Handler}
-                      />
-                    </div>
-                    <div className="w-fit max-w-11/12">
-                      <div className="px-3 py-1 rounded-[20px] bg-gray-100">
-                        <ProfileCard id={c?.userId} Handler={Handler}>
-                          <p className="text-lg hover:underline cursor-pointer">
-                            {c?.name}
-                          </p>
-                        </ProfileCard>
-                        <p className="text-sm">{c?.comment}</p>
+              {comments.length > 0 &&
+                comments?.map((c, i) => {
+                  return (
+                    <div key={i} className="flex py-2 gap-2 text-gray-900">
+                      <div>
+                        <CommentProfile01
+                          id={c?.userId}
+                          name={c?.name}
+                          pfl={c?.profile}
+                          Handler={Handler}
+                        />
                       </div>
-                      <p className={"text-[10px] ml-2"}>
-                        {formatRelativeTime(c?.createdAt)}
-                      </p>
+                      <div className="w-fit max-w-11/12">
+                        <div className="px-3 py-1 rounded-[20px] bg-gray-100">
+                          <ProfileCard id={c?.userId} Handler={Handler}>
+                            <p className="text-lg hover:underline cursor-pointer">
+                              {c?.name}
+                            </p>
+                          </ProfileCard>
+                          <p className="text-sm">{c?.comment}</p>
+                        </div>
+                        <p className={"text-[10px] ml-2"}>
+                          {formatRelativeTime(c?.createdAt)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           )}
         </div>

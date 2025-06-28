@@ -69,8 +69,6 @@ export class FriendRequestService {
       { requester: new mongoose.mongo.ObjectId(recipientId), recipient: new mongoose.mongo.ObjectId(requesterId) }
     ]
   }).select('status'); // Select only the 'status' field for efficiency
-  console.log(friendRequest)
-  console.log(requesterId,recipientId)
   if (!friendRequest) {
     return "empty"; // No document found
   }
@@ -136,7 +134,6 @@ export class FriendRequestService {
    }
    if (status === "someAcceptedFriendProfileAndAllIds") {
    const someProfile = await this.authService.findAllUserForRequestedFriend(allAcceptedUsersId)
-   console.log(someProfile)//
    }
   }
 

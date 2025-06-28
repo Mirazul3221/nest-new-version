@@ -68,7 +68,6 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
       profile:photos[0].value
     };
 
-    console.log(user)
     const payload = {
       user,
       accessToken,
