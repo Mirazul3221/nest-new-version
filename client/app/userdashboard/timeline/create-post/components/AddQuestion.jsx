@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { commonLogout } from "@/app/userdashboard/components/common";
+import DisplayQuestion from "@/app/assistantdashboard/components/MathExpression";
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
@@ -25,10 +26,14 @@ const AddQuestion = () => {
   const [rightAns, setRightAns] = useState("");
   const [loading, setloading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { store , dispatch } = useContext(storeContext);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewContent, setShowPreviewContent] = useState("");
+  const { store, dispatch } = useContext(storeContext);
   const editor = useRef(null);
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
+    console.log(content);
+    return;
     const questionSchema = {
       subject,
       chapter,
@@ -67,7 +72,7 @@ const AddQuestion = () => {
       toast.error(error.response.data);
       setloading(false);
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
 
@@ -87,7 +92,7 @@ const AddQuestion = () => {
       setContent(data);
     } catch (error) {
       setIsLoading(false);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
   return (
@@ -246,7 +251,10 @@ const AddQuestion = () => {
               <option value="3">option 03</option>
               <option value="4">option 04</option>
             </select>
-            <div onClick={handleChatboat} className="px-6 w-fit hidden md:block py-1 cursor-pointer bg-violet-500 text-white rounded-md">
+            <div
+              onClick={handleChatboat}
+              className="px-6 w-fit hidden md:block py-1 cursor-pointer bg-violet-500 text-white rounded-md"
+            >
               {isLoading ? (
                 <div className="flex items-center gap-2 ">
                   <AiOutlineLoading3Quarters
@@ -259,7 +267,10 @@ const AddQuestion = () => {
                 "Use AI to generate description"
               )}
             </div>
-            <div onClick={handleChatboat} className="px-6 md:hidden w-fit py-1 cursor-pointer bg-violet-500 text-white rounded-md">
+            <div
+              onClick={handleChatboat}
+              className="px-6 md:hidden w-fit py-1 cursor-pointer bg-violet-500 text-white rounded-md"
+            >
               {isLoading ? (
                 <div className="flex items-center gap-2 ">
                   <AiOutlineLoading3Quarters
@@ -286,6 +297,17 @@ const AddQuestion = () => {
                 Submit
               </button>
             )}
+            {subject == "গণিত" && (
+              <h2
+                onClick={() => {
+                  setShowPreviewContent(content);
+                  setShowPreview(true);
+                }}
+                className="px-6 py-1 bg-violet-500 w-fit text-white cursor-pointer rounded-md"
+              >
+                Preview Math
+              </h2>
+            )}
           </div>
 
           <div className="text-editor">
@@ -294,12 +316,25 @@ const AddQuestion = () => {
               ref={editor}
               tabIndex={1}
               value={content}
-               onBlur={(newContent) => setContent(newContent)}
+              onBlur={(newContent) => setContent(newContent)}
             />
           </div>
         </div>
       </form>
       <ToastContainer />
+      {showPreview && (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-50 p-2 md:p-8">
+          <h2
+            onClick={() => {
+              setShowPreview(false);
+            }}
+            className="ml-auto cursor-pointer pr-2 pt-2"
+          >
+            Close
+          </h2>
+          <DisplayQuestion htmlContent={previewContent} />
+        </div>
+      )}
     </div>
   );
 };

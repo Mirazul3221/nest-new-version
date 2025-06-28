@@ -22,20 +22,31 @@ const JoditEditorWrapper = (props) => {
       }
     },
   }), []);
-useEffect(() => {
-    // Ensure MathJax is loaded
-    if (!document.getElementById("MathJax-script")) {
-      const script = document.createElement("script");
-      script.id = "MathJax-script";
-      script.async = true;
-      script.src =
-        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
-      document.head.appendChild(script);
-    }
-  }, []);
+// useEffect(() => {
+//     // Ensure MathJax is loaded
+//     if (!document.getElementById("MathJax-script")) {
+//       const script = document.createElement("script");
+//       script.id = "MathJax-script";
+//       script.async = true;
+//       script.src =
+//         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+//       document.head.appendChild(script);
+//     }
+//   }, []);
     return (
         <div>
-            <JoditEditor config={defaultConfig} {...props} />
+            <JoditEditor  config={{
+    // Prevent Jodit from interpreting or executing MathJax
+    processPaste: (html) => html,
+    iframe: false,
+    // Optional: Disable unwanted sanitization
+    cleanHTML: {
+      removeEmptyElements: false
+    },
+    // Optional: disable editing rendered HTML directly
+    allowResizeX: false,
+    allowResizeY: false
+  }} {...props} />
         </div>
     );
 };

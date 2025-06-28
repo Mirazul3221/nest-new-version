@@ -173,6 +173,8 @@ Question: ${question}
 `;
     subject == 'গণিত' ? (finalPrompt = prompt1) : (finalPrompt = prompt0);
     const genData = await this.getGeminiAnswer(finalPrompt);
+
+    console.log(genData)
     return genData;
   }
 

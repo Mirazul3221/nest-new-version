@@ -15,6 +15,8 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { CountQuestionsCollection } from "../../global/common";
 import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
+import { useEffect } from "react";
+import { mathDocument } from "../../utils/mathJaxConfig";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
   const { store, dispatch } = useContext(storeContext);
@@ -28,6 +30,26 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
     const formattedDate = moment(createdAt).format(format);
     return formattedDate;
   };
+
+useEffect(() => {
+  const el = document.getElementById('math-container');
+
+  if (el) {
+    const wasHidden = el.offsetParent === null;
+
+    if (wasHidden) {
+      el.style.display = 'block';
+    }
+
+    mathDocument.convert(el, { end: el });
+
+    if (wasHidden) {
+      el.style.display = '';
+    }
+  }
+}, [myQuestion.content]);
+
+  
 
   const checkAns = useCallback((e, ans, question) => {
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -328,8 +350,8 @@ const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
             {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
           </div>
           {myQuestion.content && (
-            <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
-              <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
+            <div className="desc border-t mt-2 pt-2 duration-500 overflow-hidden">
+              <h2 id='math-container'> {myQuestion.content}</h2>
             </div>
           )}
         </div>
