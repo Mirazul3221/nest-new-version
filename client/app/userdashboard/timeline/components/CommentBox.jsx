@@ -246,7 +246,7 @@ const CommentBox = ({ question, Handler = null }) => {
                   setAnim(false)
                   handleSendReaction("restoreLiked");
                 }}
-                className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full mb-2 flex items-center gap-2 p-2"
+                className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full flex items-center gap-2 p-2"
               >
                 <div className={`${anim ? "likeButtonAnimation" : ""}`}>
                   <MdOutlineThumbUp color="#292929" size={22} />
