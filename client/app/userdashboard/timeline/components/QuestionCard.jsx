@@ -18,6 +18,7 @@ import ProfileCard from "../../components/ProfileCard";
 import { useEffect } from "react";
 import { mathDocument } from "../../utils/mathJaxConfig";
 import DisplayQuestion from "@/app/assistantdashboard/components/MathExpression";
+import HtmlBodyParsarWithMathExp from "./HtmlBodyParsarWithMathExp";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
   const { store, dispatch } = useContext(storeContext);
@@ -133,7 +134,7 @@ useEffect(() => {
 
   const randomCount = Math.floor(Math.random() * 360 + 1);
   return (
-    <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border">
+    <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border max-w-screen">
       {myQuestion && (
         <div>
           <div className="flex justify-between">
@@ -351,10 +352,8 @@ useEffect(() => {
             {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
           </div>
           {myQuestion.content && (
-            <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
-              {
-                myQuestion.subject == 'গণিত' ? <DisplayQuestion htmlContent={myQuestion.content} /> : <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
-              }  
+            <div className={`desc border-t scale-0 mt-2 pt-2 w-[82vw] md:w-full max-h-screen hidden duration-500 overflow-auto`}>
+             <HtmlBodyParsarWithMathExp content={myQuestion.content}/> 
             </div>
           )}
         </div>

@@ -140,7 +140,7 @@ const CommentBox = ({ question, Handler = null }) => {
   };
 
   const handleSendReaction = useCallback(async (react) => {
-    if(react== 'like')new Audio("/like-justify-sound/pick-92276.mp3").play();
+    if(react== 'liked') new Audio("/like-justify-sound/pick-92276.mp3").play();
     try {
       const { data } = await axios.post(
         `${baseurl}/userquestions/add-reaction`,

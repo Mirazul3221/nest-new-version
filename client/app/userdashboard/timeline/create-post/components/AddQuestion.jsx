@@ -11,7 +11,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { commonLogout } from "@/app/userdashboard/components/common";
-import DisplayQuestion from "@/app/assistantdashboard/components/MathExpression";
+import HtmlBodyParsarWithMathExp from "../../components/HtmlBodyParsarWithMathExp";
+import { RiDeleteBack2Line } from "react-icons/ri";
 
 const AddQuestion = () => {
   const [subject, setSubject] = useState("");
@@ -88,6 +89,12 @@ const AddQuestion = () => {
       );
       setIsLoading(false);
       setContent(data);
+      // if(subject == "গণিত") {
+      //   setTimeout(() => {
+      //     setShowPreviewContent(content);
+      //     setShowPreview(true) 
+      //   }, 2000);
+      // }
     } catch (error) {
       setIsLoading(false);
       commonLogout(dispatch, error);
@@ -178,7 +185,7 @@ const AddQuestion = () => {
           {/* ------------------------------------------------------------------------------------- */}
           <div className="md:flex gap-10 mt-2">
             <div className="flex flex-col w-full mb-2">
-              <label htmlFor="title">Qusetion Option value 01</label>
+              <label htmlFor="title">Option 01</label>
               <input
                 onChange={(e) => setOption_01(e.target.value)}
                 value={option_01}
@@ -191,7 +198,7 @@ const AddQuestion = () => {
               />
             </div>
             <div className="flex flex-col w-full mb-2">
-              <label htmlFor="title">Qusetion Option value 02</label>
+              <label htmlFor="title">Option 02</label>
               <input
                 onChange={(e) => setOption_02(e.target.value)}
                 value={option_02}
@@ -206,7 +213,7 @@ const AddQuestion = () => {
           </div>
           <div className="md:flex gap-10 mt-2">
             <div className="flex flex-col w-full mb-2">
-              <label htmlFor="title">Qusetion Option value 03</label>
+              <label htmlFor="title">Option 03</label>
               <input
                 onChange={(e) => setOption_03(e.target.value)}
                 value={option_03}
@@ -219,7 +226,7 @@ const AddQuestion = () => {
               />
             </div>
             <div className="flex flex-col w-full mb-2">
-              <label htmlFor="title">Qusetion Option value 02</label>
+              <label htmlFor="title">Option 04</label>
               <input
                 onChange={(e) => setOption_04(e.target.value)}
                 value={option_04}
@@ -278,9 +285,20 @@ const AddQuestion = () => {
                   Loading...
                 </div>
               ) : (
-                "Get description"
+                "Click to assist"
               )}
             </div>
+            {subject == "গণিত" && content && (
+              <h2
+                onClick={() => {
+                  setShowPreviewContent(content);
+                  setShowPreview(true);
+                }}
+                className="px-6 py-1 bg-violet-500 w-fit text-white cursor-pointer rounded-md"
+              >
+                Preview Math
+              </h2>
+            )}
 
             {loading ? (
               <AiOutlineLoading3Quarters
@@ -294,17 +312,6 @@ const AddQuestion = () => {
               >
                 Submit
               </button>
-            )}
-            {subject == "গণিত" && (
-              <h2
-                onClick={() => {
-                  setShowPreviewContent(content);
-                  setShowPreview(true);
-                }}
-                className="px-6 py-1 bg-violet-500 w-fit text-white cursor-pointer rounded-md"
-              >
-                Preview Math
-              </h2>
             )}
           </div>
 
@@ -321,16 +328,16 @@ const AddQuestion = () => {
       </form>
       <ToastContainer />
       {showPreview && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-50 p-2 md:p-8">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-50 p-2 md:p-8 overflow-auto">
           <h2
             onClick={() => {
               setShowPreview(false);
             }}
-            className="ml-auto cursor-pointer pr-2 pt-2"
+            className="fixed top-4 right-4"
           >
-            Close
+            <RiDeleteBack2Line size={30} />
           </h2>
-          <DisplayQuestion htmlContent={previewContent} />
+           <HtmlBodyParsarWithMathExp content={previewContent}/>
         </div>
       )}
     </div>

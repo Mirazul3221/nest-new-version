@@ -17,7 +17,7 @@ const DisplayQuestion = ({ htmlContent }) => {
 
   return (
     <div
-      className="prose mt-4 p-4 border border-gray-300 rounded w-full h-full overflow-auto"
+      className="prose mt-4 p-4 rounded w-[90vw] md:w-full h-full overflow-auto"
       dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   );

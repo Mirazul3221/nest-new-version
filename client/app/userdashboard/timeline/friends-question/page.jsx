@@ -331,37 +331,39 @@ const Page = () => {
             <NearbyUserProfileCard />
             <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
               <img
-                className="w-16 rounded-full"
+                className="md:w-16 w-12 rounded-full"
                 src={store?.userInfo?.profile}
                 alt={store?.userInfo?.name}
               />
               <a
-                className="text-gray-700 text-lg md:font-semibold"
+                className="text-gray-700 md:text-lg md:font-semibold"
                 href="/userdashboard/timeline/create-post"
               >
                 Share a question with your friends
               </a>
-              <p
+              {/* <p
                 onClick={() => setOpenSideMenu(true)}
                 className="md:hidden cursor-pointer"
               >
                 <span>...</span>
-              </p>
+              </p> */}
             </div>
             {/* =====================================Story sharing from here==================================== */}
             <DisplayMemoryCard />
-   {questions?.map((question, i) => (
-  <div key={i} className="mx-auto">
-    {/* This will render the suggestion card in the middle of the list */}
-    {i === Math.floor(questions.length / 2) && <FrindSuggestedCard />}
-    {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />} */}
-    <QuestionCard
-      questionsAfterDelete={questionsAfterDelete}
-      myQuestion={question}
-      Handler={setUserDetails}
-    />
-  </div>
-))}
+            {questions?.map((question, i) => (
+              <div key={i} className="mx-auto">
+                {/* This will render the suggestion card in the middle of the list */}
+                {i === Math.floor(questions.length / 2) && (
+                  <FrindSuggestedCard />
+                )}
+                {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />} */}
+                <QuestionCard
+                  questionsAfterDelete={questionsAfterDelete}
+                  myQuestion={question}
+                  Handler={setUserDetails}
+                />
+              </div>
+            ))}
 
             {isLoading && (
               <div className="flex bg-white justify-center">

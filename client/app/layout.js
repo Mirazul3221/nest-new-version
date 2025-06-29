@@ -4,6 +4,7 @@ import DataProvider from "./global/DataProvider";
 import SocketProvider from "./userdashboard/global/SocketProvider";
 import MessageProvider from "./userdashboard/global/globalDataProvider.jsx";
 import AdScript from "./components/googleAds/AddScript";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,18 +35,41 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({ children }) {
   return (
     <html className="select-none" lang="en">
-      <meta
-        name="google-adsense-account"
-        content="ca-pub-8668385137041223"
-      ></meta>
-      <body className={inter.className}>
+      <head>
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-8668385137041223"
+        />
+        {/* ✅ MathJax config */}
+        <Script id="mathjax-config" strategy="beforeInteractive">
+          {`
+            window.MathJax = {
+              tex: {
+                inlineMath: [['\\\\(', '\\\\)']],
+                displayMath: [['\\\\[', '\\\\]'], ['$$', '$$']]
+              },
+              svg: {
+                fontCache: 'global'
+              }
+            };
+          `}
+        </Script>
+
+        {/* ✅ Load MathJax script */}
+        <Script
+          id="mathjax-script"
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          async
+          strategy="beforeInteractive"
+        />
+      </head>
+
+      <body className="font-sans">
         <DataProvider>
           <SocketProvider>
             <MessageProvider>
               <div className="min-h-screen w-full">
-                <div className="max-w-[1440px] w-full mx-auto">
-                  {children}
-                </div>
+                <div className="max-w-[1440px] w-full mx-auto">{children}</div>
               </div>
             </MessageProvider>
           </SocketProvider>
