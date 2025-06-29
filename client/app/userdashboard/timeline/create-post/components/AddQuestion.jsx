@@ -32,8 +32,6 @@ const AddQuestion = () => {
   const editor = useRef(null);
   const handleSubmitAnswer = async (e) => {
     e.preventDefault();
-    console.log(content);
-    return;
     const questionSchema = {
       subject,
       chapter,

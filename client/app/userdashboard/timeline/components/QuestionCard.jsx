@@ -17,6 +17,7 @@ import { commonLogout } from "../../components/common";
 import ProfileCard from "../../components/ProfileCard";
 import { useEffect } from "react";
 import { mathDocument } from "../../utils/mathJaxConfig";
+import DisplayQuestion from "@/app/assistantdashboard/components/MathExpression";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
   const { store, dispatch } = useContext(storeContext);
@@ -350,8 +351,10 @@ useEffect(() => {
             {/* ////////////////////////////////////////Here end all Question options//////////////////////////////////////////////// */}
           </div>
           {myQuestion.content && (
-            <div className="desc border-t mt-2 pt-2 duration-500 overflow-hidden">
-              <h2 id='math-container'> {myQuestion.content}</h2>
+            <div className="desc border-t scale-0 mt-2 pt-2 hidden duration-500 overflow-hidden">
+              {
+                myQuestion.subject == 'গণিত' ? <DisplayQuestion htmlContent={myQuestion.content} /> : <h2> {HTMLReactParser(`${myQuestion.content}`)}</h2>
+              }  
             </div>
           )}
         </div>
