@@ -3,11 +3,14 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import socketContext from "./socketContext";
-import storeContext from "@/app/global/createContex";
+import { baseurl } from "@/app/config";
+import axios from "axios";
+import { useStore } from "@/app/global/DataProvider";
+import { commonLogout } from "../components/common";
 const SocketProvider = ({ children }) => {
   let mysocketUrl = "https://edu-socket.onrender.com";
   // mysocketUrl = "http://localhost:3001";
-  const { store } = useContext(storeContext);
+  const { store ,dispatch} = useStore();
   const [socket, setSocket] = useState(null);
   const [localStream, setLocalStram] = useState(null);
   const [remoteStream,setRemoteStream] = useState(null);
@@ -27,6 +30,34 @@ const SocketProvider = ({ children }) => {
       socketInstance.disconnect();
     };
   }, []);
+  const fetchIds = async () => {
+    try {
+      const { data } = await axios.get(`${baseurl}/auth/current-friends`, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      });
+      return data
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
+  };
+useEffect(() => {
+  const fetchAndEmit = async () => {
+    try {
+      const friendsId = await fetchIds();
+      console.log(friendsId, 'grl;gdgd glkdg;l');
+      socket?.emit('all-friendsid', friendsId);
+    } catch (err) {
+      console.error('Failed to fetch friend IDs:', err);
+    }
+  };
+
+  if (socket) {
+    fetchAndEmit();
+  }
+}, [socket]);
+
 
   useEffect(() => {
     socket &&
@@ -34,7 +65,7 @@ const SocketProvider = ({ children }) => {
         setMyActiveFriends(res);
         console.log(res);
       });
-    return () => {
+     () => {
       socket?.off("onlineFriends");
     };
   }, [socket]);

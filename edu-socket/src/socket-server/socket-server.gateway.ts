@@ -37,8 +37,8 @@ export class NotificationsGateway
   private onlineUsers = [];
   private socketUsers = {};
   private userActivity = {}; // Track the active status of users (active/inactive)
-  private userInActivity = {} //
-  
+  private userInActivity = {}; //
+
   connectedUsesrs = async (socketId, userId) => {
     const isExist = await this.onlineUsers.some((u) => u.userId === userId);
     if (!isExist) {
@@ -58,27 +58,28 @@ export class NotificationsGateway
     this.socketUsers[userId].push(client.id);
     if (userId) {
       ///////////////////////////////////////check user active window or not ////////////////////////////////
-          // Listen for the user position (active/inactive status)
-    client.on("userActivity", (data) => {
-      const { userId, status } = data;
-      
-      // Update user activity status based on the tab's visibility
-      if (status) {
+      // Listen for the user position (active/inactive status)
+      client.on('userActivity', (data) => {
+        const { userId, status } = data;
+
+        // Update user activity status based on the tab's visibility
+        if (status) {
           // Mark the user as active
           this.userActivity[userId] = this.userActivity[userId] || new Set();
           this.userActivity[userId].add(client.id); // Add current socket id as active
           if (this.userInActivity[userId]) {
-            this.userInActivity[userId].delete(client.id)
+            this.userInActivity[userId].delete(client.id);
           }
-      } else {
-        this.userInActivity[userId] = this.userInActivity[userId] || new Set();
-        this.userInActivity[userId].add(client.id); // Add current socket id as active
+        } else {
+          this.userInActivity[userId] =
+            this.userInActivity[userId] || new Set();
+          this.userInActivity[userId].add(client.id); // Add current socket id as active
           // Mark the user as inactive
           if (this.userActivity[userId]) {
-              this.userActivity[userId].delete(client.id); // Remove current socket id
+            this.userActivity[userId].delete(client.id); // Remove current socket id
           }
-      }
-  });//
+        }
+      }); //
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////
       client.on('checkSenderOnlineStatus', async (data) => {
@@ -94,34 +95,37 @@ export class NotificationsGateway
         }
       });
       //////////////////////////////////////////logi for new messanger/////////////////////////////
-      client.on('message-to',(data)=>{
+      client.on('message-to', (data) => {
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
-        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [
+          ...(this.userInActivity[data?.receiverId] || []),
+        ];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          
           if (userIdsArray.length > 0) {
             userIdsArray.map(async (id) => {
-              await this.server.to(id).emit('message-from', data);
+              await client.to(id).emit('message-from', data);
             });
           }
           if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
-             this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('message-from', data);
+           client.to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1]) .emit('message-from', data);   
           }
         }
-      })
+      });
       //////////////////////////////////////////logi for send user profile when send message/////////////////////////////
-      client.on('lastMsgWithProfile',(data)=>{
-        console.log(data)
+      client.on('lastMsgWithProfile', (data) => {
+        console.log(data);
         if (this.socketUsers[data?.receiver]?.length > 0) {
           this.socketUsers[data?.receiver]?.map(async (id) => {
             await this.server.to(id).emit('lastMsgWithProfile', data.sender);
           });
         }
-      })
+      });
       ///////////////////////////////////////////////////////////////////////////////////////
-      client.on('set-seen-validation',(data)=>{
+      client.on('set-seen-validation', (data) => {
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
-        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [
+          ...(this.userInActivity[data?.receiverId] || []),
+        ];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           if (userIdsArray.length > 0) {
             userIdsArray.map(async (id) => {
@@ -129,65 +133,68 @@ export class NotificationsGateway
             });
           }
           if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
-             this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('get-seen-validation', data);
+            this.server
+              .to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1])
+              .emit('get-seen-validation', data);
           }
         } else {
           if (this.socketUsers[data?.senderId]?.length > 0) {
             this.socketUsers[data?.senderId]?.map(async (id) => {
               await this.server.to(id).emit('not-active', 'user is not online');
-            }); 
+            });
           }
         }
-    
-      })
+      });
 
       /////////////////////////////////////////////////////////////////////////////////////////////
-      client.on('check-my-friend-window',(data)=>{
-        console.log(data)
+      client.on('check-my-friend-window', (data) => {
         const userIdsArray = [...(this.userActivity[data?.to] || [])];
         const inactiveUserIdsArray = [...(this.userInActivity[data?.to] || [])];
         if (this.socketUsers[data?.to]?.length > 0) {
-          if ( userIdsArray.length > 0) {
+          if (userIdsArray.length > 0) {
             userIdsArray?.map(async (id) => {
-              await this.server.to(id).emit('check-my-friend-window', data);
+              await client.to(id).emit('check-my-friend-window', data);
             });
           }
 
           if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
-            this.server.to( inactiveUserIdsArray[inactiveUserIdsArray.length-1]).emit('check-my-friend-window', data);
-         }
+            client
+              .to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1])
+              .emit('check-my-friend-window', data);
+          }
         }
-      })
+      });
       ///////////////////////////////////////////////////////////////////////////////////////////
-      client.on('validation-status',(data)=>{
+      client.on('validation-status', (data) => {
         if (this.socketUsers[data?.sender]?.length > 0) {
           this.socketUsers[data?.sender]?.map(async (id) => {
             await this.server.to(id).emit('validation-status', data);
           });
         }
-      })
+      });
       ////////////////////////////////////////////////////////////////////////////////////////
-      client.on('check-message-unseen-status',(data)=>{
+      client.on('check-message-unseen-status', (data) => {
         if (this.socketUsers[data?.senderId]?.length > 0) {
           this.socketUsers[data?.senderId]?.map(async (id) => {
             await this.server.to(id).emit('check-message-unseen-status', data);
           });
         }
-      })
+      });
       //////////////////////////////////////////////////////////////////////////////////////////
       client.on('typingMsg', async (data) => {
-        console.log(data)//
+        console.log(data); //
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          userIdsArray.length > 0 && userIdsArray.map(async (id) => {
-            await this.server.to(id).emit('getTypingMsg', data);
-          });
+          userIdsArray.length > 0 &&
+            userIdsArray.map(async (id) => {
+              await client.to(id).emit('getTypingMsg', data);
+            });
         }
       });
       client.on('typingalert', async (data) => {
         if (this.socketUsers[data?.receiverId]?.length > 0) {
           this.socketUsers[data?.receiverId]?.map(async (id) => {
-            await this.server.to(id).emit('typingalert', data);
+            await client.to(id).emit('typingalert', data);
           });
         }
       });
@@ -209,10 +216,9 @@ export class NotificationsGateway
         }
       });
 
-      
       /////////////////////////Here is the logic for user block and unblock////////////////////////
       client.on('user-block-and-unblock-status', async (data) => {
-        console.log("user-block-and-unblock-status",data)
+        console.log('user-block-and-unblock-status', data);
         if (this.socketUsers[data[0]]?.length > 0) {
           this.socketUsers[data[0]]?.map(async (id) => {
             await client.to(id).emit('user-block-and-unblock-status', data);
@@ -229,27 +235,40 @@ export class NotificationsGateway
         }
       });
 
-      //////////////////////////Here is the logic for active users////////////////////////////////
+      ////////////////////////// Here is the logic for active users ////////////////////////////////
       const userIds = Object.keys(this.socketUsers);
-      await this.server.emit('onlineFriends', userIds);
+      const userIdSet = new Set(userIds); // Create set once for fast lookup
+
+      client.on('all-friendsid', async (data) => {
+        // data is the array of a user's friends
+        const matchedFriendIds = [userId, ...data].filter((id) =>
+          userIdSet.has(id),
+        );
+        await client.emit('onlineFriends', matchedFriendIds);
+      });
 
       ////////////////////////////////////Logic for video and audio call system////////////////////////////////////////////
       await client.on('signal-call', (data) => {
         const userIdsArray = [...(this.userActivity[data?.receiverId] || [])];
-        const inactiveUserIdsArray = [...(this.userInActivity[data?.receiverId] || [])];
+        const inactiveUserIdsArray = [
+          ...(this.userInActivity[data?.receiverId] || []),
+        ];
         if (this.socketUsers[data?.receiverId]?.length > 0) {
-          userIdsArray.length > 0 && userIdsArray.map(async (id) => {
-            await this.server.to(id).emit('signal-call', data);
-          });//
+          userIdsArray.length > 0 &&
+            userIdsArray.map(async (id) => {
+              await this.server.to(id).emit('signal-call', data);
+            }); //
 
           if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
-           this.server.to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1]).emit('signal-call', data);
+            this.server
+              .to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1])
+              .emit('signal-call', data);
           }
 
           this.socketUsers[data?.senderId]?.map(async (id) => {
             await this.server.to(id).emit('call-reached', this.socketUsers);
           });
-        } 
+        }
       });
       ///////////////////////////////////////////////////////////////////////////////////
       await client.on('end-call', (req) => {
@@ -303,13 +322,13 @@ export class NotificationsGateway
       });
 
       //////////////////////logic for screen sharing//////////////////////
-      await client.on('screen-sharing',res=>{
+      await client.on('screen-sharing', (res) => {
         if (this.socketUsers[res?.friend]?.length > 0) {
           this.socketUsers[res?.friend]?.map(async (id) => {
             await this.server.to(id).emit('screen-sharing', res.isSharing);
           });
         }
-      })
+      });
     }
   } ///////
   //

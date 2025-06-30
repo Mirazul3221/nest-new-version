@@ -12,8 +12,7 @@ export class MessangerController {
   @Post('message-create')
   @UseGuards(AuthGuard())
   async createTextMessage(@Body() createMessangerDto:CreateMessangerDto,@Req() req:any) {
-    const me = req.user._id; 
-    return await this.messangerService.createTextMessage(createMessangerDto,me);
+    return await this.messangerService.createTextMessage(createMessangerDto,req);
   }
 //
 
@@ -21,15 +20,13 @@ export class MessangerController {
   @UseGuards(AuthGuard())
   @FormDataRequest({storage:FileSystemStoredFile})//
   async createImageMessage(@Body() createMessage:CreateImageMessangerDto, @Req() req:any) {
-    const me = req.user._id; 
-    return await this.messangerService.createImageMessage(createMessage,me);
+    return await this.messangerService.createImageMessage(createMessage,req);
   }
   @Post('voice-create')
   @UseGuards(AuthGuard())
   @FormDataRequest({storage:FileSystemStoredFile})//
   async createVoiceMessage(@Body() createMessage:CreateVoiceMessageDto, @Req() req:any) {
-    const me = req.user._id; 
-    return await this.messangerService.createVoiceMessage(createMessage,me);
+    return await this.messangerService.createVoiceMessage(createMessage,req);
   }
 
 

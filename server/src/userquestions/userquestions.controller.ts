@@ -89,8 +89,7 @@ export class UserquestionsController {
   @Post('add-reaction')
   @UseGuards(AuthGuard())
   async addReaction(@Req() req, @Body() body) {
-    const userId = req.user.id;
-    return await this.userquestionsService.addReaction(userId, body);
+    return await this.userquestionsService.addReaction(req, body);
   }
 
   @Post('check-reaction-status')

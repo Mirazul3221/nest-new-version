@@ -918,7 +918,6 @@ export class AuthService {
     page: number,
     limit: number,
   ) {
-
     const targetUser = await this.userModel
       .findById(id)
       .populate({
@@ -992,14 +991,14 @@ export class AuthService {
       );
   }
 
-async multipleUsersProfile(ids: string[]): Promise<string[]> {
-  const profiles = await this.userModel
-    .find({ _id: { $in: ids } })
-    .select('profile')
-    .lean();
+  async multipleUsersProfile(ids: string[]): Promise<string[]> {
+    const profiles = await this.userModel
+      .find({ _id: { $in: ids } })
+      .select('profile')
+      .lean();
 
-  return profiles.map((user) => user.profile);
-}
+    return profiles.map((user) => user.profile);
+  }
 
   //===========================================================================================================
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
@@ -1044,52 +1043,67 @@ async multipleUsersProfile(ids: string[]): Promise<string[]> {
       ),
     ];
 
-// 3. Get recent connections of all direct friends (second-degree)
-const allFriendConnections = await this.friendRequestModel
-  .find({
-    status: 'accepted',
-    $or: [
-      { requester: { $in: directFriendIds } },
-      { recipient: { $in: directFriendIds } },
-    ],
-  })
-  .select('requester recipient createdAt')
-  .sort({ createdAt: -1 }) // most recent first
-  .limit(100) // tweak this number based on how far back you want to go
-  .lean();
-  // 4. Build mutual friend map with IDs
-const mutualFriendCounts: Record<string, number> = {};
-const mutualFriendIdsMap: Record<string, Set<string>> = {}; // new
+    // 3. Get recent connections of all direct friends (second-degree)
+const objectIds = directFriendIds.map(id => new Types.ObjectId(id));
 
-for (const conn of allFriendConnections) {
-  const [userA, userB] = [conn.requester.toString(), conn.recipient.toString()];
+const allFriendConnections = await this.friendRequestModel.aggregate([
+  {
+    $match: {
+      status: 'accepted',
+      $or: [
+        { requester: { $in: objectIds } },
+        { recipient: { $in: objectIds } },
+      ],
+    },
+  },
+  { $sort: { createdAt: -1 } },
+  { $limit: 100 },
+  { $sample: { size: 20 } },
+  {
+    $project: {
+      _id: 1,
+      requester: 1,
+      recipient: 1,
+      createdAt: 1,
+    },
+  },
+]);
 
-  const isUserAFriend = directFriendIds.includes(userA);
-  const isUserBFriend = directFriendIds.includes(userB);
+    // 4. Build mutual friend map with IDs
+    const mutualFriendCounts: Record<string, number> = {};
+    const mutualFriendIdsMap: Record<string, Set<string>> = {}; // new
+    for (const conn of allFriendConnections) {
+      const [userA, userB] = [
+        conn.requester.toString(),
+        conn.recipient.toString(),
+      ];
 
-  // If both are not direct friends, skip
-  if (!isUserAFriend && !isUserBFriend) continue;
+      const isUserAFriend = directFriendIds.includes(userA);
+      const isUserBFriend = directFriendIds.includes(userB);
 
-  // Find the friend (mutual) and the candidate (non-direct-friend)
-  const mutualFriend = isUserAFriend ? userA : userB;
-  const friendCandidate = isUserAFriend ? userB : userA;
+      // If both are not direct friends, skip
+      if (!isUserAFriend && !isUserBFriend) continue;
 
-  // Skip if candidate is current user or already a friend
-  if (
-    friendCandidate === currentUserId ||
-    directFriendIds.includes(friendCandidate)
-  )
-    continue;
+      // Find the friend (mutual) and the candidate (non-direct-friend)
+      const mutualFriend = isUserAFriend ? userA : userB;
+      const friendCandidate = isUserAFriend ? userB : userA;
 
-  // Count and track mutual friend
-  mutualFriendCounts[friendCandidate] =
-    (mutualFriendCounts[friendCandidate] || 0) + 1;
+      // Skip if candidate is current user or already a friend
+      if (
+        friendCandidate === currentUserId ||
+        directFriendIds.includes(friendCandidate)
+      )
+        continue;
 
-  if (!mutualFriendIdsMap[friendCandidate]) {
-    mutualFriendIdsMap[friendCandidate] = new Set();
-  }
-  mutualFriendIdsMap[friendCandidate].add(mutualFriend);
-}
+      // Count and track mutual friend
+      mutualFriendCounts[friendCandidate] =
+        (mutualFriendCounts[friendCandidate] || 0) + 1;
+
+      if (!mutualFriendIdsMap[friendCandidate]) {
+        mutualFriendIdsMap[friendCandidate] = new Set();
+      }
+      mutualFriendIdsMap[friendCandidate].add(mutualFriend);
+    }
 
     // 5. Get all pending friend requests sent by current user
     const pendingSentRequests = await this.friendRequestModel
@@ -1115,15 +1129,40 @@ for (const conn of allFriendConnections) {
       .select('_id name profile') // select what you need
       .lean();
 
-const res = suggestedUsers.map((user) => {
-  const id = user._id.toString();
-  return {
-    ...user,
-    mutualFriends: mutualFriendCounts[id] || 0,
-    mutualFriendIds: Array.from(mutualFriendIdsMap[id] || []),
-  };
-});
-res.reverse();
+    const res = suggestedUsers.map((user) => {
+      const id = user._id.toString();
+      return {
+        ...user,
+        mutualFriends: mutualFriendCounts[id] || 0,
+        mutualFriendIds: Array.from(mutualFriendIdsMap[id] || []),
+      };
+    });
+    res.reverse();
     return await res;
+  }
+
+  async currentFriends(req) {
+    const currentUserId = req.user._id.toString();
+    // 1. Get all accepted friend requests of current user
+    const friendRequests = await this.friendRequestModel
+      .find({
+        status: 'accepted',
+        $or: [{ requester: currentUserId }, { recipient: currentUserId }],
+      })
+      .select('requester recipient')
+      .lean();
+
+    // 2. Extract direct friends' IDs
+    const directFriendIds = [
+      ...new Set(
+        friendRequests
+          .flatMap(({ requester, recipient }) => [
+            requester.toString(),
+            recipient.toString(),
+          ])
+          .filter((id) => id !== currentUserId),
+      ),
+    ];
+    return directFriendIds;
   }
 }

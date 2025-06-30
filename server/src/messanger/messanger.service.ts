@@ -24,38 +24,46 @@ export class MessangerService {
     private readonly authService: AuthService,
     private readonly ConfigService: ConfigService,
   ) {}
-async fetchMeta(url: string): Promise<any> {
-  try {
-    const cleanUrl = url.split('?')[0];
+  async fetchMeta(url: string): Promise<any> {
+    try {
+      const cleanUrl = url.split('?')[0];
 
-    const data = await ogs({
-      url: cleanUrl,
-       timeout: 20000, // ⏱ 20 seconds instead of default 10
-      fetchOptions: {
-        headers: {
-          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+      const data = await ogs({
+        url: cleanUrl,
+        timeout: 20000, // ⏱ 20 seconds instead of default 10
+        fetchOptions: {
+          headers: {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+          },
         },
-      },
-    });
+      });
 
-    if (data.result.success) {
-      return {status:true,ogTitle:data.result.ogTitle,ogDescription:data.result.ogDescription,image:data.result.ogImage[0].url};
+      if (data.result.success) {
+        return {
+          status: true,
+          ogTitle: data.result.ogTitle,
+          ogDescription: data.result.ogDescription,
+          image: data.result.ogImage[0].url,
+        };
+      }
+      if (!data.result.success) {
+        return { status: false };
+      }
+      return data.result;
+    } catch (error) {
+      return { status: false };
     }
-    if (!data.result.success) {
-      return {status:false};
-    }
-    return data.result;
-  } catch (error) {
-    return {status:false};
   }
-}
-  async createTextMessage(createMessangerDto: CreateMessangerDto, id) {
-    const receivedUser = await this.userModel.findById(createMessangerDto.receiverId);
+  async createTextMessage(createMessangerDto: CreateMessangerDto, req) {
+    const id = req.user._id;
+    const receivedUser = await this.userModel.findById(
+      createMessangerDto.receiverId,
+    );
     const isblocked = receivedUser.blockedUsers?.includes(id);
-    let verifyText = {status:false}
+    let verifyText = { status: false };
     const urlRegex = /\bhttps?:\/\/[^\s<>"']+/gi;
     const urls = createMessangerDto.message.match(urlRegex) || [];
-    if(urls.length !== 0){
+    if (urls.length !== 0) {
       verifyText = await this.fetchMeta(createMessangerDto.message);
     }
     if (!isblocked) {
@@ -65,27 +73,33 @@ async fetchMeta(url: string): Promise<any> {
         message: { content: createMessangerDto.message, media: '', voice: '' },
         reply: createMessangerDto.reply,
         seenMessage: createMessangerDto.seenMessage,
-        others:verifyText.status ? verifyText : null
+        others: verifyText.status ? verifyText : null,
       });
 
-const recId = createMessangerDto.receiverId.toString();
+      const recId = createMessangerDto.receiverId.toString();
 
       const sendableData = {
-  title: `New message!`,
-  body: `${receivedUser.name} : ${createMessangerDto.message.slice(0.50)}.`,
-  icon: receivedUser.profile?.replace('http://', 'https://'),
-  url: `./userdashboard/messanger/${receivedUser.name}/${recId}`,
-};
-      await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user',{id:recId,payload:sendableData})
+        title: `New message!`,
+        body: `${req.user.name} : ${createMessangerDto.message.slice(0.5)}.`,
+        icon: req.user.profile?.replace('http://', 'https://'),
+        url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
+      };
+      await axios.post(
+        'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+        { id: recId, payload: sendableData },
+      );
       return created;
     } else {
-      return 'User is blocked'
+      return 'User is blocked';
     }
+  } //
 
-  }//
-
-  async createImageMessage(createMessage: CreateImageMessangerDto, id) {
+  async createImageMessage(createMessage: CreateImageMessangerDto, req) {
+    const id = req.user._id;
     const { receiverId, image, reply } = createMessage;
+    const receivedUser = await this.userModel.findById(receiverId);
+    const isblocked = receivedUser.blockedUsers?.includes(id);
+    if (isblocked) return 'User is blocked';
     const replyAsArray = JSON.parse(reply);
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
@@ -103,10 +117,27 @@ const recId = createMessangerDto.receiverId.toString();
       reply: replyAsArray,
       seenMessage: false,
     });
+
+    const recId = receiverId.toString();
+
+    const sendableData = {
+      title: `New message!`,
+      body: `${req.user.name} : sends you a image in your message box.`,
+      icon: req.user.profile?.replace('http://', 'https://'),
+      url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
+    };
+    await axios.post(
+      'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+      { id: recId, payload: sendableData },
+    );
     return created;
   }
-  async createVoiceMessage(createMessage: CreateVoiceMessageDto, id) {
+  async createVoiceMessage(createMessage: CreateVoiceMessageDto, req) {
     const { receiverId, voice, reply } = createMessage;
+    const id = req.user._id;
+    const receivedUser = await this.userModel.findById(receiverId);
+    const isblocked = receivedUser.blockedUsers?.includes(id);
+    if (isblocked) return 'User is blocked';
     const replyAsArray = JSON.parse(reply);
     cloudinary.config({
       cloud_name: this.ConfigService.get('cloud_name'),
@@ -130,6 +161,18 @@ const recId = createMessangerDto.receiverId.toString();
       seenMessage: false,
     });
 
+        const recId = receiverId.toString();
+
+    const sendableData = {
+      title: `New message!`,
+      body: `${req.user.name} : sends you a voice in your message box.`,
+      icon: req.user.profile?.replace('http://', 'https://'),
+      url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
+    };
+    await axios.post(
+      'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+      { id: recId, payload: sendableData },
+    );
     return created;
   }
 

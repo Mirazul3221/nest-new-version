@@ -281,6 +281,10 @@ async isBlockedMe (@Req() req :any, @Param('targetId') targetId : string){
 async suggestedFriends (@Req() req :any){
  return await this.authService.suggestedFriends(req)
 }
-
+@Get('current-friends')
+@UseGuards(AuthGuard())
+async currentFriends (@Req() req :any){
+ return await this.authService.currentFriends(req)
+}
 }
 ///=====

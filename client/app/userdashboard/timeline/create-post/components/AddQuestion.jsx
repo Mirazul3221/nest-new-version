@@ -89,12 +89,10 @@ const AddQuestion = () => {
       );
       setIsLoading(false);
       setContent(data);
-      // if(subject == "গণিত") {
-      //   setTimeout(() => {
-      //     setShowPreviewContent(content);
-      //     setShowPreview(true) 
-      //   }, 2000);
-      // }
+      if(subject == "গণিত") {
+       setShowPreviewContent(data);
+       setShowPreview(true) 
+      }
     } catch (error) {
       setIsLoading(false);
       commonLogout(dispatch, error);
@@ -328,16 +326,18 @@ const AddQuestion = () => {
       </form>
       <ToastContainer />
       {showPreview && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-50 p-2 md:p-8 overflow-auto">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-white z-50 p-2 md:p-8">
           <h2
             onClick={() => {
               setShowPreview(false);
             }}
-            className="fixed top-4 right-4"
+            className="fixed top-4 cursor-pointer right-4"
           >
             <RiDeleteBack2Line size={30} />
           </h2>
+          <div className="w-fit mx-auto p-4 border shadow-md overflow-auto h-[90vh]">
            <HtmlBodyParsarWithMathExp content={previewContent}/>
+          </div>
         </div>
       )}
     </div>

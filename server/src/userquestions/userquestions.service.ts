@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UsersQuestion, QuestionDocument } from './schema/userquestions.schema';
 import { Model, Types } from 'mongoose';
 import axios from 'axios';
+import { CommentSchema } from './schema/comment.schema';
 
 @Injectable()
 export class UserquestionsService {
@@ -173,8 +174,6 @@ Question: ${question}
 `;
     subject == 'গণিত' ? (finalPrompt = prompt1) : (finalPrompt = prompt0);
     const genData = await this.getGeminiAnswer(finalPrompt);
-
-    console.log(genData)
     return genData;
   }
 
@@ -215,10 +214,22 @@ Question: ${question}
     const targetQuestion = await this.QuestionModel.findById(questionId);
     targetQuestion.comments.push(commentSchema);
     await targetQuestion.save();
+    const recId = targetQuestion.userId.toString();
+            const sendableData = {
+              title: `New Notification!`,
+              body: `${commentSchema.name} : Comments your Question as "${commentSchema.comment}"`,
+              icon: commentSchema.profile?.replace('http://', 'https://'),
+              url: `./userdashboard/timeline/${targetQuestion.slug}`,
+            };
+            await axios.post(
+              'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+              { id: recId, payload: sendableData },
+            );
     return await commentSchema;
   }
   /////////////////////////////////////////////////////////////////////////////////////
-  async addReaction(userId, body) {
+  async addReaction(req, body) {
+    const userId = req.user.id;
     const { type, questionId } = body;
     const targetQuestion = await this.QuestionModel.findById(questionId);
     const { likes, dislikes } = targetQuestion.reactions;
@@ -236,6 +247,17 @@ Question: ${question}
             $addToSet: { 'reactions.likes': userId }, // avoids duplicates
           },
         );
+const recId = targetQuestion.userId.toString();
+            const sendableData = {
+              title: `New Notification!`,
+              body: `${req.user.name} : 👍(likes) your Question ${targetQuestion.question.slice(0,50)} `,
+              icon: req.user.profile?.replace('http://', 'https://'),
+              url: `./userdashboard/timeline/${targetQuestion.slug}`,
+            };
+            await axios.post(
+              'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+              { id: recId, payload: sendableData },
+            );
       }
     }
     if (type == 'disliked') {
@@ -277,10 +299,12 @@ Question: ${question}
     const targetQuestion = await this.QuestionModel.findById(questionId);
     if(!targetQuestion) return;
     const { likes, dislikes } = targetQuestion.reactions;
-    const isLiked = likes.includes(userId);
-    const isDisliked = dislikes.includes(userId);
-    if(isLiked)return 'like-stored'
-    if(isDisliked)return 'dislike-stored'
+    const lookUpLike = new Set(likes);
+    const lookUpDislike = new Set(dislikes);
+    const isL = lookUpLike.has(userId)
+    const isD = lookUpDislike.has(userId)
+    if(isL)return 'like-stored'
+    if(isD)return 'dislike-stored'
     return null
   }
 

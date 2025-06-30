@@ -62,7 +62,7 @@ const CurrentMessage = ({
   };
   useEffect(() => {
     sendMessage();
-  }, []);
+  }, []);//
   return (
     <div>
       <div ref={element} className="flex justify-end">
