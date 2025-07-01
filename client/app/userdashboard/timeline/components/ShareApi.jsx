@@ -16,7 +16,7 @@ if (navigator.share) {
   }
   return (
     <div>
-        <h2 onClick={share}>Click</h2>
+        <h2 onClick={share}>Share</h2>
     </div>
   )
 }

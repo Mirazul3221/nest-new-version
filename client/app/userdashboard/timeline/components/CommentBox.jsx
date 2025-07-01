@@ -26,6 +26,7 @@ import ShareComponent from "./ShareComponent";
 import CommentProfile01 from "./CommentsProfile01";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdOutlineThumbDownAlt, MdOutlineThumbUp } from "react-icons/md";
+import ShareAPI from "./ShareApi";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
   const { store, dispatch } = useContext(storeContext);
@@ -310,11 +311,10 @@ const CommentBox = ({ question, Handler = null }) => {
             </div>
           )}
           <div
-            onClick={handleShare}
             className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
           >
             <LuShare2 size={22} />
-            <span>Share</span>
+            <ShareAPI title={question.question} uri={`userdashboard/timeline/${question.slug}`} />
           </div>
         </div>
 
@@ -461,8 +461,6 @@ const CommentBox = ({ question, Handler = null }) => {
           )}
         </div>
       </div>
-
-      <ShareComponent share={share} slug={question?.slug} id={question._id} />
     </div>
   );
 };
