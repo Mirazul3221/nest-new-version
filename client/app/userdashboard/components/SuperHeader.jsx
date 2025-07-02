@@ -508,7 +508,7 @@ const SuperHeader = () => {
             />
           )} */}
           {/* ////////////////////////////////////////////////////////////// */}
-          <div className="group relative duration-100">
+          <div className="relative duration-100">
             {me.profile.length > 0 ? (
               <div onClick={handleClick} className="relative cursor-pointer">
                 <Profile profile={me.profile} myId={me.id} />
@@ -527,19 +527,6 @@ const SuperHeader = () => {
             ) : (
               <div className="w-16 h-16 animate-pulse border-4 bg-gray-100 rounded-full"></div>
             )}
-            <div className="space-y-1 hidden group-hover:block py-2 absolute z-10 duration-200 bg-white p-2 rounded-md shadow-md -left-4">
-              <Link href={"/userdashboard/myprofile"}>
-                <h2 className="flex items-center gap-1 text-violet-700">
-                  <CgProfile /> Profile
-                </h2>
-              </Link>
-              <h2
-                onClick={logout}
-                className="cursor-pointer text-white text-sm flex items-center gap-1 px-2 rounded-md bg-[#ff8d85]"
-              >
-                <RiLogoutCircleRLine /> Logout
-              </h2>
-            </div>
           </div>
         </div>
       </div>
