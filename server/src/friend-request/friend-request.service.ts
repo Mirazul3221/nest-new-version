@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { FriendRequest, FriendRequestDocument } from './schemas/friend-request.schema';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { RespondFriendRequestDto } from './dto/respond-friend-request.dto';
@@ -93,6 +93,29 @@ export class FriendRequestService {
   }
 
   async myFriends(userId: string, status:string) {
+
+    // 1. Get all accepted friend requests of current user
+    const friendRequests = await this.friendRequestModel
+      .find({
+        status: 'accepted',
+        $or: [{ requester: userId }, { recipient: userId }],
+      })
+      .select('requester recipient')
+      .lean();
+
+    // 2. Extract direct friends' IDs
+    const directFriendIds = [
+      ...new Set(
+        friendRequests
+          .flatMap(({ requester, recipient }) => [
+            requester.toString(),
+            recipient.toString(),
+          ])
+          .filter((id) => id !== userId.toString()),
+      ),
+    ];
+    // 3. Get recent connections of all direct friends (second-degree)
+const objectIds = directFriendIds.map(id => new Types.ObjectId(id));
     const FriendsFromRequester =await this.friendRequestModel.find({
       requester: userId,
     }).exec();
@@ -110,7 +133,6 @@ export class FriendRequestService {
    FriendsFromReceiver.filter((item)=>item.status === "accepted").map((item)=>{
     allAcceptedUsersId.push(item.requester)
    })
-  //  console.log(allAcceptedUsersId)
 
        //==========================================================================
     //===============All pending friends logic=====================================
@@ -121,24 +143,43 @@ export class FriendRequestService {
     //  console.log(pendingFriends)
 
    if (status === "accepted") {
-    const allAcceptedFriend =await this.authService.findAllUserForRequestedFriend(allAcceptedUsersId)
+    const allAcceptedFriend =await this.authService.findAllUserForRequestedFriend(objectIds)
    return await allAcceptedFriend
    }
 
    if (status === "pending") {
-    const allPendingFriend =await this.authService.findAllUserForRequestedFriend(pendingFriends)
+     // 1. Get all accepted friend requests of current user
+    const friendRequests = await this.friendRequestModel
+      .find({
+        status: 'pending',
+        $or: [{ recipient: userId }],
+      })
+      .select('requester recipient status')
+      .lean();
+    // 2. Extract direct friends' IDs
+    const directFriendIds = [
+      ...new Set(
+        friendRequests
+          .flatMap(({ requester, recipient }) => [
+            requester.toString(),
+            recipient.toString(),
+          ])
+          .filter((id) => id !== userId.toString()),
+      ),
+    ];
+    // 3. Get recent connections of all direct friends (second-degree)
+const obj = directFriendIds.map(id => new Types.ObjectId(id));
+    const allPendingFriend =await this.authService.findAllUserForRequestedFriend(obj)
    return await allPendingFriend
    }
    if (status === "acceptedFriendId") {
-   return await allAcceptedUsersId
+   return await objectIds
    }
    if (status === "someAcceptedFriendProfileAndAllIds") {
    const someProfile = await this.authService.findAllUserForRequestedFriend(allAcceptedUsersId)
    }
   }
-
-
-//==========================================================================================
+//========================================================================================
   async yourFriends(yourId:string,yourStatus:string){
 
     const getRequesterAndReceiverId =async ()=>{

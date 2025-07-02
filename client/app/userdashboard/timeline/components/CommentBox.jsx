@@ -25,7 +25,7 @@ import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
 import CommentProfile01 from "./CommentsProfile01";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { MdOutlineThumbDownAlt, MdOutlineThumbUp } from "react-icons/md";
+import { MdOutlineThumbDownAlt, MdOutlineThumbUp, MdThumbDown, MdThumbUpAlt } from "react-icons/md";
 import ShareAPI from "./ShareApi";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
@@ -51,33 +51,13 @@ const CommentBox = ({ question, Handler = null }) => {
   const [comments, setComments] = useState(extractQuestion);
   const [hideImoji, setHideImoji] = useState(false);
   const [share, setShare] = useState(false);
-  const insertANewComment = (newComment) => {
-    const newObject = {
-      userId: store.userInfo.id,
-      name: store.userInfo.name,
-      profile: store.userInfo.profile,
-      comment: newComment,
-      createdAt: new Date().toISOString(),
-    }; //
-  };
-
   useEffect(() => {
     const checkReactionStatus = async () => {
       try {
-        const { data } = await axios.post(
-          `${baseurl}/userquestions/check-reaction-status`,
-          { questionId: question._id },
-          {
-            headers: {
-              Authorization: `Bearer ${store.token}`,
-            },
-          }
-        );
-
-        if (data == "like-stored") {
+        if (question.reactionStatus.like == true) {
           setPutLike(true);
         }
-        if (data == "dislike-stored") {
+        if (question.reactionStatus.dislike == true) {
           setPutDislike(true);
         }
       } catch (error) {}
@@ -87,8 +67,6 @@ const CommentBox = ({ question, Handler = null }) => {
   const handleShare = () => {
     setShare(true);
   };
-
-  console.log(question.totalReaction)
   //====================================
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -250,9 +228,9 @@ const CommentBox = ({ question, Handler = null }) => {
                 className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full flex items-center gap-2 p-2"
               >
                 <div className={`${anim ? "likeButtonAnimation" : ""}`}>
-                  <MdOutlineThumbUp color="#292929" size={22} />
+                  <MdThumbUpAlt color="#292929" size={22} />
                 </div>
-                <span>Liked</span>
+                <span className="text-black">Liked</span>
               </div>
             ) : (
               <div
@@ -276,9 +254,9 @@ const CommentBox = ({ question, Handler = null }) => {
                 }}
                 className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full flex items-center gap-2 p-2"
               >
-                <span>Disliked</span>{" "}
+                <span className="color-black">Disliked</span>
                 <div>
-                  <MdOutlineThumbDownAlt color="#292929" size={22} />
+                  <MdThumbDown color="#292929" size={22} />
                 </div>
               </div>
             ) : (
@@ -297,14 +275,14 @@ const CommentBox = ({ question, Handler = null }) => {
           </div>
 
           {question.comments.length > 0 ? (
-            <div className="comment flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+            <div className="comment flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
               <FaRegCommentDots size={22} />
               <span>Comment</span>
             </div>
           ) : (
             <div
               onClick={() => setOpen(!open)}
-              className="comment flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
+              className="comment flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
             >
               <FaRegCommentDots size={22} />
               <span>Comment</span>

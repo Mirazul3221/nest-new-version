@@ -7,11 +7,12 @@ import { useEffect } from "react";
 import { BsPersonUp } from "react-icons/bs";
 import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
 import { commonLogout } from "../../common";
+import { LuUserRoundCheck } from "react-icons/lu";
 
 const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
   const { store,dispatch } = useStore();
   const { socket } = useSocket();
-  const [requestStatus, setRequestStatus] = useState();
+  const [requestStatus, setRequestStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   ////////////////notification api////////////////////////
   const handleNotification = async (recipient) => {
@@ -31,6 +32,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
 
   const checkFriendRequestStatus = async () => {
     try {
+       setLoading(true);
       const { data } = await axios.post(
         `${baseurl}/friend-request/status`,
         { id },
@@ -41,8 +43,10 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
         }
       );
       setRequestStatus(data);
+       setLoading(false);
     } catch (error) {
       console.log(error);
+       setLoading(false);
       commonLogout(dispatch,error)
     }
   };
@@ -91,7 +95,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
             {requestStatus == "pending"
               ? <span className="flex gap-1 items-center"><BsPersonUp />  Connecting</span>
               : requestStatus == "accepted"
-              ? <span title="Click to make unfriend" className="flex gap-1 items-center"><IoPersonRemoveOutline />  Friend</span>
+              ? <span title="Click to make unfriend" className="flex gap-1 items-center"><LuUserRoundCheck />  Friend</span>
               : <span className="flex gap-1 items-center"><IoPersonAddOutline /> Connect</span>}
           </>
         )}

@@ -162,17 +162,8 @@ const Page = () => {
   const popup = () => {
     setOpenModel(true);
   };
-
-  const [src, setSrc] = useState(null);
   const [preview, setPreview] = useState(0);
 
-  const onCrop = (view) => {
-    setPreview(view);
-  };
-  const onClose = () => {
-    setPreview(0);
-  };
-  console.log(preview);
   function bytesToKB(bytes) {
     if (typeof bytes !== "number" || isNaN(bytes) || bytes < 0) {
       throw new Error("Invalid value: Must be a non-negative number");
@@ -207,7 +198,6 @@ const Page = () => {
   const [getAllPendingFriend, setGetAllPendingFriend] = useState(null);
   const [getAllAcceptedFriend, setGetAllAcceptedFriend] = useState(null);
   //////////////////////////////////////////////////////////////////////////////
-  console.log(getAllPendingFriend?.length);
   useEffect(() => {
     async function getAllFriends() {
       try {

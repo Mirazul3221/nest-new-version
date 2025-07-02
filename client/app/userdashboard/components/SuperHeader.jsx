@@ -23,11 +23,14 @@ import CurrentWindowChecker from "../global/CurrentWindowChecker";
 import { useGlobalData } from "../global/globalDataProvider.jsx";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 import { commonLogout } from "./common";
+import RightSideBar from "./RightSideBar";
 
 const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
   const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
   const messageContainerRef = useRef(null);
+  const notifContainerRef = useRef(null);
+  const rightBarRef = useRef(null);
   CurrentWindowChecker();
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
@@ -68,8 +71,10 @@ const SuperHeader = () => {
           id: myDetails._id,
           isOnline: myDetails.isOnline,
           name: myDetails.name,
+          status: myDetails.status,
           profile: myDetails.profile,
           balance: myDetails.balance,
+          email:myDetails.email
         });
         localStorage.setItem("userId", myDetails._id);
       } catch (error) {
@@ -263,7 +268,6 @@ const SuperHeader = () => {
   ////////////////////////////////////Notification open/close logic////////////////////////////
   const [isOpenNotif, setIsOpenNotif] = useState(false);
   // const [isOpenMobileMessage, setIsOpenMobileMessage] = useState(false);
-  const notifContainerRef = useRef(null);
   const handleNotificationToggle = () => {
     setIsOpenNotif(!isOpenNotif);
   };
@@ -287,6 +291,40 @@ const SuperHeader = () => {
       document.removeEventListener("click", handleNotif);
     };
   }, [isOpenNotif]);
+
+
+
+
+  const [showParent, setShowParent] = useState(false);
+  const [showChild, setShowChild] = useState(false);
+  useEffect(() => {
+    const handleRightBar = (e) => {
+      if (
+        rightBarRef.current &&
+        !rightBarRef.current.contains(e.target)
+      ) {
+        setShowParent(false);
+      }
+    };
+
+    if (showParent) {
+      document.addEventListener("click", handleRightBar);
+    } else {
+      document.removeEventListener("click", handleRightBar);
+    }
+    return () => {
+      document.removeEventListener("click", handleRightBar);
+    };
+  }, [showParent]);
+
+  const handleClick = () => {
+    setShowParent(true);
+    setShowChild(false);
+
+    setTimeout(() => {
+      setShowChild(true);
+    }, 100);
+  };
   return (
     <div
       className={`font-title ${
@@ -472,9 +510,9 @@ const SuperHeader = () => {
           {/* ////////////////////////////////////////////////////////////// */}
           <div className="group relative duration-100">
             {me.profile.length > 0 ? (
-              <div className="relative">
+              <div onClick={handleClick} className="relative cursor-pointer">
                 <Profile profile={me.profile} myId={me.id} />
-                <div className="absolute w-full">
+                {/* <div className="absolute w-full">
                   {me?.balance === 0 ? (
                     <h2 className="text-center flex justify-center items-center gap-1">
                       0.00 <span className="font-bold text-[12px]">৳</span>{" "}
@@ -484,7 +522,7 @@ const SuperHeader = () => {
                       {me?.balance?.toFixed(2) + " ৳"}
                     </h2>
                   )}
-                </div>
+                </div> */}
               </div>
             ) : (
               <div className="w-16 h-16 animate-pulse border-4 bg-gray-100 rounded-full"></div>
@@ -514,6 +552,16 @@ const SuperHeader = () => {
         </div>
         <Search />
       </div>
+
+       {showParent && (
+        <div className="fixed z-50 top-0 left-0 w-[100dvw] h-[100dvh] bg-black/50">
+          {showChild && (
+            <div ref={rightBarRef} className="h-full w-2/3 md:w-3/12 bg-white ml-auto transition-transform duration-1000 transform translate-x-0 animate-slide-in">
+              <RightSideBar me={me} />  
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

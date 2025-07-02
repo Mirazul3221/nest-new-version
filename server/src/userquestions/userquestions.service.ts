@@ -7,6 +7,7 @@ import { UsersQuestion, QuestionDocument } from './schema/userquestions.schema';
 import { Model, Types } from 'mongoose';
 import axios from 'axios';
 import { CommentSchema } from './schema/comment.schema';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class UserquestionsService {
@@ -153,22 +154,20 @@ provide a perfect solution of this question. Do not use unnecessary word and giv
 - The explanation should be between 100 and 1000 words. If the answer naturally ends earlier, that’s okay.
 - Do not include any preface or closing — return only the explanation body.
 `;
-    const prompt1 = `
+  const prompt1 = `
 Solve the following math question always in Bangla language.
 
 Rules:
 - If the original question contains Bangla digits (e.g. ১, ২, ৩), use Bangla digits inside LaTeX.
 - If the question contains English digits (e.g. 1, 2, 3), use English digits inside LaTeX.
-
-Instructions:
-- First, write only the final solved math expression using LaTeX inside double dollar signs: $$ ... $$.
-- Then, explain the solution step by step.
-- All mathematical expressions, including simple ones like exponents (e.g. x²), must be displayed using full-line LaTeX blocks: $$ ... $$.
-- Never write LaTeX inside paragraphs. Every expression must appear on its own line, with surrounding $$ ... $$.
-- Use only display math (not inline math with single $).
-- Ensure proper LaTeX formatting so expressions render clearly with MathJax in display mode.
+- Use only full-line display math with double dollar signs: $$ ... $$.
+- Never write math expressions inside paragraphs.
+- Do NOT use complex LaTeX environments such as array, align, or tabular.
+- For factorization or division steps, write simple equations or factorizations in separate lines.
+- Show step-by-step explanation in Bangla, with math expressions only in separate LaTeX blocks.
+- Use simple LaTeX formatting for all math expressions, no multi-column or tables.
 - Do not escape dollar signs.
-- Do not add any preface or closing.
+- Do not add any preface or closing statements.
 
 Question: ${question}
 `;
@@ -413,59 +412,64 @@ const recId = targetQuestion.userId.toString();
       throw new Error('Invalid user ID');
     }
 
-    const objectId = new Types.ObjectId(id);
+ const userId = new mongoose.Types.ObjectId(id); // make sure to convert to ObjectId
 
     const variant: any = {
-      userId: { $ne: objectId }, // Exclude user's own questions properly
+      userId: { $ne: userId }, // Exclude user's own questions properly
     };
 
     if (flug && flug !== 'all' && tag) {
       variant[flug] = tag;
     }
+const stringId = id.toString();
+const questions = await this.QuestionModel.aggregate([
+  // { $match: variant }, // Optional filter
+  {
+    $lookup: {
+      from: 'readers',
+      localField: 'userId',
+      foreignField: '_id',
+      as: 'userProfile',
+    },
+  },
+  {
+    $unwind: {
+      path: '$userProfile',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  { $sort: { createdAt: -1 } },
+  { $skip: +skip },
+  { $limit: 10 },
+  {
+    $project: {
+      slug: 1,
+      userId: 1,
+      userName: 1,
+      profile: '$userProfile.profile',
+      subject: 1,
+      chapter: 1,
+      prevExam: 1,
+      question: 1,
+      option_01: 1,
+      option_02: 1,
+      option_03: 1,
+      option_04: 1,
+      rightAns: 1,
+      content: 1,
+      totalReaction: { $size: '$reactions.likes' },
+      comments: { $slice: ['$comments', -2] },
+      totalComments: { $size: '$comments' },
+      createdAt: 1,
 
-    const questions = await this.QuestionModel.aggregate([
-      { $match: variant },
-      {
-        $lookup: {
-          from: 'readers',
-          localField: 'userId',
-          foreignField: '_id',
-          as: 'userProfile',
-        },
+      // ✅ Add this part
+      reactionStatus: {
+        like: { $in: [stringId, '$reactions.likes'] },
+        dislike: { $in: [stringId, '$reactions.dislikes'] },
       },
-      {
-        $unwind: {
-          path: '$userProfile',
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      { $sort: { createdAt: -1 } },
-      { $skip: +skip },
-      { $limit: 10 },
-      {
-        $project: {
-          slug: 1,
-          userId: 1,
-          userName: 1,
-          profile: '$userProfile.profile',
-          subject: 1,
-          chapter: 1,
-          prevExam: 1,
-          question: 1,
-          option_01: 1,
-          option_02: 1,
-          option_03: 1,
-          option_04: 1,
-          rightAns: 1,
-          content: 1,
-          totalReaction: { $size: '$reactions.likes'},
-          comments: { $slice: ['$comments', -2] },
-          totalComments: { $size: '$comments' },
-          createdAt: 1,
-        },
-      },
-    ]);
-
+    },
+  },
+]);
     return questions;
   }
 

@@ -1,18 +1,20 @@
 import HTMLReactParser from 'html-react-parser';
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useRef } from 'react';
 
 const HtmlBodyParsarWithMathExp = ({ content }) => {
-      const ref = useReducer(null);
-     useEffect(() => {
-    if (window.MathJax && window.MathJax.typesetPromise) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (window.MathJax && window.MathJax.typesetPromise && ref.current) {
       window.MathJax.typesetPromise([ref.current]);
     }
   }, [content]);
-  return (
-   <h2 ref={ref}>
-      {HTMLReactParser(`${content}`)}
-    </h2>
-  )
-}
 
-export default HtmlBodyParsarWithMathExp
+  return (
+    <div ref={ref}>
+      {HTMLReactParser(content)}
+    </div>
+  );
+};
+
+export default HtmlBodyParsarWithMathExp;

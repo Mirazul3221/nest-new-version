@@ -485,10 +485,10 @@ export class AuthService {
   }
 
   //====================================
-  findSingleUser(id: string) {
+ async findSingleUser(id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid User!', 404);
-    return this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
+    return await this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
   }
   //====================================
   async getBio(id: string) {
@@ -1004,11 +1004,18 @@ export class AuthService {
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
   //===========================================================================================================
   async findAllUserForRequestedFriend(allId) {
-    // console.log(allId)
-    const user = await this.userModel
-      .find({ _id: allId })
-      .sort({ createdAt: -1 });
-    return user;
+  const users = await this.userModel.aggregate([
+    {
+      $match: {
+        _id: { $in: allId },
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ]);
+
+  return users;
   }
 
   async updateUserOnlineStatus(id, bool) {
