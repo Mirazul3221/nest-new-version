@@ -33,9 +33,9 @@ const redirect = (id) => {
   window.location.href = `${viewurl}/userdashboard/searchusers/${id}`;
 };
   return (
-<div className="border md:w-[12vw] bg-white rounded-b-md shadow-sm">
+<div className="border md:w-[15vw] bg-white rounded-b-md shadow-sm">
   <img
-    className="w-full h-32 mx-auto rounded-t-md object-cover"
+    className="w-full h-40 mx-auto rounded-t-md object-cover"
     src={user.profile}
     alt={user.name}
   />

@@ -1030,14 +1030,14 @@ export class AuthService {
     const currentUserId = req.user._id.toString();
 
     // 1. Get all accepted friend requests of current user
-    const friendRequests = await this.friendRequestModel
-      .find({
-        status: 'accepted',
-        $or: [{ requester: currentUserId }, { recipient: currentUserId }],
-      })
-      .select('requester recipient')
-      .lean();
-
+ const friendRequests = await this.friendRequestModel
+  .find({
+    status: 'accepted',
+    $or: [{ requester: currentUserId }, { recipient: currentUserId }],
+  })
+  .sort({ createdAt: -1 }) // ✅ Proper sorting
+  .select('requester recipient createdAt') // optional: include createdAt
+  .lean();
     // 2. Extract direct friends' IDs
     const directFriendIds = [
       ...new Set(
