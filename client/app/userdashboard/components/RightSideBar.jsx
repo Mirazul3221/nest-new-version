@@ -5,8 +5,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
-import { LuLogOut } from "react-icons/lu";
+import { LuDatabaseZap, LuLogOut } from "react-icons/lu";
 import { PiBookOpenTextDuotone } from "react-icons/pi";
+import { RiFileEditLine, RiHistoryFill } from "react-icons/ri";
 import { TiDocumentText } from "react-icons/ti";
 const RightSideBar = ({ me }) => {
   const { store, dispatch } = useStore();
@@ -43,23 +44,39 @@ const RightSideBar = ({ me }) => {
     window.location.href = `/userdashboard/query?value=${val}&type=${type}`;
   }
 
+  const redirect = ()=> {
+     window.location.href = `/userdashboard/myprofile`; 
+  };
   return (
-    <div className="w-full h-full md:py-6 md:px-4 p-2">
+    <div className="w-full h-full md:p-4 p-2">
       <div className="mx-auto border p-4 rounded-md text-center">
-        <img
-          className="w-28 rounded-full mx-auto border"
+        <img onClick={redirect}
+          className="w-20 cursor-pointer rounded-full mx-auto border"
           src={me.profile}
           alt={me.name}
         />
-        <h3 className="md:text-lg font-semibold">
+        <h3 onClick={redirect} className="md:text-lg cursor-pointer font-semibold">
           {me.name} ({me.status})
         </h3>
         <p>{me.email}</p>
       </div>
-
+          <div className="flex justify-between gap-2 mt-2">
+                  <a
+        href={`${viewurl}/userdashboard/timeline/create-post`}
+        className="flex justify-center gap-2 items-center bg-gray-100  hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full"
+      >
+        <RiFileEditLine /> Add new
+      </a>
+            <a
+        href={`${viewurl}/userdashboard/timeline/my-questions`}
+        className="flex justify-center gap-2 items-center bg-gray-100 hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full"
+      >
+        <LuDatabaseZap /> My Store
+      </a>
+          </div>
       <div className="mt-4">
         {/* Subject & Topic Filters */}
-        <div className="max-h-[48vh] overflow-auto">
+        <div className="max-h-[40vh] overflow-auto">
           <div className="px-4 py-2 bg-white border mt-2">
             <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
               <PiBookOpenTextDuotone /> Subject Based Query
@@ -100,6 +117,12 @@ const RightSideBar = ({ me }) => {
           </div>
         </div>
       </div>
+      <a
+        href={`${viewurl}/userdashboard/archaiv`}
+        className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2 mt-2"
+      >
+        <RiHistoryFill /> History
+      </a>
       <a
         href={`${viewurl}/userdashboard/setting`}
         className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300 px-4 py-2"

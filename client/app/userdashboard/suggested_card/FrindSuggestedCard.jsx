@@ -23,8 +23,6 @@ export default function FrindSuggestedCard() {
           Authorization: `Bearer ${store.token}`,
         },
       });
-
-      console.log(data);
       setSuggestedFriends(data);
     } catch (error) {
       commonLogout(dispatch, error);

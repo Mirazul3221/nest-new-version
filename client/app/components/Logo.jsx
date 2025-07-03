@@ -7,7 +7,7 @@ const Logo = ({w}) => {
 
       <Link href={"/"}>
         {/* <Image width={w} src={logo} alt="BCS Logo" /> */}
-        <div className="text-center text-violet-500 text-3xl">edu <sub>++</sub></div>
+        <div className="text-center text-violet-500 text-2xl md:text-3xl">edu<sup>++</sup></div>
       </Link>
   );
 };
