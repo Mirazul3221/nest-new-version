@@ -3,7 +3,7 @@ import { baseurl, viewurl } from "@/app/config";
 import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import { commonLogout } from "../components/common";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import QuestionCard from "../timeline/components/QuestionCard";
 import { useSocket } from "../global/SocketProvider";
@@ -337,4 +337,12 @@ const Page = () => {
   );
 };
 
-export default Page;
+const Suspen = () => {
+  return (
+    <Suspense>
+      <Page />
+    </Suspense>
+  );
+};
+
+export default Suspen;
