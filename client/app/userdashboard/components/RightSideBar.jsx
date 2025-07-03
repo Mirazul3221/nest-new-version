@@ -29,7 +29,6 @@ const RightSideBar = ({ me }) => {
           }
         );
         setTags(data);
-        console.log(data);
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -39,6 +38,11 @@ const RightSideBar = ({ me }) => {
 
     fetchData();
   }, [store.token]);
+
+  function goToQueryPage(val, type) {
+    window.location.href = `/userdashboard/query?value=${val}&type=${type}`;
+  }
+
   return (
     <div className="w-full h-full md:py-6 md:px-4 p-2">
       <div className="mx-auto border p-4 rounded-md text-center">
@@ -64,9 +68,7 @@ const RightSideBar = ({ me }) => {
               <h3
                 key={i}
                 onClick={() => {
-                  setTag(tag.subject);
-                  setFlug("subject");
-                  reFormate("subject", tag.subject);
+                  goToQueryPage(tag.subject, "subject");
                 }}
                 className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer"
               >
@@ -86,9 +88,7 @@ const RightSideBar = ({ me }) => {
                   <p
                     key={i}
                     onClick={() => {
-                      setTag(chap);
-                      setFlug("chapter");
-                      reFormate("chapter", chap);
+                      goToQueryPage(chap, "chapter");
                     }}
                     className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer"
                   >

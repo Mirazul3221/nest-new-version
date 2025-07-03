@@ -32,7 +32,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
 
   const checkFriendRequestStatus = async () => {
     try {
-       setLoading(true);
+      //  setLoading(true);
       const { data } = await axios.post(
         `${baseurl}/friend-request/status`,
         { id },
@@ -43,10 +43,10 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
         }
       );
       setRequestStatus(data);
-       setLoading(false);
+      //  setLoading(false);
     } catch (error) {
       console.log(error);
-       setLoading(false);
+      //  setLoading(false);
       commonLogout(dispatch,error)
     }
   };

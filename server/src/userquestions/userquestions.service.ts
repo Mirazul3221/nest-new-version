@@ -415,7 +415,7 @@ const recId = targetQuestion.userId.toString();
  const userId = new mongoose.Types.ObjectId(id); // make sure to convert to ObjectId
 
     const variant: any = {
-      userId: { $ne: userId }, // Exclude user's own questions properly
+      // userId: { $ne: userId }, // Exclude user's own questions properly
     };
 
     if (flug && flug !== 'all' && tag) {
@@ -423,7 +423,7 @@ const recId = targetQuestion.userId.toString();
     }
 const stringId = id.toString();
 const questions = await this.QuestionModel.aggregate([
-  // { $match: variant }, // Optional filter
+  { $match: variant }, // Optional filter
   {
     $lookup: {
       from: 'readers',
