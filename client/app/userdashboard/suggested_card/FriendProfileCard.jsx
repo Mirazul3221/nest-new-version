@@ -34,7 +34,7 @@ const redirect = (id) => {
 };
   return (
 <div className="border md:w-[15vw] bg-white relative rounded-b-md shadow-sm">
-  <div onClick={()=>{questionsAfterDelete(user)}} className="absolute w-fit top-1 cursor-pointer border right-1 text-gray-600 bg-white z-50 rounded-full p-[1px]"><LiaTimesSolid size={20} /></div>
+  <div onClick={()=>{questionsAfterDelete(user)}} className="absolute w-fit top-1 cursor-pointer border right-1 text-gray-600 bg-white rounded-full p-[1px]"><LiaTimesSolid size={20} /></div>
   <img
     className="w-full h-40 mx-auto rounded-t-md object-cover"
     src={user.profile}
