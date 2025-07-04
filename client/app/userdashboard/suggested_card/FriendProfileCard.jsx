@@ -4,8 +4,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { commonLogout } from "../components/common";
 import AddAndDeleteFriendRequestButton from "../components/messanger/components/AddAndDeleteFriendRequestButton";
+import { LiaTimesSolid } from "react-icons/lia";
 
-const FriendProfileCard = ({user}) => {
+const FriendProfileCard = ({user,questionsAfterDelete}) => {
   console.log(user)
     if(!user) return
       const { store, dispatch } = useStore();
@@ -22,7 +23,6 @@ const FriendProfileCard = ({user}) => {
         },
       });
    setProfiles(data)
-      console.log(data)
           } catch (error) {
               console.log(error)
             commonLogout(dispatch, error);
@@ -33,7 +33,8 @@ const redirect = (id) => {
   window.location.href = `${viewurl}/userdashboard/searchusers/${id}`;
 };
   return (
-<div className="border md:w-[15vw] bg-white rounded-b-md shadow-sm">
+<div className="border md:w-[15vw] bg-white relative rounded-b-md shadow-sm">
+  <div onClick={()=>{questionsAfterDelete(user)}} className="absolute w-fit top-1 cursor-pointer border right-1 text-gray-600 bg-white z-50 rounded-full p-[1px]"><LiaTimesSolid size={20} /></div>
   <img
     className="w-full h-40 mx-auto rounded-t-md object-cover"
     src={user.profile}
@@ -59,7 +60,7 @@ const redirect = (id) => {
     </div>
   )}
 <div className="mt-3">
-  <AddAndDeleteFriendRequestButton className='mt-1' id={user._id} />
+  <AddAndDeleteFriendRequestButton  className='mt-1' id={user._id} reForm={questionsAfterDelete} user={user} />
 </div>
   </div>
 </div>

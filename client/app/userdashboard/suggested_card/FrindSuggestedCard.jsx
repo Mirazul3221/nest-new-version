@@ -28,13 +28,17 @@ export default function FrindSuggestedCard() {
       commonLogout(dispatch, error);
     }
   };
+  const questionsAfterDelete = (friend) => {
+    const filteredQuestions = suggestedFriends?.filter((q) => q._id !== friend._id);
+    setSuggestedFriends(filteredQuestions);
+  }; //
   return (
     <main className="md:w-full w-screen">
         <div className="overflow-x-auto w-full mt-1">
           <div className="flex gap-2 mt-2 w-max">
             {suggestedFriends.map((user, i) => {
               return (
-                   <FriendProfileCard key={i} user={user}/>
+                   <FriendProfileCard key={i} user={user} questionsAfterDelete={questionsAfterDelete}/>
               );
             })}
           </div>

@@ -9,7 +9,7 @@ import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
 import { commonLogout } from "../../common";
 import { LuUserRoundCheck } from "react-icons/lu";
 
-const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
+const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0',user=null, reForm=null }) => {
   const { store,dispatch } = useStore();
   const { socket } = useSocket();
   const [requestStatus, setRequestStatus] = useState(null);
@@ -80,6 +80,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0' }) => {
         ? setRequestStatus("empty")
         : setRequestStatus("pending");
       setLoading(false);
+      if(reForm) reForm(user)
     } catch (error) {
       setLoading(false);
       commonLogout(dispatch,error)
