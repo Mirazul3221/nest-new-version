@@ -1,4 +1,3 @@
-
 "use client";
 import { baseurl, viewurl } from "@/app/config";
 import ProtectRoute from "@/app/global/ProtectRoute";
@@ -26,10 +25,12 @@ import { useRouter } from "next/navigation";
 import DisplayMemoryCard from "../components/DisplayMemoryCard";
 import FrindSuggestedCard from "../../suggested_card/FrindSuggestedCard";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useGlobalData } from "../../global/globalDataProvider.jsx";
 const Page = () => {
   const router = useRouter();
   const { dispatch, store } = useStore();
-  const { socket } = useSocket();
+  const { appData } = useGlobalData();
+  const { socket, myActiveFriends } = useSocket();
   const [questions, setQuestions] = useState([]); // Store fetched comments
   const [userDetails, setUserDetails] = useState(null);
   const [switcher, setSwitcher] = useState(false);
@@ -41,6 +42,9 @@ const Page = () => {
   const [flug, setFlug] = useState("all");
   //////////////////Floating messanger logic////////////////////////
   const [suggestionShown, setSuggestionShown] = useState(false);
+  const sortedMessages = appData?.user?.sort(
+    (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+  );
   const [gard, setGard] = useState(1);
   useEffect(() => {
     setGard(gard + 1);
@@ -337,7 +341,7 @@ const Page = () => {
                 alt={store?.userInfo?.name}
               />
               <a
-                className="text-gray-700 md:text-lg md:font-semibold"
+                className="text-gray-500 text-lg py-1 px-2 rounded-full bg-gray-200 border w-full"
                 href="/userdashboard/timeline/create-post"
               >
                 Share a question with your friends
@@ -369,17 +373,47 @@ const Page = () => {
             {isLoading && (
               <div className="flex bg-white justify-center">
                 <div className="flex items-center gap-2">
-                 <AiOutlineLoading3Quarters className="animate-spin" />
-                  <h2 className="text-center text-gray-500">Loading...</h2>
+                  <AiOutlineLoading3Quarters
+                    size={20}
+                    className="animate-spin"
+                  />
+                  <h2 className="text-center text-gray-700">Loading...</h2>
                 </div>
               </div>
             )}
           </div>
 
           {/* Right Sidebar (e.g., Ads or Extra Info) */}
-          <div className="w-3/12 hidden md:block">
+          <div className="w-3/12 hidden md:block sticky top-24 max-h-[calc(100vh-6rem)]">
             <VerticleBanner />
-            {/* Optional: <MobileBanner /> */}
+
+            <h2>Contacts</h2>
+            { 
+              sortedMessages.length > 0 ?  <div className="h-[calc(100vh-9rem)] overflow-y-auto">
+              {sortedMessages.map((friend) => {
+                return (
+                  <div
+                    key={friend.id} onClick={()=>setUserDetails({ name:friend.name, profile:friend.userProfile, _id:friend.userId })}
+                    className="relative hover:bg-white border border-gray-100 hover:border-gray-200 duration-150 cursor-pointer rounded-md flex items-center gap-2 p-2"
+                  >
+                    <div className="relative">
+                      <img
+                        className="w-10 rounded-full"
+                        src={friend.userProfile}
+                        alt={friend.userName}
+                      />
+                      {myActiveFriends?.includes(friend.userId) ? (
+                        <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <h2>{friend.userName}</h2>
+                  </div>
+                );
+              })}
+            </div> : <h3>No message found</h3>
+            }
           </div>
         </div>
 

@@ -2,9 +2,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import DataProvider from "./global/DataProvider";
 import SocketProvider from "./userdashboard/global/SocketProvider";
-import MessageProvider from "./userdashboard/global/globalDataProvider.jsx";
 import AdScript from "./components/googleAds/AddScript";
 import Script from "next/script";
+import GlobalDataProvider from "./userdashboard/global/globalDataProvider.jsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -67,11 +67,11 @@ export default function RootLayout({ children }) {
       <body className="font-sans">
         <DataProvider>
           <SocketProvider>
-            <MessageProvider>
+            <GlobalDataProvider>
               <div className="min-h-screen w-full">
                 <div className="max-w-[1440px] w-full mx-auto">{children}</div>
               </div>
-            </MessageProvider>
+            </GlobalDataProvider>
           </SocketProvider>
         </DataProvider>
       </body>

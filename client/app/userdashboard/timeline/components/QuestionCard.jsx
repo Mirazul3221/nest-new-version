@@ -19,9 +19,12 @@ import { useEffect } from "react";
 import { mathDocument } from "../../utils/mathJaxConfig";
 import DisplayQuestion from "@/app/assistantdashboard/components/MathExpression";
 import HtmlBodyParsarWithMathExp from "./HtmlBodyParsarWithMathExp";
+import { useSocket } from "../../global/SocketProvider";
 
 const QuestionCard = ({ questionsAfterDelete, myQuestion, Handler = null }) => {
   const { store, dispatch } = useContext(storeContext);
+    const { myActiveFriends } = useSocket();
+  const isOnline = myActiveFriends && myActiveFriends?.some((O) => O === myQuestion.userId);
   const [edit, setEdit] = useState(false);
   const [deleteQ, setDelete] = useState(false);
   const dateFormate = (createdAt) => {
@@ -140,11 +143,16 @@ useEffect(() => {
               <div className="">
                 {myQuestion.profile !== "" ? (
                   <ProfileCard id={myQuestion.userId} Handler={Handler}>
+                    <div className="w-10 relative">
+                      {
+                        isOnline &&  <div className="absolute bottom-0 right-0 z-10 w-[12px] h-[12px] bg-green-400 rounded-full border-2 border-white"></div>
+                      }
                     <img
-                      className="w-10 rounded-full hover:ring-[2px] cursor-pointer"
+                      className="w-full rounded-full hover:ring-[2px] cursor-pointer"
                       src={myQuestion.profile}
                       alt={myQuestion.userName}
                     />
+                    </div>
                   </ProfileCard>
                 ) : (
                   <div

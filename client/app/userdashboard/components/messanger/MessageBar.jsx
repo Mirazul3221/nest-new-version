@@ -4,7 +4,7 @@ import { useSocket } from '../../global/SocketProvider';
 import { useStore } from '@/app/global/DataProvider';
 
 const MessageBar = ({friend,hiddenNumber}) => {
-      const { myActiveFriends,socket } = useSocket();
+      const { myActiveFriends, socket } = useSocket();
         const { store } = useStore();
   return (
     <div className="px-6 relative flex gap-4 items-center rounded-2xl py-2 border-b hover:bg-gray-200 duration-100">
@@ -17,7 +17,7 @@ const MessageBar = ({friend,hiddenNumber}) => {
       {myActiveFriends?.includes(friend.userId) ? (
         <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
       ) : (
-        <div className="w-3 h-3 border-2 border-white bg-gray-400 absolute rounded-full -right-[2px] bottom-1"></div>
+        ''
       )}
     </div>
     <div>

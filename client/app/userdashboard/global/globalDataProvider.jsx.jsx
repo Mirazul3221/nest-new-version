@@ -4,8 +4,8 @@ import globalDataStore from './globalDataStore'
 import { globalDataReducer } from './globalDataReducer'
 
 
-const MessageProvider = ({children}) => {
-    const [appData,dispatch] = useReducer(globalDataReducer,{message:[],user:[],userMemories:[]})
+const GlobalDataProvider = ({children}) => {
+    const [appData,dispatch] = useReducer(globalDataReducer,{message:[],notifications:[],user:[],userMemories:[]})
   return (
      <globalDataStore.Provider value ={{appData,dispatch}}>
          {children}
@@ -13,7 +13,7 @@ const MessageProvider = ({children}) => {
   )
 }
 
-export default MessageProvider
+export default GlobalDataProvider
 
 export const useGlobalData = () =>{
    const getData = useContext(globalDataStore)
