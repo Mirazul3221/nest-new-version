@@ -336,12 +336,12 @@ const Page = () => {
             <NearbyUserProfileCard />
             <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
               <img
-                className="md:w-16 w-12 rounded-full"
+                className="md:w-16 w-10 rounded-full"
                 src={store?.userInfo?.profile}
                 alt={store?.userInfo?.name}
               />
               <a
-                className="text-gray-500 text-lg py-1 px-2 rounded-full bg-gray-200 border w-full"
+                className="text-gray-500 text-sm md:text-inherit py-1 px-2 rounded-full bg-gray-200 border w-full"
                 href="/userdashboard/timeline/create-post"
               >
                 Share a question with your friends
