@@ -1,15 +1,10 @@
+
 "use client";
 import { baseurl, viewurl } from "@/app/config";
 import ProtectRoute from "@/app/global/ProtectRoute";
 import axios from "axios";
 import loder from "@/public/loading-buffer.gif";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
 import Image from "next/image";
@@ -35,7 +30,6 @@ const Page = () => {
   const { dispatch, store } = useStore();
   const { socket } = useSocket();
   const [questions, setQuestions] = useState([]); // Store fetched comments
-  const isLoadingRef = useRef(false);
   const [userDetails, setUserDetails] = useState(null);
   const [switcher, setSwitcher] = useState(false);
   const [page, setPage] = useState(0); // Current page index
@@ -45,6 +39,7 @@ const Page = () => {
   const [tag, setTag] = useState(null);
   const [flug, setFlug] = useState("all");
   //////////////////Floating messanger logic////////////////////////
+  const [suggestionShown, setSuggestionShown] = useState(false);
   const [gard, setGard] = useState(1);
   useEffect(() => {
     setGard(gard + 1);
@@ -63,41 +58,6 @@ const Page = () => {
       socket && socket.off("message-from");
     };
   }, [socket]);
-
-  ///////////////////////////////////////////////////////////////////////////////////////////
-const reduceQuestionsWithScrollPreserve = () => {
-  const anchorIndex = 10;
-  const anchorQuestion = questions[anchorIndex];
-  if (!anchorQuestion) return;
-
-  const anchorId = anchorQuestion._id;
-  const anchorElement = document.getElementById(`question-${anchorId}`);
-  if (!anchorElement) return;
-
-  const prevTop = anchorElement.getBoundingClientRect().top;
-  const scrollYBefore = window.scrollY;
-
-  // Slice the questions
-  setQuestions((prev) => prev.slice(anchorIndex));
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      // 🔥 Reuse same anchorId instead of using questions[0] (which is not updated yet)
-      const newAnchorElement = document.getElementById(`question-${anchorId}`);
-      if (!newAnchorElement) return;
-
-      const newTop = newAnchorElement.getBoundingClientRect().top;
-      const scrollDiff = newTop - prevTop;
-
-      window.scrollTo({
-        top: scrollYBefore + scrollDiff,
-        behavior: "auto",
-      });
-    });
-  });
-};
-
-
   ///////////////////////////////////////////////////////////////
   useEffect(() => {
     setSwitcher(true);
@@ -127,8 +87,8 @@ const reduceQuestionsWithScrollPreserve = () => {
     fetchData();
   }, [store.token]);
   const fetchChunkData = useCallback(async () => {
-    if (isLoadingRef.current || !hasMore) return; // Avoid duplicate requests
-    isLoadingRef.current = true;
+    if (isLoading || !hasMore) return; // Avoid duplicate requests
+    setIsLoading(true);
     try {
       const { data } = await axios.get(
         `${baseurl}/userquestions/all-friends-questions?skip=${
@@ -143,31 +103,24 @@ const reduceQuestionsWithScrollPreserve = () => {
       if (data.length === 0) {
         setHasMore(false); // No more comments to fetch
       } else {
-        setQuestions((prev) => {
-          const updated = [...prev, ...data];
-          if (updated.length >= 200) {
-            return []
-          }
-          return updated;
-        });
-
+        setQuestions((prev) => [...prev, ...data]);
         setPage((prev) => prev + 1); // Increment page
       }
     } catch (error) {
       console.error("Failed to fetch comments:", error);
       commonLogout(dispatch, error);
     } finally {
-      isLoadingRef.current = false;
+      setIsLoading(false);
     }
-  }, [page, isLoadingRef.current, hasMore]);
+  }, [page, isLoading, hasMore]);
 
   const reFormate = async (sub, val) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    isLoadingRef.current = false;
+    setIsLoading(false);
     setHasMore(true);
     setPage(0);
     setQuestions([]);
-    isLoadingRef.current = true;
+    setIsLoading(true);
     try {
       const { data } = await axios.get(
         `${baseurl}/userquestions/all-friends-questions?skip=${
@@ -189,7 +142,7 @@ const reduceQuestionsWithScrollPreserve = () => {
       console.error("Failed to fetch comments:", error);
       commonLogout(dispatch, error);
     } finally {
-      isLoadingRef.current = false;
+      setIsLoading(false);
     }
   };
 
@@ -199,7 +152,7 @@ const reduceQuestionsWithScrollPreserve = () => {
       if (
         window.innerHeight + window.scrollY >=
           document.body.offsetHeight - 500 &&
-        !isLoadingRef.current
+        !isLoading
       ) {
         fetchChunkData();
       }
@@ -207,7 +160,7 @@ const reduceQuestionsWithScrollPreserve = () => {
     //
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
-  }, [fetchChunkData,isLoadingRef.current]);
+  }, [fetchChunkData, isLoading]);
 
   // Initial Fetch
   useEffect(() => {
@@ -397,15 +350,13 @@ const reduceQuestionsWithScrollPreserve = () => {
             </div>
             {/* =====================================Story sharing from here==================================== */}
             <DisplayMemoryCard />
-            {questions?.map((question) => (
-              <div
-                key={question._id}
-                className="mx-auto"
-              >
+            {questions?.map((question, i) => (
+              <div key={i} className="mx-auto">
                 {/* This will render the suggestion card in the middle of the list */}
-                {question === questions[Math.floor(questions.length / 2)] && (
+                {i === Math.floor(questions.length / 2) && (
                   <FrindSuggestedCard />
                 )}
+                {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />} */}
                 <QuestionCard
                   questionsAfterDelete={questionsAfterDelete}
                   myQuestion={question}
@@ -414,13 +365,13 @@ const reduceQuestionsWithScrollPreserve = () => {
               </div>
             ))}
 
-            {isLoadingRef.current && (
-                <div className="flex bg-white justify-center">
-                  <div className="flex items-center gap-2">
-                    <Image src={loder} />
-                    <h2 className="text-center text-gray-500">Loading...</h2>
-                  </div>
+            {isLoading && (
+              <div className="flex bg-white justify-center">
+                <div className="flex items-center gap-2">
+                 <AiOutlineLoading3Quarters className="animate-spin" />
+                  <h2 className="text-center text-gray-500">Loading...</h2>
                 </div>
+              </div>
             )}
           </div>
 
@@ -441,7 +392,7 @@ const reduceQuestionsWithScrollPreserve = () => {
             />
           </div>
         )}
-        {!hasMore && <Footer />}
+        <Footer />
       </ProtectRoute>
     </div>
   );

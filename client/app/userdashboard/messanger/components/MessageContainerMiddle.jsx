@@ -27,6 +27,7 @@ import { showNotification } from "../../global/UseBrowserNotification";
 import BlockButton from "../../components/messanger/BlockButton";
 import { commonLogout } from "../../components/common";
 import SmartText from "../../components/messanger/VerifyText";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Middle = ({
   id,
   userDetails,
@@ -796,8 +797,8 @@ const Middle = ({
             </div>
           </div>
           {loading && (
-            <div className="loading flex justify-center">
-              <img src={"/loading-buffer.gif"} alt="loading" />
+            <div className="loading flex justify-center mt-2">
+            <AiOutlineLoading3Quarters className="animate-spin" />
             </div>
           )}
           {groupMessages?.map((messageBlog, i) => {
