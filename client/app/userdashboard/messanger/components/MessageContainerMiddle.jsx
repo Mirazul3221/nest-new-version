@@ -866,7 +866,7 @@ const Middle = ({
                               </h4>
                             </div>
                           </div>
-                          <div className="max-w-[60%] w-full">
+                          <div className="max-w-[60%] w-fit">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
                                 {" "}
@@ -999,7 +999,7 @@ const Middle = ({
                           </p>
                         )}
                         <div className="flex justify-start items-center gap-3 group">
-                          <div className="max-w-[60%] w-full">
+                          <div className="max-w-[60%] w-fit">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] flex items-center gap-2">
                                 {" "}

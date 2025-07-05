@@ -1004,18 +1004,11 @@ export class AuthService {
   //=========================== SERVICE FOR OTHTER MODULE AND CONTROLLER ======================================
   //===========================================================================================================
   async findAllUserForRequestedFriend(allId) {
-  const users = await this.userModel.aggregate([
-    {
-      $match: {
-        _id: { $in: allId },
-      },
-    },
-    {
-      $sort: { createdAt: -1 },
-    },
-  ]);
-
-  return users;
+    // console.log(allId)
+    const user = await this.userModel
+      .find({ _id: allId })
+      .sort({ createdAt: -1 });
+    return user;
   }
 
   async updateUserOnlineStatus(id, bool) {

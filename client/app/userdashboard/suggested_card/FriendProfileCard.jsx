@@ -7,7 +7,6 @@ import AddAndDeleteFriendRequestButton from "../components/messanger/components/
 import { LiaTimesSolid } from "react-icons/lia";
 
 const FriendProfileCard = ({user,questionsAfterDelete}) => {
-  console.log(user)
     if(!user) return
       const { store, dispatch } = useStore();
         useEffect(() => {

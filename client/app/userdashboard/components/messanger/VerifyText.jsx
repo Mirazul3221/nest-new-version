@@ -33,7 +33,7 @@ const SmartText = ({userType, message }) => {
           rel="noopener noreferrer"
           className="underline"
         >
-          {urls[i]}
+          {urls[0].length > 100 ? urls[i].slice(0,100) + "..." : urls[i]}
         </a>
       );
     }

@@ -25,6 +25,7 @@ import MessagePlayer from "../../messanger/components/MessagePlayer";
 import BlockButton from "./BlockButton";
 import { commonLogout } from "../common";
 import SmartText from "./VerifyText";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { appData, dispatch } = useGlobalData();
   const [message, setMessage] = useState("");
@@ -544,7 +545,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             alt={userDetails?.name}
           />
           <div className="text-black">
-            <h2 className="text-[18px]">{userDetails?.name.split(' ')[0].slice(0,4)}</h2>
+            <h2 className="text-[18px]">{userDetails?.name?.split(' ')[0].slice(0,4)}</h2>
             {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
         </div>
@@ -624,8 +625,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             </div>
           </div>
           {loading && (
-            <div className="loading flex justify-center">
-              <img src={"/loading-buffer.gif"} alt="loading" />
+            <div className="loading flex justify-center mt-2">
+            <AiOutlineLoading3Quarters className="animate-spin" />
             </div>
           )}
           {groupMessages?.map((messageBlog, i) => {
@@ -694,7 +695,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </h4>
                             </div>
                           </div>
-                          <div className="max-w-[60%] w-full">
+                          <div className="max-w-[60%] w-fit">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
                                 {" "}
@@ -827,7 +828,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                           </p>
                         )}
                         <div className="flex justify-start items-center gap-3 group">
-                          <div className="max-w-[60%] w-full">
+                          <div className="max-w-[60%] w-fit">
                             {msg?.reply[1] === store.userInfo.id && (
                               <h2 className="px-4 text-[10px] flex items-center gap-2">
                                 {" "}

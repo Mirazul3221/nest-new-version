@@ -56,6 +56,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0',user=null,
   }, []);
   const addAndDeleteFriendRequest = async () => {
     setLoading(true);
+    if(requestStatus == 'empty') new Audio("/notification-soun/request-a-friend.mp3").play();
     try {
       await axios.post(
         `${baseurl}/friend-request/${

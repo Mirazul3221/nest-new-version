@@ -6,6 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Client } from 'socket.io/dist/client';
 
 @WebSocketGateway({
   cors: {
@@ -230,7 +231,7 @@ export class NotificationsGateway
       client.on('new-notification', async (data) => {
         if (this.socketUsers[data]?.length > 0) {
           this.socketUsers[data]?.map(async (id) => {
-            await this.server.to(id).emit('new-notification', 'new message');
+            await client.to(id).emit('new-notification', 'new message');
           });
         }
       });
