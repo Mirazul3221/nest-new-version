@@ -25,6 +25,7 @@ import { useSocket } from "../../global/SocketProvider";
 import { useRouter } from "next/navigation";
 import DisplayMemoryCard from "../components/DisplayMemoryCard";
 import FrindSuggestedCard from "../../suggested_card/FrindSuggestedCard";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Page = () => {
   const router = useRouter();
   const { dispatch, store } = useStore();
