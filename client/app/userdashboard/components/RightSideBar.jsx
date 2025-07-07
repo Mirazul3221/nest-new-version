@@ -114,14 +114,14 @@ const copyToClipboard = async (text) => {
         <p className="hidden md:block">Share with your friends</p>
         <p className="md:hidden">Share profile</p>
       </div>
-      <div onClick={()=>copyToClipboard(`${viewurl}/u/${uri}`)} className="flex cursor-pointer justify-center gap-1 items-center">
+      <div onClick={()=>copyToClipboard(`${viewurl}/u?id=${uri}`)} className="flex cursor-pointer justify-center gap-1 items-center">
        <RxCopy />
         <p>Copy</p>
       </div>
       </div>
       <div className="hidden md:flex gap-1 mt-1">
       <HiOutlineLink />
-        <a className="w-full" href={`${viewurl}/u?id=${uri}`}>e++.vercel.app/u?id={uri}</a>
+        <a className="w-full" href={`${viewurl}/u?id=${uri}`}>edu++.vercel.app/u?id={uri}</a>
       </div>
     </div>
       <div className="mt-4">
