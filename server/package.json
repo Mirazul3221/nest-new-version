@@ -37,6 +37,7 @@
     "class-validator": "^0.14.1",
     "cloudinary": "^2.2.0",
     "mongoose": "^8.2.3",
+    "nanoid": "^5.1.5",
     "nestjs-form-data": "^1.9.7",
     "nodemailer": "^6.9.13",
     "open-graph-scraper": "^6.10.0",

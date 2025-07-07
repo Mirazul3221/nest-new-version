@@ -31,6 +31,18 @@ export class AuthController {
     return await this.authService.loginInfo(userDto,req);
   }
 
+  @Get('asked-for-short-link-generator')
+  @UseGuards(AuthGuard())
+  async shortLinkGenerator(@Req() req:any){
+    return await this.authService.shortLinkGenerator(req)
+  }
+
+  @Get('check-short-link')
+  @UseGuards(AuthGuard())
+  async checkShortLink(@Req() req:any){
+    return await this.authService.checkShortLink(req)
+  }
+
   @Get('user/nearby')
   @UseGuards(AuthGuard())
   async findNearbyUsers(@Req() req:any) {

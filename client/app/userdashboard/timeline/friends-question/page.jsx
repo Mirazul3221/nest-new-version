@@ -371,7 +371,7 @@ const Page = () => {
             ))}
 
             {isLoading && (
-              <div className="flex bg-white justify-center">
+              <div className="flex justify-center">
                 <div className="flex items-center gap-2">
                   <AiOutlineLoading3Quarters
                     size={20}

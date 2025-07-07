@@ -73,6 +73,16 @@ export class Reader extends Document {
   @IsOptional()
   @Prop({ type: [String], default: [] })
   blockedUsers: string[];
+
+@IsOptional()
+@Prop({
+  type: {
+    shortId: { type: String },
+    fullUrl: { type: String }
+  },
+  _id: false // 🔥 Prevents Mongoose from adding _id to this object
+})
+shortLink: { shortId: string; fullUrl: string };
 }
 
 //// ✅ Create schema & add the 2dsphere index

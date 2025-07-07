@@ -4,16 +4,48 @@ import { useStore } from "@/app/global/DataProvider";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { HiOutlineLink } from "react-icons/hi";
 import { IoMdSettings } from "react-icons/io";
 import { LuDatabaseZap, LuLogOut } from "react-icons/lu";
-import { PiBookOpenTextDuotone } from "react-icons/pi";
+import { PiBookOpenTextDuotone, PiShareNetworkLight } from "react-icons/pi";
 import { RiFileEditLine, RiHistoryFill } from "react-icons/ri";
+import { RxCopy } from "react-icons/rx";
 import { TiDocumentText } from "react-icons/ti";
+import { toast, ToastContainer } from "react-toastify";
+import { commonLogout } from "./common";
 const RightSideBar = ({ me }) => {
   const { store, dispatch } = useStore();
   const [tags, setTags] = useState(null);
   const [tag, setTag] = useState(null);
+  const [uri, setUri] = useState(null);
   const route = useRouter();
+  useEffect(() => {
+     const getLink =   JSON.parse(localStorage.getItem('sortLink')) || null;
+     setUri(getLink.shortId)
+  }, []);
+  const share = ()=> {
+if (navigator.share) {
+  navigator.share({
+    title: `Share a link`,
+    text: 'Check out this profile link!',
+    url: `${viewurl}/u?id=${uri}`
+  })
+  .then(() => console.log('Successfully shared'))
+  .catch((error) => console.error('Share failed:', error));
+} else {
+  alert('Sharing not supported on this browser');
+}
+  }
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success('Link copied to clipboard!');
+  } catch (err) {
+    toast.error('Failed to copy link.');
+  }
+};
+
+
   const logout = () => {
     dispatch({ type: "logout" });
     route.push("/login");
@@ -48,7 +80,7 @@ const RightSideBar = ({ me }) => {
      window.location.href = `/userdashboard/myprofile`; 
   };
   return (
-    <div className="w-full h-full md:p-4 p-2">
+    <div className="w-full h-full md:p-4 p-2 max-h-[dvh] overflow-y-auto">
       <div className="mx-auto border p-4 rounded-md text-center">
         <img onClick={redirect}
           className="w-20 cursor-pointer rounded-full mx-auto border"
@@ -63,21 +95,40 @@ const RightSideBar = ({ me }) => {
           <div className="flex justify-between gap-2 mt-2">
                   <a
         href={`${viewurl}/userdashboard/timeline/create-post`}
-        className="flex justify-center gap-2 items-center bg-gray-100  hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full"
+        className="flex justify-center gap-1 items-center bg-gray-100  hover:bg-gray-200/60 rounded-md duration-300 md:px-4 px-2 md:py-1 w-full"
       >
         <RiFileEditLine /> Add new
       </a>
             <a
         href={`${viewurl}/userdashboard/timeline/my-questions`}
-        className="flex justify-center gap-2 items-center bg-gray-100 hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full"
+        className="flex justify-center gap-1 items-center bg-gray-100 hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full"
       >
         <LuDatabaseZap /> My Store
       </a>
+
           </div>
+    <div className=" bg-gray-100 mt-2 hover:bg-gray-200/60 rounded-md duration-300 px-4 py-1 w-full">
+      <div className="flex items-center justify-between">
+      <div onClick={share} className="flex cursor-pointer justify-center gap-1 items-center">
+        <PiShareNetworkLight size={20} />
+        <p className="hidden md:block">Share with your friends</p>
+        <p className="md:hidden">Share profile</p>
+      </div>
+      <div onClick={()=>copyToClipboard(`${viewurl}/u/${uri}`)} className="flex cursor-pointer justify-center gap-1 items-center">
+       <RxCopy />
+        <p>Copy</p>
+      </div>
+      </div>
+      <div className="flex gap-1 mt-1">
+      <HiOutlineLink />
+        <a className="break-words w-full" href={`${viewurl}/u/${uri}`}>{viewurl}/u/{uri}</a>
+      </div>
+
+    </div>
       <div className="mt-4">
         {/* Subject & Topic Filters */}
-        <div className="max-h-[40vh] overflow-auto">
-          <div className="px-4 py-2 bg-white border mt-2">
+        <div>
+          <div className="px-4 py-2 bg-white border mt-2 rounded-md">
             <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
               <PiBookOpenTextDuotone /> Subject Based Query
             </p>
@@ -94,7 +145,7 @@ const RightSideBar = ({ me }) => {
             ))}
           </div>
 
-          <div className="px-4 py-2 bg-white border mt-2">
+          <div className="px-4 py-2 bg-white border mt-2 rounded-md">
             <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
               <TiDocumentText /> Topic Based Query
             </p>
@@ -135,6 +186,7 @@ const RightSideBar = ({ me }) => {
       >
         <LuLogOut /> Log out
       </div>
+          <ToastContainer />
     </div>
   );
 };

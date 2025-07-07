@@ -33,6 +33,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UAParser } from 'ua-parser-js';
 import axios from 'axios';
 import { Types } from 'mongoose';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class AuthService {
@@ -427,6 +428,30 @@ export class AuthService {
     }
   }
 
+  async shortLinkGenerator(req){
+    // console.log(req.user._id.toString())
+    const myInfo = await this.userModel.findById(req.user._id);
+    const isExist = myInfo.shortLink;
+    if(isExist){
+      return isExist;
+    } else {
+      const shortLink = nanoid(12); 
+      const generatedLink = {shortId:shortLink,fullUrl:req.user._id.toString()}
+      myInfo.shortLink= generatedLink;
+      await myInfo.save();
+      return generatedLink;
+    }
+
+  }
+
+  async checkShortLink(req){
+    const myInfo = await this.userModel.findById(req.user._id);
+    const isExist = myInfo.shortLink;
+    if(isExist){
+      return isExist.fullUrl;
+    }
+
+  }
   //===================================
 
   async findNearbyUsers(id) {
