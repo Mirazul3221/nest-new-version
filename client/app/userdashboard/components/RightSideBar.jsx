@@ -119,11 +119,10 @@ const copyToClipboard = async (text) => {
         <p>Copy</p>
       </div>
       </div>
-      <div className="flex gap-1 mt-1">
+      <div className="hidden md:flex gap-1 mt-1">
       <HiOutlineLink />
-        <a className="break-words w-full" href={`${viewurl}/u/${uri}`}>{viewurl}/u/{uri}</a>
+        <a className="w-full" href={`${viewurl}/u?id=${uri}`}>e++.vercel.app/u?id={uri}</a>
       </div>
-
     </div>
       <div className="mt-4">
         {/* Subject & Topic Filters */}

@@ -33,7 +33,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { UAParser } from 'ua-parser-js';
 import axios from 'axios';
 import { Types } from 'mongoose';
-import { nanoid } from 'nanoid';
+import { nanoid } from 'nanoid'; // ✅ now allowed because v3.3.4 is CJS
+
 
 @Injectable()
 export class AuthService {
