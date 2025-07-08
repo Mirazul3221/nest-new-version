@@ -196,7 +196,7 @@ const Page = () => {
         </div>
 
         {/* Main Content */}
-        <div className="md:px-6 relative flex md:pt-4 gap-4 bg-gray-100">
+        <div className="md:px-6 relative flex md:pt-4 gap-4">
           {/* Sidebar (Sticky - Desktop Only) */}
           <div className="w-3/12 h-fit sticky top-24 hidden md:block">
             <div className="text-gray-700">

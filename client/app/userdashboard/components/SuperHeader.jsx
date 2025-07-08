@@ -24,6 +24,7 @@ import { useGlobalData } from "../global/globalDataProvider.jsx";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 import { commonLogout } from "./common";
 import RightSideBar from "./RightSideBar";
+import { LuSearch, LuSearchX } from "react-icons/lu";
 
 const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
@@ -31,6 +32,22 @@ const SuperHeader = () => {
   const messageContainerRef = useRef(null);
   const notifContainerRef = useRef(null);
   const rightBarRef = useRef(null);
+  const [openSearch, setOpenSearch] = useState(false);
+  //=============set scroll for header================
+  const [header, setHeader] = useState(false);
+  const scrollHeader = () => {
+    if (window.scrollY >= 1) {
+      setHeader(true);
+    } else {
+      setHeader(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHeader);
+    return () => {
+      window.removeEventListener("scroll", scrollHeader);
+    };
+  }, []);
   CurrentWindowChecker();
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
@@ -74,7 +91,7 @@ const SuperHeader = () => {
           status: myDetails.status,
           profile: myDetails.profile,
           balance: myDetails.balance,
-          email:myDetails.email
+          email: myDetails.email,
         });
         localStorage.setItem("userId", myDetails._id);
       } catch (error) {
@@ -101,7 +118,9 @@ const SuperHeader = () => {
         },
       });
       setNotificationList(data);
-    } catch (error) {commonLogout(dispatch,error)}
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   };
   //====================================================================
   //====================================================================
@@ -115,7 +134,7 @@ const SuperHeader = () => {
       });
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,27 +190,12 @@ const SuperHeader = () => {
       socket && (await socket.emit("new-notification", id));
     } catch (error) {
       console.log(error);
-      commonLogout(dispatch,error)
+      commonLogout(dispatch, error);
     }
   };
 
   const fullName = me.name?.split(" ");
   const firstname = fullName[0];
-  //=============set scroll for header================
-  const [header, setHeader] = useState(false);
-  const scrollHeader = () => {
-    if (window.scrollY >= 1) {
-      setHeader(true);
-    } else {
-      setHeader(false);
-    }
-  };
-  useEffect(() => {
-    window.addEventListener("scroll", scrollHeader);
-    return () => {
-      window.removeEventListener("scroll", scrollHeader);
-    };
-  }, []);
 
   const [countUnreadMessage, setCountUnreadMessage] = useState(0);
   async function countMessage() {
@@ -207,7 +211,9 @@ const SuperHeader = () => {
 
       console.log(data);
       setCountUnreadMessage(data);
-    } catch (error) {commonLogout(dispatch,error)}
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
   }
 
   useEffect(() => {
@@ -292,17 +298,11 @@ const SuperHeader = () => {
     };
   }, [isOpenNotif]);
 
-
-
-
   const [showParent, setShowParent] = useState(false);
   const [showChild, setShowChild] = useState(false);
   useEffect(() => {
     const handleRightBar = (e) => {
-      if (
-        rightBarRef.current &&
-        !rightBarRef.current.contains(e.target)
-      ) {
+      if (rightBarRef.current && !rightBarRef.current.contains(e.target)) {
         setShowParent(false);
       }
     };
@@ -439,12 +439,32 @@ const SuperHeader = () => {
             </div>
           </div>
 
+          {!openSearch ? (
+            <div
+              onClick={() => {
+                setOpenSearch(true);
+              }}
+              className="md:hidden text-gray-700"
+            >
+              <LuSearch size={26} />
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                setOpenSearch(false);
+              }}
+              className="md:hidden text-gray-700"
+            >
+              <LuSearchX size={26} />{" "}
+            </div>
+          )}
+
           {isOpenNotif && (
             <NotificationContainer
               notificationList={notificationList}
               notifContainerRef={notifContainerRef}
               sayThanks={sayThanks}
-              handleNotificationToggle ={handleNotificationToggle}
+              handleNotificationToggle={handleNotificationToggle}
             />
           )}
           {/* ///////////////////////////////////////////////////////////////////message box for mobile from here///////////////////////////////////////////// */}
@@ -482,7 +502,7 @@ const SuperHeader = () => {
           {/* ///////////////////////////////////////////////////////////////////Notification box for mobile from here///////////////////////////////////////////// */}
           <div
             onClick={() => {
-           handleNotificationToggle();
+              handleNotificationToggle();
               seenAndDeleteNotif();
             }}
             className={`text-lg header-box font-normal md:hidden relative text-gray-700 p-1 w-fit cursor-pointer duration-500`}
@@ -531,20 +551,29 @@ const SuperHeader = () => {
         </div>
       </div>
       <div className="md:hidden">
-        <div className="gap-1 justify-between md:flex my-2 px-3">
+        {
+          !header && <div className="gap-1 justify-between md:flex my-2 px-3">
           <h2 className="text-md font-semibold text-gray-500 text-balance">
-            Hi <span className="text-violet-700">{firstname + " "}</span>{" "}
+            Hi <span className="text-violet-700">{firstname + " "}</span>
             Welcome back
           </h2>
         </div>
-        <Search />
+        }
+        {openSearch && (
+          <div>
+            <Search />
+          </div>
+        )}
       </div>
 
-       {showParent && (
+      {showParent && (
         <div className="fixed z-50 top-0 left-0 w-[100dvw] h-[100dvh] bg-black/50">
           {showChild && (
-            <div ref={rightBarRef} className="h-full w-2/3 md:w-3/12 bg-white ml-auto transition-transform duration-1000 transform translate-x-0 animate-slide-in">
-              <RightSideBar me={me} />  
+            <div
+              ref={rightBarRef}
+              className="h-full w-2/3 md:w-3/12 bg-white ml-auto transition-transform duration-1000 transform translate-x-0 animate-slide-in"
+            >
+              <RightSideBar me={me} />
             </div>
           )}
         </div>

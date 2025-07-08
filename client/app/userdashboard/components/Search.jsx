@@ -134,7 +134,7 @@ const Search = () => {
                   name="choice"
                   value="option1"
                   checked={pinVal === "question"}
-                  onChange={() => setPinVal("question")}
+                  onChange={() => {  setSuggestions([]),setPinVal("question")}}
                 />
                 <span className="ml-1">Question</span>
               </label>
@@ -145,7 +145,7 @@ const Search = () => {
                   name="choice"
                   value="option2"
                   checked={pinVal === "user"}
-                  onChange={() => setPinVal("user")}
+                  onChange={() => {  setSuggestions([]),setPinVal("user")}}
                 />
                 <span className="ml-1"> User</span>
               </label>

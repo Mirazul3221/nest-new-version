@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className="font-sans">
+      <body className="font-sans bg-[#F2F2FC]">
         <DataProvider>
           <SocketProvider>
             <GlobalDataProvider>

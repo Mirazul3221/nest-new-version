@@ -408,7 +408,7 @@ const Page = () => {
   src={`/cover-photo/background-${randNum}.jpg`}
   alt="cover"
 />
-      <div className="md:w-10/12 mt-2 md:mt-0 md:rounded-t-2xl mx-auto z-50 bg-white shadow-md md:shadow-none px-5 pb-5 border-2 md:border-0 rounded-t-3xl">
+      <div className="md:w-10/12 mt-2 md:mt-0 md:rounded-t-2xl mx-auto z-50 shadow-md md:shadow-none px-5 pb-5 border-2 md:border-0 rounded-t-3xl">
       {/* <div className="w-screen h-[95vh] bg-black fixed top-0"></div> */}
            <div className="-mt-16 md:-mt-32 md:flex justify-center">
             <ProfileCropper name={userDetails.name} profile={userDetails.profile} wm={120} wl={200} /></div>
@@ -626,7 +626,7 @@ const Page = () => {
           </div>
 
         {userDetails && (
-          <div className="bg-white mt-5">
+          <div className="mt-5">
             {getAllPendingFriend?.length > 0 && (
               <div className="box1 mb-4 md:mb-10">
                 <h2 className="md:text-2xl flex gap-2 items-center font-semibold">
@@ -676,7 +676,7 @@ const Page = () => {
               <div className="md:grid grid-cols-3 gap-4">
                 {getAllAcceptedFriend !== null &&
                   getAllAcceptedFriend?.map((item, i) => (
-                    <div key={i} className="bg-gray-100 p-4 rounded-lg border">
+                    <div key={i} className="bg-white p-4 rounded-lg border">
                       <div className="flex justify-between items-center">
                         <div className="flex gap-2 items-center">
                           <div className="relative rounded-full w-fit">
@@ -875,7 +875,7 @@ const Page = () => {
           </div>
         )}
         <div className="fixed bottom-0 left-0 w-full">
-          <div className="mobile-responsive flex md:hidden justify-around rounded-t-3xl items-center py-4 w-full bg-white">
+          <div className="mobile-responsive flex md:hidden justify-around rounded-t-3xl items-center py-4 w-full">
             <div>
               <div className="p-2 rounded-full bg-gray-200 shadow-md shadow-gray-500">
                 <Link href={"/"}>
