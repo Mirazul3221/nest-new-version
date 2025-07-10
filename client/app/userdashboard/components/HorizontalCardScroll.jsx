@@ -52,7 +52,7 @@ const HorizontalCardScroll = ({ children }) => {
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
         >
           <LiaAngleLeftSolid />
         </button>
@@ -68,7 +68,7 @@ const HorizontalCardScroll = ({ children }) => {
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
         >
           <LiaAngleRightSolid />
         </button>
