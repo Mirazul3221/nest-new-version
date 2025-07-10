@@ -42,7 +42,7 @@ const redirect = (id) => {
   window.location.href = `${viewurl}/userdashboard/searchusers/${id}`;
 };
   return (
-    <div className="w-[98vw] mx-auto md:w-full overflow-x-auto">
+    <div>
       <div className="flex flex-nowrap min-w-max bg-gray-100 gap-4 md:gap-2 mb-2">
         <div
           onClick={switchToStory}

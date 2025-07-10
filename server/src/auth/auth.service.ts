@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   Injectable,
@@ -1009,13 +1010,15 @@ export class AuthService {
   }
 
   //==========================================================================================================-
-  async userProfileAndName(id: string) {
-    return await this.userModel
-      .findById(id)
-      .select(
-        '-password -totalCountQuestions -totalCountQuestionsId -balance -email',
-      );
+async userProfileAndName(id: string) {
+  if (!Types.ObjectId.isValid(id)) {
+    throw new BadRequestException('Invalid user ID');
   }
+
+  return await this.userModel
+    .findById(id)
+    .select('-password -totalCountQuestions -totalCountQuestionsId -balance -email');
+}
 
   async multipleUsersProfile(ids: string[]): Promise<string[]> {
     const profiles = await this.userModel

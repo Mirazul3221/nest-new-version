@@ -1,24 +1,21 @@
-'use client'
 import React from 'react'
-const ShareAPI = ({title,uri}) => {
-  const share = ()=> {
-if (navigator.share) {
-  navigator.share({
-    title: `${title}`,
-    text: 'Check out this question!',
-    url: `https://bcs-prep.vercel.app/${uri}`
-  })
-  .then(() => console.log('Successfully shared'))
-  .catch((error) => console.error('Share failed:', error));
-} else {
-  alert('Sharing not supported on this browser');
-}
-  }
+import HorizontalCardScroll from '../components/HorizontalCardScroll'
+
+const page = () => {
   return (
     <div>
-        <h2 onClick={share}>Click</h2>
+        <HorizontalCardScroll>
+          {[...Array(10)].map((_, i) => (
+          <div
+            key={i}
+            className="min-w-[200px] h-[150px] bg-blue-500 text-white flex items-center justify-center rounded-lg shadow"
+          >
+            Card {i + 1}
+          </div>
+        ))}
+        </HorizontalCardScroll>
     </div>
   )
 }
 
-export default ShareAPI
+export default page

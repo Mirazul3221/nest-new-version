@@ -5,6 +5,7 @@ import { commonLogout } from "../../components/common.js";
 import axios from "axios";
 import { baseurl } from "@/app/config.js";
 import StorySlider from "../../story_sharing_components/StorySlider.jsx";
+import HorizontalCardScroll from "../../components/HorizontalCardScroll.jsx";
 
 const DisplayMemoryCard = () => {
   const { appData, dispatch:dataDispatch } = useGlobalData();
@@ -29,8 +30,10 @@ const DisplayMemoryCard = () => {
     }
   };
   return (
-    <div className="flex space-x-4 overflow-x-auto ml-2 md:ml-0">
-       <StorySlider users={appData.userMemories}/>
+    <div className="ml-2 md:ml-0">
+      <HorizontalCardScroll>
+         <StorySlider users={appData.userMemories}/>
+      </HorizontalCardScroll>
     </div>
   );
 };

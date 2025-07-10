@@ -8,6 +8,7 @@ import { useStore } from "@/app/global/DataProvider";
 import { baseurl } from "@/app/config";
 import axios from "axios";
 import FriendProfileCard from "./FriendProfileCard";
+import HorizontalCardScroll from "../components/HorizontalCardScroll";
 export default function FrindSuggestedCard() {
   //usermemory/all-users-memory
   const { store, dispatch } = useStore();
@@ -29,12 +30,13 @@ export default function FrindSuggestedCard() {
     }
   };
   const questionsAfterDelete = (friend) => {
-    const filteredQuestions = suggestedFriends?.filter((q) => q._id !== friend._id);
+    const filteredQuestions = suggestedFriends?.filter(
+      (q) => q._id !== friend._id
+    );
     setSuggestedFriends(filteredQuestions);
   }; //
   return (
-    <main className="md:w-full w-screen">
-        <div className="overflow-x-auto w-full mt-1">
+      <HorizontalCardScroll>
           <div className="flex gap-2 mt-2 w-max">
             {suggestedFriends.map((user, i) => {
               return (
@@ -42,7 +44,6 @@ export default function FrindSuggestedCard() {
               );
             })}
           </div>
-      </div>
-    </main>
+      </HorizontalCardScroll>
   );
 }
