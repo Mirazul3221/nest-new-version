@@ -70,7 +70,7 @@ export class MessangerService {
       const created = await this.MessangerModel.create({
         senderId: id,
         receiverId: createMessangerDto.receiverId,
-        message: { content: createMessangerDto.message, media: '', voice: '' },
+        message: { content: createMessangerDto.message, media: '', voice: '',story :'' },
         reply: createMessangerDto.reply,
         seenMessage: createMessangerDto.seenMessage,
         others: verifyText.status ? verifyText : null,
@@ -113,7 +113,7 @@ export class MessangerService {
     const created = await this.MessangerModel.create({
       senderId: id,
       receiverId: receiverId,
-      message: { content: '', media: data.secure_url, voice: '' },
+      message: { content: '', media: data.secure_url, voice: '',story:'' },
       reply: replyAsArray,
       seenMessage: false,
     });
@@ -156,6 +156,7 @@ export class MessangerService {
         content: '',
         media: '', // Use the secure_url from Cloudinary for HTTPS
         voice: data.secure_url,
+        story:''
       },
       reply: replyAsArray,
       seenMessage: false,
@@ -166,6 +167,38 @@ export class MessangerService {
     const sendableData = {
       title: `New message!`,
       body: `${req.user.name} : sends you a voice in your message box.`,
+      icon: req.user.profile?.replace('http://', 'https://'),
+      url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
+    };
+    await axios.post(
+      'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+      { id: recId, payload: sendableData },
+    );
+    return created;
+  }
+  async createStoryMessage(data, req) {
+    const { receiverId, message, storyImage,storyText,style } = data;
+    const id = req.user._id;
+    const receivedUser = await this.userModel.findById(receiverId);
+    const isblocked = receivedUser.blockedUsers?.includes(id);
+    if (isblocked) return 'User is blocked';
+    const created = await this.MessangerModel.create({
+      senderId: id,
+      receiverId: receiverId,
+        message: {
+        content: '',
+        media: '', // Use the secure_url from Cloudinary for HTTPS
+        voice: '',
+        story:message
+      },
+      storyAssets:{storyImage,storyText,style},
+      seenMessage: false,
+    });
+    
+    const recId = receiverId.toString();
+    const sendableData = {
+      title: `New message!`,
+      body: `${req.user.name} : reply from story in your message box.`,
       icon: req.user.profile?.replace('http://', 'https://'),
       url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
     };

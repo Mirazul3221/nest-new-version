@@ -5,10 +5,11 @@ import { useStore } from "@/app/global/DataProvider";
 import { commonLogout } from "../components/common";
 import { baseurl } from "@/app/config";
 import axios from "axios";
-import { VscEye } from "react-icons/vsc";
+import { VscEye, VscSend } from "react-icons/vsc";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import SendLike from "./SendLike";
+import { useSocket } from "../global/SocketProvider";
 
 export default function StoryModal({
   activeUserIndex,
@@ -19,13 +20,17 @@ export default function StoryModal({
   onNextUser,
 }) {
   const { store, dispatch } = useStore();
+  const {socket} = useSocket();
   const duration = 5000;
   const [currentStoryIndex, setCurrentStoryIndex] = useState(startingIndex);
+  const [replyMessage, setReplyMessage] = useState("");
   const [isPaused, setIsPaused] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
   const [isLongPress, setIsLongPress] = useState(false);
   const LONG_PRESS_DURATION = 600; // ms
   const timerRef = useRef(null);
+  const inputRef = useRef(null);
+  const pauseRef = useRef(null);
   const handleLongPress = () => {
     setIsLongPress(true);
   };
@@ -91,6 +96,54 @@ export default function StoryModal({
   }, [currentStoryIndex]);
 
   const emojies = ["👍", "❤️", "😊", "😂", "😍", "😭", "😮", "😡"];
+
+  const ifText = {
+   receiverId:user?.user?._id, message:replyMessage,storyImage:story,storyText:defText,style,
+  }
+
+  const ifImg = {
+   receiverId:user?.user?._id, message:replyMessage,storyImage:story
+  }
+
+  const finalMsg = type == 'text'? ifText : ifImg
+
+  const handleSendMesage = async () => {
+      try {
+      const {data} = await axios.post(
+        `${baseurl}/messanger/story-create`,finalMsg,
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+        if (data == "User is blocked") {
+        alert("You cannot send message to this user!");
+      } else {
+        socket &&
+          socket.emit("message-to", {
+            ...data,
+            name: store.userInfo.name,
+            profile: store.userInfo.profile,
+          });
+      }
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
+  };
+
+  useEffect(() => {
+    const handleInput = (e)=> {
+      if(pauseRef.current == e.target) return
+       if(inputRef.current && !inputRef.current.contains(e.target)){
+            setIsPaused(false),setIsFocus(false) 
+       }
+    }
+    window.addEventListener('click',handleInput);
+    return () => {
+      window.removeEventListener('click',handleInput);
+    };
+  }, []);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-white">
       <div
@@ -137,7 +190,7 @@ export default function StoryModal({
                 <p className="text-white">{user.user.name}</p>
               </div>
               <div className="flex items-center gap-4 justify-end">
-                <div
+                <div ref={pauseRef}
                   className="cursor-pointer"
                   onClick={() => setIsPaused((prev) => !prev)}
                 >
@@ -245,20 +298,26 @@ export default function StoryModal({
       </div>
       {user?.user?._id !== store.userInfo.id && (
         <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 md:bg-black/20 z-40">
-          <input
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            placeholder={`${
-              isFocus ? "Reply to " + user?.user?.name : "Reply..."
-            }`}
-            type="text"
-            className={`${
-              isFocus ? "md:w-[40vw] w-full" : "md:w-[20vw] w-[80vw]"
-            } ${
-              isLongPress ? "hidden" : ""
-            } focus:outline-none transition-all duration-500 ease-in-out px-6 py-1 md:text-white rounded-full bg-transparent border-2 border-gray-400`}
-          />{" "}
-          {!isFocus && (
+          <div ref={inputRef} onClick={()=>{setIsPaused(true),setIsFocus(true)}} className="flex gap-1 items-center">
+            <input
+              onChange={(e) => setReplyMessage(e.target.value)}
+              placeholder={`${
+                isFocus ? "Reply to " + user?.user?.name : "Reply..."
+              }`}
+              type="text"
+              className={`${
+                isFocus ? "md:w-[40vw] w-[90vw]" : "md:w-[20vw] w-[80vw]"
+              } ${
+                isLongPress ? "hidden" : ""
+              } focus:outline-none transition-all duration-500 ease-in-out px-6 py-1 md:text-white rounded-full bg-transparent border-2 border-gray-400`}
+            />
+            {replyMessage && (
+              <div onClick={handleSendMesage}>
+                <VscSend size={20} />
+              </div>
+            )}
+          </div>
+          {!isPaused && !replyMessage && (
             <button
               className={`md:hidden ${isLongPress ? "hidden" : ""}`}
               onMouseDown={startPressTimer}

@@ -36,7 +36,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
-  const { store,dispatch:storeDispatch } = useStore();
+  const { store, dispatch: storeDispatch } = useStore();
   const { socket } = useSocket();
   const currentMessages = useRef([]);
   const groupMessages = groupMessagesBysender(appData.message);
@@ -177,6 +177,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     socket &&
       socket.on("message-from", (data) => {
         setSeenMsg(false);
+        console.log(data);
         id == data.senderId &&
           dispatch({ type: "receive-message", payload: data });
         setTimeout(() => {
@@ -187,6 +188,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       socket && socket.off("message-from");
     };
   }, [socket]);
+
+  console.log(groupMessages);
   //////////////////////////////Here is the logic for getting alert and update message status//////////////////////////////
   const [seenMsg, setSeenMsg] = useState(false);
   useEffect(() => {
@@ -252,7 +255,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       );
     } catch (error) {
       console.log(error);
-      commonLogout(storeDispatch)
+      commonLogout(storeDispatch);
     }
     if (store.userInfo.id !== msg.senderId) {
       socket && socket.emit("sendEmojiInMessage", emojiElements);
@@ -367,7 +370,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           "Error uploading file:",
           error.response?.data || error.message
         );
-         commonLogout(storeDispatch)
+        commonLogout(storeDispatch);
       }
     } else {
       console.log("No file selected.");
@@ -437,7 +440,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
-       commonLogout(storeDispatch)
+      commonLogout(storeDispatch);
     } finally {
       setLoading(false);
     }
@@ -474,27 +477,28 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       setIsBlockedByHim(data);
     } catch (error) {
       console.log(error);
-       commonLogout(storeDispatch)
+      commonLogout(storeDispatch);
     }
   };
 
-    useEffect(() => {
-      socket && socket.on('user-block-and-unblock-status',(data)=>{
-         if(data[1]==id){
-          setIsBlockedByHim(data[2])
-         }
-      })
-      return ()=>{
-        socket && socket.off('user-block-and-unblock-status')
-      }
-    }, [socket,id]);
+  useEffect(() => {
+    socket &&
+      socket.on("user-block-and-unblock-status", (data) => {
+        if (data[1] == id) {
+          setIsBlockedByHim(data[2]);
+        }
+      });
+    return () => {
+      socket && socket.off("user-block-and-unblock-status");
+    };
+  }, [socket, id]);
   useEffect(() => {
     checkUserBlockStatus();
   }, []);
 
   //=============================================user is Blocked By me=========================================
   const [isBlockedByMe, setIsBlockedByMe] = useState();
-  const [loadingBlc,setLoadingBlc] = useState(false)
+  const [loadingBlc, setLoadingBlc] = useState(false);
   const checkIsBlockedByMe = async () => {
     try {
       const { data } = await axios.post(
@@ -507,10 +511,10 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
         }
       );
 
-    setIsBlockedByMe(data);
+      setIsBlockedByMe(data);
     } catch (error) {
       console.log(error);
-       commonLogout(storeDispatch)
+      commonLogout(storeDispatch);
     }
   };
   useEffect(() => {
@@ -519,19 +523,24 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
 
   const unBlockUser = async () => {
     try {
-      setLoadingBlc(true)
-      await axios.post(`${baseurl}/auth/user/unblock/${id}`,"", {
+      setLoadingBlc(true);
+      await axios.post(`${baseurl}/auth/user/unblock/${id}`, "", {
         headers: {
           Authorization: `Bearer ${store.token}`,
         },
       });
-      socket && await socket.emit('user-block-and-unblock-status',[id, store.userInfo.id, false])
-      setIsBlockedByMe(false)
-      setLoadingBlc(false)
+      socket &&
+        (await socket.emit("user-block-and-unblock-status", [
+          id,
+          store.userInfo.id,
+          false,
+        ]));
+      setIsBlockedByMe(false);
+      setLoadingBlc(false);
     } catch (error) {
       console.log(error);
-      setLoadingBlc(false)
-       commonLogout(storeDispatch)
+      setLoadingBlc(false);
+      commonLogout(storeDispatch);
     }
   };
 
@@ -545,7 +554,9 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             alt={userDetails?.name}
           />
           <div className="text-black">
-            <h2 className="text-[18px]">{userDetails?.name?.split(' ')[0].slice(0,4)}</h2>
+            <h2 className="text-[18px]">
+              {userDetails?.name?.split(" ")[0].slice(0, 4)}
+            </h2>
             {/* <p className="text-[10px]">{userDetails?.status}</p> */}
           </div>
         </div>
@@ -589,7 +600,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                   blockedUserId={id}
                   name={userDetails.name}
                   status={isBlockedByMe}
-                  setIsBlockedByMe = {setIsBlockedByMe}
+                  setIsBlockedByMe={setIsBlockedByMe}
                 />
               )}
             </div>
@@ -626,7 +637,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           </div>
           {loading && (
             <div className="loading flex justify-center mt-2">
-            <AiOutlineLoading3Quarters className="animate-spin" />
+              <AiOutlineLoading3Quarters className="animate-spin" />
             </div>
           )}
           {groupMessages?.map((messageBlog, i) => {
@@ -718,7 +729,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               )}
                             {msg?.message?.content !== "" && (
                               <h2
-                                ref={scrollRef}
                                 className={`${
                                   i === messageBlog.length - 1 &&
                                   messageBlog.length > 1
@@ -760,7 +770,41 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   src={msg?.message.media}
                                   alt="message_image"
                                 />
-                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
+
+                               {msg?.message?.story !== "" && (
+                              <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
+                                <div className="absolute top-2 right-2 text-gray-300 z-20">
+                                  STORY
+                                </div>
+                                <div className="flex justify-center relative">
+                                  {msg?.storyAssets?.style ? (
+                                    <div className="h-32 border relative flex justify-center items-center overflow-y-auto">
+                                      <img
+                                        className="h-full"
+                                        src={`/story-bg/${msg?.storyAssets?.storyImage}.jpg`}
+                                        alt="story_image"
+                                      />
+                                      <div
+                                        style={{ color: msg?.storyAssets?.style?.colorCode }}
+                                        className="absolute text-[10px] z-30"
+                                      >
+                                        {msg?.storyAssets?.storyText}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <img
+                                      className="h-32 border"
+                                      src={msg?.storyAssets?.storyImage}
+                                      alt="message_image"
+                                    />
+                                  )}
+                                </div>
+
+                                <p className="break-words">
+                                  {msg?.message.story}
+                                </p>
                               </div>
                             )}
                             {msg?.message.voice !== "" && (
@@ -769,7 +813,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   url={msg?.message.voice}
                                   userType="me"
                                 />
-                                <p ref={scrollRef}></p>
                               </div>
                             )}
 
@@ -876,7 +919,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                                               : ""
                                                           }`}
                               >
-                                <SmartText  userType={"he"} message={msg} />
+                                <SmartText userType={"he"} message={msg} />
                               </h2>
                             )}
 
@@ -890,13 +933,47 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </div>
                             )}
 
+                            {msg?.message?.story !== "" && (
+                              <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
+                                <div className="absolute top-2 right-2 text-gray-300 z-20">
+                                  STORY
+                                </div>
+                                <div className="flex justify-center relative">
+                                  {msg?.storyAssets?.style ? (
+                                    <div className="h-32 border relative flex justify-center items-center overflow-y-auto">
+                                      <img
+                                        className="h-full"
+                                        src={`/story-bg/${msg?.storyAssets?.storyImage}.jpg`}
+                                        alt="story_image"
+                                      />
+                                      <div
+                                        style={{ color: msg?.storyAssets?.style?.colorCode }}
+                                        className="absolute text-[10px] z-30"
+                                      >
+                                        {msg?.storyAssets?.storyText}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <img
+                                      className="h-32 border"
+                                      src={msg?.storyAssets?.storyImage}
+                                      alt="message_image"
+                                    />
+                                  )}
+                                </div>
+
+                                <p className="break-words">
+                                  {msg?.message.story}
+                                </p>
+                              </div>
+                            )}
+
                             {msg?.message.voice !== "" && (
                               <div className="mb-2 w-full">
                                 <MessagePlayer
                                   url={msg?.message.voice}
                                   userType="he"
                                 />
-                                <p ref={scrollRef}></p>
                               </div>
                             )}
                             {msg?.emoji?.length > 0 && (
@@ -1038,16 +1115,14 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                   style={{ borderRadius: "20px 20px 20px 0px" }}
                   className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
                 >
-                  <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
-                    {typing.message}
-                  </p>
+                  <p className="px-4 py-1 blur-[2px]">{typing.message}</p>
                 </div>
               </div>
             )}
           {currentMessages.current &&
             currentMessages.current.length > 0 &&
             currentMessages.current[0].receiverId === id && (
-              <div ref={scrollRef}>
+              <div>
                 {currentMessages.current.map((msg, i) => {
                   return (
                     <CurrentMessage
@@ -1108,9 +1183,10 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                   />
                 </div>
               </div>
-              <div ref={scrollRef} className="scroll_point"></div>
+              <div className="scroll_point"></div>
             </div>
           )}
+          <p ref={scrollRef}></p>
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
         {isBlockedByHim ? (
@@ -1121,9 +1197,18 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           <div>
             {isBlockedByMe ? (
               <h2 className="text-center pb-4 text-gray-700">
-                Only you can send message after {
-                  loadingBlc ? "Loading..." :  <span onClick={unBlockUser} className="underline duration-300 hover:text-green-300 cursor-pointer">unblocking</span>
-                } him
+                Only you can send message after{" "}
+                {loadingBlc ? (
+                  "Loading..."
+                ) : (
+                  <span
+                    onClick={unBlockUser}
+                    className="underline duration-300 hover:text-green-300 cursor-pointer"
+                  >
+                    unblocking
+                  </span>
+                )}{" "}
+                him
               </h2>
             ) : (
               <div className={"bottom relative"}>

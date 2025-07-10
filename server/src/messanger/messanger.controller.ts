@@ -30,6 +30,14 @@ export class MessangerController {
   }
 
 
+  @Post('story-create')
+  @UseGuards(AuthGuard())
+  async createStoryMessage(@Body() data, @Req() req:any) {
+    console.log(data);
+    return await this.messangerService.createStoryMessage(data, req)
+  }
+
+
   @Get('update-message-seen-status')
   @UseGuards(AuthGuard())
   async updateMessageSeenStatus(@Req() req:any, @Query() user:any){

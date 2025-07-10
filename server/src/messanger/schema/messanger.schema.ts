@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { IsOptional } from "class-validator";
 import mongoose, { Document } from "mongoose";
 
 class EmojiObject {
@@ -20,6 +21,14 @@ class VariantMessage {
   media: string;
   
   voice: string;
+
+  story:string;
+}
+
+class StoryAssets {
+url:string;
+text:string;
+style:object;
 }
 
 // interface VariantMessage {
@@ -44,6 +53,10 @@ export class Messanger extends Document {
   reply:string[]
   @Prop({required:true})
   seenMessage:boolean
+  @IsOptional()
+  @Prop({type:Object})
+  storyAssets:{}
+  @IsOptional()
   @Prop({type:Object})
   others:{}
 }

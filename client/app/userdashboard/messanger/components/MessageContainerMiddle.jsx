@@ -890,7 +890,6 @@ const Middle = ({
                               )}
                             {msg?.message?.content !== "" && (
                               <h2
-                                ref={scrollRef}
                                 className={`${
                                   i === messageBlog.length - 1 &&
                                   messageBlog.length > 1
@@ -932,7 +931,40 @@ const Middle = ({
                                   src={msg?.message.media}
                                   alt="message_image"
                                 />
-                                <p ref={scrollRef}></p>
+                              </div>
+                            )}
+                                                           {msg?.message?.story !== "" && (
+                              <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
+                                <div className="absolute top-2 right-2 text-gray-300 z-20">
+                                  STORY
+                                </div>
+                                <div className="flex justify-center relative">
+                                  {msg?.storyAssets?.style ? (
+                                    <div className="h-32 border relative flex justify-center items-center overflow-y-auto">
+                                      <img
+                                        className="h-full"
+                                        src={`/story-bg/${msg?.storyAssets?.storyImage}.jpg`}
+                                        alt="story_image"
+                                      />
+                                      <div
+                                        style={{ color: msg?.storyAssets?.style?.colorCode }}
+                                        className="absolute text-[10px] z-30"
+                                      >
+                                        {msg?.storyAssets?.storyText}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <img
+                                      className="h-32 border"
+                                      src={msg?.storyAssets?.storyImage}
+                                      alt="message_image"
+                                    />
+                                  )}
+                                </div>
+
+                                <p className="break-words">
+                                  {msg?.message.story}
+                                </p>
                               </div>
                             )}
                             {msg?.message.voice !== "" && (
@@ -941,7 +973,6 @@ const Middle = ({
                                   url={msg?.message.voice}
                                   userType="me"
                                 />
-                                <p ref={scrollRef}></p>
                               </div>
                             )}
 
@@ -1061,14 +1092,46 @@ const Middle = ({
                                 />
                               </div>
                             )}
+                               {msg?.message?.story !== "" && (
+                              <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
+                                <div className="absolute top-2 right-2 text-gray-300 z-20">
+                                  STORY
+                                </div>
+                                <div className="flex justify-center relative">
+                                  {msg?.storyAssets?.style ? (
+                                    <div className="h-32 border relative flex justify-center items-center overflow-y-auto">
+                                      <img
+                                        className="h-full"
+                                        src={`/story-bg/${msg?.storyAssets?.storyImage}.jpg`}
+                                        alt="story_image"
+                                      />
+                                      <div
+                                        style={{ color: msg?.storyAssets?.style?.colorCode }}
+                                        className="absolute text-[10px] z-30"
+                                      >
+                                        {msg?.storyAssets?.storyText}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <img
+                                      className="h-32 border"
+                                      src={msg?.storyAssets?.storyImage}
+                                      alt="message_image"
+                                    />
+                                  )}
+                                </div>
 
+                                <p className="break-words">
+                                  {msg?.message.story}
+                                </p>
+                              </div>
+                            )}
                             {msg?.message.voice !== "" && (
                               <div className="mb-2 w-full">
                                 <MessagePlayer
                                   url={msg?.message.voice}
                                   userType="he"
                                 />
-                                <p ref={scrollRef}></p>
                               </div>
                             )}
                             {msg?.emoji?.length > 0 && (
@@ -1176,7 +1239,6 @@ const Middle = ({
                               src={userDetails?.profile}
                               alt={userDetails?.name}
                             />
-                            <p ref={scrollRef}></p>
                           </div>
                         )}
                       </div>
@@ -1211,7 +1273,7 @@ const Middle = ({
                   style={{ borderRadius: "20px 20px 20px 0px" }}
                   className="px-2 ml-6 bg-gray-100 text-gray-300 max-w-[80%] w-fit text-left"
                 >
-                  <p ref={scrollRef} className="px-4 py-1 blur-[2px]">
+                  <p className="px-4 py-1 blur-[2px]">
                     {typing.message}
                   </p>
                 </div>
@@ -1220,7 +1282,7 @@ const Middle = ({
           {currentMessages.current &&
             currentMessages.current.length > 0 &&
             currentMessages.current[0].receiverId === id && (
-              <div ref={scrollRef}>
+              <div>
                 {currentMessages.current.map((msg, i) => {
                   return (
                     <CurrentMessage
@@ -1282,9 +1344,10 @@ const Middle = ({
                   />
                 </div>
               </div>
-              <div ref={scrollRef} className="scroll_point"></div>
+              <div className="scroll_point"></div>
             </div>
           )}
+          <p ref={scrollRef}></p>
         </div>
         {/* /////////////////////////////////////////////////////////////////////////////////////////// */}
 
