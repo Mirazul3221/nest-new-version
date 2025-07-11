@@ -333,9 +333,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const handle_media_file = async (e) => {
     const file = e.target.files[0]; // Get the selected file
     setImgUri(URL.createObjectURL(e.target.files[0]));
-    setTimeout(() => {
-      scrollToBottom();
-    }, 100);
     if (file) {
       const media = new FormData(); // Create a FormData object
       media.append("receiverId", userDetails?._id); // Add receiverId
@@ -344,7 +341,9 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
         "reply",
         JSON.stringify([replyContent.innerText, toReplyerId])
       ); // Add reply as a string if it's an array or object
-
+          setTimeout(() => {
+      scrollToBottom();
+    }, 100);
       try {
         setLoadingImage(true);
         const { data } = await axios.post(
@@ -543,7 +542,22 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       commonLogout(storeDispatch);
     }
   };
+  // Count images after messages change (new incoming message)
+    const imageLoadCount = useRef(0);
+  const [totalImages, setTotalImages] = useState(0);
+    useEffect(() => {
+    const newTotal = appData?.message?.filter(m => m.message.media === 'media').length;
+    setTotalImages(newTotal);
+    imageLoadCount.current = 0;
+  }, [appData]);
 
+    const handleImageLoad = () => {
+    imageLoadCount.current += 1;
+    if (imageLoadCount.current >= totalImages) {
+      // All images loaded, scroll to bottom
+      scrollToBottom();
+    }
+  };
   return (
     <div>
       <div className="top-bar px-4 rounded-t-sm py-2 relative bg-gray-300 flex justify-between items-center">
@@ -769,6 +783,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   className="rounded-2xl"
                                   src={msg?.message.media}
                                   alt="message_image"
+                                  onLoad={handleImageLoad}
                                 />
                               </div>
                             )}
@@ -929,6 +944,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   className="rounded-2xl"
                                   src={msg?.message.media}
                                   alt="message_image"
+                                  onLoad={handleImageLoad}
                                 />
                               </div>
                             )}
@@ -1172,9 +1188,12 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
           {loadingImage && (
             <div>
               <div className="w-full flex justify-end">
-                <div className="w-[60%] relative">
+                <div className="w-fit relative">
                   <div className="w-full h-full absolute bg-black/30 top-0 left-0 flex justify-center items-center">
-                    Loading...
+                              <div className="loading animate-pulse flex justify-center items-center rounded-md gap-1 px-4 py-1 bg-white"> 
+              <AiOutlineLoading3Quarters size={14} className="animate-spin" /> Loading...
+            </div>
+                    
                   </div>
                   <img
                     className="max-w-full max-h-[350px]"

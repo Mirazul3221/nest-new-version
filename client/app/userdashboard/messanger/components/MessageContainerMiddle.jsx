@@ -697,6 +697,24 @@ const Middle = ({
     }
   };
 
+
+  // Count images after messages change (new incoming message)
+    const imageLoadCount = useRef(0);
+  const [totalImages, setTotalImages] = useState(0);
+    useEffect(() => {
+    const newTotal = appData?.message?.filter(m => m.message.media === 'media').length;
+    setTotalImages(newTotal);
+    imageLoadCount.current = 0;
+  }, [appData]);
+
+    const handleImageLoad = () => {
+    imageLoadCount.current += 1;
+    if (imageLoadCount.current >= totalImages) {
+      // All images loaded, scroll to bottom
+      scrollToBottom();
+    }
+  };
+
   return (
     <div>
       <div
@@ -930,6 +948,7 @@ const Middle = ({
                                   className="rounded-2xl"
                                   src={msg?.message.media}
                                   alt="message_image"
+                                  onLoad={handleImageLoad}
                                 />
                               </div>
                             )}
@@ -1089,6 +1108,7 @@ const Middle = ({
                                   className="rounded-2xl"
                                   src={msg?.message.media}
                                   alt="message_image"
+                                  onLoad={handleImageLoad}
                                 />
                               </div>
                             )}
