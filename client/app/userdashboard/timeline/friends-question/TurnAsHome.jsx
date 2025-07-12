@@ -25,8 +25,9 @@ import { useRouter } from "next/navigation";
 import DisplayMemoryCard from "../components/DisplayMemoryCard";
 import FrindSuggestedCard from "../../suggested_card/FrindSuggestedCard";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useGlobalData } from "../../global/globalDataProvider.jsx";
-const Page = () => {
+import { useGlobalData } from "../../global/globalDataProvider.jsx.jsx";
+import HorizontalCardScroll from "../../components/HorizontalCardScroll";
+const TurnAsHome = () => {
   const router = useRouter();
   const { dispatch, store } = useStore();
   const { appData } = useGlobalData();
@@ -37,7 +38,6 @@ const Page = () => {
   const [page, setPage] = useState(0); // Current page index
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true);
-  const [tags, setTags] = useState(null);
   const [tag, setTag] = useState(null);
   const [flug, setFlug] = useState("all");
   //////////////////Floating messanger logic////////////////////////
@@ -70,27 +70,6 @@ const Page = () => {
   useEffect(() => {
     if (!switcher) setUserDetails(null);
   }, [switcher]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${baseurl}/userquestions/get-tag/subject/chapter`,
-          {
-            headers: {
-              Authorization: `Bearer ${store.token}`,
-            },
-          }
-        );
-        setTags(data);
-        // Do something with `data` here (e.g., update state)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        commonLogout(dispatch, error);
-      }
-    };
-
-    fetchData();
-  }, [store.token]);
   const fetchChunkData = useCallback(async () => {
     if (isLoading || !hasMore) return; // Avoid duplicate requests
     setIsLoading(true);
@@ -193,6 +172,58 @@ const Page = () => {
         {/* Header */}
         <div className="md:px-10 px-2 py-3">
           <SuperHeader />
+          <HorizontalCardScroll>
+            <div className="flex whitespace-nowrap">
+              {appData?.rightSideBarData &&
+                appData?.rightSideBarData[0]?.chapter.map((chap, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setTag(chap);
+                        setFlug("chapter");
+                        reFormate("chapter", chap);
+                      }}
+                      className=" px-4 py-1 bg-white text-gray-700 cursor-pointer rounded-md border whitespace-nowrap"
+                    >
+                      {chap}
+                    </div>
+                  );
+                })}
+              {appData?.rightSideBarData &&
+                appData?.rightSideBarData[1]?.chapter.map((chap, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setTag(chap);
+                        setFlug("chapter");
+                        reFormate("chapter", chap);
+                      }}
+                      className=" px-4 py-1 bg-white text-gray-700 cursor-pointer rounded-md border whitespace-nowrap"
+                    >
+                      {chap}
+                    </div>
+                  );
+                })}
+              {appData?.rightSideBarData &&
+                appData?.rightSideBarData[2]?.chapter.map((chap, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setTag(chap);
+                        setFlug("chapter");
+                        reFormate("chapter", chap);
+                      }}
+                      className=" px-4 py-1 bg-white text-gray-700 cursor-pointer rounded-md border whitespace-nowrap"
+                    >
+                      {chap}
+                    </div>
+                  );
+                })}
+            </div>
+          </HorizontalCardScroll>
         </div>
 
         {/* Main Content */}
@@ -241,43 +272,45 @@ const Page = () => {
                   <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
                     <PiBookOpenTextDuotone /> Subject Based Query
                   </p>
-                  {tags?.map((tag, i) => (
-                    <h3
-                      key={i}
-                      onClick={() => {
-                        setTag(tag.subject);
-                        setFlug("subject");
-                        reFormate("subject", tag.subject);
-                      }}
-                      className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer"
-                    >
-                      {tag.subject}
-                    </h3>
-                  ))}
+                  {appData?.rightSideBarData &&
+                    appData?.rightSideBarData?.map((tag, i) => (
+                      <h3
+                        key={i}
+                        onClick={() => {
+                          setTag(tag.subject);
+                          setFlug("subject");
+                          reFormate("subject", tag.subject);
+                        }}
+                        className="mt-2 space-y-1 hover:text-black duration-200 cursor-pointer"
+                      >
+                        {tag.subject}
+                      </h3>
+                    ))}
                 </div>
 
                 <div className="px-4 py-2 bg-white border mt-2">
                   <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
                     <TiDocumentText /> Topic Based Query
                   </p>
-                  {tags?.map((tag, i) => (
-                    <div key={i}>
-                      <h3 className="mt-2 font-semibold">{tag.subject}</h3>
-                      {[...tag.chapter].reverse().map((chap, i) => (
-                        <p
-                          key={i}
-                          onClick={() => {
-                            setTag(chap);
-                            setFlug("chapter");
-                            reFormate("chapter", chap);
-                          }}
-                          className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer"
-                        >
-                          {chap}
-                        </p>
-                      ))}
-                    </div>
-                  ))}
+                  {appData?.rightSideBarData &&
+                    appData?.rightSideBarData?.map((tag, i) => (
+                      <div key={i}>
+                        <h3 className="mt-2 font-semibold">{tag.subject}</h3>
+                        {[...tag.chapter].reverse().map((chap, i) => (
+                          <p
+                            key={i}
+                            onClick={() => {
+                              setTag(chap);
+                              setFlug("chapter");
+                              reFormate("chapter", chap);
+                            }}
+                            className="ml-2 space-y-1 hover:text-black duration-200 cursor-pointer"
+                          >
+                            {chap}
+                          </p>
+                        ))}
+                      </div>
+                    ))}
                 </div>
               </div>
 
@@ -388,32 +421,41 @@ const Page = () => {
             <VerticleBanner />
 
             <h2>Contacts</h2>
-            { 
-              sortedMessages.length > 0 ?  <div className="h-[calc(100vh-9rem)] overflow-y-auto">
-              {sortedMessages.map((friend) => {
-                return (
-                  <div
-                    key={friend.id} onClick={()=>setUserDetails({ name:friend.name, profile:friend.userProfile, _id:friend.userId })}
-                    className="relative hover:bg-white border border-gray-100 hover:border-gray-200 duration-150 cursor-pointer rounded-md flex items-center gap-2 p-2"
-                  >
-                    <div className="relative">
-                      <img
-                        className="w-10 rounded-full"
-                        src={friend.userProfile}
-                        alt={friend.userName}
-                      />
-                      {myActiveFriends?.includes(friend.userId) ? (
-                        <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
-                      ) : (
-                        ""
-                      )}
+            {sortedMessages.length > 0 ? (
+              <div className="h-[calc(100vh-9rem)] overflow-y-auto">
+                {sortedMessages.map((friend) => {
+                  return (
+                    <div
+                      key={friend.id}
+                      onClick={() =>
+                        setUserDetails({
+                          name: friend.name,
+                          profile: friend.userProfile,
+                          _id: friend.userId,
+                        })
+                      }
+                      className="relative hover:bg-white border border-gray-100 hover:border-gray-200 duration-150 cursor-pointer rounded-md flex items-center gap-2 p-2"
+                    >
+                      <div className="relative">
+                        <img
+                          className="w-10 rounded-full"
+                          src={friend.userProfile}
+                          alt={friend.userName}
+                        />
+                        {myActiveFriends?.includes(friend.userId) ? (
+                          <div className="w-3 h-3 border-2 border-white bg-green-500 absolute rounded-full -right-[2px] bottom-1"></div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <h2>{friend.userName}</h2>
                     </div>
-                    <h2>{friend.userName}</h2>
-                  </div>
-                );
-              })}
-            </div> : <h3>No message found</h3>
-            }
+                  );
+                })}
+              </div>
+            ) : (
+              <h3>No message found</h3>
+            )}
           </div>
         </div>
 
@@ -433,4 +475,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default TurnAsHome;

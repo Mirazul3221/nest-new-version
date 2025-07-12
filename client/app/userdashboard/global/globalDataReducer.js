@@ -1,4 +1,5 @@
 export const globalDataReducer = (state, action) => {
+
   if (action.type === "fetch-message") {
     state.message = [...action.payload];
     return state;
@@ -13,6 +14,7 @@ export const globalDataReducer = (state, action) => {
       message: [...state.message, action.payload],
       user: state.user,
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
 
@@ -44,6 +46,7 @@ export const globalDataReducer = (state, action) => {
       message: [...state.message],
       user: state.user,
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
 
@@ -52,6 +55,7 @@ export const globalDataReducer = (state, action) => {
       message: [...action.payload, ...state.message],
       user: state.user,
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
   if (action.type === "empty-message") {
@@ -65,6 +69,7 @@ export const globalDataReducer = (state, action) => {
       message: state.message,
       user: [...action.payload],
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
 
@@ -79,6 +84,7 @@ export const globalDataReducer = (state, action) => {
       message: state.message,
       user: [action.payload, ...updateArrey],
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
 
@@ -98,6 +104,7 @@ export const globalDataReducer = (state, action) => {
       message: state.message,
       user: [newUserModify, ...updatingUsers],
       userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
     };
   }
 
@@ -107,6 +114,7 @@ export const globalDataReducer = (state, action) => {
       message: state.message,
       user: state.user,
       userMemories: action.payload,
+      rightSideBarData:state.rightSideBarData
     };
   }
   if (action.type === "ADD_NEW_MEMORY") {
@@ -114,6 +122,15 @@ export const globalDataReducer = (state, action) => {
       message: state.message,
       user: state.user,
       userMemories: action.payload,
+      rightSideBarData:state.rightSideBarData
+    };
+  }
+  if (action.type === "STORE_RIGHTSIDEBAR_DATA") {
+    return {
+      message: state.message,
+      user: state.user,
+      userMemories: state.userMemories,
+      rightSideBarData:action.payload
     };
   }
   return state;

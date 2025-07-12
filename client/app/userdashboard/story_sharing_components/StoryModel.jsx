@@ -200,6 +200,7 @@ export default function StoryModal({
                   ✕
                 </div>
               </div>
+              
             </div>
           </div>
 

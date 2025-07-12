@@ -64,7 +64,7 @@ const InputForm = () => {
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
-       window.location.href = `${viewurl}/userdashboard/timeline/friends-question`
+       window.location.href = `${viewurl}`
        setTimeout(() => {
         setLoader(false);
        }, 60000);

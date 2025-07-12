@@ -4,20 +4,19 @@ import { useContext, useEffect, useState } from "react";
 // import CustomTimer from "./mainpage_components/timer";
 // import Roboticx from "./mainpage_components/robotix";
 import storeContext from "./global/createContex";
-import UserDashboard from "./userdashboard/UserDashboard";
 import AdminDashboard from "./admindashboard/AdminDashboard";
 import AssistantHome from "./assistantdashboard/Home";
 import Header from "./components/Header";
 import Section_01 from "./components/Section_01";
 import "./anim.css";
 import BannerSection from "./components/BannerSection";
-import Projects from "./components/Cards";
 import Image from "next/image";
 import manymobile from "@/public/banner/multiplemobile.png";
 import { Banner } from "./adsterra/Banner";
 import Script from "next/script";
 import Footer from "./components/Footer";
 import Section_02 from "./components/Section_02";
+import TurnAsHome from "./userdashboard/timeline/friends-question/TurnAsHome";
 
 export default function Home() {
   const isBrowser = () => typeof window !== "undefined"; //The approach recommended by Next.js
@@ -42,7 +41,7 @@ export default function Home() {
   const { store } = useContext(storeContext);
   // const `otp` = Math.floor(1000 + Math.random() * 9000);
   if (store?.userInfo?.role === "user") {
-    return <div>{isClient ? <UserDashboard /> : ""}</div>;
+    return <div>{isClient ? <TurnAsHome /> : ""}</div>;
   } else if (store?.userInfo?.role === "admin") {
     return <div>{isClient ? <AdminDashboard /> : ""}</div>;
   } else if (store?.userInfo?.role === "assistant") {

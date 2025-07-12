@@ -1,5 +1,5 @@
 'use client'
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useReducer, useState } from 'react'
 import globalDataStore from './globalDataStore'
 import { globalDataReducer } from './globalDataReducer'
 import { commonLogout } from '../components/common'
@@ -10,8 +10,9 @@ import axios from 'axios'
 
 
 const GlobalDataProvider = ({children}) => {
-   const {store, dispatch:storeDispatch} = useStore()
-    const [appData,dispatch] = useReducer(globalDataReducer,{message:[],notifications:[],user:[],userMemories:[]})
+   const {store, dispatch:storeDispatch} = useStore();
+   const [tags,setTags] = useState(false);
+    const [appData,dispatch] = useReducer(globalDataReducer,{message:[],notifications:[],user:[],userMemories:[],rightSideBarData:tags})
 
      const fetchIds = async () => {
        try {
@@ -31,6 +32,30 @@ const GlobalDataProvider = ({children}) => {
       const link = localStorage.getItem('sortLink');
       if(!link) fetchIds();
      }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/userquestions/get-tag/subject/chapter`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+        setTags(data);
+        // Do something with `data` here (e.g., update state)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        commonLogout(dispatch, error);
+      }
+    };
+
+    fetchData();
+  }, [store.token]);
+
 
   return (
      <globalDataStore.Provider value ={{appData,dispatch}}>

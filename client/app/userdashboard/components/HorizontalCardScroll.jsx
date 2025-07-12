@@ -52,12 +52,11 @@ const HorizontalCardScroll = ({ children }) => {
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
+          className="absolute -translate-x-[50%] hidden md:block top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
         >
           <LiaAngleLeftSolid />
         </button>
       )}
-
       <div
         ref={scrollRef}
         className="overflow-x-auto gap-2 scroll-smooth hidden_scroll w-full"
@@ -68,7 +67,7 @@ const HorizontalCardScroll = ({ children }) => {
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
+          className="absolute hidden md:block translate-x-[50%] right-1 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full"
         >
           <LiaAngleRightSolid />
         </button>

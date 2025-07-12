@@ -13,10 +13,8 @@ import { RxCopy } from "react-icons/rx";
 import { TiDocumentText } from "react-icons/ti";
 import { toast, ToastContainer } from "react-toastify";
 import { commonLogout } from "./common";
-const RightSideBar = ({ me }) => {
+const RightSideBar = ({ me ,rightSideBarData }) => {
   const { store, dispatch } = useStore();
-  const [tags, setTags] = useState(null);
-  const [tag, setTag] = useState(null);
   const [uri, setUri] = useState(null);
   const route = useRouter();
   useEffect(() => {
@@ -50,27 +48,6 @@ const copyToClipboard = async (text) => {
     dispatch({ type: "logout" });
     route.push("/login");
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${baseurl}/userquestions/get-tag/subject/chapter`,
-          {
-            headers: {
-              Authorization: `Bearer ${store.token}`,
-            },
-          }
-        );
-        setTags(data);
-        // Do something with `data` here (e.g., update state)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        commonLogout(dispatch, error);
-      }
-    };
-
-    fetchData();
-  }, [store.token]);
 
   function goToQueryPage(val, type) {
     window.location.href = `/userdashboard/query?value=${val}&type=${type}`;
@@ -131,7 +108,7 @@ const copyToClipboard = async (text) => {
             <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
               <PiBookOpenTextDuotone /> Subject Based Query
             </p>
-            {tags?.map((tag, i) => (
+            {rightSideBarData && rightSideBarData?.map((tag, i) => (
               <h3
                 key={i}
                 onClick={() => {
@@ -148,9 +125,9 @@ const copyToClipboard = async (text) => {
             <p className="flex gap-2 items-center hover:bg-gray-200/60 rounded-md duration-300">
               <TiDocumentText /> Topic Based Query
             </p>
-            {tags?.map((tag, i) => (
+            {rightSideBarData && rightSideBarData?.map((tag, i) => (
               <div key={i}>
-                <h3 className="mt-2 font-semibold">{tag.subject}</h3>
+                <h3 className="font-semibold">{tag.subject}</h3>
                 {[...tag.chapter].reverse().map((chap, i) => (
                   <p
                     key={i}

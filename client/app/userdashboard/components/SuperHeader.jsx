@@ -33,6 +33,10 @@ const SuperHeader = () => {
   const notifContainerRef = useRef(null);
   const rightBarRef = useRef(null);
   const [openSearch, setOpenSearch] = useState(false);
+  const path = usePathname();
+  const { store, dispatch } = useContext(storeContext);
+  const { appData, dispatch: messangerUser } = useGlobalData();
+  const { socket } = useSocket();
   //=============set scroll for header================
   const [header, setHeader] = useState(false);
   const scrollHeader = () => {
@@ -42,6 +46,30 @@ const SuperHeader = () => {
       setHeader(false);
     }
   };
+
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseurl}/userquestions/get-tag/subject/chapter`,
+          {
+            headers: {
+              Authorization: `Bearer ${store.token}`,
+            },
+          }
+        );
+
+        messangerUser({ type: "STORE_RIGHTSIDEBAR_DATA", payload: data })
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        commonLogout(dispatch, error);
+      }
+    };
+
+    fetchData();
+  }, [store.token]);
+
+
   useEffect(() => {
     window.addEventListener("scroll", scrollHeader);
     return () => {
@@ -49,10 +77,6 @@ const SuperHeader = () => {
     };
   }, []);
   CurrentWindowChecker();
-  const path = usePathname();
-  const { store, dispatch } = useContext(storeContext);
-  const { appData, dispatch: messangerUser } = useGlobalData();
-  const { socket } = useSocket();
   const [me, setMe] = useState({
     name: "",
     profile: store.userInfo.profile,
@@ -573,7 +597,7 @@ const SuperHeader = () => {
               ref={rightBarRef}
               className="h-full w-2/3 md:w-3/12 bg-white ml-auto transition-transform duration-1000 transform translate-x-0 animate-slide-in"
             >
-              <RightSideBar me={me} />
+              <RightSideBar me={me} rightSideBarData={appData.rightSideBarData} />
             </div>
           )}
         </div>

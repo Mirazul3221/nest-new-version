@@ -26,7 +26,7 @@ const Page = () => {
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
-      window.location.href = `${viewurl}/userdashboard/timeline/friends-question`
+      window.location.href = `${viewurl}/userdashboard`
     setIsVarify(true)
     } catch (error) {
       setIsVarify(false)
@@ -34,7 +34,7 @@ const Page = () => {
       toast.error(error.response.data.message)
       if(error.response.data.message == 'Account already exists!'){
       setTimeout(() => {
-        window.location.href = `${viewurl}/userdashboard/timeline/friends-question`;
+        window.location.href = `${viewurl}`;
       }, 6000);
       } else {
       setTimeout(() => {
@@ -48,7 +48,7 @@ handlesubmit()
 }, []);//
   return (
     <div className="flex relative justify-center items-center w-screen h-screen bg-slate-100">
-           <h2 className="text-gray-50 absolute top-5 text-[50px] md:text-[90px] text-center">BCS PREP || ONLINE PLATFORM</h2>
+           <h2 className="text-gray-50 absolute top-5 text-[50px] md:text-[90px] text-center">EDU++ || ONLINE PLATFORM</h2>
       <div className="md:w-1/2 flex justify-center items-center md:h-1/2 bg-white rounded-2xl p-4">
       <div className="">
                {!isVarify ? (
