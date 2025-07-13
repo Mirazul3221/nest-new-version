@@ -111,6 +111,7 @@ export default function StoryModal({
   };
 
   useEffect(() => {
+    if(counter == 0) return
     retchUsers();
   }, []);
 
@@ -344,12 +345,12 @@ export default function StoryModal({
           )}
 
           {user?.user?._id == store.userInfo.id && counter !== 0 && (
-            <div className="overflow-y-auto max-h-[70vh] md:max-h-[40vh]">
+            <div>
               {
-                visitors && <div>
+                visitors && <div className="overflow-y-auto w-fit h-fit max-h-[70vh] md:max-h-[40vh] absolute bottom-28 left-4 z-20">
                   {
                     visitors.map((V,i)=> {
-                     return <div key={i} onClick={()=>{redirect(V.id._id)}} className="flex cursor-pointer gap-1 absolute top-20 left-4 z-20">
+                     return <div key={i} onClick={()=>{redirect(V.id._id)}} className="flex cursor-pointer gap-1">
                       <img className="w-4 rounded-full" src={V.id.profile} alt={V.id.name} />
                       <p className="text-[8px]">{V.id.name}</p>
                      </div>
