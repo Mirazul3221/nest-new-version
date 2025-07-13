@@ -17,15 +17,26 @@ export class UserMemory extends Document {
   @Prop({type:Object, required: false })
   style: {};
   @IsOptional()
-  @Prop({
+@Prop({
   type: [
     {
-      id: { type: String, required: false },
-      action: { type: [Object], required: false }, // Array of any (Object is safest)
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Reader',
+        required: true,
+      },
+      action: {
+        type: [Object],
+        default: [],
+        required: false,
+      },
     },
   ],
   default: [],
 })
-visitors: { id: string; action: any[] }[];
+visitors: {
+  id: mongoose.Schema.Types.ObjectId;
+  action: any[];
+}[];
 }
 export const memorySchema = SchemaFactory.createForClass(UserMemory); //

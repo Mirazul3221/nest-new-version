@@ -45,4 +45,13 @@ export class UsermemoryController {
  async checkVisitor(@Body() data:any) {
     return await this.usermemoryService.checkVisitor(data);
   }
+
+
+   @Post('delete')
+  @UseGuards(AuthGuard())
+ async deleteMemory(@Body() data:any) {
+    return await this.usermemoryService.deleteMemory(data);
+  }
+
+
 }

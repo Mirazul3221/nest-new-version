@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import ProgressBar from "./ProgressBar";
 import { useStore } from "@/app/global/DataProvider";
 import { commonLogout } from "../components/common";
-import { baseurl } from "@/app/config";
+import { baseurl, viewurl } from "@/app/config";
 import axios from "axios";
 import { VscEye, VscSend } from "react-icons/vsc";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import SendLike from "./SendLike";
 import { useSocket } from "../global/SocketProvider";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 export default function StoryModal({
   activeUserIndex,
@@ -20,12 +21,13 @@ export default function StoryModal({
   onNextUser,
 }) {
   const { store, dispatch } = useStore();
-  const {socket} = useSocket();
+  const { socket } = useSocket();
   const duration = 5000;
   const [currentStoryIndex, setCurrentStoryIndex] = useState(startingIndex);
   const [replyMessage, setReplyMessage] = useState("");
   const [isPaused, setIsPaused] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
+  const [visitors, setVisitors] = useState(false);
   const [isLongPress, setIsLongPress] = useState(false);
   const LONG_PRESS_DURATION = 600; // ms
   const timerRef = useRef(null);
@@ -95,29 +97,53 @@ export default function StoryModal({
     visited();
   }, [currentStoryIndex]);
 
+  const retchUsers = async () => {
+    const { data } = await axios.post(
+      `${baseurl}/usermemory/count-visitors`,
+      { storyId: id },
+      {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      }
+    );
+    setVisitors(data);
+  };
+
+  useEffect(() => {
+    retchUsers();
+  }, []);
+
   const emojies = ["👍", "❤️", "😊", "😂", "😍", "😭", "😮", "😡"];
 
   const ifText = {
-   receiverId:user?.user?._id, message:replyMessage,storyImage:story,storyText:defText,style,
-  }
+    receiverId: user?.user?._id,
+    message: replyMessage,
+    storyImage: story,
+    storyText: defText,
+    style,
+  };
 
   const ifImg = {
-   receiverId:user?.user?._id, message:replyMessage,storyImage:story
-  }
+    receiverId: user?.user?._id,
+    message: replyMessage,
+    storyImage: story,
+  };
 
-  const finalMsg = type == 'text'? ifText : ifImg
+  const finalMsg = type == "text" ? ifText : ifImg;
 
   const handleSendMesage = async () => {
-      try {
-      const {data} = await axios.post(
-        `${baseurl}/messanger/story-create`,finalMsg,
+    try {
+      const { data } = await axios.post(
+        `${baseurl}/messanger/story-create`,
+        finalMsg,
         {
           headers: {
             Authorization: `Bearer ${store.token}`,
           },
         }
       );
-        if (data == "User is blocked") {
+      if (data == "User is blocked") {
         alert("You cannot send message to this user!");
       } else {
         socket &&
@@ -133,17 +159,41 @@ export default function StoryModal({
   };
 
   useEffect(() => {
-    const handleInput = (e)=> {
-      if(pauseRef.current == e.target) return
-       if(inputRef.current && !inputRef.current.contains(e.target)){
-            setIsPaused(false),setIsFocus(false) 
-       }
-    }
-    window.addEventListener('click',handleInput);
+    const handleInput = (e) => {
+      if (pauseRef.current == e.target) return;
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        setIsPaused(false), setIsFocus(false);
+      }
+    };
+    window.addEventListener("click", handleInput);
     return () => {
-      window.removeEventListener('click',handleInput);
+      window.removeEventListener("click", handleInput);
     };
   }, []);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDeleteMemory = async () => {
+    try {
+      await axios.post(
+        `${baseurl}/usermemory/delete`,
+        { storyId: id, story, type },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+
+      window.location.href = "/";
+    } catch (error) {
+      commonLogout(dispatch, error);
+    }
+  };
+
+  const redirect = (id) => {
+    window.location.href = `${viewurl}/userdashboard/searchusers/${id}`
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-white">
       <div
@@ -190,17 +240,27 @@ export default function StoryModal({
                 <p className="text-white">{user.user.name}</p>
               </div>
               <div className="flex items-center gap-4 justify-end">
-                <div ref={pauseRef}
+                <div
+                  ref={pauseRef}
                   className="cursor-pointer"
                   onClick={() => setIsPaused((prev) => !prev)}
                 >
                   {isPaused ? "▶" : "⏸"}
                 </div>
+                {user?.user?._id == store.userInfo.id && (
+                  <div
+                    onClick={() => {
+                      setIsOpen(true);
+                      setIsPaused(true);
+                    }}
+                  >
+                    <HiOutlineDotsHorizontal size={25} />
+                  </div>
+                )}
                 <div className="cursor-pointer md:hidden" onClick={onClose}>
                   ✕
                 </div>
               </div>
-              
             </div>
           </div>
 
@@ -284,9 +344,23 @@ export default function StoryModal({
           )}
 
           {user?.user?._id == store.userInfo.id && counter !== 0 && (
-            <div className="absolute flex items-center px-6 py-1 ring-1 ring-black rounded-full text-white bottom-16 bg-black/50 w-fit left-2 bg-gradient-to-t from-black/50 to-transparent z-20">
-              <VscEye size={20} />
-              <span className="text-sm">Visitors : {counter} </span>
+            <div className="overflow-y-auto max-h-[70vh] md:max-h-[40vh]">
+              {
+                visitors && <div>
+                  {
+                    visitors.map((V)=> {
+                     return <div onClick={()=>{redirect(V.id._id)}} className="flex cursor-pointer gap-1 absolute top-20 left-4 z-20">
+                      <img className="w-4 rounded-full" src={V.id.profile} alt={V.id.name} />
+                      <p className="text-[8px]">{V.id.name}</p>
+                     </div>
+                    })
+                  }
+                </div>
+              }
+              <div className="absolute flex items-center px-6 py-1 ring-1 ring-black rounded-full text-white bottom-16 bg-black/50 w-fit left-2 bg-gradient-to-t from-black/50 to-transparent z-20">
+                <VscEye size={20} />
+                <span className="text-sm">Visitors : {counter} </span>
+              </div>
             </div>
           )}
         </div>
@@ -299,7 +373,13 @@ export default function StoryModal({
       </div>
       {user?.user?._id !== store.userInfo.id && (
         <div className="md:static absolute bottom-0 flex justify-center items-center gap-5 mt-3 w-full p-2 bg-black/50 md:bg-black/20 z-40">
-          <div ref={inputRef} onClick={()=>{setIsPaused(true),setIsFocus(true)}} className="flex gap-1 items-center">
+          <div
+            ref={inputRef}
+            onClick={() => {
+              setIsPaused(true), setIsFocus(true);
+            }}
+            className="flex gap-1 items-center"
+          >
             <input
               onChange={(e) => setReplyMessage(e.target.value)}
               placeholder={`${
@@ -360,6 +440,31 @@ export default function StoryModal({
                 story={user.stories[currentStoryIndex]}
               />
             ))}
+          </div>
+        </div>
+      )}
+
+      {isOpen && (
+        <div className="w-screen h-screen flex absolute top-0 justify-center items-center z-50 left-0 bg-black/50">
+          <div className="py-4 px-8 rounded-md bg-white">
+            <div className="text-gray-700">Delete this memory!</div>
+            <div className="flex items-center gap-4">
+              <div
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsPaused(false);
+                }}
+                className="text-gray-700 cursor-pointer rounded-md border px-3"
+              >
+                No
+              </div>
+              <div
+                onClick={handleDeleteMemory}
+                className="text-rose-700 cursor-pointer rounded-md border py-1 px-3"
+              >
+                Yes
+              </div>
+            </div>
           </div>
         </div>
       )}

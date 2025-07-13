@@ -82,7 +82,7 @@ const MoveableImage = forwardRef((prop,ref) => {
         const finalData = [{user:{_id:store.userInfo.id,name:store.userInfo.name,profile:store.userInfo.profile},stories:[data]},...appData.userMemories]
          globalDispatch({type:'ADD_NEW_MEMORY',payload:finalData});
       }
-    router.push('/userdashboard/timeline/friends-question')
+    router.push('/')
     } catch (error) {
         commonLogout(dispatch, error);
     }

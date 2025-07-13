@@ -150,23 +150,20 @@ groupedArray.sort((a, b) => {
   async addVisitorId(req, { storyId }) {
     const isExist = await this.memoryModel.findOne({ _id: storyId });
     const isVisited = isExist.visitors.some(
-      (visitor) => visitor.id === req.user._id.toString(),
+      (visitor) => visitor.id.toString() === req.user._id.toString(),
     );
-
-    console.log(isVisited); // true or false
     if (isVisited) return;
-    isExist.visitors.push({ id: req.user._id, action: [] });
+    isExist.visitors.push({ id: req.user._id, action: null});
     await isExist.save();
   }
 
 
  async addVisitorAction(req, { storyId, reaction }) {
-  console.log(reaction)
   const isExist = await this.memoryModel.findOne({ _id: storyId });
   if (!isExist) throw new NotFoundException('Story not found');
 
   const visitor = isExist.visitors?.find(
-    (visitor) => visitor.id === req.user._id.toString(),
+    (visitor) => visitor.id.toString() === req.user._id.toString(),
   );
   if (!visitor) {
     throw new BadRequestException('Visitor not found in story visitors list');
@@ -203,11 +200,31 @@ try {
 
 
   async checkVisitor({ storyId }) {
-    const story = await this.memoryModel.findOne(
-      { _id: storyId },
-      { visitors: 1 },
-    ); // only fetch `visitors` field
-    const totalVisitors = story?.visitors?.length;
-    return totalVisitors;
+const story = await this.memoryModel
+  .findOne(
+    { _id: storyId },
+    { visitors: { $slice: -60 } } // get only last 60 visitors
+  )
+  .populate({
+    path: 'visitors.id',
+    select: 'name profile', // ✅ Only include name, profile, and _id
+  });
+    return story.visitors;
+  }
+
+  async deleteMemory({ storyId,type,story }) {
+     if(type=='image'){
+          cloudinary.config({
+      cloud_name: this.ConfigService.get('cloud_name1'),
+      api_key: this.ConfigService.get('Api_key1'),
+      api_secret: this.ConfigService.get('Api_secret1'),
+    });
+              const devide = story.split('/');
+              const lastPart = devide[devide.length - 1];
+              const finalPart = lastPart.split('.')[0];
+              await cloudinary.uploader.destroy(`memory/${finalPart}`);
+     }
+
+    await this.memoryModel.findByIdAndDelete(storyId)
   }
 }

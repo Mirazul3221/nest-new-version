@@ -61,7 +61,6 @@ const LikeCommentShare = ({question,handleShare}) => {
       store.userInfo.id !== question.userId &&
         handleNotification("like-question");
     } catch (error) {
-      console.log(error);
       commonLogout(dispatch,error)
     }
   }, []);
@@ -84,7 +83,7 @@ const LikeCommentShare = ({question,handleShare}) => {
         <div>
           {question?.likes?.length > 0 && (
             <div className="countcomments gap-2 flex items-center">
-              <h4>{question.likes.length}</h4>
+              <h4>{question?.likes?.length}</h4>
               <FaThumbsUp size={18} />
             </div>
           )}
@@ -92,7 +91,7 @@ const LikeCommentShare = ({question,handleShare}) => {
       )}
       {question?.comments?.length > 0 && (
         <div className="countcomments gap-2 flex items-center">
-          <h4>{question.totalComments}</h4>
+          <h4>{question?.totalComments}</h4>
           <FaComments size={18} />
         </div>
       )}
@@ -145,7 +144,7 @@ const LikeCommentShare = ({question,handleShare}) => {
         )}
         <div onClick={handleShare} className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
           <LuShare2 size={22} />
-        <ShareAPI title={question.question} uri={`userdashboard/timeline/${question.slug}`} />
+        <ShareAPI title={question?.question} uri={`userdashboard/timeline/${question?.slug}`} />
         </div>
       </div>
     </div>

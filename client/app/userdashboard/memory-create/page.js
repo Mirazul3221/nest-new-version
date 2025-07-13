@@ -254,8 +254,7 @@ const Page = () => {
                     {!imgLoader ? (
                       "Click to capture"
                     ) : (
-                      <div>
-                        {" "}
+                      <div className="flex justify-center items-center gap-1">
                         <span>
                           <AiOutlineLoading3Quarters
                             className="animate-spin"
@@ -355,9 +354,7 @@ const Page = () => {
                       {!imgLoader ? (
                         "capture"
                       ) : (
-                        <span className="animate-spin">
-                          <AiOutlineLoading3Quarters size={25} />
-                        </span>
+                       <AiOutlineLoading3Quarters  className="animate-spin" size={25} />
                       )}
                     </button>
                   </div>
