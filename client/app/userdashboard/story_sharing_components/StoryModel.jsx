@@ -347,7 +347,7 @@ export default function StoryModal({
           {user?.user?._id == store.userInfo.id && counter !== 0 && (
             <div>
               {
-                visitors && <div className="overflow-y-auto w-fit h-fit max-h-[70vh] md:max-h-[40vh] absolute bottom-28 left-4 z-20">
+                visitors && <div className="overflow-y-auto w-fit h-fit max-h-[70vh] md:max-h-[40vh] absolute bottom-20 left-4 z-20">
                   {
                     visitors.map((V,i)=> {
                      return <div key={i} onClick={()=>{redirect(V.id._id)}} className="flex cursor-pointer gap-1">
@@ -358,7 +358,7 @@ export default function StoryModal({
                   }
                 </div>
               }
-              <div className="absolute flex items-center px-6 py-1 ring-1 ring-black rounded-full text-white bottom-16 bg-black/50 w-fit left-2 bg-gradient-to-t from-black/50 to-transparent z-20">
+              <div className="absolute flex items-center px-6 py-1 ring-1 ring-black rounded-full text-white bottom-8 bg-black/50 w-fit left-2 bg-gradient-to-t from-black/50 to-transparent z-20">
                 <VscEye size={20} />
                 <span className="text-sm">Visitors : {counter} </span>
               </div>
