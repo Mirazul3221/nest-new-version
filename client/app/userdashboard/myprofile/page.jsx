@@ -693,7 +693,7 @@ const Page = () => {
                           </div>
                           <div>
                             <a
-                              href={`${viewurl}/userdashboard/searchusers/${item._id}`}
+                              href={`${viewurl}/userdashboard/q/${item._id}`}
                             >
                               <h2 className="hover:underline duration-200 font-semibold text-gray-700 mt-2">
                                 {item.name}

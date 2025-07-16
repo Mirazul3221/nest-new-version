@@ -177,7 +177,7 @@ const Search = () => {
                         <div className="md:flex gap-4">
                           <div className="px-4 py-2 bg-white md:w-1/2">
                             <Link
-                              href={`/userdashboard/searchusers/${item?._id}`}
+                              href={`/userdashboard/q/${item?._id}`}
                             >
                               <div className="flex w-fit items-center gap-2">
                                 <img

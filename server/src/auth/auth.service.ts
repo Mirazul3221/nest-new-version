@@ -36,7 +36,6 @@ import axios from 'axios';
 import { Types } from 'mongoose';
 import { nanoid } from 'nanoid'; // ✅ now allowed because v3.3.4 is CJS
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -120,8 +119,9 @@ export class AuthService {
 
     // ✅ Create user
     const allSubject = [
-      { sub: 'Bangla', rightAns: 0, wrongAns: 0 },
-      { sub: 'English', rightAns: 0, wrongAns: 0 },
+      { sub: 'বাংলা', rightAns: 0, wrongAns: 0 },
+      { sub: 'ইংরেজি', rightAns: 0, wrongAns: 0 },
+      { sub: 'গণিত', rightAns: 0, wrongAns: 0 },
     ];
 
     const new_user = await this.userModel.create({
@@ -430,29 +430,30 @@ export class AuthService {
     }
   }
 
-  async shortLinkGenerator(req){
+  async shortLinkGenerator(req) {
     // console.log(req.user._id.toString())
     const myInfo = await this.userModel.findById(req.user._id);
     const isExist = myInfo.shortLink;
-    if(isExist){
+    if (isExist) {
       return isExist;
     } else {
-      const shortLink = nanoid(12); 
-      const generatedLink = {shortId:shortLink,fullUrl:req.user._id.toString()}
-      myInfo.shortLink= generatedLink;
+      const shortLink = nanoid(12);
+      const generatedLink = {
+        shortId: shortLink,
+        fullUrl: req.user._id.toString(),
+      };
+      myInfo.shortLink = generatedLink;
       await myInfo.save();
       return generatedLink;
     }
-
   }
 
-  async checkShortLink(req){
+  async checkShortLink(req) {
     const myInfo = await this.userModel.findById(req.user._id);
     const isExist = myInfo.shortLink;
-    if(isExist){
+    if (isExist) {
       return isExist.fullUrl;
     }
-
   }
   //===================================
 
@@ -512,10 +513,13 @@ export class AuthService {
   }
 
   //====================================
- async findSingleUser(id: string) {
+  async findSingleUser(id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid User!', 404);
-    return await this.userModel.findById({ _id: id }, { totalCountQuestionsId: 0 });
+    return await this.userModel.findById(
+      { _id: id },
+      { totalCountQuestionsId: 0 },
+    );
   }
   //====================================
   async getBio(id: string) {
@@ -899,42 +903,33 @@ export class AuthService {
     const reader = await this.userModel.findOne({ email: user.email });
     return reader;
   }
+
   async questionCollecton(questions, req) {
-    const { _id, totalCountQuestions } = req.user;
+    const { _id } = req.user;
     const { status, subject, id } = questions;
     const targetUser = await this.userModel.findById(_id);
+
+    console.log(status, subject, id);
+
     if (targetUser.totalCountQuestionsId.includes(id)) {
       return null;
     } else {
+      ///////////////////////////////////////////////////////////////////
       targetUser?.totalCountQuestionsId.push(id);
       await targetUser.save();
-      //=============UPDATE ENGLISH=================
-      if ((subject == 'English' || subject == 'ইংরেজি') && status == 'right') {
-        totalCountQuestions[1].rightAns = totalCountQuestions[1].rightAns + 1;
-        await this.userModel.findByIdAndUpdate(_id, {
-          totalCountQuestions: totalCountQuestions,
-        });
-      }
-      if ((subject == 'English' || subject == 'ইংরেজি') && status == 'wrong') {
-        totalCountQuestions[1].wrongAns = totalCountQuestions[1].wrongAns + 1;
-        await this.userModel.findByIdAndUpdate(_id, {
-          totalCountQuestions: totalCountQuestions,
-        });
-      }
-      //
-      //=============UPDATE BANGLA===============
-      if ((subject == 'Bangla' || subject == 'বাংলা') && status == 'right') {
-        totalCountQuestions[0].rightAns = totalCountQuestions[0].rightAns + 1;
-        await this.userModel.findByIdAndUpdate(_id, {
-          totalCountQuestions: totalCountQuestions,
-        });
-      }
-      if ((subject == 'Bangla' || subject == 'বাংলা') && status == 'wrong') {
-        totalCountQuestions[0].wrongAns = totalCountQuestions[0].wrongAns + 1;
-        await this.userModel.findByIdAndUpdate(_id, {
-          totalCountQuestions: totalCountQuestions,
-        });
-      }
+      const field = status === 'right' ? 'rightAns' : 'wrongAns';
+      await this.userModel.updateOne(
+        { _id },
+        {
+          $inc: {
+            [`totalCountQuestions.$[elem].${field}`]: 1,
+          },
+        },
+        {
+          arrayFilters: [{ 'elem.sub': subject }],
+        },
+      );
+      ///////////////////////////////////////////////////////////////////
     }
   }
   /////////////////////////////Retrive all read question/////////////////////////////
@@ -1010,15 +1005,17 @@ export class AuthService {
   }
 
   //==========================================================================================================-
-async userProfileAndName(id: string) {
-  if (!Types.ObjectId.isValid(id)) {
-    throw new BadRequestException('Invalid user ID');
-  }
+  async userProfileAndName(id: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid user ID');
+    }
 
-  return await this.userModel
-    .findById(id)
-    .select('-password -totalCountQuestions -totalCountQuestionsId -balance -email');
-}
+    return await this.userModel
+      .findById(id)
+      .select(
+        '-password -totalCountQuestions -totalCountQuestionsId -balance -email',
+      );
+  }
 
   async multipleUsersProfile(ids: string[]): Promise<string[]> {
     const profiles = await this.userModel
@@ -1052,14 +1049,14 @@ async userProfileAndName(id: string) {
     const currentUserId = req.user._id.toString();
 
     // 1. Get all accepted friend requests of current user
- const friendRequests = await this.friendRequestModel
-  .find({
-    status: 'accepted',
-    $or: [{ requester: currentUserId }, { recipient: currentUserId }],
-  })
-  .sort({ createdAt: -1 }) // ✅ Proper sorting
-  .select('requester recipient createdAt') // optional: include createdAt
-  .lean();
+    const friendRequests = await this.friendRequestModel
+      .find({
+        status: 'accepted',
+        $or: [{ requester: currentUserId }, { recipient: currentUserId }],
+      })
+      .sort({ createdAt: -1 }) // ✅ Proper sorting
+      .select('requester recipient createdAt') // optional: include createdAt
+      .lean();
     // 2. Extract direct friends' IDs
     const directFriendIds = [
       ...new Set(
@@ -1073,30 +1070,30 @@ async userProfileAndName(id: string) {
     ];
 
     // 3. Get recent connections of all direct friends (second-degree)
-const objectIds = directFriendIds.map(id => new Types.ObjectId(id));
+    const objectIds = directFriendIds.map((id) => new Types.ObjectId(id));
 
-const allFriendConnections = await this.friendRequestModel.aggregate([
-  {
-    $match: {
-      status: 'accepted',
-      $or: [
-        { requester: { $in: objectIds } },
-        { recipient: { $in: objectIds } },
-      ],
-    },
-  },
-  { $sort: { createdAt: -1 } },
-  { $limit: 100 },
-  { $sample: { size: 20 } },
-  {
-    $project: {
-      _id: 1,
-      requester: 1,
-      recipient: 1,
-      createdAt: 1,
-    },
-  },
-]);
+    const allFriendConnections = await this.friendRequestModel.aggregate([
+      {
+        $match: {
+          status: 'accepted',
+          $or: [
+            { requester: { $in: objectIds } },
+            { recipient: { $in: objectIds } },
+          ],
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      { $limit: 100 },
+      { $sample: { size: 20 } },
+      {
+        $project: {
+          _id: 1,
+          requester: 1,
+          recipient: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
 
     // 4. Build mutual friend map with IDs
     const mutualFriendCounts: Record<string, number> = {};

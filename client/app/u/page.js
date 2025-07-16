@@ -4,6 +4,8 @@ import React, { Suspense, useEffect } from 'react'
 import { useStore } from '../global/DataProvider';
 import { baseurl, viewurl } from '../config';
 import axios from 'axios';
+import ProtectRoute from '../global/ProtectRoute';
+import { commonLogout } from '../userdashboard/components/common';
 
 const Page = () => {
     const {store,dispatch} = useStore()
@@ -19,7 +21,7 @@ const Page = () => {
               },
             }
           );
-         if(data) window.location.href = `${viewurl}/userdashboard/searchusers/${data}`
+         if(data) window.location.href = `${viewurl}/userdashboard/q/${data}`
           // Do something with `data` here (e.g., update state)
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -34,6 +36,14 @@ const Page = () => {
       } else {
         window.location.href = ''
       }
+
+      return <>
+       <ProtectRoute>
+        <div className='w-screen h-screen flex justify-center items-center overflow-hidden'>
+           <p>Loading...</p>
+        </div>
+       </ProtectRoute>
+      </>
 }
 
 const Suspen = () => {

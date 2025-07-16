@@ -342,7 +342,7 @@ const Page = () => {
                             <div key={i} className="md:flex gap-4">
                               <div className="px-4 py-2 bg-white md:w-1/2">
                                 <Link
-                                  href={`/userdashboard/searchusers/${user._id}`}
+                                  href={`/userdashboard/q/${user._id}`}
                                 >
                                   <div className="flex w-fit pr-10 pl-4 items-center md:gap-4 gap-2 border-b-2 shadow-md rounded-full py-2">
                                     <img

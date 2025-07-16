@@ -193,7 +193,7 @@ export default function StoryModal({
   };
 
   const redirect = (id) => {
-    window.location.href = `${viewurl}/userdashboard/searchusers/${id}`
+    window.location.href = `${viewurl}/userdashboard/q/${id}`
   }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-white">

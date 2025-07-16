@@ -35,12 +35,8 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({ children }) {
   return (
     <html className="select-none" lang="en">
-      <head>
-        <meta
-          name="google-adsense-account"
-          content="ca-pub-8668385137041223"
-        />
-        {/* ✅ MathJax config */}
+      <body className="font-sans bg-[#F2F2FC]">
+                {/* ✅ MathJax config */}
         <Script id="mathjax-config" strategy="beforeInteractive">
           {`
             window.MathJax = {
@@ -62,9 +58,6 @@ export default function RootLayout({ children }) {
           async
           strategy="beforeInteractive"
         />
-      </head>
-
-      <body className="font-sans bg-[#F2F2FC]">
         <DataProvider>
           <SocketProvider>
             <GlobalDataProvider>

@@ -260,7 +260,7 @@ const SuperHeader = () => {
         console.log("yes");
         if (
           !path.includes("userdashboard/messanger") &&
-          !path.includes("userdashboard/searchusers")
+          !path.includes("userdashboard/q")
         ) {
           socket &&
             socket.emit("validation-status", {

@@ -20,6 +20,7 @@ import { UserResumeModule } from './user-resume/user-resume.module';
 import { LoginstatusModule } from './loginstatus/loginstatus.module';
 import { PushNotificationModule } from './push_notification/push_notification.module';
 import { UsermemoryModule } from './usermemory/usermemory.module';
+import { SaveuserquestionincollectionsModule } from './saveuserquestionincollections/saveuserquestionincollections.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { UsermemoryModule } from './usermemory/usermemory.module';
     LoginstatusModule,
     PushNotificationModule,
     UsermemoryModule,
+    SaveuserquestionincollectionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

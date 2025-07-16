@@ -29,7 +29,7 @@ const FriendProfileCard = ({user,questionsAfterDelete}) => {
         };
 
 const redirect = (id) => {
-  window.location.href = `${viewurl}/userdashboard/searchusers/${id}`;
+  window.location.href = `${viewurl}/userdashboard/q/${id}`;
 };
   return (
 <div className="border md:w-[15vw] w-[50vw] bg-white relative rounded-b-md shadow-sm">

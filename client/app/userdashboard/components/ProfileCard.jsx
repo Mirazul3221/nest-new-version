@@ -66,7 +66,7 @@ const ProfileCard = ({ children, id, Handler = null,smt='-translate-x-[10%]',lgt
   };
 
   const viewDetails = () => {
-    window.location.href = `${viewurl}/userdashboard/searchusers/${id}`;
+    window.location.href = `${viewurl}/userdashboard/q/${id}`;
   };
   return (
     <div
