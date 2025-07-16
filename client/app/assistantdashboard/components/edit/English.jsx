@@ -94,7 +94,7 @@ const English = () => {
                         onClick={() => {
                           setId(question._id);
                         }}
-                        className="px-4 cursor-pointer py-1 bg-violet-700 h-fit rounded-l-md text-white"
+                        className="px-4 cursor-pointer py-1 bg-[#3e19fa] h-fit rounded-l-md text-white"
                       >
                         <RiEditBoxLine size={20} />
                       </span>

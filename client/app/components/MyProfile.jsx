@@ -18,7 +18,7 @@ const MyProfile = ({myProfile,setKey,mail}) => {
      <h2 className='text-2xl mb-2 font-bold border-b-2 text-center'>{myProfile.name}</h2>
      <div className="flex justify-between gap-3">
      <button onClick={()=>setKey("mailbox")} className='bg-white text-gray-500 duration-500 border py-2 rounded-md w-full flex justify-center items-center'>Cancel</button>
-     <button onClick={sendMail} className='bg-violet-700 hover:bg-violet-600 text-white duration-500 border py-2 rounded-md w-full flex justify-center items-center'>Continue</button>
+     <button onClick={sendMail} className='bg-[#3e19fa] hover:bg-violet-600 text-white duration-500 border py-2 rounded-md w-full flex justify-center items-center'>Continue</button>
      </div>
     </div>
   )

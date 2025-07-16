@@ -91,7 +91,7 @@ const FriendRequest = ({item}) => {
             <div onClick={()=>cancleFriendRequest(item)} className="px-4 cursor-pointer py-[3px] bg-gray-200 text-gray-700 w-fit rounded-md">
               <h2>Delete</h2>
             </div>
-            <div onClick={()=>handleAcceptRequest(item)} className="px-4 cursor-pointer py-[3px] bg-violet-700 text-white w-fit rounded-md">
+            <div onClick={()=>handleAcceptRequest(item)} className="px-4 cursor-pointer py-[3px] bg-[#3e19fa] text-white w-fit rounded-md">
               <h2>Confirm</h2>
             </div>
           </div>

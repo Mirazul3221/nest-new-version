@@ -683,7 +683,7 @@ const Controller = ({
                          <Image className="w-16 h-16" src={pinterest} alt="pinterest"/>
                         </ TelegramShareButton>
                       </div>
-                      <div className="md:hidden w-16 h-16 bg-violet-700 rounded-full flex justify-center items-center">
+                      <div className="md:hidden w-16 h-16 bg-[#3e19fa] rounded-full flex justify-center items-center">
                       <CopyToClipboard text={`https://bcs-prep.vercel.app/singlequestion/${showPointDesc?.slug ? showPointDesc.slug : showPointDesc._id}`}>
                         <button className="p-4 text-white" onClick={()=>{setCopy('Copied!');setTimeout(() => {
                           setCopy('copy')

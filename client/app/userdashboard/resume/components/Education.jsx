@@ -749,7 +749,7 @@ const Education = () => {
               </div>
               <button
                 type="submit"
-                class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 {isLoading ? (
                   <AiOutlineLoading3Quarters
@@ -1363,14 +1363,14 @@ const Education = () => {
               <div className="flex gap-6 items-center">
                 <button
                   type="submit"
-                  class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1.5 text-center"
+                  class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1.5 text-center"
                 >
                   {isLoading ? "Loading..." : "Save change"}
                 </button>
 
                 <button
                   onClick={() => setOpenEducationForm(false)}
-                  class={`text-white w-fit bg-violet-500 hover:bg-violet-600 ring-[3px] ring-violet-300 font-medium rounded-lg px-5 py-1 text-center`}
+                  class={`text-white w-fit bg-[#3e19fa] hover:bg-violet-600 ring-[3px] ring-violet-300 font-medium rounded-lg px-5 py-1 text-center`}
                 >
                   Cancel
                 </button>
@@ -1382,7 +1382,7 @@ const Education = () => {
             <button
               disabled={openEducationForm}
               onClick={() => setOpenEducationForm(true)}
-              class={`text-white w-fit bg-violet-500 ${
+              class={`text-white w-fit bg-[#3e19fa] ${
                 openEducationForm ? "cursor-not-allowed" : ""
               } hover:bg-violet-600 mt-10 ring-[3px] ring-violet-300 font-medium rounded-lg px-5 py-2.5 text-center`}
             >

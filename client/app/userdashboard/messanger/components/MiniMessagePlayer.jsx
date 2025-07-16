@@ -67,7 +67,7 @@ export default function MiniMessagePlayer({ url, userType = "me" }) {
   return (
     <div
       className={`p-4 w-[58vw] md:w-[18vw] ${
-        userType === "me" ? "bg-violet-500" : "bg-gray-200"
+        userType === "me" ? "bg-[#3e19fa]" : "bg-gray-200"
       } rounded-2xl shadow-lg`}
     >
       <div className="relative flex items-center gap-4">

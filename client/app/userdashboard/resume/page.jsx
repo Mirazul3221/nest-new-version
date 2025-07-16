@@ -81,7 +81,7 @@ const page = () => {
             </h2>
             <div className="progres py-[2px] px-1 rounded-full bg-gray-200">
               <div
-                className="inner bg-violet-500 rounded-full duration-500 h-[3px]"
+                className="inner bg-[#3e19fa] rounded-full duration-500 h-[3px]"
                 style={{ width: `${percentage}%` }}
               ></div>
             </div>
@@ -96,13 +96,13 @@ const page = () => {
             <div className="ml-auto w-fit gap-4 flex mt-10">
               <div
                 onClick={prevStap}
-                class="text-white bg-violet-500 hover:bg-violet-600 ring-[2px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-2 text-center"
+                class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[2px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-2 text-center"
               >
                 Prev
               </div>
               <div
                 onClick={nextStap}
-                class="text-white bg-violet-500 hover:bg-violet-600 ring-[2px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-2 text-center"
+                class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[2px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-2 text-center"
               >
                 Next
               </div>

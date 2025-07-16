@@ -443,7 +443,7 @@ const Page = () => {
                         onClick={() => {
                           updateUserTitle(), setControlTitle(false);
                         }}
-                        className="updateTitle w-1/2 cursor-pointer text-white px-2 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                        className="updateTitle w-1/2 cursor-pointer text-white px-2 bg-[#3e19fa] hover:bg-violet-600 duration-200 text-center rounded-md"
                       >
                         Update
                       </div>
@@ -521,7 +521,7 @@ const Page = () => {
                             onClick={() => {
                               updateUserDescription(), setControlDesc(false);
                             }}
-                            className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                            className="updateTitle w-1/2 cursor-pointer text-white py-1 px-6 bg-[#3e19fa] hover:bg-violet-600 duration-200 text-center rounded-md"
                           >
                             Update
                           </div>
@@ -612,7 +612,7 @@ const Page = () => {
                           </div>
                           <div
                             onClick={updateFacebookLink}
-                            className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-violet-700 hover:bg-violet-600 duration-200 text-center rounded-md"
+                            className=" w-1/2 cursor-pointer text-white py-1 px-6 bg-[#3e19fa] hover:bg-violet-600 duration-200 text-center rounded-md"
                           >
                             Update
                           </div>
@@ -659,7 +659,7 @@ const Page = () => {
                             onClick={() => {
                               handleAcceptRequest(item);
                             }}
-                            className="py-2 px-4 cursor-pointer bg-violet-700 rounded-md text-white"
+                            className="py-2 px-4 cursor-pointer bg-[#3e19fa] rounded-md text-white"
                           >
                             Accept
                           </h2>
@@ -713,7 +713,7 @@ const Page = () => {
                                 onClick={() => {
                                   inviteYourFriend(item._id);
                                 }}
-                                className="py-1 px-2 cursor-pointer bg-violet-700 rounded-md text-sm text-white"
+                                className="py-1 px-2 cursor-pointer bg-[#3e19fa] rounded-md text-sm text-white"
                               >
                                 Invite
                               </h2>
@@ -964,7 +964,7 @@ const Page = () => {
                 className={`updateTitle w-1/2 py-1 px-6 ${
                   loader
                     ? "bg-white text-gray-700 hover:bg-slate-100"
-                    : "bg-violet-700 text-white cursor-pointer"
+                    : "bg-[#3e19fa] text-white cursor-pointer"
                 } hover:bg-violet-600 duration-200 text-center rounded-md`}
               >
                 <div className="flex justify-center items-center gap-2">

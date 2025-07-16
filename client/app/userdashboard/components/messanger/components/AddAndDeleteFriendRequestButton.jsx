@@ -89,7 +89,7 @@ const AddAndDeleteFriendRequestButton = ({ id , px ='px-4', py='py-0',user=null,
   };
   return (
     <div>
-      <button onClick={addAndDeleteFriendRequest} className={`${(requestStatus == "accepted") ? "bg-violet-500 text-white" : "bg-gray-200 text-gray-700"} cursor-pointer text-center rounded-md w-full px-3 ${px} ${py} flex gap-[3px] justify-center items-center`}>
+      <button onClick={addAndDeleteFriendRequest} className={`${(requestStatus == "accepted") ? "bg-[#3e19fa] text-white" : "bg-gray-200 text-gray-700"} cursor-pointer text-center rounded-md w-full px-3 ${px} ${py} flex gap-[3px] justify-center items-center`}>
         {loading && "Loading..."}
          
         {!loading && (

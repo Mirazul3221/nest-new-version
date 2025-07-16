@@ -131,7 +131,7 @@ const InputForm = () => {
               className={`mt-2 ${
                 loader
                   ? ""
-                  : "bg-violet-700 hover:bg-violet-600 text-white duration-500"
+                  : "bg-[#3e19fa] hover:bg-violet-600 text-white duration-500"
               } border py-2 rounded-md w-full flex justify-center items-center`}
             >
               {loader ? (
@@ -149,7 +149,7 @@ const InputForm = () => {
         <div className="py-4 border-t-2 mt-2">
           <Link href='./register'>
             <button
-              className={`bg-violet-700 hover:bg-violet-600 text-white duration-500 border py-2 rounded-md w-full flex justify-center items-center`}
+              className={`bg-[#3e19fa] hover:bg-violet-600 text-white duration-500 border py-2 rounded-md w-full flex justify-center items-center`}
             >
               <h2>Create account</h2>
             </button>

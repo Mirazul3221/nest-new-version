@@ -36,7 +36,7 @@ const Page = () => {
         <div className="py-1 bg-slate-300"></div>
         <div className="flex justify-between px-4 md:px-0 bg-gray-200">
           <div className="left hidden md:block w-3/12">
-            <h2 className="font-semibold bg-violet-500 py-2 text-center text-white md:t-2xl">
+            <h2 className="font-semibold bg-[#3e19fa] py-2 text-center text-white md:t-2xl">
               সূচিপত্র
             </h2>
             <LeftBar />
@@ -45,7 +45,7 @@ const Page = () => {
             } */}
           </div>
           <div className="right md:w-9/12">
-            <h1 className="font-semibold bg-violet-500 py-2 text-center text-white md:t-2xl">
+            <h1 className="font-semibold bg-[#3e19fa] py-2 text-center text-white md:t-2xl">
               বিসিএস প্রিলিমিনারি পরীক্ষা: প্রস্তুতি এবং গুরুত্ব
             </h1>
             <div className="md:pr-20 text-gray-700 mt-4">

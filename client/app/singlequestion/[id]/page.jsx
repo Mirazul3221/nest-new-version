@@ -121,7 +121,7 @@ const Page = () => {
               )}
             </div>
             <div className="md:px-20 px-4 md:flex">
-              <div className="bg-violet-500 sticky min-h-[90vh] h-[90vh] w-2/12 top-20 overflow-y-auto hidden md:block">
+              <div className="bg-[#3e19fa] sticky min-h-[90vh] h-[90vh] w-2/12 top-20 overflow-y-auto hidden md:block">
                 <div className="w-full">
                   <EnglishSiteBar dataLoad={dataLoad} />
                 </div>
@@ -197,7 +197,7 @@ const Page = () => {
                     </div>
                   )}
                   {topic.length > 0 && (
-                    <h2 className="md:text-2xl mt-6 bg-violet-500 pb-6 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
+                    <h2 className="md:text-2xl mt-6 bg-[#3e19fa] pb-6 text-gray-50 py-2 rounded-t-lg text-center shadow-md">
                       Read more relevent questions
                     </h2>
                   )}
@@ -280,7 +280,7 @@ const Page = () => {
                                     }}
                                     className={`px-4 cursor-pointer ${
                                       i === count ? "hidden" : ""
-                                    } bg-violet-700 rounded-lg text-white`}
+                                    } bg-[#3e19fa] rounded-lg text-white`}
                                   >
                                     Read more...
                                   </h4>
@@ -288,7 +288,7 @@ const Page = () => {
                                 <Link
                                   href={`${viewurl}/singlequestion/${item._id}`}
                                 >
-                                  <h4 className="px-4 bg-violet-700 rounded-lg text-white">
+                                  <h4 className="px-4 bg-[#3e19fa] rounded-lg text-white">
                                     Open in a tab
                                   </h4>
                                 </Link>
@@ -315,7 +315,7 @@ const Page = () => {
                     onClick={() => {
                       fetchChunkData(layoutData);
                     }}
-                    className="bg-violet-700 cursor-pointer shadow-md flex duration-300 justify-center items-center pr-4 border border-violet-700 text-white md:text-lg w-fit mx-auto my-4 rounded-full"
+                    className="bg-[#3e19fa] cursor-pointer shadow-md flex duration-300 justify-center items-center pr-4 border border-violet-700 text-white md:text-lg w-fit mx-auto my-4 rounded-full"
                   >
                     {loading && (
                       <div className="flex justify-center w-20 bg-white rounded-l-full">

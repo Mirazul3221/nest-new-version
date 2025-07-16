@@ -398,7 +398,7 @@ const ShowExpData = ({ exp, setExperienceData }) => {
           </div>
           <button
             type="submit"
-            class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
             {isLoading ? (
               <AiOutlineLoading3Quarters

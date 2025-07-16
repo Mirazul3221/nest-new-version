@@ -224,7 +224,7 @@ const EditQuestion = ({Q}) => {
             ) : (
               <button
                 type="submit"
-                className="px-6 py-1 bg-violet-500 text-white rounded-md"
+                className="px-6 py-1 bg-[#3e19fa] text-white rounded-md"
               >
                 Edit
               </button>

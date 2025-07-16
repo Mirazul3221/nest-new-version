@@ -91,7 +91,7 @@ const ShowSkillsData = ({ item, setProjectData }) => {
             <div className="flex mt-4 items-center gap-2">
               <button
                 type="submit"
-                class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
               >
                 {isLoading ? (
                   <AiOutlineLoading3Quarters
@@ -104,7 +104,7 @@ const ShowSkillsData = ({ item, setProjectData }) => {
               </button>
               <div
                 onClick={() => setIsOpenFormWindow(false)}
-                class="text-white w-fit bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-1 text-center"
+                class="text-white w-fit bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-1 text-center"
               >
                 Cancel
               </div>

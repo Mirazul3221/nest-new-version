@@ -39,7 +39,7 @@ const ModifyPlayButton = () => {
 <div>
   <div className="audio_container rounded-full mt-20 overflow-hidden bg-gray-200 relative py-2">
     <div style={{width:`${percentage}%`}}
-      className={`absolute h-full rounded-full top-0 left-0 bg-violet-500 z-0`}
+      className={`absolute h-full rounded-full top-0 left-0 bg-[#3e19fa] z-0`}
     ></div>
      <div className="relative z-10 flex px-6 justify-between items-center">
      <span

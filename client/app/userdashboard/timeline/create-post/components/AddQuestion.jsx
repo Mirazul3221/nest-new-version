@@ -256,7 +256,7 @@ const AddQuestion = () => {
             </select>
             <div
               onClick={handleChatboat}
-              className="px-6 w-fit hidden md:block py-1 cursor-pointer bg-violet-500 text-white rounded-md"
+              className="px-6 w-fit hidden md:block py-1 cursor-pointer bg-[#3e19fa] text-white rounded-md"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 ">
@@ -272,7 +272,7 @@ const AddQuestion = () => {
             </div>
             <div
               onClick={handleChatboat}
-              className="px-6 md:hidden w-fit py-1 cursor-pointer bg-violet-500 text-white rounded-md"
+              className="px-6 md:hidden w-fit py-1 cursor-pointer bg-[#3e19fa] text-white rounded-md"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 ">
@@ -292,7 +292,7 @@ const AddQuestion = () => {
                   setShowPreviewContent(content);
                   setShowPreview(true);
                 }}
-                className="px-6 py-1 bg-violet-500 w-fit text-white cursor-pointer rounded-md"
+                className="px-6 py-1 bg-[#3e19fa] w-fit text-white cursor-pointer rounded-md"
               >
                 Preview Math
               </h2>
@@ -306,7 +306,7 @@ const AddQuestion = () => {
             ) : (
               <button
                 type="submit"
-                className="px-6 py-1 bg-violet-500 text-white rounded-md"
+                className="px-6 py-1 bg-[#3e19fa] text-white rounded-md"
               >
                 Submit
               </button>

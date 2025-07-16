@@ -161,23 +161,23 @@ const ProfileCard = ({ id }) => {
             {myFriend === undefined ? (
               "Loading..."
             ) : myFriend === true ? (
-              <div className="py-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white">
+              <div className="py-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white">
                 Message
               </div>
             ) : (
               <div>
-                {/* <div onClick={()=>cancleFriendRequest(user._id)} className="py-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white" >Cancel </div> */}
+                {/* <div onClick={()=>cancleFriendRequest(user._id)} className="py-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white" >Cancel </div> */}
                 {sendFriend ? (
                   <div
                     onClick={() => cancleFriendRequest(user._id)}
-                    className="py-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white"
+                    className="py-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white"
                   >
                     Cancel
                   </div>
                 ) : (
                   <div
                     onClick={() => friendRequestApi(user._id)}
-                    className="py-2 flex items-center gap-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white"
+                    className="py-2 flex items-center gap-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white"
                   >
                     {" "}
                     {friendLoding ? (
@@ -194,7 +194,7 @@ const ProfileCard = ({ id }) => {
 
             <a
               href={`${viewurl}/userdashboard/q/${id}`}
-              className="py-2 px-6 cursor-pointer rounded-lg bg-violet-500 text-white"
+              className="py-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white"
             >
               View details
             </a>

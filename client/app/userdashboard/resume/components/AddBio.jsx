@@ -120,7 +120,7 @@ const AddBio = () => {
         <div className="w-full h-full">
       {
         bio &&   !editBio &&  <h2
-        class="text-white bg-violet-500 ml-auto hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
+        class="text-white bg-[#3e19fa] ml-auto hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
         onClick={openBioBox}
       >
         Edit
@@ -250,7 +250,7 @@ const AddBio = () => {
               </div>
               <button
                 type="submit"
-                 class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+                 class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
               >
                 Save
               </button>
@@ -417,7 +417,7 @@ const AddBio = () => {
 
                     <div className="flex items-center gap-2">
               <h2
-                    class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
+                    class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
                     onClick={openBioBox}
                   >
                     Cancel
@@ -425,7 +425,7 @@ const AddBio = () => {
                   <button
                       disabled={isLoading}
                       type="submit"
-                     class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
+                     class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] cursor-pointer w-fit focus:outline-none ring-violet-300 font-medium rounded-lg px-5 py-1 text-center"
                     >
                       {isLoading ?  <AiOutlineLoading3Quarters className="animate-spin text-white text-center" size={20} />  : "Save change"}
                     </button>

@@ -142,7 +142,7 @@ const InputForm = () => {
               className={`mt-2 ${
                 loader
                   ? ""
-                  : "bg-violet-700 hover:bg-violet-600 text-white duration-500"
+                  : "bg-[#3e19fa] hover:bg-violet-600 text-white duration-500"
               } border py-2 rounded-md w-full flex justify-center items-center`}
             >
               {loader ? (

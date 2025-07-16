@@ -8,7 +8,7 @@ const Section_02 = () => {
        <div className="card space-y-10 md:space-y-0 px-4 md:grid mx-auto grid-cols-3 gap-4 md:px-20">
        
        <div className="item-01 hover:bg-violet-100 duration-100 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 relative rounded-2xl p-6 shadow-md overflow-hidden">
-        <div className="h-1 text-gray-700 w-full bg-violet-500 left-0 bottom-0 absolute"></div>
+        <div className="h-1 text-gray-700 w-full bg-[#3e19fa] left-0 bottom-0 absolute"></div>
             <span className='text-violet-400'>{section2_data[0].emoji}</span>
             <h2 className='py-2 mt-2 text-lg font-semibold'>{section2_data[0].title}</h2>
             <p className='mb-4'>{section2_data[0].description}</p>
@@ -60,11 +60,11 @@ const Section_02 = () => {
          {/* {
             section2_data.map((item,i)=>{
                 return (
-                    <div key={i} className={`px-6 py-8 shadow-sm border rounded-sm ${i===1 || i === 3 || i === 5 ? "bg-violet-500 text-white" : "bg-white text-gray-700"}`}>
+                    <div key={i} className={`px-6 py-8 shadow-sm border rounded-sm ${i===1 || i === 3 || i === 5 ? "bg-[#3e19fa] text-white" : "bg-white text-gray-700"}`}>
                       <div className={`p-2 border shadow-lg ${i===1 || i === 3 || i === 5 ? "bg-gray-100 text-gray-700 " : 'bg-gray-100 text-gray-700' } w-fit rounded-full`}>{item?.emoji}</div>
                         <h3 className='font-semibold mb-2'>{item.title}</h3>
                         <p>{item.description}</p>
-                        <button className={`${i===1 || i === 3 || i === 5 ? "bg-gray-100 text-gray-700" : " bg-violet-500 text-gray-100"} shadow-md px-4 py-1 mt-4 rounded-md`}>Read more</button>
+                        <button className={`${i===1 || i === 3 || i === 5 ? "bg-gray-100 text-gray-700" : " bg-[#3e19fa] text-gray-100"} shadow-md px-4 py-1 mt-4 rounded-md`}>Read more</button>
 
                     </div>
                 )

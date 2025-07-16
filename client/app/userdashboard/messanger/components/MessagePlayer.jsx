@@ -67,7 +67,7 @@ export default function MessagePlayer({ url, userType = "me" }) {
   return (
     <div
       className={`py-2 px-4 min-w-full ${
-        userType === "me" ? "bg-violet-500" : "bg-gray-200"
+        userType === "me" ? "bg-[#3e19fa]" : "bg-gray-200"
       } rounded-2xl shadow-lg`}
     >
       <div className="relative flex items-center gap-2">

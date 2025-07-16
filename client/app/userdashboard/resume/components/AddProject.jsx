@@ -247,13 +247,13 @@ export default function AddProject() {
                   <div className="flex gap-3 items-center">
                     <div
                       onClick={() => setOpenProjectForm(false)}
-                      class="text-white cursor-pointer bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                      class="text-white cursor-pointer bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
                     >
                       Cancel
                     </div>
                     <button
                       type="submit"
-                      class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                      class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
                     >
                       {isLoading ? (
                         <AiOutlineLoading3Quarters
@@ -267,7 +267,7 @@ export default function AddProject() {
                     {sections.length < 5 - projectData?.length && (
                       <div
                         onClick={handleAddSection}
-                        class="text-white cursor-pointer bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                        class="text-white cursor-pointer bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
                       >
                         Add New
                       </div>
@@ -282,7 +282,7 @@ export default function AddProject() {
                     <button
                       disabled={openProjectForm}
                       onClick={() => setOpenProjectForm(true)}
-                      class={`text-white w-fit bg-violet-500 ${
+                      class={`text-white w-fit bg-[#3e19fa] ${
                         openProjectForm ? "cursor-not-allowed" : ""
                       } hover:bg-violet-600 mt-10 ring-[3px] ring-violet-300 font-medium rounded-lg px-5 py-2.5 text-center`}
                     >
@@ -385,7 +385,7 @@ export default function AddProject() {
               <div className="flex gap-3 items-center">
                 <button
                   type="submit"
-                  class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                  class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
                 >
                   {isLoading ? (
                     <AiOutlineLoading3Quarters
@@ -399,7 +399,7 @@ export default function AddProject() {
                 {sections.length < 5 && (
                   <div
                     onClick={handleAddSection}
-                    class="text-white bg-violet-500 hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                    class="text-white bg-[#3e19fa] hover:bg-violet-600 ring-[3px] focus:outline-none ring-violet-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
                   >
                     Add New
                   </div>

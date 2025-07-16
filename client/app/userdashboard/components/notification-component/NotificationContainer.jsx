@@ -75,7 +75,7 @@ const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,han
                           src={item.message[0].requesterProfie}
                           alt={item.message[0].requesterName}
                         />
-                        <h2 className="bg-violet-500 w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-2 -right-3">
+                        <h2 className="bg-[#3e19fa] w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-2 -right-3">
                           {item?.message[0]?.requesterStatus}
                         </h2>
                       </div>
@@ -108,7 +108,7 @@ const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,han
                           src={item.message[0].requesterProfie}
                           alt={item.message[0].requesterName}
                         />
-                        <h2 className="bg-violet-500 w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-2 -right-3">
+                        <h2 className="bg-[#3e19fa] w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-2 -right-3">
                           {item?.message[0]?.requesterStatus}
                         </h2>
                       </div>

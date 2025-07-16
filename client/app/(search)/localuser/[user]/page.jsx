@@ -89,7 +89,7 @@ const Page = () => {
                 {userDetails?.name ? (
                   <div className="absolute bottom-0 translate-y-[50%]">
                     <div className="relative">
-                      <h4 className="absolute bottom-[40%] md:bottom-[50%] right-0 translate-x-[50%] p-2 bg-violet-500 w-12 h-12 rounded-full flex justify-center items-center border-r-2 border-t-2 border-white text-center text-sm md:translate-y-[50%] text-white translate-y-[20%]">
+                      <h4 className="absolute bottom-[40%] md:bottom-[50%] right-0 translate-x-[50%] p-2 bg-[#3e19fa] w-12 h-12 rounded-full flex justify-center items-center border-r-2 border-t-2 border-white text-center text-sm md:translate-y-[50%] text-white translate-y-[20%]">
                         {userDetails.status}
                       </h4>
                       <img

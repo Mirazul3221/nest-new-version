@@ -5,7 +5,7 @@ import { MdOutlineArrowRight } from "react-icons/md";
 export const ExamBasedQuestion = ({ fetchQuestionsBasedOnTopic,setHedTitle,headTitle,setSwitcher }) => {
     return (
       <div className="w-full">
-        <h2 className="py-2 bg-violet-700 px-6 text-2xl md:text-3xl text-white">
+        <h2 className="py-2 bg-[#3e19fa] px-6 text-2xl md:text-3xl text-white">
           বিষয় ভিত্তিকk
         </h2>
         <div>

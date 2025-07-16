@@ -58,7 +58,7 @@ export class AuthService {
 
     const token = await this.jwtService.sign(
       { ...userData, password: password }, // or userData if needed
-      { expiresIn: '30m' }, // Override default here
+      { expiresIn: '90m' }, // Override default here
     );
 
     const transporter = nodemailer.createTransport({
@@ -70,26 +70,646 @@ export class AuthService {
     });
 
     const mailOptions = {
-      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      from: '"info.eduplusplus@gmail.io" <bdmirazul906@gmail.com>',
       to: email,
-      subject: 'Account Varification Process - BCS Prep',
+      subject: 'Account Verification Process - Edu++',
       html: `
-       <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
-      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-        <h2 style="color: #333;">Hi, ${name}</h2>
-        <p style="font-size: 16px; color: #555;">
-         Hope you're doing well!. We appreciate you for your interest to open an account in our platform. We received a request for varifying your account. To complete the process, please click the link below. This verification link will be valid for 30 minutes:
-        </p>
-          <p><span style="font-weight: 700; color: #555">Verification Link:</span> <a style="color: #5846fa;" href="https://bcs-prep.vercel.app//verify-account?token=${token}">${token.slice(0, 40)}</a></p>
-        <p style="font-size: 14px; color: #888;">If you did not request this, feel free to ignore this email—no further action is needed.</p>
-        <p style="font-weight: bold; color: #444;">Thank you,<br/>BCS Prep Team</p>
-      </div>
-    </div>   
+          <div
+                    style="
+                      background-color: #f1f5f8;
+                      margin: 0;
+                      padding: 0;
+                      font-family: Helvetica, Arial, Helvetica, sans-serif;
+                      color: #111111;
+                      font-size: 14px;
+                      line-height: 18px;
+                    "
+                  >
+                    <table
+                      cellpadding="0"
+                      cellspacing="0"
+                      style="
+                        background-color: #e4ebf1;
+                        min-width: 413px;
+                        min-width: 320px;
+                      "
+                      width="100%"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            valign="top"
+                            style="
+                              font-family: Helvetica, Arial, Helvetica,
+                                sans-serif;
+                              color: #111111;
+                              font-size: 14px;
+                              line-height: 18px;
+                            "
+                          >
+                            <table cellpadding="0" cellspacing="0" width="100%">
+                              <tbody>
+                                <tr>
+                                  <td
+                                    bgcolor="#3e19fa"
+                                    height="150"
+                                    style="
+                                      font-family: Helvetica, Arial, Helvetica,
+                                        sans-serif;
+                                      color: #111111;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                    "
+                                  ></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+
+                          <td
+                            width="600"
+                            style="
+                              font-family: Helvetica, Arial, Helvetica,
+                                sans-serif;
+                              color: #111111;
+                              font-size: 14px;
+                              line-height: 18px;
+                            "
+                          >
+                            <table
+                              align="center"
+                              cellpadding="0"
+                              cellspacing="0"
+                              style="
+                                width: 100%;
+                                max-width: 600px;
+                                margin: 0 auto;
+                              "
+                              width="600"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td
+                                    align="center"
+                                    bgcolor="#3e19fa"
+                                    style="
+                                      font-family: Helvetica, Arial, Helvetica,
+                                        sans-serif;
+                                      color: #111111;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      padding: 20px 15px 24px;
+                                    "
+                                  >
+                                    <a
+                                      href="https://bcs-prep.vercel.app"
+                                      style="
+                                        font-family: Helvetica, Arial, Helvetica,
+                                          sans-serif;
+                                        font-size: 14px;
+                                        line-height: 18px;
+                                        font-weight: bold;
+                                        color:wheat;
+                                        text-decoration: none;
+                                      "
+                                      target="_blank"
+                                    >
+                                      <div
+                                        style="
+                                          font-size: 18px;
+                                          font-weight: bold;
+                                          color: #ffffff;
+                                        "
+                                      >
+                                        Edu<sup>++</sup> (Online platform)
+                                      </div>
+                                    </a>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    bgcolor="#0071ba"
+                                    style="
+                                      font-family: Helvetica, Arial, Helvetica,
+                                        sans-serif;
+                                      color: #111111;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      border-radius: 0 0 10px 10px;
+                                    "
+                                  >
+                                    <table
+                                      cellpadding="0"
+                                      cellspacing="0"
+                                      width="100%"
+                                    >
+                                      <tbody>
+                                        <tr>
+                                          <td
+                                            bgcolor="#ffffff"
+                                            style="
+                                              font-family: Helvetica, Arial,
+                                                Helvetica, sans-serif;
+                                              color: #111111;
+                                              font-size: 14px;
+                                              line-height: 18px;
+                                              border-radius: 6px;
+                                            "
+                                          >
+                                            <table
+                                              cellpadding="0"
+                                              cellspacing="0"
+                                              width="100%"
+                                            >
+                                              <tbody>
+                                                <tr>
+                                                  <td
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                      padding-left: 15px;
+                                                      padding-right: 15px;
+                                                      padding-top: 25px;
+                                                      padding: 36px 40px 18px;
+                                                    "
+                                                  >
+                                                    <table
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      width="100%"
+                                                    >
+                                                      <tbody>
+                                                        <tr>
+                                                          <td
+                                                            align="left"
+                                                            style="
+                                                              font-family: Helvetica,
+                                                                Arial, Helvetica,
+                                                                sans-serif;
+                                                              color: #111111;
+                                                              font-size: 14px;
+                                                              line-height: 18px;
+                                                              padding: 0 0 8px;
+                                                              font: 500 24px/22px
+                                                                  Arial,
+                                                                Helvetica,
+                                                                sans-serif, Fira;
+                                                              color: #3e19fa;
+                                                            "
+                                                          >
+                                                            Verify Your Email
+                                                            Address
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td
+                                                            align="center"
+                                                            style="
+                                                              font-family: Helvetica,
+                                                                Arial, Helvetica,
+                                                                sans-serif;
+                                                              color: #111111;
+                                                              font-size: 14px;
+                                                              line-height: 18px;
+                                                              padding: 0 0 14px;
+                                                              font: 600 14px/18px
+                                                                  Arial,
+                                                                Helvetica,
+                                                                sans-serif, Fira;
+                                                              color: #0066b8;
+                                                              border-bottom: 1px
+                                                                solid #c7cfd9;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                    <br />
+                                                    <br />
+                                                   Hi, ${name}
+                                                    <br />
+                                                    <br />
+                                                    Congratulations! You're
+                                                    almost set to start using
+                                                    edu++.
+                                                    <br />
+                                                    Just click the button below
+                                                    to validate your email
+                                                    address.
+                                                    <table
+                                                      align="center"
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      style="
+                                                        margin: 0 auto;
+                                                        padding: 40px;
+                                                      "
+                                                    >
+                                                      <tbody>
+                                                        <tr>
+                                                          <td
+                                                            align="center"
+                                                            bgcolor="#3e19fa"
+                                                            style="
+                                                              font-family: Helvetica,
+                                                                Arial, Helvetica,
+                                                                sans-serif;
+                                                              color: #111111;
+                                                              font-size: 14px;
+                                                              line-height: 18px;
+                                                              font: 500 32px/18px
+                                                                  Arial,
+                                                                Helvetica,
+                                                                sans-serif, Fira;
+                                                              letter-spacing: 0.4px;
+                                                              border-radius: 5px;
+                                                            "
+                                                          >
+                                                            <a
+                                                              href="https://bcs-prep.vercel.app/verify-account?token=${token}"
+                                                              style="
+                                                                font-family: Helvetica,
+                                                                  Arial,
+                                                                  Helvetica,
+                                                                  sans-serif;
+                                                                font-size: 14px;
+                                                                line-height: 18px;
+                                                                font-weight: bold;
+                                                                padding: 20px;
+                                                                color: #fff;
+                                                                text-decoration: none;
+                                                                display: block;
+                                                              "
+                                                              target="_blank"
+                                                              >Verify Email
+                                                            </a>
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                    <table
+                                                      style="
+                                                        padding: 0px 0px 20px;
+                                                      "
+                                                      width="100%"
+                                                    >
+                                                      <tbody>
+                                                        <tr>
+                                                          <td
+                                                            align="center"
+                                                            style="
+                                                              font-family: Helvetica,
+                                                                Arial, Helvetica,
+                                                                sans-serif;
+                                                              color: #111111;
+                                                              font-size: 14px;
+                                                              line-height: 18px;
+                                                              padding: 0 0 1px;
+                                                              font: 600 14px/18px
+                                                                  Arial,
+                                                                Helvetica,
+                                                                sans-serif, Fira;
+                                                              color: #0066b8;
+                                                              border-bottom: 1px
+                                                                solid #c7cfd9;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                    <div
+                                                      style="
+                                                        font-size: 12px;
+                                                        font-weight: normal;
+                                                      "
+                                                    >
+                                                      You need to perform this
+                                                      validation within the next
+                                                      1 hour and 30 minutes to
+                                                      start using this edu++
+                                                      app.
+                                                      <br />
+                                                      If the button does not
+                                                      work for any reason, you
+                                                      can also paste the
+                                                      following into your
+                                                      browser:
+                                                      <a
+                                                        href="https://bcs-prep.vercel.app/verify-account?token=${token}"
+                                                        style="
+                                                          font-family: Helvetica,
+                                                            Arial, Helvetica,
+                                                            sans-serif;
+                                                          font-size: 14px;
+                                                          line-height: 18px;
+                                                          font-weight: bold;
+                                                          color: #005ce4;
+                                                          font-size: 12px;
+                                                          font-weight: normal;
+                                                        "
+                                                        target="_blank"
+                                                        >https://bcs-prep.vercel.app/verify-account?token=${token}</a
+                                                      >
+                                                      <br />
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    style="
+                                      font-family: Helvetica, Arial, Helvetica,
+                                        sans-serif;
+                                      color: #111111;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                      padding-left: 10px;
+                                      padding-right: 10px;
+                                      padding: 20px 40px 20px;
+                                    "
+                                  >
+                                    <table
+                                      cellpadding="0"
+                                      cellspacing="0"
+                                      width="100%"
+                                    >
+                                      <tbody>
+                                        <tr>
+                                          <th
+                                            align="left"
+                                            style="
+                                              font-weight: normal;
+                                              text-align: left;
+                                              display: block;
+                                              width: 100%;
+                                              box-sizing: border-box;
+                                              vertical-align: top;
+                                            "
+                                            width="140"
+                                          >
+                                            <table
+                                              cellpadding="0"
+                                              cellspacing="0"
+                                              style="
+                                                float: none;
+                                                margin: 0 auto;
+                                              "
+                                            >
+                                              <tbody>
+                                                <tr>
+                                                  <td
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  >
+                                                    <a
+                                                      href="#"
+                                                      style="
+                                                        font-family: Helvetica,
+                                                          Arial, Helvetica,
+                                                          sans-serif;
+                                                        font-size: 14px;
+                                                        line-height: 18px;
+                                                        font-weight: bold;
+                                                        color: #005ce4;
+                                                        text-decoration: none;
+                                                      "
+                                                      target="_blank"
+                                                      data-saferedirecturl="https://www.google.com/url?q=https://discord.gg/Cloudinary&amp;source=gmail&amp;ust=1752787985482000&amp;usg=AOvVaw3subJr85y8KMWjNKfw0kcl"
+                                                    >
+                                                      <img
+                                                        alt="Discord"
+                                                        src="https://ci3.googleusercontent.com/meips/ADKq_Nbia12i4y9ALfdvzL9-RdtFsa7Z4KC5Vbfy9i2sZjvN4SK9L2dhYqCp8bZxONskgDMSes70Ywfn-fM4C-ErTb98mtRQWBO03AQwA5usbRWx0JaSZlEC8vL39g2wFAXVj6bNB57UaV6s0hNIrp2ANQ=s0-d-e1-ft#https://cloudinary-res.cloudinary.com/image/upload/w_33,dpr_2.0/mail/ico-discord-dark.png"
+                                                        style="
+                                                          width: 33px;
+                                                          vertical-align: top;
+                                                        "
+                                                        width="33"
+                                                        class="CToWUd"
+                                                        data-bit="iit"
+                                                      />
+                                                    </a>
+                                                  </td>
+                                                  <td
+                                                    width="14"
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  ></td>
+                                                  <td
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  >
+                                                    <a
+                                                      href="https://www.facebook.com/profile.php?id=100089694753522"
+                                                      style="
+                                                        font-family: Helvetica,
+                                                          Arial, Helvetica,
+                                                          sans-serif;
+                                                        font-size: 14px;
+                                                        line-height: 18px;
+                                                        font-weight: bold;
+                                                        color: #005ce4;
+                                                        text-decoration: none;
+                                                      "
+                                                      target="_blank"
+                                                      data-saferedirecturl="https://www.google.com/url?q=https://www.facebook.com/Cloudinary&amp;source=gmail&amp;ust=1752787985482000&amp;usg=AOvVaw13eYqjA1U2mM_bFB2WTH_2"
+                                                    >
+                                                      <img
+                                                        alt="Facebook"
+                                                        src="https://ci3.googleusercontent.com/meips/ADKq_NZU2yzsJ67ivGrSvbnbGlbF_668jnJeVVq--n131XoKcvT51leilCS_RWRYn8qpsaZmkqSoSb1Bf81zsLVbUttU4bYPrkMuQIlfx9UOQ367UQK7Cj-WyoVM_a4MzWR9xjiO_kg3gxdfuFwQuEP4nGk=s0-d-e1-ft#https://cloudinary-res.cloudinary.com/image/upload/w_33,dpr_2.0/mail/ico-facebook-dark.png"
+                                                        style="
+                                                          width: 33px;
+                                                          vertical-align: top;
+                                                        "
+                                                        width="33"
+                                                        class="CToWUd"
+                                                        data-bit="iit"
+                                                      />
+                                                    </a>
+                                                  </td>
+                                                  <td
+                                                    width="14"
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  ></td>
+                                                  <td
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  >
+                                                    <a
+                                                      href="https://www.linkedin.com/in/toriqul-islam-447379278"
+                                                      style="
+                                                        font-family: Helvetica,
+                                                          Arial, Helvetica,
+                                                          sans-serif;
+                                                        font-size: 14px;
+                                                        line-height: 18px;
+                                                        font-weight: bold;
+                                                        color: #005ce4;
+                                                        text-decoration: none;
+                                                      "
+                                                      target="_blank"
+                                                      data-saferedirecturl="https://www.google.com/url?q=https://www.linkedin.com/company/2725088/&amp;source=gmail&amp;ust=1752787985483000&amp;usg=AOvVaw0UMRGzhYOcG6vlp_w9XWHW"
+                                                    >
+                                                      <img
+                                                        alt="Linkedin"
+                                                        src="https://ci3.googleusercontent.com/meips/ADKq_NaRA3XNxBo9W3R5I3QglzH2qvQWdHSvsSvoDCMcGCkEqEXsN9FYuPRbCXRjR-I9KVzHx9hVeRNPwgHVY2akKxLMjQ6pceVI0pfQDiaglm6FZEF3QO1TTt-Rq8j9H7o8ow1D8C206A3HB_j8qYLsaGE=s0-d-e1-ft#https://cloudinary-res.cloudinary.com/image/upload/w_33,dpr_2.0/mail/ico-linkedin-dark.png"
+                                                        style="
+                                                          width: 33px;
+                                                          vertical-align: top;
+                                                        "
+                                                        width="33"
+                                                        class="CToWUd"
+                                                        data-bit="iit"
+                                                      />
+                                                    </a>
+                                                  </td>
+                                                  <td
+                                                    width="14"
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  ></td>
+                                                  <td
+                                                    style="
+                                                      font-family: Helvetica,
+                                                        Arial, Helvetica,
+                                                        sans-serif;
+                                                      color: #111111;
+                                                      font-size: 14px;
+                                                      line-height: 18px;
+                                                    "
+                                                  >
+                                                    <a
+                                                      href="#"
+                                                      style="
+                                                        font-family: Helvetica,
+                                                          Arial, Helvetica,
+                                                          sans-serif;
+                                                        font-size: 14px;
+                                                        line-height: 18px;
+                                                        font-weight: bold;
+                                                        color: #005ce4;
+                                                        text-decoration: none;
+                                                      "
+                                                      target="_blank"
+                                                      data-saferedirecturl="https://www.google.com/url?q=https://twitter.com/cloudinary&amp;source=gmail&amp;ust=1752787985483000&amp;usg=AOvVaw2eGcTZXe2qej9N0DZz6hFe"
+                                                    >
+                                                      <img
+                                                        alt="Twitter"
+                                                        src="https://ci3.googleusercontent.com/meips/ADKq_NYyElM09gVyX_Zat30d5Gt4yVQZ42o-tbEkcQhBHAWY-MnJC9MzF-j93kKX6EquOT7xw-4_g_T-qE5I-txW3nUm2d8JaMR5clM7HGXBqcqGTbI8YUARtmKIx7hlJ9wJoTd9Jxgespnl2zR336a_8g=s0-d-e1-ft#https://cloudinary-res.cloudinary.com/image/upload/w_33,dpr_2.0/mail/ico-twitter-dark.png"
+                                                        style="
+                                                          width: 33px;
+                                                          vertical-align: top;
+                                                        "
+                                                        width="33"
+                                                        class="CToWUd"
+                                                        data-bit="iit"
+                                                      />
+                                                    </a>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </th>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+
+                          <td
+                            valign="top"
+                            style="
+                              font-family: Helvetica, Arial, Helvetica,
+                                sans-serif;
+                              color: #111111;
+                              font-size: 14px;
+                              line-height: 18px;
+                            "
+                          >
+                            <table cellpadding="0" cellspacing="0" width="100%">
+                              <tbody>
+                                <tr>
+                                  <td
+                                    bgcolor="#3e19fa"
+                                    height="150"
+                                    style="
+                                      font-family: Helvetica, Arial, Helvetica,
+                                        sans-serif;
+                                      color: #111111;
+                                      font-size: 14px;
+                                      line-height: 18px;
+                                    "
+                                  ></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="yj6qo"></div>
+                    <div class="adL"></div>
+                  </div>
     `,
     };
 
-    await transporter.sendMail(mailOptions); // await without callback
+    try {
+      await transporter.sendMail(mailOptions); // await without callback
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   async register_user(
     userData: any,
     req,

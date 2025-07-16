@@ -223,7 +223,7 @@ const Messanger = ({
   return (
     <div>
       {!switcher && (
-        <button className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white" onClick={() => setSwitcher(true)}>
+        <button className="bg-[#3e19fa] px-4 flex items-center gap-2 rounded-md text-white" onClick={() => setSwitcher(true)}>
         <BiMessageRoundedDots />  Messaging
         </button>
       )}
@@ -232,7 +232,7 @@ const Messanger = ({
           switcher ? "scale-1" : "scale-0"
         } fixed duration-200 -left-0 md:left-1/3 md:h-auto pb-4 bg-white origin-bottom-left bottom-0 md:bottom-10 w-full md:w-4/12 z-50 md:ml-6 border rounded-md`}
       >
-        <div className="py-3 bg-violet-700 rounded-t-md flex justify-between items-center px-4">
+        <div className="py-3 bg-[#3e19fa] rounded-t-md flex justify-between items-center px-4">
           <div className="flex gap-2">
             <img
               className="w-8 h-8 border border-white rounded-full"
@@ -328,7 +328,7 @@ const Messanger = ({
                         </div>
                         <div
                           style={{ borderRadius: "20px 20px 20px 0px" }}
-                          className="px-2 ml-6 bg-violet-700 max-w-[80%] w-fit text-white text-left"
+                          className="px-2 ml-6 bg-[#3e19fa] max-w-[80%] w-fit text-white text-left"
                         >
                           <p
                             ref={bottomRef}

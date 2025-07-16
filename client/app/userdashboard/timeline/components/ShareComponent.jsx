@@ -143,7 +143,7 @@ const ShareComponent = ({share,slug,id}) => {
                         />
                       </PinterestShareButton>
                     </div>
-                    <div className="md:hidden md:w-16 md:h-16 w-10 h-10 bg-violet-700 rounded-full flex justify-center items-center">
+                    <div className="md:hidden md:w-16 md:h-16 w-10 h-10 bg-[#3e19fa] rounded-full flex justify-center items-center">
                       <CopyToClipboard
                         text={`${viewurl}/${
                           slug ? slug : id

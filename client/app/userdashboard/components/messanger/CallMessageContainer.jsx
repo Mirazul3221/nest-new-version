@@ -59,7 +59,7 @@ const CallMessageContainer = ({ id, userDetails }) => {
     <div>
       {!switcher && (
         <button
-          className="bg-violet-700 px-4 flex items-center gap-2 rounded-md text-white"
+          className="bg-[#3e19fa] px-4 flex items-center gap-2 rounded-md text-white"
           onClick={() => {setSwitcher(true); check_my_friend_window(); checkMessageStatus()}}
           
         >

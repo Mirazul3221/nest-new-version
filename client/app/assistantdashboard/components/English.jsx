@@ -107,7 +107,7 @@ const English = () => {
   return (
     <div className={`${show ? "fixed w-screen top-0 left-0 bg-white" : ""}`}>
       <div className={` cursor-pointer font-medium flex justify-end mr-10`}>
-        <div className="w-8 h-8 bg-violet-700 flex justify-center items-center text-white rounded-full absolute mt-1">
+        <div className="w-8 h-8 bg-[#3e19fa] flex justify-center items-center text-white rounded-full absolute mt-1">
           <FaRegEdit size={20} />
         </div>
       </div>
@@ -369,7 +369,7 @@ const English = () => {
             <button
               disabled={loader}
               type="submit"
-              className="py-1 px-6 bg-violet-700 rounded-md text-white"
+              className="py-1 px-6 bg-[#3e19fa] rounded-md text-white"
             >
               {loader ? "Loading..." : "Create"}
             </button>

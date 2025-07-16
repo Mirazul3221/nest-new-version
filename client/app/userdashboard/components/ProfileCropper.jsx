@@ -281,7 +281,7 @@ export default function ProfileCropper({
                 className={`updateTitle w-1/2 py-1 px-6 ${
                   loader
                     ? "bg-gray-200 text-gray-700 hover:bg-slate-100"
-                    : "bg-violet-700 text-white cursor-pointer"
+                    : "bg-[#3e19fa] text-white cursor-pointer"
                 } duration-200 text-center rounded-md`}
               >
                 <div className="flex justify-center items-center gap-2">

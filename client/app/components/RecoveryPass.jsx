@@ -64,7 +64,7 @@ const RecoveryPass = ({mail}) => {
             <button
             disabled={loader}
               type="submit"
-              className={`mt-2 ${loader ? "":"bg-violet-700 hover:bg-violet-600 text-white duration-500"} border py-2 rounded-md w-full flex justify-center items-center`}>
+              className={`mt-2 ${loader ? "":"bg-[#3e19fa] hover:bg-violet-600 text-white duration-500"} border py-2 rounded-md w-full flex justify-center items-center`}>
               {loader ? <div className="flex justify-center items-center gap-2"><h2>Loading</h2> <Image src={loaderImg} className="w-5" alt="Loader"/></div>: "Submit"}
             </button>
           </div>

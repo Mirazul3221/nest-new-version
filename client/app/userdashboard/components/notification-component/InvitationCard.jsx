@@ -14,7 +14,7 @@ const InvitationCard = ({item,sayThanks}) => {
           src={item.message[0].requesterProfie}
           alt={item.message[0].requesterName}
         />
-        <h2 className="bg-violet-500 w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-4 -right-4">
+        <h2 className="bg-[#3e19fa] w-10 h-10 rounded-full absolute text-white text-[10px] p-1 border-2 border-white flex justify-center items-center -bottom-4 -right-4">
           {item?.message[0]?.requesterStatus}
         </h2>
       </div>
@@ -35,7 +35,7 @@ const InvitationCard = ({item,sayThanks}) => {
     <div onClick={()=>{
       setCloseInvite(true)
       sayThanks(item?.message[0]?.requesterId)
-    }} className="py-1 cursor-pointer w-fit px-6 bg-violet-700 text-white rounded-lg">
+    }} className="py-1 cursor-pointer w-fit px-6 bg-[#3e19fa] text-white rounded-lg">
      {`Say "thank you"`}
     </div>
   </div>

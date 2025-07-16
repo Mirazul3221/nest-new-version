@@ -249,7 +249,7 @@ const Page = () => {
                   <button
                     disabled={imgLoader}
                     onClick={handleClick}
-                    className="py-1 px-10 rounded-md bg-violet-500 text-white"
+                    className="py-1 px-10 rounded-md bg-[#3e19fa] text-white"
                   >
                     {!imgLoader ? (
                       "Click to capture"
@@ -270,7 +270,7 @@ const Page = () => {
                   <button
                     disabled={imgLoader}
                     onClick={handleTextMemory}
-                    className="py-1 px-10 rounded-md bg-violet-500 text-white"
+                    className="py-1 px-10 rounded-md bg-[#3e19fa] text-white"
                   >
                     {!imgLoader ? (
                       "Click to capture"
@@ -349,7 +349,7 @@ const Page = () => {
                     <button
                       disabled={imgLoader}
                       onClick={handleClick}
-                      className="py-2 px-3 rounded-l-md rounded-r-full bg-violet-500 text-white"
+                      className="py-2 px-3 rounded-l-md rounded-r-full bg-[#3e19fa] text-white"
                     >
                       {!imgLoader ? (
                         "capture"
@@ -436,7 +436,7 @@ const Page = () => {
                     <button
                       disabled={imgLoader}
                       onClick={handleTextMemory}
-                      className="py-2 px-3 rounded-l-md rounded-r-full bg-violet-500 text-white"
+                      className="py-2 px-3 rounded-l-md rounded-r-full bg-[#3e19fa] text-white"
                     >
                       {imgLoader ? (
                         <span>

@@ -116,12 +116,12 @@ const Search = () => {
         {query.length > 0 ? (
           <div
             onClick={() => handleSearch(query)}
-            className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white cursor-pointer duration-00 border-violet-700 hover:border-fuchsia-600 hover:bg-violet-600"
+            className="px-2 py-[6px] w-fit rounded-r-lg bg-[#3e19fa] border-2 text-white cursor-pointer duration-00 border-violet-700 hover:border-fuchsia-600 hover:bg-violet-600"
           >
             <FiSearch size={22} />
           </div>
         ) : (
-          <div className="px-2 py-[6px] w-fit rounded-r-lg bg-violet-700 border-2 text-white duration-00 border-violet-700">
+          <div className="px-2 py-[6px] w-fit rounded-r-lg bg-[#3e19fa] border-2 text-white duration-00 border-violet-700">
             <FiSearch size={22} />
           </div>
         )}

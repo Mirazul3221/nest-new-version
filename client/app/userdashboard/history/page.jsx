@@ -40,7 +40,7 @@ const Page = () => {
             level === "R" ? null : setSwitcher(false)
           }}
           className={`px-6 py-2 w-1/2 ${
-            level == "R" ? "bg-violet-700 duration-300 text-white" : ""
+            level == "R" ? "bg-[#3e19fa] duration-300 text-white" : ""
           } text-center rounded-md  cursor-pointer`}
         >
           Right Ans
@@ -51,7 +51,7 @@ const Page = () => {
             level === "W" ? null : setSwitcher(false)
           }}
           className={`px-6 py-2 w-1/2 ${
-            level == "W" ? "bg-violet-700 duration-300 text-white" : ""
+            level == "W" ? "bg-[#3e19fa] duration-300 text-white" : ""
           } text-center rounded-md cursor-pointer`}
         >
           Wrong Ans
@@ -70,7 +70,7 @@ const Page = () => {
                         setCount(i);
                         setSwitcher(true);
                       }}
-                      className="cursor-pointer flex justify-between items-center bg-violet-700 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
+                      className="cursor-pointer flex justify-between items-center bg-[#3e19fa] rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
                     >
                       {item} <MdOutlineDoubleArrow />
                     </h2>
@@ -101,7 +101,7 @@ const Page = () => {
                         setCount(i);
                         setSwitcher(true);
                       }}
-                      className="cursor-pointer flex justify-between items-center bg-violet-700 rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
+                      className="cursor-pointer flex justify-between items-center bg-[#3e19fa] rounded-lg border-fuchsia-600 mb-2 text-white md:text-lg font-bold px-8 py-2"
                     >
                       {item} <MdOutlineDoubleArrow />
                     </h2>
