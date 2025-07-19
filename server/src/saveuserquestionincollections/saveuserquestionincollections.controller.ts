@@ -1,30 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { SaveuserquestionincollectionsService } from './saveuserquestionincollections.service';
-import { CreateSaveuserquestionincollectionDto } from './dto/create-saveuserquestionincollection.dto';
-import { UpdateSaveuserquestionincollectionDto } from './dto/update-saveuserquestionincollection.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('saveuserquestionincollections')
 export class SaveuserquestionincollectionsController {
   constructor(private readonly saveuserquestionincollectionsService: SaveuserquestionincollectionsService) {}
 
-  @Post()
-  create(@Body() createSaveuserquestionincollectionDto: CreateSaveuserquestionincollectionDto) {
-    return this.saveuserquestionincollectionsService.create(createSaveuserquestionincollectionDto);
+  @Post('create')
+  @UseGuards(AuthGuard())
+  async create(@Body() data, @Req() req) {
+    return await this.saveuserquestionincollectionsService.create(data,req);
   }
 
-  @Get()
-  findAll() {
-    return this.saveuserquestionincollectionsService.findAll();
+  @Get('get')
+   @UseGuards(AuthGuard())
+ async findAll(@Req() req) {
+    const id = req.user._id;
+    return await this.saveuserquestionincollectionsService.findAll(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.saveuserquestionincollectionsService.findOne(+id);
+
+  @Post('find-collected-questions')
+   @UseGuards(AuthGuard())
+ async findAllQuestions(@Body() data) {
+    const {collectionId} = data;
+    return await this.saveuserquestionincollectionsService.findAllQuestions(collectionId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSaveuserquestionincollectionDto: UpdateSaveuserquestionincollectionDto) {
-    return this.saveuserquestionincollectionsService.update(+id, updateSaveuserquestionincollectionDto);
+  @Post('update')
+ updateCollection(@Body() data) {
+    return this.saveuserquestionincollectionsService.updateCollection(data);
   }
 
   @Delete(':id')

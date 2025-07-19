@@ -134,6 +134,8 @@ useEffect(() => {
   };
 
   const randomCount = Math.floor(Math.random() * 360 + 1);
+
+  console.log(myQuestion)
   return (
     <div className="py-4 mb-4 border-t-4 md:border-t-1 relative text-gray-700 px-6 bg-white border rounded-md md:border max-w-screen">
       {myQuestion && (

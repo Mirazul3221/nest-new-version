@@ -30,11 +30,6 @@ import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
         };
       },
     }),
-    // JwtModule.register({
-    //   global: true,
-    //   secret: "mirazul",
-    //   signOptions: { expiresIn: '60s' },
-    // }),
     MongooseModule.forFeature([
       {
         name: user_model,

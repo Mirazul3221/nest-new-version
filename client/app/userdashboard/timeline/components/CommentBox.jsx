@@ -25,8 +25,14 @@ import ProfileCard from "../../components/ProfileCard";
 import ShareComponent from "./ShareComponent";
 import CommentProfile01 from "./CommentsProfile01";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { MdOutlineThumbDownAlt, MdOutlineThumbUp, MdThumbDown, MdThumbUpAlt } from "react-icons/md";
+import {
+  MdOutlineThumbDownAlt,
+  MdOutlineThumbUp,
+  MdThumbDown,
+  MdThumbUpAlt,
+} from "react-icons/md";
 import ShareAPI from "./ShareApi";
+import CollectionsContainer from "./CollectionsContainer";
 const CommentBox = ({ question, Handler = null }) => {
   if (!question) return;
   const { store, dispatch } = useContext(storeContext);
@@ -47,7 +53,7 @@ const CommentBox = ({ question, Handler = null }) => {
   const [message, setMessage] = useState("");
   const [putLike, setPutLike] = useState(false);
   const [putDislike, setPutDislike] = useState(false);
-  const [anim,setAnim] = useState(false);
+  const [anim, setAnim] = useState(false);
   const [comments, setComments] = useState(extractQuestion);
   const [hideImoji, setHideImoji] = useState(false);
   const [share, setShare] = useState(false);
@@ -119,7 +125,8 @@ const CommentBox = ({ question, Handler = null }) => {
   };
 
   const handleSendReaction = useCallback(async (react) => {
-    if(react== 'liked') new Audio("/like-justify-sound/pick-92276.mp3").play();
+    if (react == "liked")
+      new Audio("/like-justify-sound/pick-92276.mp3").play();
     try {
       const { data } = await axios.post(
         `${baseurl}/userquestions/add-reaction`,
@@ -182,6 +189,9 @@ const CommentBox = ({ question, Handler = null }) => {
   } else {
     document.body.style.overflow = "auto";
   }
+
+  ///////////////////////////////////////Collection seve function init/////////////////////////////
+const [openCollection,setOpenCollection] = useState(false)
   return (
     <div className="relative">
       <div
@@ -222,7 +232,7 @@ const CommentBox = ({ question, Handler = null }) => {
               <div
                 onClick={() => {
                   setPutLike(false);
-                  setAnim(false)
+                  setAnim(false);
                   handleSendReaction("restoreLiked");
                 }}
                 className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full flex items-center gap-2 p-2"
@@ -237,7 +247,7 @@ const CommentBox = ({ question, Handler = null }) => {
                 onClick={() => {
                   setPutDislike(false);
                   setPutLike(true);
-                  setAnim(true)
+                  setAnim(true);
                   handleSendReaction("liked");
                 }}
                 className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer p-2"
@@ -249,7 +259,7 @@ const CommentBox = ({ question, Handler = null }) => {
               <div
                 onClick={() => {
                   setPutDislike(false);
-                  setAnim(false)
+                  setAnim(false);
                   handleSendReaction("restoreDisliked");
                 }}
                 className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full flex items-center gap-2 p-2"
@@ -263,7 +273,7 @@ const CommentBox = ({ question, Handler = null }) => {
               <div
                 onClick={() => {
                   setPutLike(false);
-                   setAnim(false)
+                  setAnim(false);
                   setPutDislike(true);
                   handleSendReaction("disliked");
                 }}
@@ -288,11 +298,40 @@ const CommentBox = ({ question, Handler = null }) => {
               <span>Comment</span>
             </div>
           )}
-          <div
-            className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2"
-          >
+
+          <div onClick={()=>setOpenCollection(true)} className="flex items-center gap-1 p-2 cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 rotate-90"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+              />
+            </svg>
+            <span>Save</span>
+          </div>
+
+          {/* =============================Call container in here================================ */}
+          {
+            openCollection && (
+              <>
+                <CollectionsContainer questionId = {question?._id} setOpenCollection={setOpenCollection}/>
+              </>
+            )
+          }
+
+          <div className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
             <LuShare2 size={22} />
-            <ShareAPI title={question.question} uri={`userdashboard/timeline/${question.slug}`} />
+            <ShareAPI
+              title={question.question}
+              uri={`userdashboard/timeline/${question.slug}`}
+            />
           </div>
         </div>
 
