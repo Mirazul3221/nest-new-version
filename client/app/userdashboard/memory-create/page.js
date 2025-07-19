@@ -12,7 +12,7 @@ import { RxCross2 } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import axios from "axios";
 import { baseurl } from "@/app/config";
-
+//
 const Page = () => {
   const router = useRouter();
   const { store } = useStore();
