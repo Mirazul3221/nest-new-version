@@ -28,12 +28,16 @@ export class SaveuserquestionincollectionsController {
   }
 
   @Post('update')
- updateCollection(@Body() data) {
-    return this.saveuserquestionincollectionsService.updateCollection(data);
+  @UseGuards(AuthGuard())
+ updateCollection(@Body() data,@Req() req) {
+  const myId = req.user._id;
+    return this.saveuserquestionincollectionsService.updateCollection(data,myId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.saveuserquestionincollectionsService.remove(+id);
+  @Post('delete-collection')
+   @UseGuards(AuthGuard())
+  remove(@Body() data,@Req() req) {
+     const myId = req.user._id;
+    return this.saveuserquestionincollectionsService.deleteCollection(data,myId);
   }
 }

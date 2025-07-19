@@ -44,6 +44,9 @@ reactions: {
   dislikes: string[];
 };
   ////////////////////////////////////////////////////////////
+      @Prop({type:[{type:String}]})
+      saveQuestionsStore:string[]
+  ////////////////////////////////////////////////////////////
   @Prop({ type: [] })
   comments: Comment[]; // Nested comments
 }

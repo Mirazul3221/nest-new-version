@@ -467,6 +467,9 @@ const questions = await this.QuestionModel.aggregate([
         like: { $in: [stringId, '$reactions.likes'] },
         dislike: { $in: [stringId, '$reactions.dislikes'] },
       },
+         isSaved: {
+      $in: [stringId, "$saveQuestionsStore"]
+    }
     },
   },
 ]);

@@ -43,12 +43,30 @@ findQuestions()
     const filteredQuestions = questions?.filter((q) => q._id !== question._id);
     setQuestions(filteredQuestions);
   }; //
+
+  const handleDeleteCollection = async ()=> {
+    const isDelete = confirm('Want to delete this collection?')
+    if(isDelete){
+      await axios.post(
+        `${baseurl}/saveuserquestionincollections/delete-collection`,
+        { collectionId},
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+
+      window.location.href = '/';
+    }
+  }
   return (
     <div className="md:px-10 px-2 py-2">
       <ProtectRoute>
         <div className="flex justify-between items-center">
           <Logo />{" "}
           <div className="text-violet-700 font-semibold md:text-2xl">{name}</div>
+          <div onClick={handleDeleteCollection} className="text-rose-500 font-semibold md:text-2xl">Delete this collection</div>
         </div>
          
          <div>

@@ -143,7 +143,7 @@ useEffect(() => {
           <div className="flex justify-between">
             <div className="top flex items-center gap-2">
               <div className="">
-                {myQuestion.profile !== "" ? (
+                {myQuestion.profile ? (
                   <ProfileCard id={myQuestion.userId} Handler={Handler}>
                     <div className="w-10 relative">
                       {
@@ -191,7 +191,6 @@ useEffect(() => {
                   <div className="group relative duration-500">
                     <HiOutlineDotsHorizontal size={20} />
                     <div className="hidden absolute -right-6 group-hover:inline-block w-[200px] rounded-md text-center cursor-pointer bg-gray-100 py-1 px-4">
-                      {" "}
                       <a
                         className="flex items-center gap-2"
                         target="_blank"
@@ -262,7 +261,7 @@ useEffect(() => {
               </div>
             )}
           </div>
-          <div className="middle mt-2">
+          <div className="middle mt-2 text-sm md:text-inherit">
             <h2 className="mb-2 border-b pb-2">
               <span className="px-2 mr-2 rounded-lg bg-gray-50 border">
                 {myQuestion.subject}

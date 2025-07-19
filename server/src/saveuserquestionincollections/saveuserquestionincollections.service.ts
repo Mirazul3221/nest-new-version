@@ -13,7 +13,7 @@ export class SaveuserquestionincollectionsService {
   async create(data,req) {
     const {collectionName} = data;
     const isExist = await this.CollectionModel.find({collectionName});
-    if (isExist.length > 0)  throw new ConflictException('collection already exist ! ');
+    if (isExist.length > 0)  throw new ConflictException('collection already exist!');
     const final = await this.CollectionModel.create({
       userId:req.user._id,
       collectionName
@@ -36,7 +36,7 @@ return questions;
   }
 
 
- async updateCollection(data) {
+ async updateCollection(data,myId) {
  const {collectionId,questionId} = data;
  const findCollection = await this.CollectionModel.findById(collectionId);
  if(findCollection.container.includes(questionId)){
@@ -44,6 +44,7 @@ return questions;
     status:500, msg:'Question already exist'
    }
 }
+
  if (findCollection.container.length >= 500) {
    return {
     status:500, msg:'Falie to save! Try with another collection'
@@ -51,11 +52,37 @@ return questions;
  }
 
 findCollection.container.unshift(questionId);
-await findCollection.save()
+await findCollection.save();
+ const targetQuestion = await this.QuestionsModel.findById(questionId);
+ targetQuestion.saveQuestionsStore.unshift(myId);
+ await targetQuestion.save();
    return {
     status:200, msg:`saved to the "${findCollection.collectionName}" collection`
    }
   }
+
+
+async deleteCollection(data, myId) {
+  // 1. Find the collection
+  const {collectionId} = data;
+  const collection = await this.CollectionModel.findById(collectionId);
+  if (!collection) throw new Error('Collection not found');
+
+  // 2. Get the question IDs from the collection
+  const objectIds = collection.container.map(id => new Types.ObjectId(id));
+
+  // 3. Remove the collectionId or userId from each question's `storeId` array
+  await this.QuestionsModel.updateMany(
+    { _id: { $in: objectIds } },
+    { $pull: { saveQuestionsStore: myId } } // or collectionId if you store that
+  );
+
+  // 4. Delete the collection itself
+  await this.CollectionModel.findByIdAndDelete(collectionId);
+
+  return { message: 'Collection deleted and storeId references removed from questions.' };
+}
+
 
   findOne(id: number) {
     return `This action returns a #${id} saveuserquestionincollection`;
