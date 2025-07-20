@@ -158,8 +158,8 @@ const TurnAsHome = () => {
 
   const [myDetails, setMyDetails] = useState();
   useEffect(() => {
-    setMyDetails(JSON.parse(localStorage.getItem("myDetails")));
-  }, []);
+    setMyDetails(appData?.globalUserProfile);
+  }, [appData]);
 
   const logout = () => {
     dispatch({ type: "logout" });

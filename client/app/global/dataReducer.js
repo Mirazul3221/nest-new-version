@@ -11,6 +11,7 @@ export const dataReducer = (state,action) => {
     state.token = ''
     if(typeof window !== 'undefined'){
       localStorage.removeItem('token')
+      localStorage.removeItem('myDetails')
     }
  }
 //============================

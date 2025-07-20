@@ -8,7 +8,7 @@ export const myDetailsApi =  async (token)=>{
           Authorization: `Bearer ${token}`,
         },
       });
-      localStorage.setItem('myDetails', JSON.stringify(data))
+      return data
     } catch (error) {
       console.log(error);
     }
@@ -51,6 +51,7 @@ export const profileApi =async (token,id) => {
 export const commonLogout = async (dispatch, err) => {
   if (err?.response?.data?.error === "Unauthorized") {
     await dispatch({ type: "logout" });
+    localStorage.removeItem("myDetails");
     window.location.href = "/login";
   }
 };

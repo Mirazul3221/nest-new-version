@@ -1,5 +1,15 @@
 export const globalDataReducer = (state, action) => {
 
+ if (action.type == 'GLOBALUSERDATA') {
+      return {
+      globalUserProfile : action.payload,
+      message:state.message,
+      user: state.user,
+      userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
+    };
+ }
+ 
   if (action.type === "fetch-message") {
     state.message = [...action.payload];
     return state;
@@ -11,6 +21,7 @@ export const globalDataReducer = (state, action) => {
   }
   if (action.type === "receive-message") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: [...state.message, action.payload],
       user: state.user,
       userMemories: state.userMemories,
@@ -43,6 +54,7 @@ export const globalDataReducer = (state, action) => {
     // //   return state
     // // }
     return {
+      globalUserProfile:state.globalUserProfile,
       message: [...state.message],
       user: state.user,
       userMemories: state.userMemories,
@@ -52,6 +64,7 @@ export const globalDataReducer = (state, action) => {
 
   if (action.type === "fetch-scroll-message") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: [...action.payload, ...state.message],
       user: state.user,
       userMemories: state.userMemories,
@@ -66,6 +79,7 @@ export const globalDataReducer = (state, action) => {
   ///////////////////////////////////////////User logic from here/////////////////////////////
   if (action.type === "STORE_ALL_MESSANGER_USER") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: [...action.payload],
       userMemories: state.userMemories,
@@ -79,8 +93,8 @@ export const globalDataReducer = (state, action) => {
     const updateArrey = state.user.filter(
       (user) => user.userId !== action.payload.userId
     );
-    console.log(updateArrey);
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: [action.payload, ...updateArrey],
       userMemories: state.userMemories,
@@ -101,6 +115,7 @@ export const globalDataReducer = (state, action) => {
       test: "sttt",
     };
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: [newUserModify, ...updatingUsers],
       userMemories: state.userMemories,
@@ -111,6 +126,7 @@ export const globalDataReducer = (state, action) => {
   ///////////////////////////////Logic for user memory management///////////////////////////
   if (action.type === "ADD_ALL_MEMORY") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: state.user,
       userMemories: action.payload,
@@ -119,6 +135,7 @@ export const globalDataReducer = (state, action) => {
   }
   if (action.type === "ADD_NEW_MEMORY") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: state.user,
       userMemories: action.payload,
@@ -127,6 +144,7 @@ export const globalDataReducer = (state, action) => {
   }
   if (action.type === "STORE_RIGHTSIDEBAR_DATA") {
     return {
+      globalUserProfile:state.globalUserProfile,
       message: state.message,
       user: state.user,
       userMemories: state.userMemories,

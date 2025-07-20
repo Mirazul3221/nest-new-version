@@ -5,6 +5,8 @@ import storeContext from "./createContex";
 import { decode_token } from "./extract_jwt";
 import axios from "axios";
 import { baseurl } from "../config";
+import { myDetailsApi } from "../userdashboard/components/common";
+import { useGlobalData } from "../userdashboard/global/globalDataProvider.jsx";
 const DataProvider = ({ children }) => {
   const localstore = {};
   if (typeof window !== "undefined") {

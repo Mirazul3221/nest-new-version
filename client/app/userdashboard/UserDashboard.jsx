@@ -229,7 +229,6 @@ const UserDashboard = () => {
         </div>
       </div>
       <div className="hidden md:block">
-        {" "}
         <Footer />
       </div>
 

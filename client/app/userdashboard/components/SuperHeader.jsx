@@ -22,7 +22,7 @@ import { fetchAllFriendsByMessage } from "../messanger/components/fetchdata";
 import CurrentWindowChecker from "../global/CurrentWindowChecker";
 import { useGlobalData } from "../global/globalDataProvider.jsx";
 import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
-import { commonLogout } from "./common";
+import { commonLogout, myDetailsApi } from "./common";
 import RightSideBar from "./RightSideBar";
 import { LuSearch, LuSearchX } from "react-icons/lu";
 
@@ -35,8 +35,21 @@ const SuperHeader = () => {
   const [openSearch, setOpenSearch] = useState(false);
   const path = usePathname();
   const { store, dispatch } = useContext(storeContext);
-  const { appData, dispatch: messangerUser } = useGlobalData();
+  const { appData, dispatch: dataDispatch } = useGlobalData();
   const { socket } = useSocket();
+
+/////////////////////////////////////////////////////////////////
+   useEffect(() => {
+    const fetchProfile = async ()=> {
+      const isNotEmpty = localStorage.getItem("myDetails");
+      if(!isNotEmpty){
+         const data =await myDetailsApi(store.token);
+         localStorage.setItem('myDetails', JSON.stringify(data));
+        dataDispatch({type:'GLOBALUSERDATA' , payload:data})
+      }
+    }
+      fetchProfile()
+   }, []);
   //=============set scroll for header================
   const [header, setHeader] = useState(false);
   const scrollHeader = () => {
@@ -59,7 +72,7 @@ const SuperHeader = () => {
           }
         );
 
-        messangerUser({ type: "STORE_RIGHTSIDEBAR_DATA", payload: data })
+        dataDispatch({ type: "STORE_RIGHTSIDEBAR_DATA", payload: data })
       } catch (error) {
         console.error("Error fetching data:", error);
         commonLogout(dispatch, error);
@@ -86,7 +99,7 @@ const SuperHeader = () => {
   useEffect(() => {
     async function loadmessage() {
       const data = await fetchAllFriendsByMessage(store.token);
-      messangerUser({ type: "STORE_ALL_MESSANGER_USER", payload: data });
+      dataDispatch({ type: "STORE_ALL_MESSANGER_USER", payload: data });
     }
     loadmessage();
   }, []);
@@ -94,7 +107,7 @@ const SuperHeader = () => {
   useEffect(() => {
     socket &&
       socket.on("lastMsgWithProfile", (data) => {
-        messangerUser({
+        dataDispatch({
           type: "STORE_REMOTE_USER_PROFILE",
           payload: { data, id: "122" },
         });
@@ -104,18 +117,18 @@ const SuperHeader = () => {
     };
   }, [socket]);
 
-  useEffect(() => {
+   useEffect(() => {
     async function fetchData() {
       try {
         const myDetails = JSON.parse(localStorage.getItem("myDetails"));
         setMe({
-          id: myDetails._id,
-          isOnline: myDetails.isOnline,
-          name: myDetails.name,
-          status: myDetails.status,
-          profile: myDetails.profile,
-          balance: myDetails.balance,
-          email: myDetails.email,
+          id:appData.globalUserProfile._id,
+          isOnline: appData.globalUserProfile.isOnline,
+          name: appData.globalUserProfile.name || 'fdgd dfgf',
+          status: appData.globalUserProfile.status,
+          profile: appData.globalUserProfile.profile,
+          balance: appData.globalUserProfile.balance,
+          email: appData.globalUserProfile.email,
         });
         localStorage.setItem("userId", myDetails._id);
       } catch (error) {
@@ -123,7 +136,8 @@ const SuperHeader = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [appData]);
+
   const route = useRouter();
   const logout = () => {
     dispatch({ type: "logout" });
@@ -553,9 +567,9 @@ const SuperHeader = () => {
           )} */}
           {/* ////////////////////////////////////////////////////////////// */}
           <div className="relative duration-100">
-            {me.profile.length > 0 ? (
+            {me?.profile?.length > 0 ? (
               <div onClick={handleClick} className="relative cursor-pointer">
-                <Profile profile={me.profile} myId={me.id} />
+                <Profile profile={me?.profile} myId={me?.id} />
                 {/* <div className="absolute w-full">
                   {me?.balance === 0 ? (
                     <h2 className="text-center flex justify-center items-center gap-1">
