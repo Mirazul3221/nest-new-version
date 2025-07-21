@@ -151,7 +151,7 @@ const InputForm = () => {
                   <Image src={loaderImg} className="w-5" alt="Loader" />
                 </div>
               ) : (
-                "Click to Verify"
+                "Verify Account"
               )}
             </button>
             </div>

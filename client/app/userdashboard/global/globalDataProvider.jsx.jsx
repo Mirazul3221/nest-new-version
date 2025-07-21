@@ -12,13 +12,7 @@ import axios from 'axios'
 const GlobalDataProvider = ({children}) => {
    const {store, dispatch:storeDispatch} = useStore();
    const [tags,setTags] = useState(false);
-   const [storeData,setStoreData] = useState('');
-   useEffect(() => {
-      setStoreData(JSON.parse(localStorage.getItem("myDetails")))
-   }, []);
-
-
-    const [appData,dispatch] = useReducer(globalDataReducer,{globalUserProfile:storeData,message:[],notifications:[],user:[],userMemories:[],rightSideBarData:tags})
+    const [appData,dispatch] = useReducer(globalDataReducer,{globalUserProfile:'',message:[],notifications:[],user:[],userMemories:[],rightSideBarData:tags})
 
      const fetchIds = async () => {
        try {

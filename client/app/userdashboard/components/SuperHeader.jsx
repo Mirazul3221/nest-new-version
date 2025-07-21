@@ -38,18 +38,21 @@ const SuperHeader = () => {
   const { appData, dispatch: dataDispatch } = useGlobalData();
   const { socket } = useSocket();
 
-/////////////////////////////////////////////////////////////////
-   useEffect(() => {
-    const fetchProfile = async ()=> {
-      const isNotEmpty = localStorage.getItem("myDetails");
-      if(!isNotEmpty){
-         const data =await myDetailsApi(store.token);
-         localStorage.setItem('myDetails', JSON.stringify(data));
-        dataDispatch({type:'GLOBALUSERDATA' , payload:data})
+  /////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const isData = JSON.parse(localStorage.getItem("myDetails"))
+      if (isData) {
+         dataDispatch({ type: "GLOBALUSERDATA", payload: isData});
+      } else {
+        const data = await myDetailsApi(store.token);
+        localStorage.setItem("myDetails", JSON.stringify(data));
+        dataDispatch({ type: "GLOBALUSERDATA", payload: data });
       }
-    }
-      fetchProfile()
-   }, []);
+
+    };
+    fetchProfile();
+  }, []);
   //=============set scroll for header================
   const [header, setHeader] = useState(false);
   const scrollHeader = () => {
@@ -60,7 +63,7 @@ const SuperHeader = () => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
@@ -72,7 +75,7 @@ const SuperHeader = () => {
           }
         );
 
-        dataDispatch({ type: "STORE_RIGHTSIDEBAR_DATA", payload: data })
+        dataDispatch({ type: "STORE_RIGHTSIDEBAR_DATA", payload: data });
       } catch (error) {
         console.error("Error fetching data:", error);
         commonLogout(dispatch, error);
@@ -81,7 +84,6 @@ const SuperHeader = () => {
 
     fetchData();
   }, [store.token]);
-
 
   useEffect(() => {
     window.addEventListener("scroll", scrollHeader);
@@ -117,14 +119,14 @@ const SuperHeader = () => {
     };
   }, [socket]);
 
-   useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       try {
         const myDetails = JSON.parse(localStorage.getItem("myDetails"));
         setMe({
-          id:appData.globalUserProfile._id,
+          id: appData.globalUserProfile._id,
           isOnline: appData.globalUserProfile.isOnline,
-          name: appData.globalUserProfile.name || 'fdgd dfgf',
+          name: appData.globalUserProfile.name || "fdgd dfgf",
           status: appData.globalUserProfile.status,
           profile: appData.globalUserProfile.profile,
           balance: appData.globalUserProfile.balance,
@@ -589,14 +591,14 @@ const SuperHeader = () => {
         </div>
       </div>
       <div className="md:hidden">
-        {
-          !header && <div className="gap-1 justify-between md:flex my-2 px-3">
-          <h2 className="text-md font-semibold text-gray-500 text-balance">
-            Hi <span className="text-violet-700">{firstname + " "}</span>
-            Welcome back
-          </h2>
-        </div>
-        }
+        {!header && (
+          <div className="gap-1 justify-between md:flex my-2 px-3">
+            <h2 className="text-md font-semibold text-gray-500 text-balance">
+              Hi <span className="text-violet-700">{firstname + " "}</span>
+              Welcome back
+            </h2>
+          </div>
+        )}
         {openSearch && (
           <div>
             <Search />
@@ -611,7 +613,10 @@ const SuperHeader = () => {
               ref={rightBarRef}
               className="h-full w-2/3 md:w-3/12 bg-white ml-auto transition-transform duration-1000 transform translate-x-0 animate-slide-in"
             >
-              <RightSideBar me={me} rightSideBarData={appData.rightSideBarData} />
+              <RightSideBar
+                me={me}
+                rightSideBarData={appData.rightSideBarData}
+              />
             </div>
           )}
         </div>
