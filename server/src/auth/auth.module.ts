@@ -12,6 +12,7 @@ import { GoogleStrategy } from './google.strategy';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { FriendRequestModule } from 'src/friend-request/friend-request.module';
 import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { LoginstatusModule } from 'src/loginstatus/loginstatus.module';
     ]),
     forwardRef(() => FriendRequestModule), // Fix circular dependency
     forwardRef(() => LoginstatusModule), // Fix circular dependency
+    MailModule
   ],
   controllers: [AuthController],
   providers: [AuthService, jwtStrategy, FacebookStrategy, GoogleStrategy],

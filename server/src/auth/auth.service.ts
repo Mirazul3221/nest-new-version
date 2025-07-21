@@ -17,13 +17,10 @@ import { CreateUserDto } from './dto/create-user-dto';
 // import { setTimeout } from 'timers/promises';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
-import { use } from 'passport';
 import {
   FriendRequest,
   FriendRequestDocument,
 } from 'src/friend-request/schemas/friend-request.schema';
-import { userInfo } from 'os';
-import { UsersQuestion } from 'src/userquestions/schema/userquestions.schema';
 import {
   SessionSchemaName,
   SessionSchema,
@@ -35,6 +32,7 @@ import { UAParser } from 'ua-parser-js';
 import axios from 'axios';
 import { Types } from 'mongoose';
 import { nanoid } from 'nanoid'; // ✅ now allowed because v3.3.4 is CJS
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -47,6 +45,7 @@ export class AuthService {
     private sessionModel: mongoose.Model<Session>,
     private jwtService: JwtService,
     private readonly ConfigService: ConfigService,
+    private readonly mailService: MailService
   ) {}
 
   async verifyAccount(userData) {
@@ -61,16 +60,8 @@ export class AuthService {
       { expiresIn: '90m' }, // Override default here
     );
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'bdmirazul906@gmail.com',
-        pass: 'acco zbcl qzxu whzq',
-      },
-    });
-
     const mailOptions = {
-      from: '"info.eduplusplus@gmail.io" <bdmirazul906@gmail.com>',
+      from: '"info.eduplusplus@gmail.io" <toriquldev000@gmail.com>',
       to: email,
       subject: 'Account Verification Process - Edu++',
       html: `
@@ -704,7 +695,8 @@ export class AuthService {
     };
 
     try {
-      await transporter.sendMail(mailOptions); // await without callback
+      // await transporter.sendMail(mailOptions); // await without callback
+     await this.mailService.sendMail(mailOptions)
     } catch (error) {
       console.log(error);
     }
@@ -1399,17 +1391,8 @@ export class AuthService {
     }
 
     const firstName = user.name?.split(' ')[0] || 'User';
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'bdmirazul906@gmail.com',
-        pass: 'acco zbcl qzxu whzq',
-      },
-    });
-
     const mailOptions = {
-      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      from: '"BCS Prep" <toriquldev000@gmail.com>',
       to: email,
       subject: 'Password Reset Code - BCS Prep',
       html: `
@@ -1433,8 +1416,7 @@ export class AuthService {
     </div>
     `,
     };
-
-    await transporter.sendMail(mailOptions); // await without callback
+     await this.mailService.sendMail(mailOptions)
 
     await this.userModel.findByIdAndUpdate(user._id, { otp }, { new: true });
 
@@ -1451,17 +1433,9 @@ export class AuthService {
 
     const fullName = user.name.split(' ');
     const firstName = fullName[0];
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'bdmirazul906@gmail.com',
-        pass: 'acco zbcl qzxu whzq',
-      },
-    });
-
+    
     const mailOptions = {
-      from: '"BCS Prep" <bdmirazul906@gmail.com>',
+      from: '"Eduplusplus" <toriquldev000@gmail.com>',
       to: email,
       subject: 'Email Change Request - BCS Prep',
       html: `
@@ -1487,8 +1461,7 @@ export class AuthService {
     };
 
     // Await email sending properly
-    await transporter.sendMail(mailOptions);
-
+    await this.mailService.sendMail(mailOptions)
     return otp;
   }
 
