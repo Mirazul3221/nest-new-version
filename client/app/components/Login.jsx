@@ -15,37 +15,35 @@ const InputForm = () => {
   const [loader, setLoader] = useState(false);
   const { dispatch } = useContext(storeContext);
   const [alert, setAlert] = useState("");
-  const [location, setLocation] = useState({ lon: null, lat: null });
+  // const [location, setLocation] = useState({ lon: null, lat: null });
   const [submitValue, setSubmitValue] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLocation({
-              lat: position.coords.latitude,
-              lon: position.coords.longitude,
-            });
-          },
-          (error) => {
-            console.error("Error fetching location:", error);
-          }
-        );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           setLocation({
+  //             lat: position.coords.latitude,
+  //             lon: position.coords.longitude,
+  //           });
+  //         },
+  //         (error) => {
+  //           console.error("Error fetching location:", error);
+  //         }
+  //       );
+  //   }
+  // }, []);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const targetElement = (e) => {
-    console.log(location)
     setSubmitValue({
-       location,
       ...submitValue,
       [e.target.name]: e.target.value,
     });

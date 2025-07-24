@@ -57,13 +57,13 @@ export class AuthService {
 
     const token = await this.jwtService.sign(
       { ...userData, password: password }, // or userData if needed
-      { expiresIn: '90m' }, // Override default here
+      { expiresIn: '30d' }, // Override default here
     );
 
     const mailOptions = {
       from: '"info.eduplusplus@gmail.io" <toriquldev000@gmail.com>',
       to: email,
-      subject: 'Account Verification Process - Edu++',
+      subject: 'Account Verification Process - Eduplusplus',
       html: `
           <div
                     style="
@@ -379,8 +379,7 @@ export class AuthService {
                                                       "
                                                     >
                                                       You need to perform this
-                                                      validation within the next
-                                                      1 hour and 30 minutes to
+                                                      validation within the next 1 month (720 hours) to
                                                       start using this edu++
                                                       app.
                                                       <br />
@@ -721,7 +720,7 @@ export class AuthService {
       }
     }
 
-    const { name, email, password, location } = payload;
+    const { name, email, password } = payload;
 
     // ❌ Check if user already exists
     const userInfo = await this.userModel.findOne({ email });
@@ -735,27 +734,6 @@ export class AuthService {
       { sub: 'ইংরেজি', rightAns: 0, wrongAns: 0 },
       { sub: 'গণিত', rightAns: 0, wrongAns: 0 },
     ];
-
-    const new_user = await this.userModel.create({
-      role: 'user',
-      status: 'New',
-      balance: 0,
-      name,
-      email,
-      password: await bcrypt.hash(password, 9),
-      location: {
-        type: 'Point',
-        coordinates: [location.lon, location.lat],
-      },
-      title: 'Untitled User',
-      description: '',
-      profile:
-        'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
-      otp: '',
-      totalCountQuestions: allSubject,
-      totalCountQuestionsId: [],
-    });
-
     try {
       // 🌐 Get IP address
       let ip =
@@ -784,8 +762,28 @@ export class AuthService {
       // 🌍 Get geo-location from IP
       const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
       const data = geo.data;
+      /////////////////////////////////////////////////////////////////////////////
+      const new_user = await this.userModel.create({
+      role: 'user',
+      status: 'New',
+      balance: 0,
+      name,
+      email,
+      password: await bcrypt.hash(password, 9),
+      location: {
+        type: 'Point',
+        coordinates: [data.longitude, data.latitude],
+      },
+      title: 'Untitled User',
+      description: '',
+      profile:
+        'https://res.cloudinary.com/dqwino0wb/image/upload/v1724909787/Screenshot_3_qrv36z.png',
+      otp: '',
+      totalCountQuestions: allSubject,
+      totalCountQuestionsId: [],
+    });
+      //////////////////////////////////////////////////////////////////////////////////////////////
       const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
-
       // 🛡️ Create session
       await this.sessionModel.create({
         userId: new_user._id,
@@ -825,6 +823,7 @@ export class AuthService {
         msg: `Hey ${new_user.name}, Welcome, your registration process is accepted by our platform.`,
       };
     } catch (error) {
+      console.log(error)
       throw new UnauthorizedException('Failed to create session or token.');
     }
   }
@@ -958,26 +957,18 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password!');
     }
 
-    // If geolocation (lat, lon) is provided, update the user's location
-    if (lat && lon) {
-      loginInfo.location = {
-        type: 'Point',
-        coordinates: [lon, lat], // MongoDB expects [longitude, latitude]
-      };
-      await loginInfo.save(); // Save the updated location
-    }
-
+    
     ////////////////////////////////////////////////////////////////////////
     // Inside your method
     let ip =
-      req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
-      req.socket?.remoteAddress || // fallback
-      req.ip; // fallback
-
+    req.headers['x-forwarded-for']?.toString().split(',')[0].trim() || // most reliable
+    req.socket?.remoteAddress || // fallback
+    req.ip; // fallback
+    
     if (ip?.startsWith('::ffff:')) {
       ip = ip.replace('::ffff:', '');
     }
-
+    
     if (
       ip === '::1' ||
       ip === '127.0.0.1' ||
@@ -990,16 +981,28 @@ export class AuthService {
         ip = '8.8.8.8';
       }
     }
-
+    
     const sessionId = uuidv4();
     const userAgent = req.headers['user-agent'];
     const parser = new UAParser(userAgent);
     const parsedUA = parser.getResult();
     // Get location from IP
     try {
-      // const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
-      // const data = geo.data;
-      // const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+      const geo = await axios.get(`https://ipapi.co/${ip}/json/`);
+      const data = geo.data;
+      const geoLocation = `${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+      
+      //If geolocation (lat, lon) is provided, update the user's location
+
+
+      if (lat && lon) {
+        loginInfo.location = {
+          type: 'Point',
+          coordinates: [data.longitude, data.latitude], // MongoDB expects [longitude, latitude]
+        };
+        await loginInfo.save(); // Save the updated location
+      }
+
 
       await this.sessionModel.create({
         userId: loginInfo._id,
@@ -1009,7 +1012,7 @@ export class AuthService {
         device: parsedUA.device.model || 'Unknown device',
         browser: parsedUA.browser.name || 'Unknown browser',
         os: parsedUA.os.name || 'Unknown OS',
-        location: 'geoLocation',
+        location: geoLocation,
         // location: (optional, set below if you use geo-IP),
       });
 

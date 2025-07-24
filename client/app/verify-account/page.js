@@ -26,7 +26,7 @@ const Page = () => {
       }
 
       dispatch({ type: "login_success", paylod: { token: data.token } });
-      window.location.href = `${viewurl}/userdashboard`
+      window.location.href = `${viewurl}`
     setIsVarify(true)
     } catch (error) {
       setIsVarify(false)

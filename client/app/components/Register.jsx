@@ -14,7 +14,7 @@ const InputForm = () => {
   const [alert, setAlert] = useState("");
   const [loader,setLoader] = useState(false)
   const [bouncing,setBouncing] = useState(false)
-   const [location, setLocation] = useState({ lat:-39.145175, lon: -128.232097});
+  //  const [location, setLocation] = useState({ lat:-39.145175, lon: -128.232097});
   const [submitValue, setSubmitValue] = useState({
     name: "",
     email: "",
@@ -22,27 +22,26 @@ const InputForm = () => {
   });
 
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLocation({
-              lat: position.coords.latitude,
-              lon: position.coords.longitude,
-            });
-          },
-          (error) => {
-            console.error("Error fetching location:", error);
-          }
-        );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           setLocation({
+  //             lat: position.coords.latitude,
+  //             lon: position.coords.longitude,
+  //           });
+  //         },
+  //         (error) => {
+  //           console.error("Error fetching location:", error);
+  //         }
+  //       );
+  //   }
+  // }, []);
 
   const targetElement = (e) => {
     setSubmitValue({
       ...submitValue,
       [e.target.name]: e.target.value,
-      location,
     });
   };
   const handlesubmit = async (e) => {
