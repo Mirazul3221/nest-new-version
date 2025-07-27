@@ -50,7 +50,7 @@ const copyToClipboard = async (text) => {
   };
 
   function goToQueryPage(val, type) {
-    window.location.href = `/userdashboard/q?value=${val}&type=${type}`;
+    window.location.href = `/userdashboard/query?value=${val}&type=${type}`;
   }
 
   const redirect = ()=> {

@@ -6,7 +6,6 @@ import loder from "@/public/loading-buffer.gif";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import SuperHeader from "../../components/SuperHeader";
 import QuestionCard from "../components/QuestionCard";
-import Image from "next/image";
 import { useStore } from "@/app/global/DataProvider";
 import Footer from "@/app/components/Footer";
 import { IoMdSettings } from "react-icons/io";
@@ -227,7 +226,7 @@ const TurnAsHome = () => {
         </div>
 
         {/* Main Content */}
-        <div className="md:px-6 relative flex md:pt-4 gap-4">
+        <div className="md:px-6 relative flex gap-4">
           {/* Sidebar (Sticky - Desktop Only) */}
           <div className="w-3/12 h-fit sticky top-24 hidden md:block">
             <div className="text-gray-700">
@@ -392,7 +391,7 @@ const TurnAsHome = () => {
               <div key={i} className="mx-auto">
                 {/* This will render the suggestion card in the middle of the list */}
                 {i === Math.floor(questions.length / 2) && (
-                  <FrindSuggestedCard />
+                  <div className="-mt-4"><FrindSuggestedCard /></div>
                 )}
                 {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />} */}
                 <QuestionCard
@@ -404,7 +403,7 @@ const TurnAsHome = () => {
             ))}
 
             {isLoading && (
-              <div className="flex justify-center">
+              <div className="flex justify-center mb-4">
                 <div className="flex items-center gap-2">
                   <AiOutlineLoading3Quarters
                     size={20}
@@ -469,7 +468,9 @@ const TurnAsHome = () => {
             />
           </div>
         )}
-        <Footer />
+        {
+          !hasMore &&  <Footer />
+        }
       </ProtectRoute>
     </div>
   );

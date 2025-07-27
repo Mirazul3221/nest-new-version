@@ -39,7 +39,7 @@ export default function StorySlider({ users }) {
   };
 
 const redirect = (id) => {
-  window.location.href = `${viewurl}/userdashboard/q/${id}`;
+  window.location.href = `${viewurl}/userdashboard/profile/${id}`;
 };
   return (
     <div>

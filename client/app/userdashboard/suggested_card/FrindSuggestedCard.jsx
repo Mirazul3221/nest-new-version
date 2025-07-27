@@ -37,7 +37,7 @@ export default function FrindSuggestedCard() {
   }; //
   return (
       <HorizontalCardScroll>
-          <div className="flex gap-2 mt-2 w-max">
+          <div className="flex gap-2 w-max">
             {suggestedFriends.map((user, i) => {
               return (
                    <FriendProfileCard key={i} user={user} questionsAfterDelete={questionsAfterDelete}/>

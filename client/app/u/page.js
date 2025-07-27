@@ -21,7 +21,7 @@ const Page = () => {
               },
             }
           );
-         if(data) window.location.href = `${viewurl}/userdashboard/q/${data}`
+         if(data) window.location.href = `${viewurl}/userdashboard/profile/${data}`
           // Do something with `data` here (e.g., update state)
         } catch (error) {
           console.error("Error fetching data:", error);

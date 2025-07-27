@@ -72,7 +72,7 @@ const NearbyUserProfileCard = () => {
             className="flex gap-10 items-center border rounded-xl bg-white py-1 px-3 shrink-0"
           >
             <div className="profile flex gap-2 items-center">
-            <Link href={`${viewurl}/userdashboard/q/${u?._id}`}>
+            <Link href={`${viewurl}/userdashboard/profile/${u?._id}`}>
             <img
                 className="w-12 rounded-full"
                 src={u?.profile}
@@ -80,7 +80,7 @@ const NearbyUserProfileCard = () => {
               />
                 </Link>
               <div className="details">
-                <Link href={`${viewurl}/userdashboard/q/${u?._id}`}>
+                <Link href={`${viewurl}/userdashboard/profile/${u?._id}`}>
                   <h2 className="font-semibold text-gray-700 mt-2">
                     {u?.name}
                   </h2>

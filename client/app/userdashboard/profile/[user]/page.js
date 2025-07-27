@@ -444,7 +444,7 @@ const Page = () => {
                         </div>
                         <div>
                           <Link
-                            href={`${viewurl}/userdashboard/q/${item._id}`}
+                            href={`${viewurl}/userdashboard/profile/${item._id}`}
                           >
                             <h2 className="text-md font-semibold text-gray-700 mt-2">
                               {item.name}

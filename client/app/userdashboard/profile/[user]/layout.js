@@ -8,12 +8,12 @@ export async function generateMetadata({ params }) {
     description:data.description,
     keywords: `${data.name}, eduplusplus, job solution, bcs question bank`,
     alternates: {
-      canonical: `${baseurl}/userdashboard/q/${params.id}`,
+      canonical: `${baseurl}/userdashboard/profile/${params.id}`,
     },
     openGraph: {
     title:`${ data.name} || profile || edu++`,
     description:data.description,
-      url:  `${baseurl}/userdashboard/q/${params.id}`,
+      url:  `${baseurl}/userdashboard/profile/${params.id}`,
       images: [
         {
           url: `${data.profile}`, // you can dynamically generate this

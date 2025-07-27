@@ -65,7 +65,7 @@ const MessangerContainerRight = ({ id,globleCheckIsBlockedByMe }) => {
         <a
           title="Click here and show details"
           className="font-semibold text-2xl mt-2"
-          href={`${viewurl}/userdashboard/q/${id}`}
+          href={`${viewurl}/userdashboard/profile/${id}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -84,7 +84,7 @@ const MessangerContainerRight = ({ id,globleCheckIsBlockedByMe }) => {
             <a
               title="Click here and show details"
               className="lowercase underline duration-75 hover:text-violet-500"
-              href={`${viewurl}/userdashboard/q/${id}`}
+              href={`${viewurl}/userdashboard/profile/${id}`}
               target="_blank"
               rel="noopener noreferrer"
             >

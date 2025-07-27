@@ -7,7 +7,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
 import { GoHistory } from "react-icons/go";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
@@ -347,10 +346,18 @@ const SuperHeader = () => {
       }
     };
 
+  // if (share || openCommentsBox) {
+  //   document.body.style.overflow = "hidden";
+  // } else {
+  //   document.body.style.overflow = "auto";
+  // }
+
     if (showParent) {
       document.addEventListener("click", handleRightBar);
+       document.body.style.overflow = "hidden";
     } else {
       document.removeEventListener("click", handleRightBar);
+       document.body.style.overflow = "auto";
     }
     return () => {
       document.removeEventListener("click", handleRightBar);

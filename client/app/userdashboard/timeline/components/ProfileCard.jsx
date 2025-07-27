@@ -193,7 +193,7 @@ const ProfileCard = ({ id }) => {
             )}
 
             <a
-              href={`${viewurl}/userdashboard/q/${id}`}
+              href={`${viewurl}/userdashboard/profile/${id}`}
               className="py-2 px-6 cursor-pointer rounded-lg bg-[#3e19fa] text-white"
             >
               View details
