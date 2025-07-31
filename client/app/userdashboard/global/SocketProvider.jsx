@@ -46,7 +46,6 @@ useEffect(() => {
   const fetchAndEmit = async () => {
     try {
       const friendsId = await fetchIds();
-      console.log(friendsId, 'grl;gdgd glkdg;l');
       socket?.emit('all-friendsid', friendsId);
     } catch (err) {
       console.error('Failed to fetch friend IDs:', err);

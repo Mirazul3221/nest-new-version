@@ -28,6 +28,7 @@ import SmartText from "./VerifyText";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { LuSendHorizontal } from "react-icons/lu";
 import { IoMdClose } from "react-icons/io";
+import { FaRegTimesCircle } from "react-icons/fa";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { appData, dispatch } = useGlobalData();
   const [message, setMessage] = useState("");
@@ -37,6 +38,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const fullImage = useRef(null);
+  const [zoomImage, setZoomImage] = useState(false);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
@@ -100,10 +103,10 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
       }
     }
   };
-    const handleKeyDown = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault(); // Prevent line break
-    handleSendMessage()
+      e.preventDefault(); // Prevent line break
+      handleSendMessage()
     }
   };
   useEffect(() => {
@@ -580,17 +583,54 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const [totalImages, setTotalImages] = useState(0);
   useEffect(() => {
     const newTotal = appData?.message?.filter(m => m.message.media === 'media').length;
+    if (newTotal > 20) return
     setTotalImages(newTotal);
     imageLoadCount.current = 0;
-  }, [appData]);
+
+  }, []);
 
   const handleImageLoad = () => {
+    if (totalImages === 0) return
     imageLoadCount.current += 1;
-    if (imageLoadCount.current >= totalImages) {
+    if (imageLoadCount.current > totalImages) {
       // All images loaded, scroll to bottom
       scrollToBottom();
     }
   };
+
+  const handleImageZoom = (e) => {
+    setZoomImage(true)
+    const img = document.createElement('img');
+    img.alt = 'image'; // alt text
+    img.src = e; // image source
+    img.style.maxWidth = '100%'; // optional styling
+    img.style.borderRadius = '8px'; // optional
+    img.style.border = '2px solid white'; // optional
+    setTimeout(() => {
+      if (fullImage.current) {
+        fullImage.current.appendChild(img);
+      }
+    }, 500);
+
+    // Update the existing <a> tag to point to the image
+    const imageUrl = 'https://res.cloudinary.com/df5rvx2id/image/upload/v1752276690/image_message/sgelxcvlxyqyadqwljpp.png';
+
+    fetch(imageUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+
+        const a = document.getElementById('downloadBtn');
+        if (a) {
+          a.href = url;
+          a.download = 'downloaded-image-from-eduplusplus-messanger.png'; // your desired filename
+        }
+
+        // Optional: cleanup
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      })
+      .catch(err => console.error('Failed to download image:', err));
+  }
   return (
     <div>
       <div className="top-bar px-4 rounded-t-sm py-2 relative bg-gray-300 flex justify-between items-center">
@@ -665,6 +705,16 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
         </div>
       </div>
       <div className=" overflow-y-scroll flex flex-col justify-between hidden_scroll h-[74vh]">
+        {
+          zoomImage && <div className="absolute top-0 p-2 md:p-4 left-0 w-full h-full bg-gray-700/50 backdrop-blur-md z-50">
+            <div className="flex justify-end gap-2"> <a id="downloadBtn" className="bg-white px-3 py-1 rounded-full">Download</a>
+              <FaRegTimesCircle className="ml-auto text-white cursor-pointer" onClick={() => {
+                setZoomImage(false)
+              }} /></div>
+            <div ref={fullImage} className="w-full h-full flex justify-center items-center">
+            </div>
+          </div>
+        }
         <div
           onScroll={handleScroll}
           ref={containerRef}
@@ -803,15 +853,15 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                     }
                                                         `}
                                 >
-                                  <SmartText userType={"me"} message={msg} />
+                                  <SmartText handleImageZoom={handleImageZoom} userType={"me"} message={msg} />
                                 </h2>
                               </div>
                             )}
 
                             {msg?.message.media !== "" && (
                               <div className="mb-2">
-                                <img
-                                  className="rounded-2xl"
+                                <img onClick={() => handleImageZoom(msg?.message.media)}
+                                  className="rounded-2xl cursor-pointer"
                                   src={msg?.message.media}
                                   alt="message_image"
                                   onLoad={handleImageLoad}
@@ -961,7 +1011,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                     : ""
                                   }`}
                               >
-                                <SmartText userType={"he"} message={msg} />
+                                <SmartText handleImageZoom={handleImageZoom} userType={"he"} message={msg} />
                               </h2>
                             )}
 
@@ -971,6 +1021,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   className="rounded-2xl"
                                   src={msg?.message.media}
                                   alt="message_image"
+                                  onClick={() => handleImageZoom(msg?.message.media)}
                                   onLoad={handleImageLoad}
                                 />
                               </div>
