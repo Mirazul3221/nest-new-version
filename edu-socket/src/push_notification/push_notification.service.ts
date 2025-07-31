@@ -52,6 +52,7 @@ async addSubscription(subscription: any) {
 
     async sendNotificationTo(req) {
       const {id,payload} = req;
+      console.log(req)
     const currentKey = await this.StoreSubKey.find({userId:id})//
     if(currentKey.length === 0) return
     try {
