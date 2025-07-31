@@ -11,6 +11,7 @@ export class MessangerController {
 
   @Post('message-create')
   @UseGuards(AuthGuard())
+   @FormDataRequest({storage:FileSystemStoredFile})//
   async createTextMessage(@Body() createMessangerDto:CreateMessangerDto,@Req() req:any) {
     return await this.messangerService.createTextMessage(createMessangerDto,req);
   }

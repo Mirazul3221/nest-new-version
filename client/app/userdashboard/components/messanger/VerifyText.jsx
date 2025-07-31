@@ -18,7 +18,12 @@ const SmartText = ({userType, message }) => {
   }
   const modifyUrl = getBaseUrl(urls[0]);
   if (urls.length === 0) {
-    return <p className={`${userType=="me" ? "bg-gradient-to-b from-violet-500 via-violet-500 to-pink-400 text-white" : "bg-gradient-to-b from-gray-200 to-gray-100 text-gray-700"} rounded-2xl px-4 py-2 break-words`}>{message.message.content}</p>;
+    return  <div className={`${userType=="me" ? "bg-gradient-to-b from-violet-500 via-violet-500 to-pink-400 text-white" : "bg-gradient-to-b from-gray-200 to-gray-100 text-gray-700"} rounded-2xl px-4 py-2 break-words`}>
+      {
+        message.others && <img className="w-full rounded-xl" src={ message.others} alt="image" />
+      }
+      <p>{message.message.content}</p>
+    </div>;
   }
 
   const mixed = [];

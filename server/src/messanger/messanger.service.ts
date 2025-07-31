@@ -23,7 +23,7 @@ export class MessangerService {
     private userModel: mongoose.Model<Reader>,
     private readonly authService: AuthService,
     private readonly ConfigService: ConfigService,
-  ) {}
+  ) { }
   async fetchMeta(url: string): Promise<any> {
     try {
       const cleanUrl = url.split('?')[0];
@@ -55,6 +55,7 @@ export class MessangerService {
     }
   }
   async createTextMessage(createMessangerDto: CreateMessangerDto, req) {
+    console.log(createMessangerDto);//
     const id = req.user._id;
     const receivedUser = await this.userModel.findById(
       createMessangerDto.receiverId,
@@ -67,10 +68,32 @@ export class MessangerService {
       verifyText = await this.fetchMeta(createMessangerDto.message);
     }
     if (!isblocked) {
+      if (createMessangerDto.image) {
+        cloudinary.config({
+          cloud_name: this.ConfigService.get('cloud_name'),
+          api_key: this.ConfigService.get('Api_key'),
+          api_secret: this.ConfigService.get('Api_secret'),
+        });
+        const data = await cloudinary.uploader.upload(createMessangerDto.image.path, {
+          folder: 'image_message', // Specify the folder in Cloudinary
+          resource_type: 'auto', // Automatically detect the file type (audio in this case)
+        });
+        const created = await this.MessangerModel.create({
+          senderId: id,
+          receiverId: createMessangerDto.receiverId,
+          message: { content: createMessangerDto.message, media: '', voice: '', story: '' },
+          reply: createMessangerDto.reply,
+          seenMessage: createMessangerDto.seenMessage,
+          others: data.secure_url,
+        });
+
+        return created;
+      }
+
       const created = await this.MessangerModel.create({
         senderId: id,
         receiverId: createMessangerDto.receiverId,
-        message: { content: createMessangerDto.message, media: '', voice: '',story :'' },
+        message: { content: createMessangerDto.message, media: '', voice: '', story: '' },
         reply: createMessangerDto.reply,
         seenMessage: createMessangerDto.seenMessage,
         others: verifyText.status ? verifyText : null,
@@ -113,7 +136,7 @@ export class MessangerService {
     const created = await this.MessangerModel.create({
       senderId: id,
       receiverId: receiverId,
-      message: { content: '', media: data.secure_url, voice: '',story:'' },
+      message: { content: '', media: data.secure_url, voice: '', story: '' },
       reply: replyAsArray,
       seenMessage: false,
     });
@@ -156,13 +179,13 @@ export class MessangerService {
         content: '',
         media: '', // Use the secure_url from Cloudinary for HTTPS
         voice: data.secure_url,
-        story:''
+        story: ''
       },
       reply: replyAsArray,
       seenMessage: false,
     });
 
-        const recId = receiverId.toString();
+    const recId = receiverId.toString();
 
     const sendableData = {
       title: `New message!`,
@@ -177,7 +200,7 @@ export class MessangerService {
     return created;
   }
   async createStoryMessage(data, req) {
-    const { receiverId, message, storyImage,storyText,style } = data;
+    const { receiverId, message, storyImage, storyText, style } = data;
     const id = req.user._id;
     const receivedUser = await this.userModel.findById(receiverId);
     const isblocked = receivedUser.blockedUsers?.includes(id);
@@ -185,16 +208,16 @@ export class MessangerService {
     const created = await this.MessangerModel.create({
       senderId: id,
       receiverId: receiverId,
-        message: {
+      message: {
         content: '',
         media: '', // Use the secure_url from Cloudinary for HTTPS
         voice: '',
-        story:message
+        story: message
       },
-      storyAssets:{storyImage,storyText,style},
+      storyAssets: { storyImage, storyText, style },
       seenMessage: false,
     });
-    
+
     const recId = receiverId.toString();
     const sendableData = {
       title: `New message!`,

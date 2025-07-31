@@ -26,6 +26,8 @@ import BlockButton from "./BlockButton";
 import { commonLogout } from "../common";
 import SmartText from "./VerifyText";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { LuSendHorizontal } from "react-icons/lu";
+import { IoMdClose } from "react-icons/io";
 const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const { appData, dispatch } = useGlobalData();
   const [message, setMessage] = useState("");
@@ -33,6 +35,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const messangerRef = useRef(null);
   const scrollRef = useRef();
   const messageRef = useRef(message); // Store `message` in a ref
@@ -76,6 +80,31 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
 
   const handleMessage = (event) => {
     setMessage(event.target.value);
+    scrollToBottom()
+  };
+
+  const handlePaste = (e) => {
+    const items = e.clipboardData?.items;
+
+    if (!items) return;
+
+    for (let item of items) {
+      if (item.type.indexOf('image') !== -1) {
+        const blob = item.getAsFile();
+        const url = URL.createObjectURL(blob);
+
+        setImagePreview(url);
+        setImageFile(blob);
+        e.preventDefault();
+        break;
+      }
+    }
+  };
+    const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault(); // Prevent line break
+    handleSendMessage()
+    }
   };
   useEffect(() => {
     // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
@@ -92,6 +121,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   };
 
   const handleSendMessage = useCallback(() => {
+    setImagePreview(null);
+    setImageFile(null);
     messageRef.current = message;
     currentMessages.current = [
       ...currentMessages.current,
@@ -99,6 +130,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
         message: { content: message, media: "", voice: "" },
         receiverId: userDetails?._id,
         seenStatus: seenMessage,
+        others: imageFile,
+        imagePreview
       },
     ];
 
@@ -111,7 +144,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     }
 
     // setSeenMsg(false)
-  }, [message, socket, store.userInfo.id, userDetails?._id, seenMessage]);
+  }, [message, socket, store.userInfo.id, userDetails?._id, seenMessage, imageFile]);
 
   useEffect(() => {
     scrollToBottom();
@@ -341,9 +374,9 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
         "reply",
         JSON.stringify([replyContent.innerText, toReplyerId])
       ); // Add reply as a string if it's an array or object
-          setTimeout(() => {
-      scrollToBottom();
-    }, 100);
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
       try {
         setLoadingImage(true);
         const { data } = await axios.post(
@@ -543,15 +576,15 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     }
   };
   // Count images after messages change (new incoming message)
-    const imageLoadCount = useRef(0);
+  const imageLoadCount = useRef(0);
   const [totalImages, setTotalImages] = useState(0);
-    useEffect(() => {
+  useEffect(() => {
     const newTotal = appData?.message?.filter(m => m.message.media === 'media').length;
     setTotalImages(newTotal);
     imageLoadCount.current = 0;
   }, [appData]);
 
-    const handleImageLoad = () => {
+  const handleImageLoad = () => {
     imageLoadCount.current += 1;
     if (imageLoadCount.current >= totalImages) {
       // All images loaded, scroll to bottom
@@ -742,39 +775,37 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                 </h2>
                               )}
                             {msg?.message?.content !== "" && (
-                              <h2
-                                className={`${
-                                  i === messageBlog.length - 1 &&
-                                  messageBlog.length > 1
+                              <div className="">
+                                <h2
+                                  className={`${i === messageBlog.length - 1 &&
+                                    messageBlog.length > 1
                                     ? "msg_anim "
                                     : ""
-                                } break-words duration-500 max-w-fit ml-auto mb-[1px] ${
-                                  messageBlog.length === 1
-                                    ? "rounded-[30px]"
-                                    : "rounded-l-[30px]"
-                                } ${
-                                  messageBlog.indexOf(msg) === 0 &&
-                                  messageBlog.length > 1
-                                    ? "rounded-tr-[30px]"
-                                    : messageBlog.indexOf(msg) ===
-                                        messageBlog.length - 1 &&
+                                    } break-words duration-500 max-w-fit ml-auto mb-[1px] ${messageBlog.length === 1
+                                      ? "rounded-[30px]"
+                                      : "rounded-l-[30px]"
+                                    } ${messageBlog.indexOf(msg) === 0 &&
                                       messageBlog.length > 1
-                                    ? "rounded-br-[30px] duration-500"
-                                    : ""
-                                }
-                                                        ${
-                                                          (msg?.reply?.length >
-                                                            0 &&
-                                                            msg?.reply[0] !==
-                                                              null) ||
-                                                          msg?.emoji?.length > 0
-                                                            ? "rounded-br-[30px]"
-                                                            : ""
-                                                        }
+                                      ? "rounded-tr-[30px]"
+                                      : messageBlog.indexOf(msg) ===
+                                        messageBlog.length - 1 &&
+                                        messageBlog.length > 1
+                                        ? "rounded-br-[30px] duration-500"
+                                        : ""
+                                    }
+                                                        ${(msg?.reply?.length >
+                                      0 &&
+                                      msg?.reply[0] !==
+                                      null) ||
+                                      msg?.emoji?.length > 0
+                                      ? "rounded-br-[30px]"
+                                      : ""
+                                    }
                                                         `}
-                              >
-                                <SmartText userType={"me"} message={msg} />
-                              </h2>
+                                >
+                                  <SmartText userType={"me"} message={msg} />
+                                </h2>
+                              </div>
                             )}
 
                             {msg?.message.media !== "" && (
@@ -788,7 +819,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </div>
                             )}
 
-                               {msg?.message?.story !== "" && (
+                            {msg?.message?.story !== "" && (
                               <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
                                 <div className="absolute top-2 right-2 text-gray-300 z-20">
                                   STORY
@@ -834,9 +865,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                             {msg?.emoji?.length > 0 && (
                               <div
                                 onClick={(e) => handleEmojiSenderIdentity(e)}
-                                className={`flex ${
-                                  msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
-                                } relative cursor-pointer group items-center -translate-x-[10px] ml-5 -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                                className={`flex ${msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                                  } relative cursor-pointer group items-center -translate-x-[10px] ml-5 -mt-3 bg-white rounded-full border gap-1 w-fit`}
                               >
                                 {msg?.emoji?.map((emj, i) => {
                                   return (
@@ -909,30 +939,27 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               )}
                             {msg?.message?.content && (
                               <h2
-                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] ${
-                                  messageBlog.length === 1
-                                    ? "rounded-[30px]"
-                                    : "rounded-r-[30px]"
-                                } ${
-                                  messageBlog.indexOf(msg) === 0 &&
-                                  messageBlog.length > 1
+                                className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] ${messageBlog.length === 1
+                                  ? "rounded-[30px]"
+                                  : "rounded-r-[30px]"
+                                  } ${messageBlog.indexOf(msg) === 0 &&
+                                    messageBlog.length > 1
                                     ? "rounded-tl-[30px]"
                                     : messageBlog.indexOf(msg) ===
-                                        messageBlog.length - 1 &&
+                                      messageBlog.length - 1 &&
                                       messageBlog.length > 1
+                                      ? "rounded-bl-[30px]"
+                                      : ""
+                                  }
+                                                          ${(msg?.reply
+                                    ?.length > 0 &&
+                                    msg?.reply[0] !==
+                                    null) ||
+                                    msg?.emoji?.length >
+                                    0
                                     ? "rounded-bl-[30px]"
                                     : ""
-                                }
-                                                          ${
-                                                            (msg?.reply
-                                                              ?.length > 0 &&
-                                                              msg?.reply[0] !==
-                                                                null) ||
-                                                            msg?.emoji?.length >
-                                                              0
-                                                              ? "rounded-bl-[30px]"
-                                                              : ""
-                                                          }`}
+                                  }`}
                               >
                                 <SmartText userType={"he"} message={msg} />
                               </h2>
@@ -995,9 +1022,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                             {msg?.emoji?.length > 0 && (
                               <div
                                 onClick={(e) => handleEmojiSenderIdentity(e)}
-                                className={`flex ${
-                                  msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
-                                } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
+                                className={`flex ${msg?.emoji?.length > 1 ? "px-2" : "p-[1px]"
+                                  } relative cursor-pointer group items-center -translate-x-[10px] ml-auto -mt-3 bg-white rounded-full border gap-1 w-fit`}
                               >
                                 {msg?.emoji?.map((emj, i) => {
                                   return (
@@ -1091,14 +1117,14 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                         </div>
                         {messageBlog.indexOf(msg) ===
                           messageBlog.length - 1 && (
-                          <div className="profile w-10 ">
-                            <img
-                              className="w-full bg-white p-[2px] z-40 rounded-full"
-                              src={userDetails?.profile}
-                              alt={userDetails?.name}
-                            />
-                          </div>
-                        )}
+                            <div className="profile w-10 ">
+                              <img
+                                className="w-full bg-white p-[2px] z-40 rounded-full"
+                                src={userDetails?.profile}
+                                alt={userDetails?.name}
+                              />
+                            </div>
+                          )}
                       </div>
                     )
                   ) : (
@@ -1190,10 +1216,10 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
               <div className="w-full flex justify-end">
                 <div className="w-fit relative">
                   <div className="w-full h-full absolute bg-black/30 top-0 left-0 flex justify-center items-center">
-                              <div className="loading animate-pulse flex justify-center items-center rounded-md gap-1 px-4 py-1 bg-white"> 
-              <AiOutlineLoading3Quarters size={14} className="animate-spin" /> Loading...
-            </div>
-                    
+                    <div className="loading animate-pulse flex justify-center items-center rounded-md gap-1 px-4 py-1 bg-white">
+                      <AiOutlineLoading3Quarters size={14} className="animate-spin" /> Loading...
+                    </div>
+
                   </div>
                   <img
                     className="max-w-full max-h-[350px]"
@@ -1232,9 +1258,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
             ) : (
               <div className={"bottom relative"}>
                 <div
-                  className={`${
-                    showReply ? "flex" : "hidden"
-                  } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
+                  className={`${showReply ? "flex" : "hidden"
+                    } mt-4 bg-white w-full justify-between py-2 border-t px-6`}
                 >
                   <div>
                     <div>
@@ -1271,9 +1296,8 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                   />
                   {!isStartRecord && (
                     <div
-                      className={`pr-4 ${
-                        hiddenTarget ? "pl-4" : ""
-                      } py-4 flex w-full justify-between items-end gap-2`}
+                      className={`pr-4 ${hiddenTarget ? "pl-4" : ""
+                        } py-4 flex w-full justify-between items-end gap-2`}
                     >
                       {!hiddenTarget && (
                         <label htmlFor="send_image">
@@ -1292,33 +1316,44 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                         id="send_image"
                         type="file"
                       />
-                      <textarea
-                        className="hiddenTarget"
-                        id="message_text"
-                        ref={messangerRef}
-                        value={message}
-                        onChange={(e) => {
-                          handleMessage(e), scrollToBottom();
-                        }}
-                        rows={1}
-                        style={{
-                          width: "100%",
-                          resize: "none",
-                          overflow: "hidden",
-                          padding: "6px 14px",
-                          boxSizing: "border-box",
-                          outline: "none",
-                          border: "none",
-                          borderRadius: "20px",
-                          background: "#ededed",
-                        }}
-                      />
+                      <div className="bg-[#ededed] w-full px-4 py-2 rounded-[20px]">
+                        {imagePreview && (
+                          <div className="mt-2 relative h-20">
+                            <div onClick={() => {
+                              setImagePreview(null);
+                              setImageFile(null);
+                            }} className="absolute top-1 right-1 cursor-pointer"><IoMdClose /></div>
+                            <img src={imagePreview} alt="preview" className="max-h-20 rounded-2xl" />
+                          </div>
+                        )}
+                        <div className="flex w-full justify-center items-center">
+                          <textarea
+                            className="hiddenTarget bg-transparent w-full"
+                            id="message_text"
+                            ref={messangerRef}
+                            value={message}
+                            onChange={(e) => {
+                              handleMessage(e);
+                            }}
 
+                            onPaste={handlePaste}
+                            onKeyDown={handleKeyDown}
+                            rows={1}
+                            style={{
+                              resize: "none",
+                              overflow: "hidden",
+                              boxSizing: "border-box",
+                              outline: "none",
+                              border: "none",
+                            }}
+                          />
+                        </div>
+                      </div>
                       <div
                         onClick={handleSendMessage}
-                        className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
+                        className="flex h-full items-start cursor-pointer mb-[10px] text-gray-700"
                       >
-                        <RiSendPlaneLine size={20} />
+                        <LuSendHorizontal size={20} />
                       </div>
                     </div>
                   )}

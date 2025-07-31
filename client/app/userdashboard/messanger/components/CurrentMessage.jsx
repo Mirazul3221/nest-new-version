@@ -22,6 +22,43 @@ const CurrentMessage = ({
   const { dispatch } = useGlobalData();
   const [isSend, setIsSend] = useState(false);
   const sendMessage = async () => {
+   if(msg.others !== null){
+     const media = new FormData(); // Create a FormData object
+      media.append("receiverId", msg.receiverId); // Add receiverId
+      media.append("message",  msg.message.content ? msg.message.content : "Love"); // Add receiverId
+      media.append("image", msg.others); // Append the file
+      media.append("seenMessage", msg.seenStatus,); // Append the file
+      try {
+      setIsSend(true);
+      setSendCurrentMsg(true);
+              const { data } = await axios.post(
+        `${baseurl}/messanger/message-create`,media,{
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        })
+
+              if (data == "User is blocked") {
+        alert("You cannot send message to this user!");
+      } else {
+        setReplyContent("");
+        setToReplyerId(null);
+        socket &&
+          socket.emit("message-to", {
+            ...data,
+            name: store.userInfo.name,
+            profile: store.userInfo.profile,
+          });
+        dispatch({ type: "send-message", payload: data });
+        setIsSend(false);
+        setSendCurrentMsg(false);
+        element.current?.remove();
+      }
+      } catch (error) {
+        
+      }
+     return
+   }
     try {
       setIsSend(true);
       setSendCurrentMsg(true);
@@ -32,6 +69,7 @@ const CurrentMessage = ({
           message: msg.message.content ? msg.message.content : "Love",
           reply: [replyMsgContent.innerText, toReplyerId],
           seenMessage: msg.seenStatus,
+          others:msg.others
         },
         {
           headers: {
@@ -67,6 +105,11 @@ const CurrentMessage = ({
     <div>
       <div ref={element} className="flex justify-end">
         <div className="">
+        {
+          msg.imagePreview !== null && (
+            <img className="w-20 rounded-md" src={msg.imagePreview} alt="preview image"/>
+          )
+        }
           <h2 className="px-6 py-2 bg-violet-400 text-gray-600 rounded-full">
             {msg.message.content}
           </h2>

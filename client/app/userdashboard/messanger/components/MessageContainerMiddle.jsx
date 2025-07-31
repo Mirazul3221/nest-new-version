@@ -28,6 +28,8 @@ import BlockButton from "../../components/messanger/BlockButton";
 import { commonLogout } from "../../components/common";
 import SmartText from "../../components/messanger/VerifyText";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { LuSendHorizontal } from "react-icons/lu";
+import { IoMdClose } from "react-icons/io";
 const Middle = ({
   id,
   userDetails,
@@ -43,6 +45,8 @@ const Middle = ({
   const [replyContent, setReplyContent] = useState("");
   const [toReplyerId, setToReplyerId] = useState(null);
   const [sendCurrentMsg, setSendCurrentMsg] = useState(false);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
   const [isLoad, setIsLoad] = useState(false);
   const [typing, setTyping] = useState("");
   const [typingloading, setTypingLoading] = useState();
@@ -71,6 +75,31 @@ const Middle = ({
 
   const handleMessage = (event) => {
     setMessage(event.target.value);
+     scrollToBottom()
+  };
+
+    const handlePaste = (e) => {
+    const items = e.clipboardData?.items;
+
+    if (!items) return;
+
+    for (let item of items) {
+      if (item.type.indexOf('image') !== -1) {
+        const blob = item.getAsFile();
+        const url = URL.createObjectURL(blob);
+
+        setImagePreview(url);
+        setImageFile(blob);
+        e.preventDefault();
+        break;
+      }
+    }
+  };
+    const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent line break
+      handleSendMessage();
+    }
   };
   useEffect(() => {
     // messangerRef.current.addEventListener("keyUp",()=>alert("helo"))
@@ -87,6 +116,8 @@ const Middle = ({
   };
 
   const handleSendMessage = useCallback(() => {
+        setImagePreview(null);
+    setImageFile(null);
     messageRef.current = message;
     currentMessages.current = [
       ...currentMessages.current,
@@ -94,6 +125,8 @@ const Middle = ({
         message: { content: message, media: "", voice: "" },
         receiverId: userDetails?._id,
         seenStatus: seenMessage,
+        others: imageFile,
+        imagePreview
       },
     ];
 
@@ -140,7 +173,7 @@ const Middle = ({
         sender: lastMsgWithProfileToRemote,
         receiver: id,
       });
-  }, [message, seenMessage, socket, store.userInfo.id, userDetails?._id]);
+  }, [message, seenMessage, socket, store.userInfo.id, userDetails?._id,imageFile]);
 
   useEffect(() => {
     return () => {};
@@ -1455,33 +1488,44 @@ const Middle = ({
                         id="send_image"
                         type="file"
                       />
-                      <textarea
-                        className="hiddenTarget"
-                        id="message_text"
-                        ref={messangerRef}
-                        value={message}
-                        onChange={(e) => {
-                          handleMessage(e), scrollToBottom();
-                        }}
-                        rows={1}
-                        style={{
-                          width: "100%",
-                          resize: "none",
-                          overflow: "hidden",
-                          padding: "6px 14px",
-                          boxSizing: "border-box",
-                          outline: "none",
-                          border: "none",
-                          borderRadius: "20px",
-                          background: "#ededed",
-                        }}
-                      />
+                      <div className="bg-[#ededed] w-full px-4 py-2 rounded-[20px]">
+                        {imagePreview && (
+                          <div className="mt-2 relative h-20">
+                            <div onClick={() => {
+                              setImagePreview(null);
+                              setImageFile(null);
+                            }} className="absolute top-1 right-1 cursor-pointer"><IoMdClose /></div>
+                            <img src={imagePreview} alt="preview" className="max-h-20 rounded-2xl" />
+                          </div>
+                        )}
+                        <div className="flex w-full justify-center items-center">
+                          <textarea
+                            className="hiddenTarget bg-transparent w-full"
+                            id="message_text"
+                            ref={messangerRef}
+                            value={message}
+                            onChange={(e) => {
+                              handleMessage(e);
+                            }}
 
+                            onPaste={handlePaste}
+                            onKeyDown={handleKeyDown}
+                            rows={1}
+                            style={{
+                              resize: "none",
+                              overflow: "hidden",
+                              boxSizing: "border-box",
+                              outline: "none",
+                              border: "none",
+                            }}
+                          />
+                        </div>
+                      </div>
                       <div
                         onClick={handleSendMessage}
-                        className="flex h-full items-start cursor-pointer mb-2 text-gray-700"
+                        className="flex h-full items-start cursor-pointer mb-[10px] text-gray-700"
                       >
-                        <RiSendPlaneLine size={20} />
+                        <LuSendHorizontal size={20} />
                       </div>
                     </div>
                   )}
