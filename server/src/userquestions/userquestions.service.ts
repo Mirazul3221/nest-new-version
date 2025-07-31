@@ -255,7 +255,7 @@ Question: ${question}
         };
 
         try {
-          await axios.post('http://localhost:3001/broadcast-to-a-single-user', {
+          await axios.post('https://edu-socket.onrender.com/broadcast-to-a-single-user', {
             id: recId,
             payload: sendableData,
           });
