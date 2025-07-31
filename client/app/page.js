@@ -145,7 +145,7 @@ const dalali = [
     b: "Price: 40,000.00 ৳",
     c: "Daily 50 Ads",
     d: "Daily Income 5000",
-    e: "Validity 180 Days",
+    e: "Validity 180 Dayss",
   },
   {
     a: "Master",
