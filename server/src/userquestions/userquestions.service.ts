@@ -78,13 +78,13 @@ export class UserquestionsService {
     const date = new Date().getTime();
     const slug = createSlug(
       'bcs-preparation-online-' +
-        subject +
-        '-' +
-        chapter +
-        '-' +
-        question +
-        '-' +
-        date,
+      subject +
+      '-' +
+      chapter +
+      '-' +
+      question +
+      '-' +
+      date,
     );
     const fullSchema = {
       slug,
@@ -154,7 +154,7 @@ provide a perfect solution of this question. Do not use unnecessary word and giv
 - The explanation should be between 100 and 1000 words. If the answer naturally ends earlier, that’s okay.
 - Do not include any preface or closing — return only the explanation body.
 `;
-  const prompt1 = `
+    const prompt1 = `
 Solve the following math question always in Bangla language.
 
 Rules:
@@ -214,16 +214,16 @@ Question: ${question}
     targetQuestion.comments.push(commentSchema);
     await targetQuestion.save();
     const recId = targetQuestion.userId.toString();
-            const sendableData = {
-              title: `New Notification!`,
-              body: `${commentSchema.name} : Comments your Question as "${commentSchema.comment}"`,
-              icon: commentSchema.profile?.replace('http://', 'https://'),
-              url: `./userdashboard/timeline/${targetQuestion.slug}`,
-            };
-            await axios.post(
-              'https://edu-socket.onrender.com/broadcast-to-a-single-user',
-              { id: recId, payload: sendableData },
-            );
+    const sendableData = {
+      title: `New Notification!`,
+      body: `${commentSchema.name} : Comments your Question as "${commentSchema.comment}"`,
+      icon: commentSchema.profile?.replace('http://', 'https://'),
+      url: `./userdashboard/timeline/${targetQuestion.slug}`,
+    };
+    await axios.post(
+      'https://edu-socket.onrender.com/broadcast-to-a-single-user',
+      { id: recId, payload: sendableData },
+    );
     return await commentSchema;
   }
   /////////////////////////////////////////////////////////////////////////////////////
@@ -246,17 +246,23 @@ Question: ${question}
             $addToSet: { 'reactions.likes': userId }, // avoids duplicates
           },
         );
-const recId = targetQuestion.userId.toString();
-            const sendableData = {
-              title: `New Notification!`,
-              body: `${req.user.name} : 👍(likes) your Question ${targetQuestion.question.slice(0,50)} `,
-              icon: req.user.profile?.replace('http://', 'https://'),
-              url: `./userdashboard/timeline/${targetQuestion.slug}`,
-            };
-            await axios.post(
-              'https://edu-socket.onrender.com/broadcast-to-a-single-user',
-              { id: recId, payload: sendableData },
-            );
+        const recId = targetQuestion.userId.toString();
+        const sendableData = {
+          title: `New Notification!`,
+          body: `${req.user.name} : 👍(likes) your Question ${targetQuestion.question.slice(0, 50)} `,
+          icon: req.user.profile?.replace('http://', 'https://'),
+          url: `./userdashboard/timeline/${targetQuestion.slug}`,
+        };
+
+        try {
+          await axios.post('http://localhost:3001/broadcast-to-a-single-user', {
+            id: recId,
+            payload: sendableData,
+          });
+        } catch (error) {
+          console.error('Request failed:', error.response?.data || error.message);
+        }
+
       }
     }
     if (type == 'disliked') {
@@ -273,37 +279,37 @@ const recId = targetQuestion.userId.toString();
       }
     }
 
-    if(type == "restoreLiked"){
-              await this.QuestionModel.updateOne(
-          { _id: questionId },
-          {
-            $pull: { 'reactions.likes': userId },
-          },
-        );
+    if (type == "restoreLiked") {
+      await this.QuestionModel.updateOne(
+        { _id: questionId },
+        {
+          $pull: { 'reactions.likes': userId },
+        },
+      );
     }
 
-    if(type == "restoreDisliked"){
-              await this.QuestionModel.updateOne(
-          { _id: questionId },
-          {
-            $pull: { 'reactions.dislikes': userId },
-          },
-        );
+    if (type == "restoreDisliked") {
+      await this.QuestionModel.updateOne(
+        { _id: questionId },
+        {
+          $pull: { 'reactions.dislikes': userId },
+        },
+      );
     }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////
   async checkReactionStatus(userId, body) {
-    const {questionId} = body;
+    const { questionId } = body;
     const targetQuestion = await this.QuestionModel.findById(questionId);
-    if(!targetQuestion) return;
+    if (!targetQuestion) return;
     const { likes, dislikes } = targetQuestion.reactions;
     const lookUpLike = new Set(likes);
     const lookUpDislike = new Set(dislikes);
     const isL = lookUpLike.has(userId)
     const isD = lookUpDislike.has(userId)
-    if(isL)return 'like-stored'
-    if(isD)return 'dislike-stored'
+    if (isL) return 'like-stored'
+    if (isD) return 'dislike-stored'
     return null
   }
 
@@ -412,7 +418,7 @@ const recId = targetQuestion.userId.toString();
       throw new Error('Invalid user ID');
     }
 
- const userId = new mongoose.Types.ObjectId(id); // make sure to convert to ObjectId
+    const userId = new mongoose.Types.ObjectId(id); // make sure to convert to ObjectId
 
     const variant: any = {
       // userId: { $ne: userId }, // Exclude user's own questions properly
@@ -421,58 +427,58 @@ const recId = targetQuestion.userId.toString();
     if (flug && flug !== 'all' && tag) {
       variant[flug] = tag;
     }
-const stringId = id.toString();
-const questions = await this.QuestionModel.aggregate([
-  { $match: variant }, // Optional filter
-  {
-    $lookup: {
-      from: 'readers',
-      localField: 'userId',
-      foreignField: '_id',
-      as: 'userProfile',
-    },
-  },
-  {
-    $unwind: {
-      path: '$userProfile',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
-  { $sort: { createdAt: -1 } },
-  { $skip: +skip },
-  { $limit: 10 },
-  {
-    $project: {
-      slug: 1,
-      userId: 1,
-      userName: 1,
-      profile: '$userProfile.profile',
-      subject: 1,
-      chapter: 1,
-      prevExam: 1,
-      question: 1,
-      option_01: 1,
-      option_02: 1,
-      option_03: 1,
-      option_04: 1,
-      rightAns: 1,
-      content: 1,
-      totalReaction: { $size: '$reactions.likes' },
-      comments: { $slice: ['$comments', -2] },
-      totalComments: { $size: '$comments' },
-      createdAt: 1,
-
-      // ✅ Add this part
-      reactionStatus: {
-        like: { $in: [stringId, '$reactions.likes'] },
-        dislike: { $in: [stringId, '$reactions.dislikes'] },
+    const stringId = id.toString();
+    const questions = await this.QuestionModel.aggregate([
+      { $match: variant }, // Optional filter
+      {
+        $lookup: {
+          from: 'readers',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userProfile',
+        },
       },
-         isSaved: {
-      $in: [stringId, "$saveQuestionsStore"]
-    }
-    },
-  },
-]);
+      {
+        $unwind: {
+          path: '$userProfile',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      { $skip: +skip },
+      { $limit: 10 },
+      {
+        $project: {
+          slug: 1,
+          userId: 1,
+          userName: 1,
+          profile: '$userProfile.profile',
+          subject: 1,
+          chapter: 1,
+          prevExam: 1,
+          question: 1,
+          option_01: 1,
+          option_02: 1,
+          option_03: 1,
+          option_04: 1,
+          rightAns: 1,
+          content: 1,
+          totalReaction: { $size: '$reactions.likes' },
+          comments: { $slice: ['$comments', -2] },
+          totalComments: { $size: '$comments' },
+          createdAt: 1,
+
+          // ✅ Add this part
+          reactionStatus: {
+            like: { $in: [stringId, '$reactions.likes'] },
+            dislike: { $in: [stringId, '$reactions.dislikes'] },
+          },
+          isSaved: {
+            $in: [stringId, "$saveQuestionsStore"]
+          }
+        },
+      },
+    ]);
     return questions;
   }
 

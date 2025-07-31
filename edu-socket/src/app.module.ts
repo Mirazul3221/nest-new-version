@@ -9,7 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       isGlobal: true, // makes it accessible in all modules
     }),
         // Secondary MongoDB connection (AnotherDB)
-    MongooseModule.forRoot('mongodb+srv://toriq:yfxeikTooqKHqLFd@cluster0.dtsbv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+    MongooseModule.forRoot('mongodb+srv://toriq:KXzWuCN3RGEeuoTq@cluster0.dtsbv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
       dbName: 'pushConnection',
     }), PushNotificationModule
   ],
