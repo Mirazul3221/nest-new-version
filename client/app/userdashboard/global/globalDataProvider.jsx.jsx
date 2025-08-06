@@ -49,7 +49,7 @@ const GlobalDataProvider = ({children}) => {
         // Do something with `data` here (e.g., update state)
       } catch (error) {
         console.error("Error fetching data:", error);
-        commonLogout(dispatch, error);
+        // commonLogout(dispatch, error);
       }
     };
 

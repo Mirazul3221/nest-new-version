@@ -39,7 +39,7 @@ const SocketProvider = ({ children }) => {
       });
       return data
     } catch (error) {
-      commonLogout(dispatch, error);
+      // commonLogout(dispatch, error);
     }
   };
 useEffect(() => {

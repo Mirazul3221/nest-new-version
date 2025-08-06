@@ -49,7 +49,8 @@ export const profileApi =async (token,id) => {
 }
 
 export const commonLogout = async (dispatch, err) => {
-  if (err?.response?.data?.error === "Unauthorized") {
+  if (err?.response?.data?.message === "Unauthorized") {
+    console.log(err)
     await dispatch({ type: "logout" });
     localStorage.removeItem("myDetails");
     window.location.href = "/login";

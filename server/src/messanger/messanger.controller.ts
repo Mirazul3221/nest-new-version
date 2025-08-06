@@ -75,7 +75,11 @@ export class MessangerController {
   return await this.messangerService.updateEmojiInMessanger(message)
  }
 
- 
+ @Post('delete-msg-one-by-one')
+ @UseGuards(AuthGuard())
+ async deleteMessageOneByOne(@Body() data:any){
+  return await this.messangerService.deleteMessageOneByOne(data.id)
+ }
 
   @Get('get/:id/:page')
   @UseGuards(AuthGuard())

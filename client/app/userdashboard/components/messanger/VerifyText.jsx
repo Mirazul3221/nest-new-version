@@ -4,8 +4,8 @@ import React from "react";
 const urlRegex = /\bhttps?:\/\/[^\s<>"']+/gi;
 
 const SmartText = ({userType, message, handleImageZoom }) => {
-  const parts = message.message.content.split(urlRegex);
-  const urls = message.message.content.match(urlRegex) || [];
+  const parts = message?.message?.content.split(urlRegex);
+  const urls = message?.message?.content.match(urlRegex) || [];
   function getBaseUrl(rawUrl) {
     try {
       const fullUrl = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
@@ -20,9 +20,9 @@ const SmartText = ({userType, message, handleImageZoom }) => {
   if (urls.length === 0) {
     return  <div className={`${userType=="me" ? "bg-gradient-to-b from-violet-500 via-violet-500 to-pink-400 text-white" : "bg-gradient-to-b from-gray-200 to-gray-100 text-gray-700"} rounded-2xl px-4 py-2 break-words`}>
       {
-        message.others && <img onClick={() => handleImageZoom(message.others)} className="w-full rounded-xl" src={ message.others} alt="image" />
+        message?.others && <img onClick={() => handleImageZoom(message?.others)} className="w-full rounded-xl" src={ message?.others} alt="image" />
       }
-      <p>{message.message.content}</p>
+      <p>{message?.message?.content}</p>
     </div>;
   }
 
@@ -50,15 +50,15 @@ const SmartText = ({userType, message, handleImageZoom }) => {
         <div className="bg-gray-100 rounded-b-2xl text-gray-700 w-full font-semibold">
           {message?.others?.status == true && (
             <div className="full">
-              {message.others.image && (
-                <img className="w-full" src={message?.others.image} />
+              {message?.others?.image && (
+                <img className="w-full" src={message?.others?.image} />
               )}
-              {message?.others.ogTitle && (
-                <h3 className="px-4 text-[10px] font-semibold">{message?.others.ogTitle}</h3>
+              {message?.others?.ogTitle && (
+                <h3 className="px-4 text-[10px] font-semibold">{message?.others?.ogTitle}</h3>
               )}
-              {message?.others.ogDescription && (
+              {message?.others?.ogDescription && (
                 <h3 className="px-4 pb-2 text-[10px]">
-                  {message?.others.ogDescription}
+                  {message?.others?.ogDescription}
                 </h3>
               )}
               <p></p>

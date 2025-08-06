@@ -241,23 +241,69 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
     };
   }, [socket]);
 
+  const modifyMessage = (e) => {
+    e.target?.parentElement?.children[1]?.classList.remove("hidden")
+    setTimeout(() => {
+      e.target?.parentElement?.children[1]?.classList.add("hidden")
+    }, 10000);
+  }
+
+  const deleteMsgOneByOne = async (id) => {
+    dispatch({ type: 'DELETE_MESSAGE', payload: id })
+    try {
+      await axios.post(
+        `${baseurl}/messanger/delete-msg-one-by-one`, { id },
+        {
+          headers: {
+            Authorization: `Bearer ${store.token}`,
+          },
+        }
+      );
+    } catch (error) {
+
+    }
+  }
+
+  const editMessage = async (msg) => {
+    alert('This function is not ready yet!')
+     console.log(msg)
+  }
+
+  // useEffect(()=>{
+
+  //   window.addEventListener('click',(e)=>[
+  //    console.log(e.target)
+  //   ])
+
+  //   return ()=>{
+  //   }
+  // },[])
+
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
-      e.target.parentElement.children[2].classList.add("-left-[150px]");
+      e.target.parentElement.children[2].classList.add("-left-[250%]");
     }
     if (identifire === "friend") {
-      e.target.parentElement.children[2].classList.add("-left-[90px]");
+      e.target.parentElement.children[2].classList.add("-left-[150%]");
     }
 
     if (ctl == "add") {
       e.target.parentElement.children[0].classList.add("hidden");
       e.target.parentElement.children[1].classList.remove("hidden");
       e.target.parentElement.children[2].classList.remove("hidden");
+      e.target.parentElement.children[2].classList.add("flex");
+      setTimeout(() => {
+        e.target.parentElement.children[0].classList.remove("hidden");
+        e.target.parentElement.children[1].classList.add("hidden");
+        e.target.parentElement.children[2].classList.add("hidden");
+        e.target.parentElement.children[2].classList.remove("flex");
+      }, 5000);
     }
     if (ctl == "remove") {
       e.target.parentElement.children[0].classList.remove("hidden");
       e.target.parentElement.children[1].classList.add("hidden");
       e.target.parentElement.children[2].classList.add("hidden");
+      e.target.parentElement.children[2].classList.remove("flex");
     }
     //  e.target.parentElement.children[1].classList.remove('hidden')
   };
@@ -582,7 +628,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
   const imageLoadCount = useRef(0);
   const [totalImages, setTotalImages] = useState(0);
   useEffect(() => {
-    const newTotal = appData?.message?.filter(m => m.message.media === 'media').length;
+    const newTotal = appData?.message?.filter(m => m?.message?.media === 'media').length;
     if (newTotal > 20) return
     setTotalImages(newTotal);
     imageLoadCount.current = 0;
@@ -749,10 +795,16 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                             {formatetime(msg?.createdAt)}
                           </p>
                         )}
+
                         <div className="flex relative justify-end items-center gap-3 group">
                           <div className="hidden relative group-hover:block text-gray-700">
                             <div className="flex gap-4 items-center">
-                              <BsThreeDotsVertical size={18} />
+                              <BsThreeDotsVertical onClick={(e) => modifyMessage(e)} className="cursor-pointer target__modify__box" size={18} />
+                              <div className="absolute hidden bg-white border w-fit p-1 rounded-md">
+                                <h1 onClick={()=>editMessage(msg)} className="hover:text-violet-500 duration-100 cursor-pointer">Edit</h1>
+                                <h1 onClick={() => deleteMsgOneByOne(msg._id)} className="hover:text-violet-500 duration-100 cursor-pointer">Delete</h1>
+                              </div>
+                              {/* <input className="py-1 px-4 absolute -left-10 rounded-full z-50" placeholder="Start typing..." type="text" /> */}
                               <label
                                 className="cursor-pointer"
                                 onClick={() => handleReply(msg)}
@@ -778,7 +830,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   src="/crossed.png"
                                   alt="cross"
                                 />
-                                <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                <div className="absolute z-20 bg-white border hidden w-fit text-2xl p-2 rounded-full">
                                   {emojies.map((em, i) => {
                                     return (
                                       <span
@@ -786,7 +838,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                           sendEmoji(e, msg, "me");
                                         }}
                                         key={i}
-                                        className="px-1 cursor-pointer"
+                                        className="px-[2px] text-sm cursor-pointer"
                                       >
                                         {em}
                                       </span>
@@ -813,7 +865,6 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                             )}
                             {msg?.reply[1] === id && (
                               <h2 className="px-4 text-[10px] ml-auto flex gap-2 items-center">
-                                {" "}
                                 <IoArrowRedoOutline size={10} />
                                 You reply to {userDetails?.name}
                               </h2>
@@ -824,52 +875,48 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   {msg?.reply[0]}
                                 </h2>
                               )}
-                            {msg?.message?.content !== "" && (
-                              <div className="">
-                                <h2
-                                  className={`${i === messageBlog.length - 1 &&
+                            {msg?.message && msg?.message?.content !== "" && <h2
+                              className={`${i === messageBlog.length - 1 &&
+                                messageBlog.length > 1
+                                ? "msg_anim "
+                                : ""
+                                } break-words duration-500 max-w-fit ml-auto mb-[1px] ${messageBlog.length === 1
+                                  ? "rounded-[30px]"
+                                  : "rounded-l-[30px]"
+                                } ${messageBlog.indexOf(msg) === 0 &&
+                                  messageBlog.length > 1
+                                  ? "rounded-tr-[30px]"
+                                  : messageBlog.indexOf(msg) ===
+                                    messageBlog.length - 1 &&
                                     messageBlog.length > 1
-                                    ? "msg_anim "
+                                    ? "rounded-br-[30px] duration-500"
                                     : ""
-                                    } break-words duration-500 max-w-fit ml-auto mb-[1px] ${messageBlog.length === 1
-                                      ? "rounded-[30px]"
-                                      : "rounded-l-[30px]"
-                                    } ${messageBlog.indexOf(msg) === 0 &&
-                                      messageBlog.length > 1
-                                      ? "rounded-tr-[30px]"
-                                      : messageBlog.indexOf(msg) ===
-                                        messageBlog.length - 1 &&
-                                        messageBlog.length > 1
-                                        ? "rounded-br-[30px] duration-500"
-                                        : ""
-                                    }
+                                }
                                                         ${(msg?.reply?.length >
-                                      0 &&
-                                      msg?.reply[0] !==
-                                      null) ||
-                                      msg?.emoji?.length > 0
-                                      ? "rounded-br-[30px]"
-                                      : ""
-                                    }
+                                  0 &&
+                                  msg?.reply[0] !==
+                                  null) ||
+                                  msg?.emoji?.length > 0
+                                  ? "rounded-br-[30px]"
+                                  : ""
+                                }
                                                         `}
-                                >
-                                  <SmartText handleImageZoom={handleImageZoom} userType={"me"} message={msg} />
-                                </h2>
-                              </div>
-                            )}
+                            >
+                              <SmartText handleImageZoom={handleImageZoom} userType={"me"} message={msg} />
+                            </h2>}
 
-                            {msg?.message.media !== "" && (
+                            {msg?.message && msg?.message?.media !== "" && (
                               <div className="mb-2">
-                                <img onClick={() => handleImageZoom(msg?.message.media)}
+                                <img onClick={() => handleImageZoom(msg?.message?.media)}
                                   className="rounded-2xl cursor-pointer"
-                                  src={msg?.message.media}
+                                  src={msg?.message?.media}
                                   alt="message_image"
                                   onLoad={handleImageLoad}
                                 />
                               </div>
                             )}
 
-                            {msg?.message?.story !== "" && (
+                            {msg?.message && msg?.message?.story !== "" && (
                               <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
                                 <div className="absolute top-2 right-2 text-gray-300 z-20">
                                   STORY
@@ -899,18 +946,22 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                 </div>
 
                                 <p className="break-words">
-                                  {msg?.message.story}
+                                  {msg?.message?.story}
                                 </p>
                               </div>
                             )}
-                            {msg?.message.voice !== "" && (
+                            {msg?.message && msg?.message?.voice !== "" && (
                               <div className="mb-2 w-full">
                                 <MessagePlayer
-                                  url={msg?.message.voice}
+                                  url={msg?.message?.voice}
                                   userType="me"
                                 />
                               </div>
                             )}
+
+                            {
+                              msg?.message == null && <h2 className="p-2 my-[2px] text-rose-300 border border-rose-500 rounded-full">Unavailable data!</h2>
+                            }
 
                             {msg?.emoji?.length > 0 && (
                               <div
@@ -987,7 +1038,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   {msg?.reply[0]}
                                 </h2>
                               )}
-                            {msg?.message?.content && (
+                            {msg?.message && msg?.message?.content && (
                               <h2
                                 className={`text-left break-words max-w-fit bg-gray-200 mb-[1px] ${messageBlog.length === 1
                                   ? "rounded-[30px]"
@@ -1015,7 +1066,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </h2>
                             )}
 
-                            {msg?.message.media !== "" && (
+                            {msg?.message && msg?.message?.media !== "" && (
                               <div className="mb-2">
                                 <img
                                   className="rounded-2xl"
@@ -1027,7 +1078,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                               </div>
                             )}
 
-                            {msg?.message?.story !== "" && (
+                            {msg?.message && msg?.message?.story !== "" && (
                               <div className="mb-2 bg-gray-100 rounded-md p-2 relative">
                                 <div className="absolute top-2 right-2 text-gray-300 z-20">
                                   STORY
@@ -1057,15 +1108,15 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                 </div>
 
                                 <p className="break-words">
-                                  {msg?.message.story}
+                                  {msg?.message?.story}
                                 </p>
                               </div>
                             )}
 
-                            {msg?.message.voice !== "" && (
+                            {msg?.message && msg?.message?.voice !== "" && (
                               <div className="mb-2 w-full">
                                 <MessagePlayer
-                                  url={msg?.message.voice}
+                                  url={msg?.message?.voice}
                                   userType="he"
                                 />
                               </div>
@@ -1132,7 +1183,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                   src="/crossed.png"
                                   alt="cross"
                                 />
-                                <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                <div className="absolute z-20 bg-white border hidden w-fit text-2xl p-2 rounded-full">
                                   {emojies.map((em, i) => {
                                     return (
                                       <span
@@ -1140,7 +1191,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
                                           sendEmoji(e, msg, "friend");
                                         }}
                                         key={i}
-                                        className="px-1 cursor-pointer"
+                                        className="px-[2px] text-sm cursor-pointer"
                                       >
                                         {em}
                                       </span>

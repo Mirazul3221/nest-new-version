@@ -151,5 +151,21 @@ export const globalDataReducer = (state, action) => {
       rightSideBarData:action.payload
     };
   }
+
+    if (action.type === "DELETE_MESSAGE") {
+    // // const tergatMessage = state?.filter(m=>m._id == action.payload)
+    const index = state?.message?.findIndex((m) => m._id == action.payload);
+    state.message[index].message = null;
+    state.message[index].emoji = [];
+    state.message[index].reply = [null,null]
+    state.message[index].others = null
+    return {
+      globalUserProfile:state.globalUserProfile,
+      message: [...state.message],
+      user: state.user,
+      userMemories: state.userMemories,
+      rightSideBarData:state.rightSideBarData
+    };
+  }
   return state;
 };

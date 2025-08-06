@@ -382,21 +382,23 @@ const Middle = ({
   }, [socket, id]);
   const controllEmoji = (e, ctl, identifire) => {
     if (identifire === "me") {
-      e.target.parentElement.children[2].classList.add("-left-[150px]");
+      e.target.parentElement.children[2].classList.add("-left-[250%]");
     }
     if (identifire === "friend") {
-      e.target.parentElement.children[2].classList.add("-left-[90px]");
+      e.target.parentElement.children[2].classList.add("-left-[150%]");
     }
 
     if (ctl == "add") {
       e.target.parentElement.children[0].classList.add("hidden");
       e.target.parentElement.children[1].classList.remove("hidden");
       e.target.parentElement.children[2].classList.remove("hidden");
+       e.target.parentElement.children[2].classList.add("flex");
     }
     if (ctl == "remove") {
       e.target.parentElement.children[0].classList.remove("hidden");
       e.target.parentElement.children[1].classList.add("hidden");
       e.target.parentElement.children[2].classList.add("hidden");
+       e.target.parentElement.children[2].classList.remove("flex");
     }
     //  e.target.parentElement.children[1].classList.remove('hidden')
   };
@@ -943,7 +945,7 @@ const Middle = ({
                                   src="/crossed.png"
                                   alt="cross"
                                 />
-                                <div className="absolute z-20 bg-white border hidden w-[260px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                     <div className="absolute z-20 bg-white border hidden w-fit text-2xl p-2 rounded-full">
                                   {emojies.map((em, i) => {
                                     return (
                                       <span
@@ -951,7 +953,7 @@ const Middle = ({
                                           sendEmoji(e, msg, "me");
                                         }}
                                         key={i}
-                                        className="px-1 cursor-pointer"
+                                        className="px-[2px] text-sm cursor-pointer"
                                       >
                                         {em}
                                       </span>
@@ -1302,7 +1304,7 @@ const Middle = ({
                                   src="/crossed.png"
                                   alt="cross"
                                 />
-                                <div className="absolute z-30 bg-white border hidden w-[260px] -left-[150px] text-2xl py-2 px-6 rounded-full shadow-xl">
+                                 <div className="absolute z-20 bg-white border hidden w-fit text-2xl p-2 rounded-full">
                                   {emojies.map((em, i) => {
                                     return (
                                       <span
@@ -1310,7 +1312,7 @@ const Middle = ({
                                           sendEmoji(e, msg, "friend");
                                         }}
                                         key={i}
-                                        className="px-1 cursor-pointer"
+                                        className="px-[2px] text-sm cursor-pointer"
                                       >
                                         {em}
                                       </span>

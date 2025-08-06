@@ -371,6 +371,59 @@ export class MessangerService {
     await targetMessage.save();
   } //
 
+  async deleteMessageOneByOne(id) {
+    const allMessage = await this.MessangerModel.findOne({ _id: id });
+            cloudinary.config({
+          cloud_name: this.ConfigService.get('cloud_name'),
+          api_key: this.ConfigService.get('Api_key'),
+          api_secret: this.ConfigService.get('Api_secret'),
+        });
+
+    if (allMessage.message && allMessage.message.content !== '') {
+      if (allMessage.others !== null) {
+       const devide = allMessage?.others?.split('/');
+        const lastPart = devide[devide.length - 1];
+        const finalPart = lastPart.split('.')[0];
+        await cloudinary.uploader.destroy(`image_message/${finalPart}`);
+      }
+      await this.MessangerModel.findByIdAndUpdate(id, {
+        message: null, others: null, reply: [null, null]
+      })
+    }
+
+    if (allMessage.message && allMessage.message.media !== '') {
+      try {
+        const devide = allMessage.message.media.split('/');
+        const lastPart = devide[devide.length - 1];
+        const finalPart = lastPart.split('.')[0];
+        await cloudinary.uploader.destroy(`image_message/${finalPart}`);
+
+        await this.MessangerModel.findByIdAndUpdate(id, {
+          message: null, others: null, reply: [null, null]
+        })
+
+      } catch (error) {
+
+      }
+    }
+    
+    if (allMessage.message && allMessage.message.voice !== '') {
+      try {
+        const devide = allMessage.message.voice.split('/');
+        const lastPart = devide[devide.length - 1];
+        const finalPart = lastPart.split('.')[0];
+        await cloudinary.uploader.destroy(`voice_message/${finalPart}`);
+
+        await this.MessangerModel.findByIdAndUpdate(id, {
+          message: null, others: null, reply: [null, null]
+        })
+
+      } catch (error) {
+
+      }
+    }
+  }
+
   async findMyFriendAllMessage(user, id, page) {
     const allMessage = await this.MessangerModel.find({
       $or: [

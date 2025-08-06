@@ -58,7 +58,7 @@ export class Messanger extends Document {
   storyAssets:{}
   @IsOptional()
   @Prop({type:Object})
-  others:{}
+  others:any
 }
 
 export const messangerSchema = SchemaFactory.createForClass(Messanger);

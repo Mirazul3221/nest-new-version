@@ -190,7 +190,6 @@ const SuperHeader = () => {
   useEffect(() => {
     socket &&
       socket.on("new-notification", (id) => {
-        console.log(id);
         if (openNotif === true) {
           handleNotification();
           seenAndDeleteNotif();
@@ -247,8 +246,6 @@ const SuperHeader = () => {
           },
         }
       );
-
-      console.log(data);
       setCountUnreadMessage(data);
     } catch (error) {
       commonLogout(dispatch, error);
