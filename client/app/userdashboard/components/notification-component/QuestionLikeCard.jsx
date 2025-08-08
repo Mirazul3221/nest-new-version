@@ -8,11 +8,13 @@ const QuestionLikeCard = ({item}) => {
       <div className='py-2 border-b mb-2 rounded-md'>
         <a href={`${viewurl}/userdashboard/timeline/${item?.message[0]?.slug}`}>
          {formatRelativeTime(item?.createdAt)}
-        <div className='flex gap-4'>
+        <div className='flex items-center gap-4'>
+          <div>
         <div className="w-20 h-20 relative text-gray-700">
         <FaThumbsUp className='absolute right-0 bottom-0' color="#7305fa" size={25} />
         <img className='rounded-full' src={item?.message[0]?.requesterProfile} alt={item?.message[0]?.requesterName} />
         </div>
+          </div>
         <div>
         <h2><span className='font-bold text-[#7305fa]'>{item?.message[0]?.requesterName}</span> likes your question {` "${item?.message[0]?.question.slice(0,30)}`}..."</h2>
         </div>

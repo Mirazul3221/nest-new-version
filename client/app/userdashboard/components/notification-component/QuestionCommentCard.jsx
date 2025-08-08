@@ -8,7 +8,8 @@ const QuestionCommentCard = ({ item }) => {
       <div className="py-2 border-b px-2">
         <a href={`${viewurl}/userdashboard/timeline/${item?.message[0]?.slug}`}>
           <span>{formatRelativeTime(item.createdAt)}</span>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
+            <div>
             <div className="w-20 h-20">
               <div className="relative text-gray-700">
                 <FaComment
@@ -22,6 +23,7 @@ const QuestionCommentCard = ({ item }) => {
                   alt={item?.message[0]?.requesterName}
                 />
               </div>
+            </div>
             </div>
             <div className="w-9/12">
               <h2>
