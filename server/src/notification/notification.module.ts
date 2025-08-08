@@ -5,6 +5,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { notification_model, notification_schema } from './schemas/notification.schema';
 import { FriendRequestModule } from 'src/friend-request/friend-request.module';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports:[AuthModule,FriendRequestModule,

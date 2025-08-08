@@ -113,7 +113,6 @@ export class NotificationService {
 
   ///////////////////////delete notification more than twenty//////////////////////////
   const notificationCount = await this.notificationModel.countDocuments({readerId:body.readerId})
-  console.log(notificationCount)
    if (notificationCount > 10) {
      const excessNotification = await this.notificationModel.find({readerId:body.readerId}).sort({createdAt:1}).limit(notificationCount-10);
      const excessIds = excessNotification.map((notif)=>notif._id)
@@ -171,7 +170,7 @@ export class NotificationService {
   }
   async putNotificationToAllFriends(topic:any,user:any) {
     const friendId =await this.friendRequsetService.allAcceptedUsersId(user._id)
-    const allSchemas = []
+    const allSchemas = []//
      friendId?.map((item)=>{
     const schema = {
         readerId:item,
@@ -188,5 +187,27 @@ export class NotificationService {
      })
 
      await this.notificationModel.insertMany(allSchemas,{ ordered: true })
+  }
+
+  async setNotificationAllFreindsWhenAquestionAddedByUser(req,data){
+    const {name,profile,status} = req.user;
+    const {question,slug} = data;
+    const allFriendids = await this.readerService.currentFriends(req)
+
+     const notifications = allFriendids.map(friendId => ({
+          readerId:friendId,
+        type:'new-question-notification',
+        message:{
+          requesterName:name,
+          requesterProfie:profile,
+          requesterStatus:status,
+          slug,
+          question
+        },
+        seen:false
+  }));
+  await this.notificationModel.insertMany(notifications,{ ordered: true })
+
+  return allFriendids;
   }
 }

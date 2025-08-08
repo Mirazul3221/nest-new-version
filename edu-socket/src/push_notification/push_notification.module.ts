@@ -8,5 +8,6 @@ import { NotificationRecord, subKeySchema } from './schema/pushNotif';
   imports:[  MongooseModule.forFeature([{ name: NotificationRecord.name, schema: subKeySchema }])],
   controllers: [PushNotificationController],
   providers: [PushNotificationService],
+  exports:[PushNotificationService]
 })
 export class PushNotificationModule {}

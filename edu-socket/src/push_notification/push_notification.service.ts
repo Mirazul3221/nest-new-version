@@ -3,7 +3,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { NotificationRecord } from './schema/pushNotif';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PushNotificationService implements OnModuleInit {
@@ -52,7 +52,6 @@ async addSubscription(subscription: any) {
 
     async sendNotificationTo(req) {
       const {id,payload} = req;
-      console.log(req)
     const currentKey = await this.StoreSubKey.find({userId:id})//
     if(currentKey.length === 0) return
     try {
@@ -62,4 +61,20 @@ async addSubscription(subscription: any) {
       console.error('Error sending notification', err);
     }
   }
+
+
+async broadcastNotification (payload,ids){
+const objectIds = ids.map(id => new Types.ObjectId(id));
+const currentKey = await this.StoreSubKey.find({
+  userId: { $in: objectIds },
+});
+
+
+console.log(currentKey)
+
+    if(currentKey.length === 0) return
+  }
+
+
+
 }

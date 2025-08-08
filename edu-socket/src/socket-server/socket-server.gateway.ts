@@ -7,6 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Client } from 'socket.io/dist/client';
+import { PushNotificationService } from 'src/push_notification/push_notification.service';
 
 @WebSocketGateway({
   cors: {
@@ -26,9 +27,8 @@ import { Client } from 'socket.io/dist/client';
   },
 })
 export class NotificationsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
-  constructor() {}
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly pushNotificationService:PushNotificationService) { }
   @WebSocketServer() server: Server;
   afterInit(server: Server) {
     console.log('Socket server initialized');
@@ -108,7 +108,7 @@ export class NotificationsGateway
             });
           }
           if (userIdsArray.length == 0 && inactiveUserIdsArray.length > 0) {
-           client.to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1]) .emit('message-from', data);   
+            client.to(inactiveUserIdsArray[inactiveUserIdsArray.length - 1]).emit('message-from', data);
           }
         }
       });
@@ -236,15 +236,26 @@ export class NotificationsGateway
         }
       });
 
+      client.on('question_push_notification', async (data) => {
+        const {ids,payload} = data;
+        ids.map(id=>{
+        if (this.socketUsers[id]?.length > 0) {
+          this.socketUsers[id]?.map(async (socketId) => {
+            await client.to(socketId).emit('new-notification', 'new message');
+            await this.pushNotificationService.sendNotificationTo({id,payload})
+          });//
+        }     
+        })
+      });
+
       ////////////////////////// Here is the logic for active users ////////////////////////////////
       const userIds = Object.keys(this.socketUsers);
       const userIdSet = new Set(userIds); // Create set once for fast lookup
 
       client.on('all-friendsid', async (data) => {
         // data is the array of a user's friends
-        const matchedFriendIds = [userId, ...data].filter((id) =>
-          userIdSet.has(id),
-        );
+        const matchedFriendIds = [userId, ...(Array.isArray(data) ? data : [])]
+          .filter((id) => userIdSet.has(id));
         await client.emit('onlineFriends', matchedFriendIds);
       });
 

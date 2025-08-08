@@ -35,10 +35,10 @@ const MessageBar = ({friend,hiddenNumber}) => {
           {friend.senderId === store.userInfo.id
             ? "You :"
             : ""}
-          {friend.lastMessage.length > 20
+          {friend?.lastMessage?.length > 20
             ? friend.lastMessage.content.slice(0, 20) +
               "......"
-            : friend.lastMessage.content}
+            : friend?.lastMessage?.content}
         </span>
       </h4>
     </div>

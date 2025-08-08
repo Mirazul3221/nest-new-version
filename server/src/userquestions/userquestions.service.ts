@@ -119,7 +119,7 @@ export class UserquestionsService {
     } else {
       const createQuestion = new this.QuestionModel(fullSchema);
       await createQuestion.save();
-      return 'Question create success';
+      return {alert:'Question create success',question,slug};
     }
   } //
 

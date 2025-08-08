@@ -6,6 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import FriendRequest from './FriendRequest';
 import QuestionLikeCard from './QuestionLikeCard';
 import QuestionCommentCard from './QuestionCommentCard';
+import QuestionNotificationCard from './QuestionNotificationCard';
 const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,handleNotificationToggle}) => {
   return (
     <div ref={notifContainerRef} className="text-sm px-2 absolute top-0 md:top-20 shadow-2xl py-4 right-0 md:right-28 w-full md:w-3/12 bg-white h-screen md:h-[80vh] border rounded-2xl z-50">
@@ -140,6 +141,16 @@ const NotificationContainer = ({notificationList,sayThanks,notifContainerRef,han
                return (
                 <div className="w-full " key={i}>
                 <QuestionCommentCard
+                  item={item}
+                />
+              </div>
+               )
+            }
+            //-------------------------------------------------------------------------------------------------------------------------
+            if(item.type === 'new-question-notification'){
+               return (
+                <div className="w-full " key={i}>
+                <QuestionNotificationCard
                   item={item}
                 />
               </div>

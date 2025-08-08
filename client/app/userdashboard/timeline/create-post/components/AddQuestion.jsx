@@ -13,8 +13,10 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { commonLogout } from "@/app/userdashboard/components/common";
 import HtmlBodyParsarWithMathExp from "../../components/HtmlBodyParsarWithMathExp";
 import { RiDeleteBack2Line } from "react-icons/ri";
+import { useSocket } from "@/app/userdashboard/global/SocketProvider";
 
 const AddQuestion = () => {
+  const {socket} = useSocket();
   const [subject, setSubject] = useState("");
   const [chapter, setChapter] = useState("");
   const [prevExam, setPrevExm] = useState("");
@@ -45,7 +47,7 @@ const AddQuestion = () => {
       rightAns,
       content,
     };
-
+    
     try {
       setloading(true);
       const { data } = await axios.post(
@@ -57,7 +59,25 @@ const AddQuestion = () => {
           },
         }
       );
-      toast(data);
+
+        const ids = await axios.post(
+      `${baseurl}/notification/alert-to-all-friends-when-question-added`,{slug:data.slug,question:data.question},
+      {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+        },
+      }
+    );
+    
+    const payload = {
+      title: `${store.userInfo.name} shared a question!`,
+      body: `"${data.question}"`,
+      icon: store.userInfo.profile?.replace('http://', 'https://'),
+      // url: `./userdashboard/messanger/${receivedUser.name}/${req.user._id}`,
+    };
+        
+await socket.emit('question_push_notification',{ids:ids.data,payload})
+      toast(data.alert);
       setloading(false);
       setQuestion("");
       setPrevExm("");
@@ -68,7 +88,7 @@ const AddQuestion = () => {
       setRightAns("");
       setContent("");
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setloading(false);
       console.log(error);
       commonLogout(dispatch, error);

@@ -200,7 +200,7 @@ const obj = directFriendIds.map(id => new Types.ObjectId(id));
      })
 
      return await allAcceptedUsersId
-    }
+    }//
 
 
    if (yourStatus === "somefriendandid") {

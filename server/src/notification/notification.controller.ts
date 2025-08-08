@@ -45,6 +45,13 @@ export class NotificationController {
   deleteMany() {
     return this.notificationService.deleteMany();
   }
+
+
+  @Post('alert-to-all-friends-when-question-added')///
+  @UseGuards(AuthGuard())
+  setNotificationAllFreindsWhenAquestionAddedByUser(@Req() req:any, @Body() data:any) {
+    return this.notificationService.setNotificationAllFreindsWhenAquestionAddedByUser(req,data);
+  }
  
   @Get("notification-to-all-readers/:topic")
   @UseGuards(AuthGuard())
