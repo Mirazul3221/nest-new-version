@@ -385,6 +385,7 @@ const FloatingMessageContainer = ({ id, userDetails, setSwitcher }) => {
 
   ///////////////////////replying logic///////////////////
   const handleReply = (msg) => {
+    console.log(msg);
     setToReplyerId(msg.senderId);
     setShowReply(true);
     const replyingTo = document.getElementById("replying_to");

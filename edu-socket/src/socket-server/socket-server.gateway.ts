@@ -62,7 +62,6 @@ export class NotificationsGateway
       // Listen for the user position (active/inactive status)
       client.on('userActivity', (data) => {
         const { userId, status } = data;
-
         // Update user activity status based on the tab's visibility
         if (status) {
           // Mark the user as active

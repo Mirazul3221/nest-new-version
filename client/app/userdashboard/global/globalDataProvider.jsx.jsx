@@ -24,7 +24,7 @@ const GlobalDataProvider = ({children}) => {
          localStorage.setItem('sortLink',JSON.stringify(data));
          return data
        } catch (error) {
-         commonLogout(storeDispatch, error);
+        //  commonLogout(storeDispatch, error);
        }
      };
 

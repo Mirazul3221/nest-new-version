@@ -393,7 +393,7 @@ const TurnAsHome = () => {
                 {i === Math.floor(questions.length / 2) && (
                   <div className="-mt-4"><FrindSuggestedCard /></div>
                 )}
-                {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />} */}
+                {/* {i === Math.floor(questions.length - 2) && <DisplayMemoryCard />}. */}
                 <QuestionCard
                   questionsAfterDelete={questionsAfterDelete}
                   myQuestion={question}
