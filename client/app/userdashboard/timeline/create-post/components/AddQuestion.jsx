@@ -1,7 +1,5 @@
 "use client";
 import React, { useContext, useRef, useState } from "react";
-import English from "./select-component-for-topic/English";
-import Bangla from "./select-component-for-topic/Bangla";
 import Math from "./select-component-for-topic/Math";
 import JoditEditorWrapper from "@/app/assistantdashboard/components/joditEditor";
 import axios from "axios";
@@ -14,9 +12,27 @@ import { commonLogout } from "@/app/userdashboard/components/common";
 import HtmlBodyParsarWithMathExp from "../../components/HtmlBodyParsarWithMathExp";
 import { RiDeleteBack2Line } from "react-icons/ri";
 import { useSocket } from "@/app/userdashboard/global/SocketProvider";
+import Bangla1 from "./select-component-for-topic/Bangla1";
+import English1 from "./select-component-for-topic/English1";
+import Bangla2 from "./select-component-for-topic/Bangla2";
+import English2 from "./select-component-for-topic/Englisg2";
+import Math1 from "./select-component-for-topic/Math1";
+import Math2 from "./select-component-for-topic/Math2";
+import Math3 from "./select-component-for-topic/Math3";
+import Math4 from "./select-component-for-topic/Math4";
+import Math5 from "./select-component-for-topic/Math5";
+import Bangladesh from "./select-component-for-topic/Bangladesh";
+import International from "./International";
+import { scrollToTop } from "@/app/assistantdashboard/components/data";
+import Science1 from "./select-component-for-topic/Science1";
+import Science2 from "./select-component-for-topic/Science2";
+import Science3 from "./select-component-for-topic/Science3";
+import Computer from "./select-component-for-topic/Computer";
+import MentalAbility from "./select-component-for-topic/MentalAbility";
 
 const AddQuestion = () => {
   const {socket} = useSocket();
+  const [stage,setStage] = useState(1)
   const [subject, setSubject] = useState("");
   const [chapter, setChapter] = useState("");
   const [prevExam, setPrevExm] = useState("");
@@ -87,6 +103,9 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
       setOption_04("");
       setRightAns("");
       setContent("");
+      setSubject("");
+      setChapter("");
+      setStage(1)
     } catch (error) {
       toast.error(error?.response?.data);
       setloading(false);
@@ -123,9 +142,88 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
       <h2 className="md:text-2xl font-bold text-gray-500 mb-2">
         Add your favourite question
       </h2>
+<div className="border-b mb-2 pb-2 md:hidden">      {
+        subject && <span onClick={()=>{
+          setChapter("");
+          setStage(1)
+        }}>✔️{subject}</span>
+      }
+      {
+        chapter && <span onClick={()=>{
+          setStage(2)
+        }}> /✔️{chapter}</span>
+      }
+      {
+        stage==3 && <span> /✔️near to pbulish</span>
+      }
+      </div>
       <form onSubmit={handleSubmitAnswer}>
-        <div className="gap-2 flex items-center ">
-          <div>
+        {/* ////////////////////////////////////////For Mobile////////////////////////////////////// */}
+        {
+          stage == 1 && <div className="flex gap-4 flex-wrap md:hidden">
+          <h2 className="bg-rose-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            বাংলা সাহিত্য
+          </h2>
+          <h2 className="bg-rose-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            বাংলা ব্যাকরণ
+          </h2>
+          <h2 className="bg-amber-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            ইংরেজি সাহিত্য
+          </h2>
+          <h2 className="bg-amber-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            ইংরেজি ব্যাকরণ
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (পাটিগণিত)
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (বীজগণিত)
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (জ্যামিতি)
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (বিচ্ছিন্ন গণিত)
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (গতিবিদ্যা)
+          </h2>
+          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            গাণিতিক যুক্তি (অন্যান্য)
+          </h2>
+          <h2 className="bg-[#0398fc] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            বাংলাদেশ বিষয়াবলি
+          </h2>
+          <h2 className="bg-[#0398fc] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            আন্তর্জাতিক বিষয়াবলি
+          </h2>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            সাধারণ বিজ্ঞান(ভৌত বিজ্ঞান)
+          </h2>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            সাধারণ বিজ্ঞান(জীববিজ্ঞান)
+          </h2>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            সাধারণ বিজ্ঞান(আধুনিক বিজ্ঞান)
+          </h2>
+          <h2 className="bg-[#840ced] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            মানসিক দক্ষতা
+          </h2>
+          <h2 className="bg-[#ed0cb9] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+            ভূগোল, পরিবেশ ও দুর্যোগ ব্যবস্থাপনা
+          </h2>
+          <h2 className="bg-[#ed350c] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+           কম্পিউটার ও তথ্য প্রযুক্তি
+          </h2>
+          <h2 className="bg-[#0c10ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+           নৈতিকতা, মূল্যবোধ ও সুশাসন
+          </h2>
+        </div>
+        }
+        {/* ////////////////////////////////////////For Mobile////////////////////////////////////// */}
+
+        <div className="gap-2 md:flex items-center">
+          <div className="hidden md:block">
             <label htmlFor="title">Subject</label>
             <select
               required
@@ -138,28 +236,84 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
               <option className="text-gray-400" value="" selected>
                 --select--
               </option>
-              <option value="বাংলা">বাংলা</option>
-              <option value="ইংরেজি">ইংরেজি</option>
-              <option value="গণিত">গণিত</option>
-              <option value="সাধারণ জ্ঞান">সাধারণ জ্ঞান</option>
-              <option value="বিজ্ঞান">বিজ্ঞান</option>
-              <option value="ভূগোল">ভূগোল</option>
-              <option value="আইসিটি">আইসিটি</option>
-              <option value="নাগরিক">নাগরিক</option>
+              <option value="বাংলা সাহিত্য">বাংলা সাহিত্য</option>
+              <option value="বাংলা ব্যাকরণ">বাংলা ব্যাকরণ</option>
+              <option value="ইংরেজি সাহিত্য">ইংরেজি সাহিত্য</option>
+              <option value="ইংরেজি ব্যাকরণ">ইংরেজি ব্যাকরণ</option>
+              <option value="গাণিতিক যুক্তি (পাটিগণিত)">গাণিতিক যুক্তি (পাটিগণিত)</option>
+              <option value="গাণিতিক যুক্তি (বীজগণিত)">গাণিতিক যুক্তি (বীজগণিত)</option>
+              <option value="গাণিতিক যুক্তি (জ্যামিতি)">গাণিতিক যুক্তি (জ্যামিতি)</option>
+              <option value="গাণিতিক যুক্তি (বিচ্ছিন্ন গণিত)">গাণিতিক যুক্তি (বিচ্ছিন্ন গণিত)</option>
+              <option value="গাণিতিক যুক্তি (গতিবিদ্যা)">গাণিতিক যুক্তি (গতিবিদ্যা)</option>
+              <option value="গাণিতিক যুক্তি (অন্যান্য)">গাণিতিক যুক্তি (অন্যান্য)</option>
+              <option value="বাংলাদেশ বিষয়াবলি">বাংলাদেশ বিষয়াবলি</option>
+              <option value="আন্তর্জাতিক বিষয়াবলি">আন্তর্জাতিক বিষয়াবলি</option>
+              <option value="সাধারণ বিজ্ঞান(ভৌত বিজ্ঞান)">সাধারণ বিজ্ঞান(ভৌত বিজ্ঞান)</option>
+              <option value="সাধারণ বিজ্ঞান(জীববিজ্ঞান)">সাধারণ বিজ্ঞান(জীববিজ্ঞান)</option>
+              <option value="সাধারণ বিজ্ঞান(আধুনিক বিজ্ঞান)">সাধারণ বিজ্ঞান(আধুনিক বিজ্ঞান)</option>
+              <option value="মানসিক দক্ষতা">মানসিক দক্ষতা</option>
+              <option value="ভূগোল, পরিবেশ ও দুর্যোগ ব্যবস্থাপনা">ভূগোল, পরিবেশ ও দুর্যোগ ব্যবস্থাপনা</option>
+              <option value="কম্পিউটার ও তথ্য প্রযুক্তি">কম্পিউটার ও তথ্য প্রযুক্তি</option>
+              <option value="নৈতিকতা, মূল্যবোধ ও সুশাসন">নৈতিকতা, মূল্যবোধ ও সুশাসন</option>
             </select>
           </div>
           {/* -------------------------------------------------------------------------------- */}
-          {subject === "বাংলা" && (
-            <Bangla chapter={chapter} setChapter={setChapter} />
+          {subject === "বাংলা সাহিত্য" && (
+            <Bangla1 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
           )}
-          {subject === "ইংরেজি" && (
-            <English chapter={chapter} setChapter={setChapter} />
+          {subject === "বাংলা ব্যাকরণ" && (
+            <Bangla2 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
           )}
-          {subject === "গণিত" && (
-            <Math chapter={chapter} setChapter={setChapter} />
+          {subject === "ইংরেজি সাহিত্য" && (
+            <English1 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "ইংরেজি ব্যাকরণ" && (
+            <English2 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (পাটিগণিত)" && (
+            <Math stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (বীজগণিত)" && (
+            <Math1 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (জ্যামিতি)" && (
+            <Math2 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (বিচ্ছিন্ন গণিত)" && (
+            <Math3 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (গতিবিদ্যা)" && (
+            <Math4 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "গাণিতিক যুক্তি (অন্যান্য)" && (
+            <Math5 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "বাংলাদেশ বিষয়াবলি" && (
+            <Bangladesh stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "আন্তর্জাতিক বিষয়াবলি" && (
+            <International stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "সাধারণ বিজ্ঞান(ভৌত বিজ্ঞান)" && (
+            <Science1 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "সাধারণ বিজ্ঞান(জীববিজ্ঞান)" && (
+            <Science2 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+          {subject === "সাধারণ বিজ্ঞান(আধুনিক বিজ্ঞান)" && (
+            <Science3 stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+
+
+          {subject === "মানসিক দক্ষতা" && (
+            <MentalAbility stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
+          )}
+
+          {subject === "কম্পিউটার ও তথ্য প্রযুক্তি" && (
+            <Computer stage={stage} setStage={setStage} chapter={chapter} setChapter={setChapter} />
           )}
           {/* ------------------------------------------------------------------------------- */}
-          <div className="hidden md:block">
+          <div className={`hidden md:block`}>
             <label htmlFor="title">Previous exam session</label>
             <input
               onChange={(e) => setPrevExm(e.target.value)}
@@ -172,7 +326,7 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
             />
           </div>
         </div>
-
+<div className={`${stage==3 ? "block" : "hidden"} md:block`}>
         <div className="mt-2 block md:hidden">
           <label htmlFor="title">Previous exam session</label>
           <input
@@ -343,6 +497,7 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
             />
           </div>
         </div>
+</div>
       </form>
       <ToastContainer />
       {showPreview && (

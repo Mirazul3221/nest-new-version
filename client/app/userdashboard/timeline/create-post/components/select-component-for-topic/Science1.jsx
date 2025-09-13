@@ -1,0 +1,40 @@
+import { science1, scrollToTop } from '@/app/assistantdashboard/components/data';
+import React from 'react'
+
+const Science1 = ({ stage, setStage, chapter, setChapter }) => {
+  return (
+       <div>
+            <div className="hidden md:block">
+                <label htmlFor="chapter">Chapter</label>
+                <select
+                    required
+                    value={chapter}
+                    onChange={(e) => setChapter(e.target.value)}
+                    className="outline-none flex w-28 py-1 px-2 rounded-md border"
+                >
+                    {science1.map((item, i) => (
+                        <option key={i}>{item}</option>
+                    ))}
+                </select>
+            </div>
+
+            {
+                stage == 2 && <div className="flex gap-3 flex-wrap mt-4 mb-8">
+
+                    {science1.map((topic, i) => {
+                        return (
+                            <>
+                                <h3 key={i} onClick={(e) => { setChapter(e.target.innerText); setStage(3);scrollToTop()}} className="bg-green-500 text-white px-2 w-fit text-sm rounded-md cursor-pointer">
+                                    {topic}
+                                </h3>
+                            </>
+                        );
+                    })}
+                </div>
+            }
+
+        </div>
+  )
+}
+
+export default Science1

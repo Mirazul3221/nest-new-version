@@ -1,10 +1,10 @@
-import { mathTopicValue, scrollToTop } from "@/app/assistantdashboard/components/data";
-import React from "react";
+import { mathTopicValue, scrollToTop } from '@/app/assistantdashboard/components/data'
+import React from 'react'
 
-const Math = ({ stage, setStage, chapter, setChapter }) => {
+const Math1 = ({ stage, setStage, chapter, setChapter }) => {
   return (
-<>
-    <div className="hidden md:block">
+    <div>
+<div className="hidden md:block">
        <label htmlFor="chapter">Chapter</label>
       <select
         required
@@ -13,7 +13,7 @@ const Math = ({ stage, setStage, chapter, setChapter }) => {
         className="outline-none flex w-28 py-1 px-2 rounded-md border"
       >
  <option value="others">others</option>
-        {mathTopicValue[0].value.map((item, i) => (
+        {mathTopicValue[1].value.map((item, i) => (
           <option key={i}>{item}</option>
         ))}
       </select>
@@ -22,7 +22,7 @@ const Math = ({ stage, setStage, chapter, setChapter }) => {
               {
             stage == 2 && <div className="flex gap-3 flex-wrap mt-4 mb-8">
     
-              {mathTopicValue[0].value.map((topic,i) => {
+              {mathTopicValue[1].value.map((topic,i) => {
                 return (
                   <>
                       <h3  key={i} onClick={(e) => { setChapter(e.target.innerText); setStage(3);scrollToTop()}} className="bg-green-500 text-white px-2 w-fit text-sm rounded-md cursor-pointer">
@@ -33,8 +33,9 @@ const Math = ({ stage, setStage, chapter, setChapter }) => {
               })}
             </div>
           }
-</>
-  );
-};
+      
+    </div>
+  )
+}
 
-export default Math;
+export default Math1

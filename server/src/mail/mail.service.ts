@@ -21,6 +21,7 @@ async sendMail(mailOptions) {
   try {
  return await this.transporter.sendMail(mailOptions);
   } catch (error) {
+    console.log(error)
     throw new Error('Failed to send email');
   }
 }

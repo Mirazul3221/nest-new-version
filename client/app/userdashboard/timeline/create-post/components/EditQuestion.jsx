@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useRef, useState } from "react";
-import English from "./select-component-for-topic/English";
-import Bangla from "./select-component-for-topic/Bangla";
+import English from "./select-component-for-topic/English1";
+import Bangla from "./select-component-for-topic/Bangla1";
 import Math from "./select-component-for-topic/Math";
 import JoditEditorWrapper from "@/app/assistantdashboard/components/joditEditor";
 import axios from "axios";
