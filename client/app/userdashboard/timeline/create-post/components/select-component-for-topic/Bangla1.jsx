@@ -41,7 +41,7 @@ const Bangla1 = ({ stage, setStage, chapter, setChapter }) => {
                 <h2 disabled className="font-bold px-4 py-1 rounded-md bg-rose-500 text-gray-50" value="">
                   {item.name}
                 </h2>
-                <div className="flex gap-3 flex-wrap mt-4 mb-8">
+                <div className="flex gap-2 flex-wrap mt-4 mb-8">
                   {item.topic.map((topic, i) => (
                     <h3 onClick={(e) => { setChapter(e.target.innerText); setStage(3);scrollToTop()}} className="bg-rose-400 text-white px-2 w-fit text-sm rounded-md cursor-pointer" key={i}>
                       {topic}

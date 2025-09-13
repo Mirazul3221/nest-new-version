@@ -24,6 +24,7 @@ import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 import { commonLogout, myDetailsApi } from "./common";
 import RightSideBar from "./RightSideBar";
 import { LuSearch, LuSearchX } from "react-icons/lu";
+import { CiCirclePlus } from "react-icons/ci";
 
 const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
@@ -369,8 +370,33 @@ const SuperHeader = () => {
       setShowChild(true);
     }, 100);
   };
+  ////////////////////////////////////////////////Scrolling Logic////////////////////////////////////////
+  const [offset, setOffset] = useState(0); // 0 = fully visible, 100 = hidden
+   const [lastScrollY, setLastScrollY] = useState(0);
+
+     useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY;
+
+      // If scrolling down → increase offset (hide footer)
+      if (delta > 0) {
+        setOffset((prev) => Math.min(prev + delta, 100));
+      } else if (delta < 0) {
+        // If scrolling up → decrease offset (show footer)
+        setOffset((prev) => Math.max(prev + delta, 0));
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <div
+  <div className="">
+        <div
       className={`font-title ${
         header
           ? "fixed top-0 left-0 w-screen z-50 backdrop-blur-md px-2 md:px-20 py-2"
@@ -525,7 +551,7 @@ const SuperHeader = () => {
                   <div
                     className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
                   >
-                    <p className="text-white header-box text-[10px]">
+                    <p className="text-white header-box text-[10px]"> ssfd
                       {countUnreadMessage > 9 ? 9 + "+" : countUnreadMessage}
                     </p>
                   </div>
@@ -626,6 +652,22 @@ const SuperHeader = () => {
         </div>
       )}
     </div>
+ <div
+      className="fixed bottom-0 left-0 w-full z-50"
+      style={{
+        transform: `translateY(${offset}%)`,
+        transition: "transform 0.1s linear", // very fast update, tied to scroll
+      }}
+    >
+      <div className="bg-gray-900 text-white p-4 flex justify-around items-center shadow-lg">
+        <button>🏠Home</button>
+        <button>🔍Search</button>
+         <a href="/userdashboard/timeline/create-post"><CiCirclePlus /></a>
+        <button>📩 Messages</button>
+        <button>👤Profile</button>
+      </div>
+    </div>
+  </div>
   );
 };
 

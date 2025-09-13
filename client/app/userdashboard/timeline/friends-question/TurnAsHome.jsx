@@ -172,7 +172,7 @@ const TurnAsHome = () => {
         <div className="md:px-10 px-2 py-3">
           <SuperHeader />
           <HorizontalCardScroll>
-            <div className="flex whitespace-nowrap">
+            <div className="md:flex whitespace-nowrap hidden">
               {appData?.rightSideBarData &&
                 appData?.rightSideBarData[0]?.chapter.map((chap, i) => {
                   return (

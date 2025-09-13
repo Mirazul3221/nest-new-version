@@ -160,62 +160,62 @@ await socket.emit('question_push_notification',{ids:ids.data,payload})
       <form onSubmit={handleSubmitAnswer}>
         {/* ////////////////////////////////////////For Mobile////////////////////////////////////// */}
         {
-          stage == 1 && <div className="flex gap-4 flex-wrap md:hidden">
-          <h2 className="bg-rose-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          stage == 1 && <div className="flex gap-2 flex-wrap md:hidden">
+          <h2 className="bg-rose-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             বাংলা সাহিত্য
           </h2>
-          <h2 className="bg-rose-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-rose-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             বাংলা ব্যাকরণ
           </h2>
-          <h2 className="bg-amber-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-amber-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             ইংরেজি সাহিত্য
           </h2>
-          <h2 className="bg-amber-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-amber-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             ইংরেজি ব্যাকরণ
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (পাটিগণিত)
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (বীজগণিত)
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (জ্যামিতি)
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (বিচ্ছিন্ন গণিত)
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (গতিবিদ্যা)
           </h2>
-          <h2 className="bg-green-500 w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-green-500 w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             গাণিতিক যুক্তি (অন্যান্য)
           </h2>
-          <h2 className="bg-[#0398fc] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0398fc] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             বাংলাদেশ বিষয়াবলি
           </h2>
-          <h2 className="bg-[#0398fc] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0398fc] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             আন্তর্জাতিক বিষয়াবলি
           </h2>
-          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             সাধারণ বিজ্ঞান(ভৌত বিজ্ঞান)
           </h2>
-          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             সাধারণ বিজ্ঞান(জীববিজ্ঞান)
           </h2>
-          <h2 className="bg-[#0ce9ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0ce9ed] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             সাধারণ বিজ্ঞান(আধুনিক বিজ্ঞান)
           </h2>
-          <h2 className="bg-[#840ced] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#840ced] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             মানসিক দক্ষতা
           </h2>
-          <h2 className="bg-[#ed0cb9] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#ed0cb9] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
             ভূগোল, পরিবেশ ও দুর্যোগ ব্যবস্থাপনা
           </h2>
-          <h2 className="bg-[#ed350c] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#ed350c] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
            কম্পিউটার ও তথ্য প্রযুক্তি
           </h2>
-          <h2 className="bg-[#0c10ed] w-fit text-white px-3 py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
+          <h2 className="bg-[#0c10ed] w-fit text-white px-2 text-sm py-1 rounded-md cursor-pointer" onClick={(e)=>{setStage(2); setSubject(e.target.innerText);scrollToTop()}}>
            নৈতিকতা, মূল্যবোধ ও সুশাসন
           </h2>
         </div>

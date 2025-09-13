@@ -20,7 +20,7 @@ const Math2 = ({ stage, setStage, chapter, setChapter }) => {
       </div>
 
       {
-        stage == 2 && <div className="flex gap-3 flex-wrap mt-4 mb-8">
+        stage == 2 && <div className="flex gap-2 flex-wrap mt-4 mb-8">
 
           {mathTopicValue[2].value.map((topic, i) => {
             return (

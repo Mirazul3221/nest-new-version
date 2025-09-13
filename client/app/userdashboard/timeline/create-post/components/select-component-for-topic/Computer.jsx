@@ -33,7 +33,7 @@ const Computer = ({ stage, setStage, chapter, setChapter }) => {
                                 <h3 className="bg-[#ed350c] text-lg font-bold text-center text-white px-2 rounded-md cursor-pointer">
                                     {item.subject}
                                 </h3>
-                                                   <div className="flex gap-3 flex-wrap mt-4 mb-8">
+                                                   <div className="flex gap-2 flex-wrap mt-4 mb-8">
 
                         {item.topic.map((topic, i) => {
                             return (
