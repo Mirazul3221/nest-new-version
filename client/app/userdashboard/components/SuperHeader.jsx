@@ -24,7 +24,10 @@ import MessageContainerBoxMobile from "./messanger/MessageContainerBoxMobile";
 import { commonLogout, myDetailsApi } from "./common";
 import RightSideBar from "./RightSideBar";
 import { LuSearch, LuSearchX } from "react-icons/lu";
-import { CiCirclePlus } from "react-icons/ci";
+import { IoHomeOutline } from "react-icons/io5";
+import { GrDocumentStore, GrHistory } from "react-icons/gr";
+import { CgProfile } from "react-icons/cg";
+import { FiPlusCircle } from "react-icons/fi";
 
 const SuperHeader = () => {
   const [isOpenMessage, setIsOpenMessage] = useState(false);
@@ -551,7 +554,7 @@ const SuperHeader = () => {
                   <div
                     className={`bg-[#ff0000]/90 header-box w-[15px] h-[15px] rounded-full flex justify-center items-center`}
                   >
-                    <p className="text-white header-box text-[10px]"> ssfd
+                    <p className="text-white header-box text-[10px]">
                       {countUnreadMessage > 9 ? 9 + "+" : countUnreadMessage}
                     </p>
                   </div>
@@ -653,18 +656,18 @@ const SuperHeader = () => {
       )}
     </div>
  <div
-      className="fixed bottom-0 left-0 w-full z-50"
+      className="fixed md:hidden bottom-0 left-0 w-full z-30"
       style={{
         transform: `translateY(${offset}%)`,
         transition: "transform 0.1s linear", // very fast update, tied to scroll
       }}
     >
-      <div className="bg-gray-900 text-white p-4 flex justify-around items-center shadow-lg">
-        <button>🏠Home</button>
-        <button>🔍Search</button>
-         <a href="/userdashboard/timeline/create-post"><CiCirclePlus /></a>
-        <button>📩 Messages</button>
-        <button>👤Profile</button>
+      <div className="bg-white rounded-t-2xl border text-gray-700 px-4 py-2 flex justify-around items-center shadow-lg">
+         <a className="hover:bg-[#5236f0] duration-150" href="/"><IoHomeOutline size={22} /></a>
+         <a className="hover:bg-[#5236f0] duration-150" href="/userdashboard/archaiv"><GrHistory size={22}/></a>
+         <a className="hover:bg-[#5236f0] duration-150 -mt-8 bg-white rounded-full" href="/userdashboard/timeline/create-post"><FiPlusCircle size={35}/></a>
+         <a className="hover:bg-[#5236f0] duration-150" href="/userdashboard/timeline/my-questions"><GrDocumentStore size={22}/></a>
+         <a className="hover:bg-[#5236f0] duration-150" href="/userdashboard/myprofile"><CgProfile size={22}/></a>
       </div>
     </div>
   </div>

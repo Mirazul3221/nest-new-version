@@ -9,7 +9,6 @@ import HorizontalCardScroll from "../../components/HorizontalCardScroll.jsx";
 
 const DisplayMemoryCard = () => {
   const { appData, dispatch:dataDispatch } = useGlobalData();
-  console.log(appData)
   const { store,dispatch } = useStore();
   useEffect(() => {
     fetchStory();
@@ -30,7 +29,7 @@ const DisplayMemoryCard = () => {
     }
   };
   return (
-    <div className="ml-2 md:ml-0">
+    <div className="md:ml-0">
       <HorizontalCardScroll>
          <StorySlider users={appData.userMemories}/>
       </HorizontalCardScroll>

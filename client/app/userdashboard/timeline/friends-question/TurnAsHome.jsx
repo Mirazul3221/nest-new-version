@@ -366,7 +366,7 @@ const TurnAsHome = () => {
           {/* Main Feed */}
           <div className="md:w-6/12 w-full">
             <NearbyUserProfileCard />
-            <div className="Add_a_question rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white flex items-center gap-4 py-2 px-6">
+            <div className="Add_a_question hidden rounded-md border md:mb-4 mt-1 mb-2 shadow-sm hover:shadow-md cursor-pointer duration-150 bg-white md:flex items-center gap-4 py-2 px-6">
               <img
                 className="md:w-16 w-10 rounded-full"
                 src={store?.userInfo?.profile}
