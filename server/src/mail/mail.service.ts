@@ -7,15 +7,18 @@ import * as nodemailer from 'nodemailer';
 export class MailService {
   private transporter;
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail', // or use 'smtp.gmail.com' with port
-      auth: {
-        user: 'toriquldev000@gmail.com', // your gmail address
-        pass: 'ymrr eoyh ifjq cxgn', // your app password
-      },
-    });
-  }
+constructor() {
+  this.transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',       // Gmail SMTP server
+    port: 465,                    // 465 for SSL (recommended), or 587 for TLS
+    secure: true,                 // true for port 465, false for 587
+    auth: {
+      user: 'toriquldev000@gmail.com', // your Gmail address
+      pass: 'wvmw edzc cyum aucw',     // your App Password (not your Gmail password!)
+    },
+  });
+}
+
 
 async sendMail(mailOptions) {
   try {

@@ -8,29 +8,43 @@ import GlobalDataProvider from "./userdashboard/global/globalDataProvider.jsx";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata = {
-//   title: {
-//     default: 'BCS Preparation Online',
-//     template: '%s - BCS Preparation Online Platform',
-//   },
-//   description:
-//     'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
-//   openGraph: {
-//     title: 'BCS Preparation Online',
-//     description:
-//       'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
-//   },
-//   twitter: {
-//     card: 'summary_large_image',
-//     title: 'BCS Preparation Online',
-//     description:
-//       'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
-//   },
-//   other: {
-//     keywords:
-//       'bcs preparation, online bcs preparation, job prostuti, bcs prostuti, bcs help',
-//   },
-// };
+export const metadata = {
+  title: {
+    default: 'Eduplusplus online mcq sharing application',
+    template: '%s - online mcq sharing application',
+  },
+  description:
+    'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  openGraph: {
+    title: 'Eduplusplus - online mcq sharing application',
+    description:
+      'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Eduplusplus - online mcq sharing application',
+    description:
+      'This is the best platform to help you enhance your skills, expand your knowledge, and prepare for BCS and other exams.',
+  },
+  other: {
+    keywords:
+      'bcs preparation, online bcs preparation, job prostuti, bcs prostuti, bcs help',
+  },
+
+  // 🟢 PWA-related metadata
+  manifest: '/manifest.json',
+  themeColor: '#000000',
+  icons: {
+    icon: '/icons/icon-192x192.png',
+    apple: '/icons/icon-192x192.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Eduplusplus', // 🔥 This is the title users see when they install as a PWA
+  },
+};
+
 
 export default function RootLayout({ children }) {
   return (
