@@ -8,7 +8,7 @@ import Downloadapp from "./Downloadapp";
 const BannerSection = () => {
   const webGLAvailable = isWebGLAvailable()
   return (
-    <div className="px-4 md:px-10 relative">
+    <div className="px-4 md:px-10 relative mt-6 md:mt-10">
       {/* <div className="w-52 hidden md:block absolute top-0 blur-[120px] h-52 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div> */}
       <div className="w-52 hidden md:block absolute bottom-0 right-0 blur-[120px] h-52 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-[#011852]"></div>
       <div className="md:w-[500px] md:h-[200px] w-[250px] h-[80px] absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] blur-[180px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
