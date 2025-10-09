@@ -79,8 +79,11 @@ useEffect(() => {
         if (ans === question.rightAns) {
           store.userInfo.id !== question.userId &&
             CountQuestionsCollection("right", question, store.token);
-          e.target.parentElement.classList.add("bg-green-100");
-          e.target.parentElement.classList.add("border-green-500");
+          e.target.parentElement.classList.add("text-white");
+          e.target.parentElement.classList.add("bg-gradient-to-r");
+          e.target.parentElement.classList.add("from-[#7b54de]");
+          e.target.parentElement.classList.add("to-[#de54b5]");
+          e.target.parentElement.classList.add("border-[#810cf5]");
           e.target.parentElement.children[1].children[1].classList.remove(
             "hidden"
           );
@@ -95,10 +98,11 @@ useEffect(() => {
           e.target.parentElement.children[1].children[0].classList.remove(
             "hidden"
           );
-          tergetContainers[question.rightAns - 1].classList.add("bg-green-100");
-          tergetContainers[question.rightAns - 1].classList.add(
-            "border-green-500"
-          );
+          tergetContainers[question.rightAns - 1].classList.add("text-white");
+          tergetContainers[question.rightAns - 1].classList.add("bg-gradient-to-r");
+          tergetContainers[question.rightAns - 1].classList.add("from-[#7b54de]");
+          tergetContainers[question.rightAns - 1].classList.add("to-[#de54b5]");
+          tergetContainers[question.rightAns - 1].classList.add("border-[#810cf5]");
           tergetContainers[
             question.rightAns - 1
           ].children[1].children[1].classList.remove("hidden");
@@ -273,7 +277,7 @@ useEffect(() => {
             <div data-select={myQuestion.rightAns} className="py-2 space-y-2">
               <div
                 onClick={(e) => checkAns(e, 1, myQuestion)}
-                className="flex items-center gap-2 border bg-gray-50 pl-2 rounded-md cursor-pointer"
+                className="flex items-center gap-2 border bg-gray-50 pl-2 py-2 rounded-md cursor-pointer"
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
@@ -285,16 +289,16 @@ useEffect(() => {
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_01}{" "}
                   <span className="hidden">
-                    <RxCross2 color="red" size={22} />
+                    <RxCross2 color="white" size={22} />
                   </span>{" "}
                   <span className="hidden">
-                    <GiCheckMark color="green" />
+                    <GiCheckMark color="white" />
                   </span>
                 </h3>
               </div>
               <div
                 onClick={(e) => checkAns(e, 2, myQuestion)}
-                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+                className="flex items-center gap-2 bg-gray-50 border pl-2 py-2 rounded-md cursor-pointer"
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
@@ -306,16 +310,16 @@ useEffect(() => {
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_02}{" "}
                   <span className="hidden">
-                    <RxCross2 color="red" size={22} />
+                    <RxCross2 color="white" size={22} />
                   </span>{" "}
                   <span className="hidden">
-                    <GiCheckMark color="green" />
+                    <GiCheckMark color="white" />
                   </span>
                 </h3>
               </div>
               <div
                 onClick={(e) => checkAns(e, 3, myQuestion)}
-                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+                className="flex items-center gap-2 bg-gray-50 border pl-2 py-2 rounded-md cursor-pointer"
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
@@ -327,16 +331,16 @@ useEffect(() => {
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_03}{" "}
                   <span className="hidden">
-                    <RxCross2 color="red" size={22} />
+                    <RxCross2 color="white" size={22} />
                   </span>{" "}
                   <span className="hidden">
-                    <GiCheckMark color="green" />
+                    <GiCheckMark color="white" />
                   </span>
                 </h3>
               </div>
               <div
                 onClick={(e) => checkAns(e, 4, myQuestion)}
-                className="flex items-center gap-2 bg-gray-50 border pl-2 rounded-md cursor-pointer"
+                className="flex items-center gap-2 bg-gray-50 border pl-2 py-2 rounded-md cursor-pointer"
               >
                 <h2 className="border rounded-full w-4 h-4 flex justify-center items-center">
                   {myQuestion.subject === "বাংলা"
@@ -348,10 +352,10 @@ useEffect(() => {
                 <h3 className="__target_option__ w-full flex justify-between items-center pr-2">
                   {myQuestion.option_04}
                   <span className="hidden">
-                    <RxCross2 color="red" size={22} />
+                    <RxCross2 color="white" size={22} />
                   </span>
                   <span className="hidden">
-                    <GiCheckMark color="green" />
+                    <GiCheckMark color="white" />
                   </span>
                 </h3>
               </div>

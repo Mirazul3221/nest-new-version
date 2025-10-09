@@ -253,7 +253,7 @@ const CommentBox = ({ question, Handler = null }) => {
                   setAnim(true);
                   handleSendReaction("liked");
                 }}
-                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer p-2"
+                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer px-2 py-[11px]"
               >
                 <MdOutlineThumbUp size={24} className="hidden md:block" />
                 <MdOutlineThumbUp size={15} className="md:hidden" />
@@ -282,7 +282,7 @@ const CommentBox = ({ question, Handler = null }) => {
                   setPutDislike(true);
                   handleSendReaction("disliked");
                 }}
-                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full cursor-pointer p-2"
+                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full cursor-pointer px-2 py-[11px]"
               >
                 <MdOutlineThumbDownAlt size={22} className="hidden md:block" />
                 <MdOutlineThumbDownAlt size={15} className="md:hidden" />
@@ -368,7 +368,7 @@ const CommentBox = ({ question, Handler = null }) => {
             </>
           )}
 
-          <div className="Share flex items-center gap-2 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
+          <div className="Share flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-full cursor-pointer p-2">
             <LuShare2 size={22} className="hidden md:block" />
             <LuShare2 size={15} className="md:hidden" />
             <ShareAPI
