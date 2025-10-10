@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { FaBars } from "react-icons/fa6";
