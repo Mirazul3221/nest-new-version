@@ -5,6 +5,7 @@ import Search from "./Search";
 import { isWebGLAvailable } from "../userdashboard/components/common";
 import MackBookContainer from "./MackBookContainer";
 import Downloadapp from "./Downloadapp";
+import { viewurl } from "../config";
 const BannerSection = () => {
   const webGLAvailable = isWebGLAvailable()
   return (
@@ -36,7 +37,7 @@ const BannerSection = () => {
           </h2>
           <div className="flex gap-4 items-center">
           <Downloadapp/>
-          <a className="px-4 py-2 bg-[#623bff] text-white rounded-lg hover:bg-[#4719ff]" href="#">
+          <a className="px-4 py-2 bg-[#623bff] text-white rounded-lg hover:bg-[#4719ff]" href={`${viewurl}/blogs/static/how-to-create-an-account-in-eduplusplus`}>
             How to Start
           </a>
           </div>
