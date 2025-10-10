@@ -34,7 +34,7 @@ const BannerSection = () => {
             Eduplusplus is a community based MCQ sharing platform to help you enhance your skills, expand
             your knowledge and prepare for BCS and other exam.
           </h2>
-          <div className="flex justify-between items-center">
+          <div className="flex gap-4 items-center">
           <Downloadapp/>
           <a className="px-4 py-2 bg-[#623bff] text-white rounded-lg hover:bg-[#4719ff]" href="#">
             How to Start
