@@ -45,7 +45,7 @@ const BannerSection = () => {
         <div className="md:w-7/12 hidden md:block">
             <img className="w-full border-[20px] border-slate-800 rounded-2xl" src="/desktop_view.jpg" alt="eduplusplus" />
         </div>
-        <img className="w-full md:hidden border-[5px] mt-4 border-slate-800 rounded-2xl" src="/mobile_view.jpg" alt="eduplusplus_mobile_view" />
+        <img className="w-full md:hidden rounded-2xl" src="/mobile_view.jpg" alt="eduplusplus_mobile_view" />
         {/* <Image className="md:hidden mt-10" src={laptop} alt="laptop-view" /> */}
 
         {/* //////Disable threeD from here/////////// */}
