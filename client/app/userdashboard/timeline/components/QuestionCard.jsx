@@ -55,6 +55,7 @@ useEffect(() => {
 }, [myQuestion.content]);
 
   const checkAns = useCallback((e, ans, question) => {
+    // alert('check')
     /////////////////////////////////////////////////////////////////////////////////////////
     // const mainTerget = questionsData[index].rightAns;
     const getAtter =

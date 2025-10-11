@@ -240,7 +240,7 @@ const CommentBox = ({ question, Handler = null }) => {
                 className="like cursor-pointer bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full flex items-center gap-2 p-2"
               >
                 <div className={`${anim ? "likeButtonAnimation" : ""}`}>
-                  <MdThumbUpAlt size={22} className="hidden md:block" />
+                  <MdThumbUpAlt size={28} className="hidden md:block" />
                   <MdThumbUpAlt size={15} className="md:hidden" />
                 </div>
                 <span className="text-black">Liked</span>
@@ -253,7 +253,7 @@ const CommentBox = ({ question, Handler = null }) => {
                   setAnim(true);
                   handleSendReaction("liked");
                 }}
-                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer px-2 py-[11px]"
+                className="like flex items-center gap-2 bg-gray-50 border-r-[1px] hover:bg-gray-100 duration-150 rounded-l-full cursor-pointer px-2 py-[11px]"
               >
                 <MdOutlineThumbUp size={24} className="hidden md:block" />
                 <MdOutlineThumbUp size={15} className="md:hidden" />
@@ -270,7 +270,7 @@ const CommentBox = ({ question, Handler = null }) => {
               >
                 <span className="color-black">Disliked</span>
                 <div>
-                  <MdThumbDown size={22} className="hidden md:block" />
+                  <MdThumbDown size={28} className="hidden md:block" />
                   <MdThumbDown size={15} className="md:hidden" />
                 </div>
               </div>
@@ -282,7 +282,7 @@ const CommentBox = ({ question, Handler = null }) => {
                   setPutDislike(true);
                   handleSendReaction("disliked");
                 }}
-                className="like flex items-center gap-2 bg-gray-50 hover:bg-gray-100 duration-150 rounded-r-full cursor-pointer px-2 py-[11px]"
+                className="like flex items-center gap-2 bg-gray-50 border-l-[1px] hover:bg-gray-100 duration-150 rounded-r-full cursor-pointer px-2 py-[11px]"
               >
                 <MdOutlineThumbDownAlt size={22} className="hidden md:block" />
                 <MdOutlineThumbDownAlt size={15} className="md:hidden" />
